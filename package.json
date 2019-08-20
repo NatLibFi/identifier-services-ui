@@ -16,7 +16,7 @@
   "license": "AGPL-3.0+",
   "version": "1.0.0",
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "scripts": {
     "start": "node dist/index.js",
@@ -115,7 +115,7 @@
         "@babel/preset-env",
         {
           "targets": {
-            "node": "8"
+            "node": "10"
           }
         }
       ]

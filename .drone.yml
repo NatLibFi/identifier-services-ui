@@ -3,11 +3,16 @@ name: default
 steps:
 - name: generate-tags
   image: quay.io/natlibfi/drone-gen-tags
-- name: build
-  image: node:8
+- name: test-init
+  image: busybox
+  commands:
+  - chmod -R o+w /drone/src
+- name: test
+  image: node:10
+  user: node  
   commands:
   - npm install
-  - npm test
+  - npm run lint
 - name: docker 
   image: plugins/docker
   settings:
@@ -18,7 +23,7 @@ steps:
     password:
       from_secret: docker_password
   when:
-    branch: [master, test]
-    event: [push, tag]
+    branch: [dev]
+    event: [push]
 trigger:
-  event: [push, tag]
+  event: [push]
