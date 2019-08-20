@@ -41,7 +41,7 @@ import {useCookies} from 'react-cookie';
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
-import renderCheckboxes from './render/renderCheckboxes';
+import renderCheckboxes from './render/renderMultipleCheckboxes';
 import renderSelect from './render/renderSelect';
 import renderObjectArray from './render/renderObjectArray';
 

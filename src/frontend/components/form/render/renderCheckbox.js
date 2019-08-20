@@ -27,37 +27,25 @@
  */
 
 import React from 'react';
-import {PropTypes} from 'prop-types';
-import {Input, InputLabel, NativeSelect, FormControl} from '@material-ui/core';
+import {Checkbox, FormControlLabel} from '@material-ui/core';
 
-export default function ({label, input, name, options, defaultValue, className, meta: {touched, error}}) {
+export default function (props) {
+	const {input, label} = props;
+
 	const component = (
-		<FormControl className={className}>
-			<InputLabel htmlFor="language-helper">{label}</InputLabel>
-			<NativeSelect
-				{...input}
-				error={touched && Boolean(error)}
-				input={<Input name={name} id="language-helper"/>}
-			>
-				{
-					options.map(item =>
-						<option key={item.value} defaultValue={defaultValue} value={item.value}>{item.label}</option>
-					)
-				}
-			</NativeSelect>
-		</FormControl>
+		<FormControlLabel
+			control={
+				<Checkbox
+					color="primary"
+					checked={Boolean(input.value)}
+					onChange={input.onChange}
+				/>
+			}
+			label={label}
+		/>
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			meta: {},
-			input: {}
-		},
-		propTypes: {
-			input: PropTypes.shape({}),
-			label: PropTypes.string.isRequired,
-			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
-		}
+		...component
 	};
 }

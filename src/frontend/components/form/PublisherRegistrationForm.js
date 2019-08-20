@@ -1,9 +1,4 @@
 /* eslint-disable no-alert */
-/* eslint-disable no-undef */
-/* eslint-disable react/no-danger */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable complexity */
-/* eslint-disable no-negated-condition */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -37,11 +32,13 @@ import {Field, FieldArray, reduxForm} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
+import useStyles from '../../styles/form';
 
 import renderTextField from './render/renderTextField';
 import renderAliases from './render/renderAliases';
-import useStyles from '../../styles/form';
 import renderContactDetail from './render/renderContactDetail';
+import renderSelect from './render/renderSelect';
+import renderCheckbox from './render/renderCheckbox';
 import Captcha from '../Captcha';
 import * as actions from '../../store/actions';
 
@@ -51,25 +48,49 @@ const fieldArray = [
 			{
 				name: 'name',
 				type: 'text',
-				label: 'Name',
+				label: 'Name*',
 				width: 'half'
 			},
 			{
 				name: 'publisherEmail',
-				type: 'email',
-				label: 'Publisher Email',
+				type: 'text',
+				label: 'Publisher Email*',
 				width: 'half'
 			},
 			{
 				name: 'publicationEstimate',
-				type: 'number',
-				label: 'Publication Estimate',
+				type: 'text',
+				label: 'Publication Estimate*',
 				width: 'half'
 			},
 			{
 				name: 'website',
 				type: 'text',
 				label: 'Website',
+				width: 'half'
+			},
+			{
+				name: 'phone',
+				type: 'text',
+				label: 'Phone*',
+				width: 'half'
+			},
+			{
+				name: 'language',
+				type: 'select',
+				label: 'Select Language',
+				width: 'half',
+				defaultValue: 'eng',
+				options: [
+					{label: 'English (Default Language)', value: 'eng'},
+					{label: 'Suomi', value: 'fin'},
+					{label: 'Svenska', value: 'swe'}
+				]
+			},
+			{
+				name: 'code',
+				type: 'text',
+				label: 'Code',
 				width: 'half'
 			},
 			{
@@ -98,7 +119,7 @@ const fieldArray = [
 			{
 				name: 'email',
 				type: 'email',
-				label: 'Email',
+				label: 'Email*',
 				width: 'full'
 			}
 
@@ -107,21 +128,33 @@ const fieldArray = [
 	{
 		address: [
 			{
-				name: 'streetAddress',
+				name: 'address',
 				type: 'text',
-				label: 'Street Address',
+				label: 'Address*',
+				width: 'full'
+			},
+			{
+				name: 'addressDetails',
+				type: 'text',
+				label: 'Address Details',
 				width: 'full'
 			},
 			{
 				name: 'city',
 				type: 'text',
-				label: 'City',
+				label: 'City*',
 				width: 'full'
 			},
 			{
-				name: 'zip',
-				type: 'number',
+				name: 'zip*',
+				type: 'text',
 				label: 'Zip',
+				width: 'full'
+			},
+			{
+				name: 'public',
+				type: 'checkbox',
+				label: 'Public',
 				width: 'full'
 			}
 
@@ -131,6 +164,10 @@ const fieldArray = [
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherRegistrationForm',
+	initialValues: {
+		language: 'eng',
+		public: false
+	},
 	validate
 })(
 	props => {
@@ -141,7 +178,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		useEffect(() => {
 			loadSvgCaptcha();
-		}, []);
+		}, [loadSvgCaptcha]);
 
 		const steps = getSteps();
 		function getStepContent(step) {
@@ -171,6 +208,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const handlePublisherRegistration = async values => {
 			if (captchaInput.length === 0) {
+				// eslint-disable-next-line no-undef
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
@@ -180,6 +218,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					};
 					registerPublisher(newPublisher);
 				} else {
+					// eslint-disable-next-line no-undef
 					alert('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
@@ -207,6 +246,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<Captcha
 								captchaInput={captchaInput}
 								handleCaptchaInput={handleCaptchaInput}/>
+								{/* eslint-disable-next-line react/no-danger */}
 							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 						</>
 					}
@@ -215,6 +255,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Button disabled={activeStep === 0} onClick={handleBack}>
 							Back
 						</Button>
+						{/* eslint-disable-next-line no-negated-condition */}
 						{activeStep !== steps.length - 1 ?
 							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
 								Next
@@ -251,39 +292,76 @@ function getSteps() {
 }
 
 function element(array, classes, clearFields) {
-	return array.map(list =>
+	return array.map(list => {
+		switch (list.type) {
+			case 'arrayString':
+				return (
+					<Grid key={list.name} item xs={12}>
+						<FieldArray
+							className={`${classes.arrayString} ${list.width}`}
+							component={renderAliases}
+							name={list.name}
+							type={list.type}
+							label={list.label}
+							props={{clearFields, name: list.name, subName: list.subName}}
+						/>
+					</Grid>
+				);
+			case 'select':
+				return (
+					<Grid key={list.name} item xs={6}>
+						<Field
+							className={`${classes.selectField} ${list.width}`}
+							component={renderSelect}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+							options={list.options}
+						/>
+					</Grid>
+				);
+			case 'checkbox':
+				return (
+					<Grid key={list.name} item xs={6}>
+						<Field
+							component={renderCheckbox}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+						/>
+					</Grid>
+				);
+			case 'text':
+				if (list.width === 'full') {
+					return (
+						<Grid key={list.name} item xs={12}>
+							<Field
+								className={`${classes.textField} ${list.width}`}
+								component={renderTextField}
+								label={list.label}
+								name={list.name}
+								type={list.type}
+							/>
+						</Grid>
+					);
+				}
 
-		// eslint-disable-next-line no-negated-condition
-		((list.width !== 'half') ?
-			<Grid key={list.name} item xs={12}>
-				<Field
-					className={`${classes.textField} ${list.width}`}
-					component={renderTextField}
-					label={list.label}
-					name={list.name}
-					type={list.type}
-				/>
-			</Grid> :
-			((list.type === 'arrayString') ?
-				<Grid key={list.name} item xs={12}>
-					<FieldArray
-						className={`${classes.arrayString} ${list.width}`}
-						component={renderAliases}
-						name={list.name}
-						type={list.type}
-						label={list.label}
-						props={{clearFields, name: list.name, subName: list.subName}}
-					/>
-				</Grid> :
-				<Grid key={list.name} item xs={6}>
-					<Field
-						className={`${classes.textField} ${list.width}`}
-						component={renderTextField}
-						label={list.label}
-						name={list.name}
-						type={list.type}
-					/>
-				</Grid>))
+				return (
+					<Grid key={list.name} item xs={6}>
+						<Field
+							className={`${classes.textField} ${list.width}`}
+							component={renderTextField}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+						/>
+					</Grid>
+				);
+
+			default:
+				return null;
+		}
+	}
 	);
 }
 

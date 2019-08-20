@@ -52,6 +52,9 @@ const useStyles = makeStyles({
 		height: '60px',
 		width: '95%'
 	},
+	selectField: {
+		width: '100%'
+	},
 	full: {
 		flexDirection: 'column'
 	},
