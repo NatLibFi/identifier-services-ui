@@ -126,6 +126,145 @@ const fieldArray = [
 		]
 	},
 	{
+		affiliateOf: [
+			{
+				name: 'affiliateOfAddress',
+				type: 'text',
+				label: 'Address*',
+				width: 'full'
+			},
+			{
+				name: 'affiliateOfAddressDetails',
+				type: 'text',
+				label: 'Address Details',
+				width: 'full'
+			},
+			{
+				name: 'affiliateOfCity',
+				type: 'text',
+				label: 'City*',
+				width: 'full'
+			},
+			{
+				name: 'affiliateOfZip',
+				type: 'text',
+				label: 'Zip*',
+				width: 'full'
+			},
+			{
+				name: 'affiliateOfName',
+				type: 'text',
+				label: 'Name*',
+				width: 'full'
+			}
+
+		]
+	},
+	{
+		affiliates: [
+			{
+				name: 'affiliatesAddress',
+				type: 'text',
+				label: 'Address*',
+				width: 'full'
+			},
+			{
+				name: 'affiliatesAddressDetails',
+				type: 'text',
+				label: 'Address Details',
+				width: 'full'
+			},
+			{
+				name: 'affiliatesCity',
+				type: 'text',
+				label: 'City*',
+				width: 'full'
+			},
+			{
+				name: 'affiliatesZip',
+				type: 'text',
+				label: 'Zip*',
+				width: 'full'
+			},
+			{
+				name: 'affiliatesName',
+				type: 'text',
+				label: 'Name*',
+				width: 'full'
+			}
+
+		]
+	},
+	{
+		distributorOf: [
+			{
+				name: 'distributorOfAddress',
+				type: 'text',
+				label: 'Address*',
+				width: 'full'
+			},
+			{
+				name: 'distributorOfAddressDetails',
+				type: 'text',
+				label: 'Address Details',
+				width: 'full'
+			},
+			{
+				name: 'distributorOfCity',
+				type: 'text',
+				label: 'City*',
+				width: 'full'
+			},
+			{
+				name: 'distributorOfZip',
+				type: 'text',
+				label: 'Zip*',
+				width: 'full'
+			},
+			{
+				name: 'distributorOfName',
+				type: 'text',
+				label: 'Name*',
+				width: 'full'
+			}
+		]
+	},
+	{
+		distributor: [
+			{
+				name: 'distributorAddress',
+				type: 'text',
+				label: 'Address*',
+				width: 'full'
+			},
+			{
+				name: 'distributorAddressDetails',
+				type: 'text',
+				label: 'Address Details',
+				width: 'full'
+			},
+			{
+				name: 'distributorCity',
+				type: 'text',
+				label: 'City*',
+				width: 'full'
+			},
+			{
+				name: 'distributorZip',
+				type: 'text',
+				label: 'Zip*',
+				width: 'full'
+			},
+			{
+				name: 'distributorName',
+				type: 'text',
+				label: 'Name*',
+				width: 'full'
+			}
+
+		]
+	},
+	{
 		address: [
 			{
 				name: 'address',
@@ -175,7 +314,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
-
 		useEffect(() => {
 			loadSvgCaptcha();
 		}, [loadSvgCaptcha]);
@@ -186,9 +324,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 0:
 					return element(fieldArray[0].basicInformation, classes, clearFields);
 				case 1:
-					return fieldArrayElement(fieldArray[1], clearFields);
+					return fieldArrayElement(fieldArray[1].contactDetails, 'contactDetails', clearFields, valid);
 				case 2:
-					return element(fieldArray[2].address, classes);
+					return element(fieldArray[2].affiliateOf, classes);
+				case 3:
+					return fieldArrayElement(fieldArray[3].affiliates, 'affiliates', clearFields);
+				case 4:
+					return element(fieldArray[4].distributorOf, classes);
+				case 5:
+					return element(fieldArray[5].distributor, classes);
+				case 6:
+					return element(fieldArray[6].address, classes);
 				default:
 					return 'Unknown step';
 			}
@@ -365,13 +511,14 @@ function element(array, classes, clearFields) {
 	);
 }
 
-function fieldArrayElement(array, clearFields) {
+function fieldArrayElement(data, fieldName, clearFields, valid) {
+	console.log('****', valid)
 	return (
 		<FieldArray
 			component={renderContactDetail}
 			className="full"
-			name="contactDetails"
-			props={{clearFields, array}}
+			name={fieldName}
+			props={{clearFields, data, fieldName, valid}}
 		/>
 	);
 }
