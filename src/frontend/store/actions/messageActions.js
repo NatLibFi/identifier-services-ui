@@ -33,7 +33,7 @@ import {setLoader, success, fail} from './commonAction';
 
 export const sendMessage = values => async dispatch => {
 	dispatch(setLoader());
-	const response = await fetch('http://localhost:8080/message', {
+	const response = await fetch('http://localhost:1337/message', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

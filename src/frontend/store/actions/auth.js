@@ -28,8 +28,8 @@
 import {AUTHENTICATION} from './types';
 import fetch from 'node-fetch';
 
-const AUTHENTICATION_URL = 'http://localhost:8080/auth';
-const LOGOUT_URL = 'http://localhost:8080/logout';
+const AUTHENTICATION_URL = 'http://localhost:1337/auth';
+const LOGOUT_URL = 'http://localhost:1337/logout';
 
 export const normalLogin = values => async dispatch => {
 	const response = await fetch(AUTHENTICATION_URL, {

@@ -58,7 +58,7 @@ process.on('SIGINT', () => {
 	process.exit(-1);
 });
 
-app.use(express.static(path.resolve(__dirname, '..', 'dist', 'public')));
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.post('/message', (req, res) => {
 	async function main() {
@@ -143,7 +143,7 @@ app.get('/conf', (_req, res) => {
 });
 
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '../dist/public/index.html'));
+	res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 app.listen(HTTP_PORT, () => console.log('info', `Application Started on PORT ${HTTP_PORT}`));

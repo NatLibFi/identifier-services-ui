@@ -68,7 +68,7 @@ export const postCaptchaInput = (inputData, id) => async dispatch => {
 	};
 	dispatch(setLoader());
 	try {
-		const response = await fetch('http://localhost:8080/captcha', {
+		const response = await fetch('http://localhost:1337/captcha', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -84,7 +84,7 @@ export const postCaptchaInput = (inputData, id) => async dispatch => {
 
 export const getApiUrl = () => async dispatch => {
 	try {
-		const temp = await fetch('http://localhost:8080/conf', {
+		const temp = await fetch('http://localhost:1337/conf', {
 			method: 'GET'
 		});
 		const result = await temp.json();
