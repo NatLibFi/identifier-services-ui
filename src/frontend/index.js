@@ -46,7 +46,7 @@ import {getUserInfo} from './store/actions/auth';
 addLocaleData([...en, ...fi, ...sv]);
 
 const composeEnhancers =
-process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
 	window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
 	compose;
 
@@ -78,12 +78,13 @@ async function getApiUrl() {
 		method: 'GET'
 	});
 	const result = await temp.json();
-	const key = Object.keys(result);
-	window[key] = result[key];
-	const cookie = readCookie('login-cookie');
-	if (cookie) {
-		store.dispatch(getUserInfo(result[key], cookie));
-	}
+	Object.keys(result).forEach(key => {
+		window[key] = result[key];
+		const cookie = readCookie('login-cookie');
+		if (cookie) {
+			store.dispatch(getUserInfo(result[key], cookie));
+		}
+	});
 }
 
 getApiUrl();

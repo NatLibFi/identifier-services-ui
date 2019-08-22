@@ -44,6 +44,8 @@ import PublishersList from './components/publishers/PublishersList';
 import PublisherRequest from './components/publishersRequests/publisherRequest';
 import User from './components/users/User';
 import UsersList from './components/users/UsersList';
+import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
+import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
 import UsersRequest from './components/usersRequests/UsersRequest';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
 import Message from './components/messageTemplates/Message';
@@ -67,12 +69,14 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
 		{path: '/publishers/:id', component: PublishersList}
-
+		
 	];
-
+	
 	const privateRoutesList = [
 		{path: '/users', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
 		{path: '/users/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
+		{path: '/publications/isbn-ismn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publications/isbn-ismn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
 		{path: '/requests/users', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
 		{path: '/requests/users/:id', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
 		{path: '/templates', role: ['admin'], component: MessagesList},
@@ -127,6 +131,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 						{routes}
 					</Switch>
 					{modal ? <Route path="/publishers/:id" component={Publisher}/> : null}
+					{modal ? <Route path="/publication/isbn-ismn/:id" component={IsbnIsmn}/> : null}
 					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}
 					{modal ? <Route path="/users/:id" component={User}/> : null}
 					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}

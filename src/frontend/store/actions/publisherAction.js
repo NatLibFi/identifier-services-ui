@@ -97,7 +97,6 @@ export const searchPublisher = ({API_URL, searchText, token, offset, activeCheck
 };
 
 export const fetchPublishersRequestsList = ({API_URL}, searchText, token, offset) => async dispatch => {
-	console.log('req', searchText);
 	dispatch(setLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {

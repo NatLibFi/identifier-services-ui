@@ -1,4 +1,3 @@
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -26,69 +25,48 @@
  * for the JavaScript code in this file.
  *
  */
-import {makeStyles} from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
-	container: {
-		maxWidth: 900,
-		margin: '40px 0px 40px 0px',
-		flexGrow: 1
-	},
-	subContainer: {
-		flexGrow: 1,
-		padding: '0 10px'
-	},
-	btnContainer: {
-		marginTop: 35,
-		'& button': {
-			margin: '0 5px'
-		}
-	},
-	textField: {
-		height: '60px',
-		width: '100%'
-	},
-	selectField: {
-		width: '100%'
-	},
-	arrayString: {
-		height: '60px',
-		width: '95%'
-	},
-	full: {
-		flexDirection: 'column'
-	},
-	half: {
-		flexDirection: 'row'
-	},
-	textArea: {
-		height: '180px',
-		width: '100%'
-	},
-	stepLabel: {
-		textTransform: 'capitalize'
-	},
-	editForm: {
-		display: 'flex'
-	},
-	editFormAliases: {
-		display: 'flex',
-		width: '90%'
-	},
-	children: {
-		margin: '0 20px 0 0',
-		width: '80%'
-	},
-	authors: {
-		display: 'flex',
-		flexDirection: 'column',
-		'& button': {
-			marginTop: 15
-		}
-	},
-	authorDetails: {
-		margin: '15px 0'
+import {LOADER, ERROR, ISBN_ISMN_LIST, FETCH_ISBN_ISMN} from '../actions/types';
+
+const initialState = {
+	isbnIsmn: {},
+	isbnIsmnList: [],
+	offset: null,
+	totalDoc: null,
+	queryDocCount: null,
+	loading: false,
+	error: {}
+};
+
+export default function (state = initialState, action) {
+	switch (action.type) {
+		case LOADER:
+			return {
+				...state,
+				loading: true
+			};
+		case FETCH_ISBN_ISMN:
+			return {
+				...state,
+				isbnIsmn: action.payload,
+				loading: false
+			};
+		case ISBN_ISMN_LIST:
+			return {
+				...state,
+				isbnIsmnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				loading: false
+			};
+		case ERROR:
+			return {
+				...state,
+				error: action.payload,
+				loading: false
+			};
+		default:
+			return state;
 	}
-});
-
-export default useStyles;
+}

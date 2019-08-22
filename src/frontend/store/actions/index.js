@@ -76,3 +76,8 @@ export {
 export {
 	passwordReset
 } from './passwordResetAction';
+
+export {
+	fetchIsbnIsmn,
+	fetchIsbnIsmnList
+} from './publicationAction';

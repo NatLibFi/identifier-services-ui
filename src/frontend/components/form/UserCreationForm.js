@@ -115,7 +115,7 @@ export default connect(actions)(reduxForm({
 			// eslint-disable-next-line no-undef
 			window.confirm('Please confirm again to accept') === true ?
 				(
-					delete newUser.defaultLanguage && createUser({APIURL: window.API_URL}, newUser, token)
+					delete newUser.defaultLanguage && createUser({API_URL: API_URL}, newUser, token)
 				) :
 				null;
 		}
