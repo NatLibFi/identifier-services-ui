@@ -42,15 +42,15 @@ import {connect} from 'react-redux';
 import ModalLayout from '../ModalLayout';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {match, fetchMessage, messageInfo, apiURL} = props;
+	const {match, fetchMessage, messageInfo} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
 		const token = cookie['login-cookie'];
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchMessage({API_URL: apiURL}, match.params.id, token);
-	}, [apiURL, cookie, fetchMessage, match.params.id]);
+		// eslint-disable-next-line no-undef
+		fetchMessage({API_URL: window.API_URL}, match.params.id, token);
+	}, [cookie, fetchMessage, match.params.id]);
 
 	let messageDetail;
 	messageDetail = (messageInfo !== null &&
@@ -90,7 +90,6 @@ export default connect(mapStateToProps, actions)(props => {
 function mapStateToProps(state) {
 	return ({
 		loading: state.contact.loading,
-		messageInfo: state.contact.messageInfo,
-		apiURL: state.common.apiURL
+		messageInfo: state.contact.messageInfo
 	});
 }

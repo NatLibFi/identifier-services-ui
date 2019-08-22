@@ -39,7 +39,7 @@ import Spinner from '../Spinner';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset, apiURL} = props;
+	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = useState('');
 	const [sortStateBy, setSortStateBy] = useState('');
@@ -47,9 +47,9 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchUsersRequestsList({API_URL: apiURL, inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors, inputVal, sortStateBy, apiURL, fetchUsersRequestsList, cookie]);
+		// eslint-disable-next-line no-undef
+		fetchUsersRequestsList({API_URL: window.API_URL, inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
+	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/requests/users/${id}`, {modal: true});
@@ -129,7 +129,6 @@ function mapStateToProps(state) {
 		loading: state.users.loading,
 		usersRequestsList: state.users.usersRequestsList,
 		offset: state.users.offset,
-		totalDoc: state.users.totalUsersRequests,
-		apiURL: state.common.apiURL
+		totalDoc: state.users.totalUsersRequests
 	});
 }

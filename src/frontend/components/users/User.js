@@ -57,7 +57,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, user, userInfo, loading, fetchUser, apiURL} = props;
+	const {match, user, userInfo, loading, fetchUser} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
@@ -66,8 +66,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		const token = cookie['login-cookie'];
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchUser({API_URL: apiURL}, match.params.id, token);
+		// eslint-disable-next-line no-undef
+		fetchUser({API_URL: window.API_URL}, match.params.id, token);
 	}, [user === undefined]);
 
 	const handleEditClick = () => {
@@ -174,7 +174,6 @@ function mapStateToProps(state) {
 		user: state.users.user,
 		loading: state.users.loading,
 		initialValues: state.users.user,
-		userInfo: state.login.userInfo,
-		apiURL: state.common.apiURL
+		userInfo: state.login.userInfo
 	});
 }

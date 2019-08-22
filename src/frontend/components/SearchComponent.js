@@ -52,9 +52,11 @@ export default connect(null, actions)(withRouter(props => {
 		e.preventDefault();
 		if (props.homePage) {
 			history.push('/publishers/', {searchText: inputVal});
-			searchFunction(inputVal, cookie['login-cookie']);
+			// eslint-disable-next-line no-undef
+			searchFunction({API_URL: window.API_URL, searchText: inputVal, token: cookie['login-cookie']});
 		} else {
-			searchFunction(inputVal, cookie['login-cookie']);
+			// eslint-disable-next-line no-undef
+			searchFunction({API_URL: window.API_URL, searchText: inputVal, token: cookie['login-cookie']});
 			setSearchInputVal(inputVal);
 		}
 	};

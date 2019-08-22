@@ -70,12 +70,12 @@ const fieldArray = [
 	}
 ];
 
-export default connect(mapStateToProps, actions)(reduxForm({
+export default connect(actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, valid, createUserRequest, pristine, apiURL} = props;
+		const {handleSubmit, clearFields, valid, createUserRequest, pristine} = props;
 		const classes = useStyles();
 		const [cookie] = useCookies('login-cookie');
 		const token = cookie['login-cookie'];
@@ -90,8 +90,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				givenName: values.givenName.toLowerCase(),
 				familyName: values.familyName.toLowerCase()
 			};
-			// eslint-disable-next-line no-unused-expressions
-			apiURL !== null && createUserRequest({API_URL: apiURL}, newUser, token);
+			// eslint-disable-next-line no-undef
+			createUserRequest({API_URL: window.API_URL}, newUser, token);
 		}
 
 		const component = (
@@ -149,10 +149,4 @@ function element(array, classes, clearFields) {
 				/>
 			</Grid>)
 	);
-}
-
-function mapStateToProps(state) {
-	return ({
-		apiURL: state.common.apiURL
-	});
 }

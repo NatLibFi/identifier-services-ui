@@ -73,10 +73,20 @@ function readCookie(name) {
 	return null;
 }
 
-const cookie = readCookie('login-cookie');
-if (cookie) {
-	store.dispatch(getUserInfo(cookie));
+async function getApiUrl() {
+	const temp = await fetch('/conf', {
+		method: 'GET'
+	});
+	const result = await temp.json();
+	const key = Object.keys(result);
+	window[key] = result[key];
+	const cookie = readCookie('login-cookie');
+	if (cookie) {
+		store.dispatch(getUserInfo(result[key], cookie));
+	}
 }
+
+getApiUrl();
 
 ReactDOM.render(
 	<Provider store={store}>

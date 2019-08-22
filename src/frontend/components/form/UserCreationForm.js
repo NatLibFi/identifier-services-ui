@@ -87,12 +87,12 @@ const fieldArray = [
 	}
 ];
 
-export default connect(mapStateToProps, actions)(reduxForm({
+export default connect(actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, valid, createUser, pristine, apiURL} = props;
+		const {handleSubmit, clearFields, valid, createUser, pristine} = props;
 		const classes = useStyles();
 		const [cookie] = useCookies('login-cookie');
 		const token = cookie['login-cookie'];
@@ -115,11 +115,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			// eslint-disable-next-line no-undef
 			window.confirm('Please confirm again to accept') === true ?
 				(
-					delete newUser.defaultLanguage &&
-					(
-						apiURL !== null &&
-						createUser({APIURL: apiURL}, newUser, token)
-					)
+					delete newUser.defaultLanguage && createUser({APIURL: window.API_URL}, newUser, token)
 				) :
 				null;
 		}
@@ -241,10 +237,3 @@ function element(array, classes, clearFields) {
 					</Grid>)))
 	);
 }
-
-function mapStateToProps(state) {
-	return ({
-		apiURL: state.common.apiURL
-	});
-}
-

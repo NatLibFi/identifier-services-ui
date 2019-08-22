@@ -56,7 +56,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest, apiURL} = props;
+	const {match, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
 	const classes = useStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
@@ -64,16 +64,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		const token = cookie['login-cookie'];
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchUserRequest({API_URL: apiURL}, match.params.id, token);
+		// eslint-disable-next-line no-undef
+		fetchUserRequest({API_URL: window.API_URL}, match.params.id, token);
 		const requestToUpdate = {
 			...usersRequest,
 			state: 'inProgress',
 			backgroundProcessingState: 'inProgress'
 		};
-		// eslint-disable-next-line no-unused-expressions
-		usersRequest.id && updateUserRequest({API_URL: apiURL}, match.params.id, requestToUpdate, token);
-	}, [apiURL, cookie, fetchUserRequest, match.params.id, updateUserRequest, usersRequest]);
+		// eslint-disable-next-line no-unused-expressions, no-undef
+		usersRequest.id && updateUserRequest({API_URL: window.API_URL}, match.params.id, requestToUpdate, token);
+	}, [cookie, fetchUserRequest, match.params.id, updateUserRequest, usersRequest]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -174,7 +174,6 @@ function mapStateToProps(state) {
 		usersRequest: state.users.usersRequest,
 		loading: state.users.loading,
 		initialValues: state.users.usersRequest,
-		userInfo: state.login.userInfo,
-		apiURL: state.common.apiURL
+		userInfo: state.login.userInfo
 	});
 }

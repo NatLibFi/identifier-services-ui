@@ -42,12 +42,12 @@ import * as actions from '../../store/actions';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'login', validate})(props => {
-	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd, API_URL} = props;
+	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 
 	const handleLogin = values => {
-		normalLogin({...values, API_URL: API_URL});
+		normalLogin({...values, API_URL: window.API_URL});
 		history.push('/publishers');
 		//  Settimeout for firefox to work properly
 		setTimeout(() => {
@@ -116,7 +116,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 function mapStateToProps(state) {
 	return ({
 		user: state.login.userInfo,
-		isLogin: state.login.isLogin,
-		API_URL: state.common.apiURL
+		isLogin: state.login.isLogin
 	});
 }

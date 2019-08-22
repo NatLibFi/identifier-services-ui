@@ -27,10 +27,9 @@
  */
 import {AUTHENTICATION} from './types';
 import fetch from 'node-fetch';
-const API_URL = process.env.API_URL;
 
-const AUTHENTICATION_URL = 'http://localhost:1337/auth';
-const LOGOUT_URL = 'http://localhost:1337/logout';
+const AUTHENTICATION_URL = '/auth';
+const LOGOUT_URL = '/logout';
 
 export const normalLogin = values => async dispatch => {
 	const response = await fetch(AUTHENTICATION_URL, {
@@ -44,9 +43,9 @@ export const normalLogin = values => async dispatch => {
 	return response.status;
 };
 
-export const getUserInfo = token => async dispatch => {
+export const getUserInfo = (API_URL, token) => async dispatch => {
 	console.log(API_URL);
-	const result = await fetch('http://10.112.34.22:1338/auth', {
+	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer ' + token

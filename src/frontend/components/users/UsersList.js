@@ -38,15 +38,15 @@ import {useCookies} from 'react-cookie';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchUsersList, usersList, totalUsers, endCursor, hasNextPage, apiURL} = props;
+	const {loading, fetchUsersList, usersList, totalUsers, endCursor, hasNextPage} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
 	const [cursors, setCursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchUsersList({API_URL: apiURL}, cookie['login-cookie'], lastCursor);
-	}, [lastCursor, cursors, apiURL, fetchUsersList, cookie]);
+		// eslint-disable-next-line no-undef
+		fetchUsersList({API_URL: window.API_URL}, cookie['login-cookie'], lastCursor);
+	}, [lastCursor, cursors, fetchUsersList, cookie]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/users/${id}`, {modal: true});
@@ -109,7 +109,6 @@ function mapStateToProps(state) {
 		totalUsers: state.users.totalUsers,
 		pageInfo: state.users.pageInfo,
 		endCursor: state.users.pageInfo.endCursor,
-		hasNextPage: state.users.pageInfo.hasNextPage,
-		apiURL: state.common.apiURL
+		hasNextPage: state.users.pageInfo.hasNextPage
 	});
 }

@@ -40,7 +40,6 @@ export const ERROR = 'ERROR';
 export const LOCALE_SET = 'LOCALE_SET';
 export const GET_CAPTCHA = 'GET_CAPTCHA';
 export const POST_CAPTCHA = 'POST_CAPTCHA';
-export const GET_API_URL = 'GET_API_URL';
 
 export const CONTACT = 'CONTACT';
 export const FETCH_MESSAGE = 'FETCH_MESSAGE';

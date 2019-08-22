@@ -56,8 +56,7 @@ export {
 	fail,
 	setLoader,
 	loadSvgCaptcha,
-	postCaptchaInput,
-	getApiUrl
+	postCaptchaInput
 } from './commonAction';
 
 export {
