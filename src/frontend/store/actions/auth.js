@@ -44,7 +44,6 @@ export const normalLogin = values => async dispatch => {
 };
 
 export const getUserInfo = (API_URL, token) => async dispatch => {
-	console.log(API_URL);
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {
