@@ -27,6 +27,7 @@
  */
 import {AUTHENTICATION} from './types';
 import fetch from 'node-fetch';
+const API_URL = process.env.API_URL;
 
 const AUTHENTICATION_URL = 'http://localhost:1337/auth';
 const LOGOUT_URL = 'http://localhost:1337/logout';
@@ -39,12 +40,13 @@ export const normalLogin = values => async dispatch => {
 	});
 	const result = await response.json();
 
-	dispatch(getUserInfo(result));
+	dispatch(getUserInfo(result.token));
 	return response.status;
 };
 
 export const getUserInfo = token => async dispatch => {
-	const result = await fetch('http://localhost:8081/auth', {
+	console.log(API_URL);
+	const result = await fetch('http://10.112.34.22:1338/auth', {
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer ' + token

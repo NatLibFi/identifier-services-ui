@@ -34,7 +34,7 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, BASE_URL} from './config';
+import {HTTP_PORT, SMTP_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
@@ -118,7 +118,8 @@ app.post('/captcha', (req, res) => {
 });
 
 app.post('/auth', async (req, res) => {
-	const result = await fetch(BASE_URL, {
+	const API_URL = req.body.API_URL;
+	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
 			Authorization: 'Basic ' + base64.encode(req.body.username + ':' + req.body.password)
@@ -126,7 +127,7 @@ app.post('/auth', async (req, res) => {
 	});
 	const token = result.headers.get('Token');
 	res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
-	res.status(200).json(token);
+	res.status(200).json({token, API_URL});
 });
 
 app.get('/logOut', (req, res) => {
