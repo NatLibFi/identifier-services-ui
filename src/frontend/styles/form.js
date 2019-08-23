@@ -45,14 +45,15 @@ const useStyles = makeStyles({
 		}
 	},
 	textField: {
-		height: '60px',
+		height: '40px',
 		width: '100%'
 	},
 	arrayString: {
-		height: '60px',
+		height: '40px',
 		width: '95%'
 	},
 	selectField: {
+		height: '40px',
 		width: '100%'
 	},
 	full: {
@@ -78,6 +79,10 @@ const useStyles = makeStyles({
 	children: {
 		margin: '0 20px 0 0',
 		width: '80%'
+	},
+	formHead: {
+		width: '100%',
+		paddingLeft: '10px'
 	}
 });
 

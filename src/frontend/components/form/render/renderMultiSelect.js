@@ -25,71 +25,29 @@
  * for the JavaScript code in this file.
  *
  */
-import {createMuiTheme} from '@material-ui/core';
 
-const theme = createMuiTheme({
-	palette: {
-		primary: {
-			main: '#00224f'
-		},
-		secondary: {
-			main: '#ffffff'
-		}
-	},
-	typography: {
-		fontFamily: 'Open Sans, Helvetica, Arial'
-	},
-	overrides: {
-		MuiChip: {
-			root: {
-				marginRight: '5px',
-				marginTop: '20px'
-			}
-		},
-		MuiList: {
-			root: {
-				minWidth: 200,
-				'& li:not(:last-child)': {
-					borderBottom: '1px solid #f5f5f5'
-				}
-			},
-			padding: {
-				paddingTop: 0,
-				paddingBottom: 0
-			}
-		},
-		MuiMenu: {
-			paper: {
-				boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)'
-			}
-		},
-		MuiPaper: {
-			elevation1: {
-				boxShadow: 'none'
-			}
-		},
-		MuiExpansionPanelDetails: {
-			root: {
-				padding: '0 24px 0'
-			}
-		},
-		MuiToolbar: {
-			gutters: {
-				paddingLeft: 0,
-				paddingRight: 0
-			}
-		},
+import React from 'react';
+import CreatableSelect from 'react-select/creatable';
+import {Typography} from '@material-ui/core';
 
-		MuiToggleButton: {
-			'&$selected': {
-				'& span': {
-					color: '#ffffff !important'
-				},
-				backgroundColor: 'red !important'
-			}
+export default function ({input, label, options, meta: {touched, error}, className}) {
 
-		}
-	}
-});
+	const component = (
+		<>
+			<Typography variant="caption">Select from dropdown or choose your own</Typography>
+			<CreatableSelect
+				isMulti
+				options={options}
+				className={className}
+				placeholder={label}
+				onBlur={() => input.onBlur(input.value)}
+				onChange={value => input.onChange(value)}
+			/>
+			{touched && error && <span>{error}</span>}
+		</>
+	);
 
-export default theme;
+	return {
+		...component
+	};
+}

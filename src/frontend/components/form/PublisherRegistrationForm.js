@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 import useStyles from '../../styles/form';
@@ -39,8 +39,11 @@ import renderAliases from './render/renderAliases';
 import renderContactDetail from './render/renderContactDetail';
 import renderSelect from './render/renderSelect';
 import renderCheckbox from './render/renderCheckbox';
+import renderMultiSelect from './render/renderMultiSelect';
 import Captcha from '../Captcha';
 import * as actions from '../../store/actions';
+
+const classificationCodes = [0, 13, 24, 29, 32, 37, 40, 45, 100, 120, 130, 200, 210, 211, 270, 300, 310, 315, 316, 320, 330, 340, 350, 370, 375, 380, 390, 400, 410, 420, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 621, 622, 630, 640, 650, 660, 670, 672, 680, 690, 700, 710, 720, 730, 740, 750, 760, 765, 770, 780, 790, 800, 810, 820, 830, 840, 850, 860, 870, 880, 890, 900, 910, 920, 930, 940, 950].map(item => ({label: item, value: item}));
 
 const fieldArray = [
 	{
@@ -94,6 +97,43 @@ const fieldArray = [
 				width: 'half'
 			},
 			{
+				name: 'address',
+				type: 'text',
+				label: 'Address*',
+				width: 'half'
+			},
+			{
+				name: 'addressDetails',
+				type: 'text',
+				label: 'Address Details',
+				width: 'half'
+			},
+			{
+				name: 'city',
+				type: 'text',
+				label: 'City*',
+				width: 'half'
+			},
+			{
+				name: 'zip*',
+				type: 'text',
+				label: 'Zip',
+				width: 'half'
+			},
+			{
+				name: 'classification*',
+				type: 'anotherSelect',
+				label: 'Classification*',
+				options: classificationCodes,
+				width: 'half'
+			},
+			{
+				name: 'public',
+				type: 'checkbox',
+				label: 'Public',
+				width: 'half'
+			},
+			{
 				name: 'aliases',
 				type: 'arrayString',
 				label: 'Aliases',
@@ -126,36 +166,37 @@ const fieldArray = [
 		]
 	},
 	{
+		title: 'AffiliateOf',
 		affiliateOf: [
 			{
 				name: 'affiliateOfAddress',
 				type: 'text',
 				label: 'Address*',
-				width: 'full'
+				width: 'half'
 			},
 			{
 				name: 'affiliateOfAddressDetails',
 				type: 'text',
 				label: 'Address Details',
-				width: 'full'
+				width: 'half'
 			},
 			{
 				name: 'affiliateOfCity',
 				type: 'text',
 				label: 'City*',
-				width: 'full'
+				width: 'half'
 			},
 			{
 				name: 'affiliateOfZip',
 				type: 'text',
 				label: 'Zip*',
-				width: 'full'
+				width: 'half'
 			},
 			{
 				name: 'affiliateOfName',
 				type: 'text',
 				label: 'Name*',
-				width: 'full'
+				width: 'half'
 			}
 
 		]
@@ -263,41 +304,6 @@ const fieldArray = [
 			}
 
 		]
-	},
-	{
-		address: [
-			{
-				name: 'address',
-				type: 'text',
-				label: 'Address*',
-				width: 'full'
-			},
-			{
-				name: 'addressDetails',
-				type: 'text',
-				label: 'Address Details',
-				width: 'full'
-			},
-			{
-				name: 'city',
-				type: 'text',
-				label: 'City*',
-				width: 'full'
-			},
-			{
-				name: 'zip*',
-				type: 'text',
-				label: 'Zip',
-				width: 'full'
-			},
-			{
-				name: 'public',
-				type: 'checkbox',
-				label: 'Public',
-				width: 'full'
-			}
-
-		]
 	}
 ];
 
@@ -326,15 +332,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 1:
 					return fieldArrayElement(fieldArray[1].contactDetails, 'contactDetails', clearFields, valid);
 				case 2:
-					return element(fieldArray[2].affiliateOf, classes);
+					return withFormTitle(fieldArray[2], classes);
 				case 3:
 					return fieldArrayElement(fieldArray[3].affiliates, 'affiliates', clearFields);
 				case 4:
 					return element(fieldArray[4].distributorOf, classes);
 				case 5:
 					return element(fieldArray[5].distributor, classes);
-				case 6:
-					return element(fieldArray[6].address, classes);
 				default:
 					return 'Unknown step';
 			}
@@ -374,6 +378,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
 				<Stepper alternativeLabel activeStep={activeStep}>
+					{console.log('****', steps)}
 					{steps.map(label => (
 						<Step key={label}>
 							<StepLabel className={classes.stepLabel}>
@@ -466,6 +471,19 @@ function element(array, classes, clearFields) {
 						/>
 					</Grid>
 				);
+			case 'anotherSelect':
+				return (
+					<Grid key={list.name} item xs={6}>
+						<Field
+							className={`${classes.selectField} ${list.width}`}
+							component={renderMultiSelect}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+							options={list.options}
+						/>
+					</Grid>
+				);
 			case 'checkbox':
 				return (
 					<Grid key={list.name} item xs={6}>
@@ -494,14 +512,17 @@ function element(array, classes, clearFields) {
 
 				return (
 					<Grid key={list.name} item xs={6}>
+						{list.test}
 						<Field
 							className={`${classes.textField} ${list.width}`}
 							component={renderTextField}
 							label={list.label}
 							name={list.name}
 							type={list.type}
+							test={list.test}
 						/>
 					</Grid>
+
 				);
 
 			default:
@@ -511,8 +532,20 @@ function element(array, classes, clearFields) {
 	);
 }
 
+function withFormTitle(obj, classes) {
+	return (
+		<>
+			<div className={classes.formHead}>
+				<Typography gutterBottom variant="h6">
+					{obj.title}
+				</Typography>
+			</div>
+			{element(obj.affiliateOf, classes)}
+		</>
+	);
+}
+
 function fieldArrayElement(data, fieldName, clearFields, valid) {
-	console.log('****', valid)
 	return (
 		<FieldArray
 			component={renderContactDetail}
