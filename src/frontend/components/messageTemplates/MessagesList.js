@@ -46,7 +46,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchMessagesList({API_URL: window.API_URL}, cookie['login-cookie'], lastCursor, page);
+		fetchMessagesList({API_URL: API_URL}, cookie['login-cookie'], lastCursor, page);
 	}, [lastCursor, cursors, fetchMessagesList, cookie, page]);
 
 	const handleTableRowClick = id => {

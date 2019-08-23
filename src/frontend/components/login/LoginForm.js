@@ -47,7 +47,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const handleLogin = values => {
 		// eslint-disable-next-line no-undef
-		normalLogin({...values, API_URL: window.API_URL});
+		normalLogin({...values, API_URL: API_URL});
 		history.push('/publishers');
 		handleClose();
 	};

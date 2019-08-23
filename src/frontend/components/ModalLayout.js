@@ -76,7 +76,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 				open={open}
 				// eslint-disable-next-line no-alert
 				onClose={(form || fab) ? (() => {
-					if (window.confirm('Do you want to exit?')) {
+					if (confirm('Do you want to exit?')) {
 						handleClose();
 					}
 				}) : handleClose}

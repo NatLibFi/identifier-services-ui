@@ -63,7 +63,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchIsbnIsmn({API_URL: window.API_URL, id: match.params.id, token: cookie['login-cookie']});
+		fetchIsbnIsmn({API_URL: API_URL, id: match.params.id, token: cookie['login-cookie']});
 	}, [isbnIsmn === undefined]);
 
 	const handleEditClick = () => {

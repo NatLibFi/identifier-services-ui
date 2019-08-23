@@ -84,7 +84,7 @@ export default connect(mapToProps, actions)(reduxForm({
 				if (result === true) {
 					const newValues = {...values, user: userInfo.user, language: language, subject: values.email};
 					sendMessage(values);
-					createMessageTemplate({API_URL: window.API_URL}, newValues);
+					createMessageTemplate({API_URL: API_URL}, newValues);
 					handleClose();
 					history.push('/');
 				} else {

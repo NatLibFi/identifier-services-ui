@@ -53,10 +53,10 @@ export default connect(null, actions)(withRouter(props => {
 		if (props.homePage) {
 			history.push('/publishers/', {searchText: inputVal});
 			// eslint-disable-next-line no-undef
-			searchFunction({API_URL: window.API_URL, searchText: inputVal, token: cookie['login-cookie']});
+			searchFunction({API_URL: API_URL, searchText: inputVal, token: cookie['login-cookie']});
 		} else {
 			// eslint-disable-next-line no-undef
-			searchFunction({API_URL: window.API_URL, searchText: inputVal, token: cookie['login-cookie']});
+			searchFunction({API_URL: API_URL, searchText: inputVal, token: cookie['login-cookie']});
 			setSearchInputVal(inputVal);
 		}
 	};

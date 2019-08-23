@@ -78,7 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchPublisher({API_URL: window.API_URL}, match.params.id, cookie['login-cookie']);
+		fetchPublisher({API_URL: API_URL}, match.params.id, cookie['login-cookie']);
 	}, []);
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -265,7 +265,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		updatePublisher({API_URL: window.API_URL}, match.params.id, updateValues, token);
+		updatePublisher({API_URL: API_URL}, match.params.id, updateValues, token);
 		setIsEdit(false);
 	};
 

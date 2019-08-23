@@ -65,14 +65,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		fetchUserRequest({API_URL: window.API_URL}, match.params.id, token);
+		fetchUserRequest({API_URL: API_URL}, match.params.id, token);
 		const requestToUpdate = {
 			...usersRequest,
 			state: 'inProgress',
 			backgroundProcessingState: 'inProgress'
 		};
 		// eslint-disable-next-line no-unused-expressions, no-undef
-		usersRequest.id && updateUserRequest({API_URL: window.API_URL}, match.params.id, requestToUpdate, token);
+		usersRequest.id && updateUserRequest({API_URL: API_URL}, match.params.id, requestToUpdate, token);
 	}, [cookie, fetchUserRequest, match.params.id, updateUserRequest, usersRequest]);
 
 	const handleEditClick = () => {

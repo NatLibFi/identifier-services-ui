@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -53,9 +51,9 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		// eslint-disable-next-line no-unused-expressions, no-undef
-		window.API_URL !== undefined && searchPublisher({API_URL: window.API_URL, searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-	// eslint-disable-next-line no-undef
-	}, [window.API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
+		API_URL !== undefined && searchPublisher({API_URL: API_URL, searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
+	// eslint-disable-next-line react-hooks/exhaustive-deps, no-undef
+	}, [API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
 	const handleChange = name => event => {
 		setActiveCheck({...activeCheck, [name]: event.target.checked});

@@ -49,7 +49,7 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		fetchMessage({API_URL: window.API_URL}, match.params.id, token);
+		fetchMessage({API_URL: API_URL}, match.params.id, token);
 	}, [cookie, fetchMessage, match.params.id]);
 
 	let messageDetail;

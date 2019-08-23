@@ -91,7 +91,7 @@ export default connect(null, actions)(reduxForm({
 				familyName: values.familyName.toLowerCase()
 			};
 			// eslint-disable-next-line no-undef
-			createUserRequest({API_URL: window.API_URL}, newUser, token);
+			createUserRequest({API_URL: API_URL}, newUser, token);
 		}
 
 		const component = (
