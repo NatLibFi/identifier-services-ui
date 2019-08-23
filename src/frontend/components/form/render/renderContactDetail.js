@@ -106,22 +106,51 @@ export default connect(state => ({
 
 	const component = (
 		<>
-			{data.map(list =>
-				(
-					<Grid key={list.name} item xs={12}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderTextField}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							props={{errors}}
-						/>
-					</Grid>
-				))}
+			{data.map(list => {
+				switch (list.width) {
+					case 'half':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									props={{errors}}
+								/>
+							</Grid>
+						);
+					case 'full':
+						return (
+							<Grid key={list.name} item xs={12}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									props={{errors}}
+								/>
+							</Grid>
+						);
+					default:
+						return null;
+				}
+			}
+			)}
 			{touched && error && <span>{error}</span>}
 			{fieldName === 'contactDetails' &&
 				<>
+					<Fab
+						aria-label="Add"
+						color="primary"
+						size="small"
+						title="Add more Contact Detail"
+						onClick={handleContactClick}
+					>
+						<AddIcon/>
+					</Fab>
 					{values && values.contactDetails && values.contactDetails.map((item, index) => {
 						return (
 							<Chip
@@ -131,17 +160,18 @@ export default connect(state => ({
 							/>
 						);
 					})}
+
+				</> || fieldName === 'affiliates' &&
+				<div className={classes.affiliatesAdd}>
 					<Fab
 						aria-label="Add"
+						size="small"
 						color="primary"
 						title="Add more Contact Detail"
-						//disabled={!valid}
-						onClick={handleContactClick}
+						onClick={handleAffiliatesClick}
 					>
 						<AddIcon/>
 					</Fab>
-				</> || fieldName === 'affiliates' &&
-				<>
 					{values && values.affiliates && values.affiliates.map((item, index) => {
 						return (
 							<Chip
@@ -151,16 +181,8 @@ export default connect(state => ({
 							/>
 						);
 					})}
-					<Fab
-						aria-label="Add"
-						color="primary"
-						title="Add more Contact Detail"
-						disabled={touched && Boolean(error)}
-						onClick={handleAffiliatesClick}
-					>
-						<AddIcon/>
-					</Fab>
-				</> || null
+					
+				</div> || null
 			}
 		</>
 	);

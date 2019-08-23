@@ -166,141 +166,151 @@ const fieldArray = [
 		]
 	},
 	{
-		title: 'AffiliateOf',
-		affiliateOf: [
+		organizationalDetails1: [
 			{
-				name: 'affiliateOfAddress',
-				type: 'text',
-				label: 'Address*',
-				width: 'half'
-			},
-			{
-				name: 'affiliateOfAddressDetails',
-				type: 'text',
-				label: 'Address Details',
-				width: 'half'
-			},
-			{
-				name: 'affiliateOfCity',
-				type: 'text',
-				label: 'City*',
-				width: 'half'
-			},
-			{
-				name: 'affiliateOfZip',
-				type: 'text',
-				label: 'Zip*',
-				width: 'half'
-			},
-			{
-				name: 'affiliateOfName',
-				type: 'text',
-				label: 'Name*',
-				width: 'half'
-			}
+				title: 'AffiliateOf',
+				fields: [
+					{
+						name: 'affiliateOfAddress',
+						type: 'text',
+						label: 'Address*',
+						width: 'half'
+					},
+					{
+						name: 'affiliateOfAddressDetails',
+						type: 'text',
+						label: 'Address Details',
+						width: 'half'
+					},
+					{
+						name: 'affiliateOfCity',
+						type: 'text',
+						label: 'City*',
+						width: 'half'
+					},
+					{
+						name: 'affiliateOfZip',
+						type: 'text',
+						label: 'Zip*',
+						width: 'half'
+					},
+					{
+						name: 'affiliateOfName',
+						type: 'text',
+						label: 'Name*',
+						width: 'half'
+					}
 
-		]
-	},
-	{
-		affiliates: [
-			{
-				name: 'affiliatesAddress',
-				type: 'text',
-				label: 'Address*',
-				width: 'full'
+				]
 			},
 			{
-				name: 'affiliatesAddressDetails',
-				type: 'text',
-				label: 'Address Details',
-				width: 'full'
-			},
-			{
-				name: 'affiliatesCity',
-				type: 'text',
-				label: 'City*',
-				width: 'full'
-			},
-			{
-				name: 'affiliatesZip',
-				type: 'text',
-				label: 'Zip*',
-				width: 'full'
-			},
-			{
-				name: 'affiliatesName',
-				type: 'text',
-				label: 'Name*',
-				width: 'full'
-			}
-
-		]
-	},
-	{
-		distributorOf: [
-			{
-				name: 'distributorOfAddress',
-				type: 'text',
-				label: 'Address*',
-				width: 'full'
-			},
-			{
-				name: 'distributorOfAddressDetails',
-				type: 'text',
-				label: 'Address Details',
-				width: 'full'
-			},
-			{
-				name: 'distributorOfCity',
-				type: 'text',
-				label: 'City*',
-				width: 'full'
-			},
-			{
-				name: 'distributorOfZip',
-				type: 'text',
-				label: 'Zip*',
-				width: 'full'
-			},
-			{
-				name: 'distributorOfName',
-				type: 'text',
-				label: 'Name*',
-				width: 'full'
+				title: 'Affiliates',
+				fields: [
+					{
+						name: 'affiliatesAddress',
+						type: 'text',
+						label: 'Address*',
+						width: 'half'
+					},
+					{
+						name: 'affiliatesAddressDetails',
+						type: 'text',
+						label: 'Address Details',
+						width: 'half'
+					},
+					{
+						name: 'affiliatesCity',
+						type: 'text',
+						label: 'City*',
+						width: 'half'
+					},
+					{
+						name: 'affiliatesZip',
+						type: 'text',
+						label: 'Zip*',
+						width: 'half'
+					},
+					{
+						name: 'affiliatesName',
+						type: 'text',
+						label: 'Name*',
+						width: 'half'
+					}
+				]
 			}
 		]
 	},
 	{
-		distributor: [
+		organizationalDetails2: [
 			{
-				name: 'distributorAddress',
-				type: 'text',
-				label: 'Address*',
-				width: 'full'
+				title: 'DistributorOf',
+				fields: [
+					{
+						name: 'distributorOfAddress',
+						type: 'text',
+						label: 'Address*',
+						width: 'half'
+					},
+					{
+						name: 'distributorOfAddressDetails',
+						type: 'text',
+						label: 'Address Details',
+						width: 'half'
+					},
+					{
+						name: 'distributorOfCity',
+						type: 'text',
+						label: 'City*',
+						width: 'half'
+					},
+					{
+						name: 'distributorOfZip',
+						type: 'text',
+						label: 'Zip*',
+						width: 'half'
+					},
+					{
+						name: 'distributorOfName',
+						type: 'text',
+						label: 'Name*',
+						width: 'half'
+					}
+				]
 			},
 			{
-				name: 'distributorAddressDetails',
-				type: 'text',
-				label: 'Address Details',
-				width: 'full'
-			},
-			{
-				name: 'distributorCity',
-				type: 'text',
-				label: 'City*',
-				width: 'full'
-			},
-			{
-				name: 'distributorZip',
-				type: 'text',
-				label: 'Zip*',
-				width: 'full'
-			},
-			{
-				name: 'distributorName',
-				type: 'text',
-				label: 'Name*',
-				width: 'full'
+				title: 'Distributor',
+				fields: [
+					{
+						name: 'distributorAddress',
+						type: 'text',
+						label: 'Address*',
+						width: 'half'
+					},
+					{
+						name: 'distributorAddressDetails',
+						type: 'text',
+						label: 'Address Details',
+						width: 'half'
+					},
+					{
+						name: 'distributorCity',
+						type: 'text',
+						label: 'City*',
+						width: 'half'
+					},
+					{
+						name: 'distributorZip',
+						type: 'text',
+						label: 'Zip*',
+						width: 'half'
+					},
+					{
+						name: 'distributorName',
+						type: 'text',
+						label: 'Name*',
+						width: 'half'
+					}
+				]
 			}
 
 		]
@@ -330,15 +340,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 0:
 					return element(fieldArray[0].basicInformation, classes, clearFields);
 				case 1:
-					return fieldArrayElement(fieldArray[1].contactDetails, 'contactDetails', clearFields, valid);
+					return fieldArrayElement(fieldArray[1].contactDetails, 'contactDetails', clearFields);
 				case 2:
-					return withFormTitle(fieldArray[2], classes);
+					return withFormTitle(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 3:
-					return fieldArrayElement(fieldArray[3].affiliates, 'affiliates', clearFields);
-				case 4:
-					return element(fieldArray[4].distributorOf, classes);
-				case 5:
-					return element(fieldArray[5].distributor, classes);
+					return withFormTitle(fieldArray[3].organizationalDetails2, classes);
 				default:
 					return 'Unknown step';
 			}
@@ -378,7 +384,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
 				<Stepper alternativeLabel activeStep={activeStep}>
-					{console.log('****', steps)}
 					{steps.map(label => (
 						<Step key={label}>
 							<StepLabel className={classes.stepLabel}>
@@ -532,26 +537,30 @@ function element(array, classes, clearFields) {
 	);
 }
 
-function withFormTitle(obj, classes) {
+function withFormTitle(arr, classes, fieldName, clearFields) {
 	return (
 		<>
-			<div className={classes.formHead}>
-				<Typography gutterBottom variant="h6">
-					{obj.title}
-				</Typography>
-			</div>
-			{element(obj.affiliateOf, classes)}
+			{arr.map(item => (
+				<Grid key={item.title} container spacing={3} direction="row">
+					<div className={classes.formHead}>
+						<Typography variant="h6">
+							{item.title}
+						</Typography>
+					</div>
+					{item.title === 'Affiliates' ? fieldArrayElement(item.fields, fieldName, clearFields) : element(item.fields, classes, clearFields)}
+				</Grid>
+
+			))}
 		</>
 	);
 }
 
-function fieldArrayElement(data, fieldName, clearFields, valid) {
+function fieldArrayElement(data, fieldName, clearFields) {
 	return (
 		<FieldArray
 			component={renderContactDetail}
-			className="full"
 			name={fieldName}
-			props={{clearFields, data, fieldName, valid}}
+			props={{clearFields, data, fieldName}}
 		/>
 	);
 }

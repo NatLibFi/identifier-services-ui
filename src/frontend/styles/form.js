@@ -49,8 +49,7 @@ const useStyles = makeStyles({
 		width: '100%'
 	},
 	arrayString: {
-		height: '40px',
-		width: '95%'
+		width: '50%'
 	},
 	selectField: {
 		height: '40px',
@@ -82,7 +81,14 @@ const useStyles = makeStyles({
 	},
 	formHead: {
 		width: '100%',
-		paddingLeft: '10px'
+		padding: '10px',
+		background: '#e0dfe4',
+		textAlign: 'center',
+		marginTop: '50px'
+	},
+	affiliatesAdd: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 });
 
