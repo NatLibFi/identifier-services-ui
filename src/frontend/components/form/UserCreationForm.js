@@ -87,7 +87,7 @@ const fieldArray = [
 	}
 ];
 
-export default connect(actions)(reduxForm({
+export default connect(null, actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
