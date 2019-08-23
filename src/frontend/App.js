@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -29,12 +26,13 @@
  *
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {Switch, Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import {IntlProvider} from 'react-intl';
+import {useCookies} from 'react-cookie';
 
 import Home from './components/main';
 import TopNav from './components/navbar/topNav';
@@ -64,14 +62,20 @@ import * as actions from './store/actions';
 export default connect(mapStateToProps, actions)(withRouter(props => {
 	const {lang, userInfo, isAuthenticated, history, location, responseMessage} = props;
 	const {modal} = location.state !== undefined && location.state;
+	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
+	const [cookie] = useCookies('login-cookie');
+	const token = cookie['login-cookie'];
+
+	useEffect(() => {
+		setIsAuthenticatedState(isAuthenticated);
+	}, [isAuthenticated, token]);
 
 	const routeField = [
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
 		{path: '/publishers/:id', component: PublishersList}
-		
 	];
-	
+
 	const privateRoutesList = [
 		{path: '/users', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
 		{path: '/users/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
@@ -118,12 +122,12 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const component = (
 		<IntlProvider locale={lang} messages={translations[lang]}>
 			<MuiThemeProvider theme={theme}>
-				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticated} history={history}/>
+				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
-				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticated}/>
+				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
 				<section>
 					{
-						isAuthenticated ? (userInfo.role.includes('publisher')) &&
+						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
 						<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}

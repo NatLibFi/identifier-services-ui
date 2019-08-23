@@ -29,7 +29,6 @@ import fetch from 'node-fetch';
 import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ERROR} from './types';
 import {setLoader, success, fail} from './commonAction';
 
-
 export const fetchIsbnIsmnList = ({API_URL, token, offset}) => async dispatch => {
 	dispatch(setLoader());
 	try {
@@ -53,7 +52,7 @@ export const fetchIsbnIsmnList = ({API_URL, token, offset}) => async dispatch =>
 	}
 };
 
-// export const createUser = (values, token) => async () => {
+// Export const createUser = (values, token) => async () => {
 // 	const response = await fetch(`${API_URL}/users`, {
 // 		method: 'POST',
 // 		headers: {
@@ -95,7 +94,7 @@ export const fetchIsbnIsmn = ({API_URL, id, token}) => async dispatch => {
 	}
 };
 
-// export const fetchUserRequest = (id, token) => async dispatch => {
+// Export const fetchUserRequest = (id, token) => async dispatch => {
 // 	dispatch(setLoader());
 // 	try {
 // 		const response = await fetch(`${API_URL}/requests/users/${id}`, {

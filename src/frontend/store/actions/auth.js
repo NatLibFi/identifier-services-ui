@@ -25,21 +25,18 @@
  * for the JavaScript code in this file.
  *
  */
-import {AUTHENTICATION} from './types';
+import {AUTHENTICATION, LOG_OUT} from './types';
 import fetch from 'node-fetch';
 
-const AUTHENTICATION_URL = '/auth';
-const LOGOUT_URL = '/logout';
-
 export const normalLogin = values => async dispatch => {
-	const response = await fetch(AUTHENTICATION_URL, {
+	const response = await fetch('/auth', {
 		method: 'POST',
 		body: JSON.stringify(values),
 		headers: {'Content-Type': 'application/json'}
 	});
 	const result = await response.json();
 
-	dispatch(getUserInfo(result.token));
+	dispatch(getUserInfo(result.API_URL, result.token));
 	return response.status;
 };
 
@@ -60,8 +57,11 @@ export const getUserInfo = (API_URL, token) => async dispatch => {
 };
 
 export const logOut = () => async dispatch => {
-	await fetch(LOGOUT_URL, {
+	await fetch('/logout', {
 		method: 'GET'
 	});
-	dispatch(getUserInfo({}));
+	dispatch({
+		type: LOG_OUT,
+		payload: false
+	});
 };
