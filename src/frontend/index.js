@@ -45,6 +45,8 @@ import {getUserInfo} from './store/actions/auth';
 
 run();
 async function run() {
+	await getConf();
+
 	addLocaleData([...en, ...fi, ...sv]);
 
 	const composeEnhancers =
@@ -53,8 +55,6 @@ async function run() {
 			compose;
 
 	const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
-
-	await getConf();
 
 	if (localStorage.allLang) {
 		store.dispatch(setLocale(localStorage.allLang));
@@ -84,11 +84,12 @@ async function run() {
 		const result = await temp.json();
 		Object.keys(result).forEach(key => {
 			window[key] = result[key];
-			const cookie = readCookie('login-cookie');
-			if (cookie) {
-				store.dispatch(getUserInfo(result[key], cookie));
-			}
 		});
+	}
+
+	const cookie = readCookie('login-cookie');
+	if (cookie) {
+		store.dispatch(getUserInfo(cookie));
 	}
 
 	ReactDOM.render(

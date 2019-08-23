@@ -36,11 +36,12 @@ export const normalLogin = values => async dispatch => {
 	});
 	const result = await response.json();
 
-	dispatch(getUserInfo(result.API_URL, result.token));
+	dispatch(getUserInfo(result));
 	return response.status;
 };
 
-export const getUserInfo = (API_URL, token) => async dispatch => {
+export const getUserInfo = token => async dispatch => {
+	// eslint-disable-next-line no-undef
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {

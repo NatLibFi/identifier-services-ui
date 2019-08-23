@@ -127,7 +127,7 @@ app.post('/auth', async (req, res) => {
 	});
 	const token = result.headers.get('Token');
 	res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
-	res.status(200).json({token, API_URL});
+	res.status(200).json(token);
 });
 
 app.get('/logOut', (req, res) => {

@@ -28,7 +28,7 @@
  */
 
 export const handleMenuClick = (path, token) => async () => {
-	const result = await fetch(`http://localhost:8081/${path}`, {
+	const result = await fetch(`${API_URL}/{path}`, {
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer ' + token

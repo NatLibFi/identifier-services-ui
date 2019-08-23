@@ -33,6 +33,7 @@ import {useCookies} from 'react-cookie';
 
 import SearchComponent from '../SearchComponent';
 import useStyles from '../../styles/publisherLists';
+import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
@@ -41,6 +42,7 @@ import UserRequestForm from '../form/UserRequestForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
+	const modalClasses = useModalStyles();
 	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = useState('');
@@ -118,9 +120,11 @@ export default connect(mapStateToProps, actions)(props => {
 				</Tabs>
 				{usersData}
 			</Grid>
-			<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" color="primary">
-				<UserRequestForm {...props}/>
-			</ModalLayout>
+			<Grid item xs={12} className={classes.publisherListSearch}>
+				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
+					<UserRequestForm {...props}/>
+				</ModalLayout>
+			</Grid>
 		</Grid>
 	);
 	return {
