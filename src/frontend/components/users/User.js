@@ -67,7 +67,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		fetchUser({API_URL: API_URL}, match.params.id, token);
+		fetchUser(match.params.id, token);
 	}, [user === undefined]);
 
 	const handleEditClick = () => {

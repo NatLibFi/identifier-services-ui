@@ -47,7 +47,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchIsbnIsmnList({API_URL: API_URL, token: cookie['login-cookie'], offset: lastCursor});
+		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors]);
 
 	const handleTableRowClick = id => {

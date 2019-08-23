@@ -41,6 +41,7 @@ const initialState = {
 	queryDocCount: null,
 
 	loading: false,
+	listLoading: false,
 	error: {}
 };
 
@@ -49,13 +50,14 @@ export default function (state = initialState, action) {
 		case LOADER:
 			return {
 				...state,
-				loading: true
+				loading: true,
+				listLoading: true
 			};
 		case PUBLISHERS_LIST:
 			return {
 				...state,
 				publishersList: action.payload,
-				loading: false
+				listLoading: false
 			};
 		case PUBLISHER:
 			return {
@@ -91,7 +93,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 
 		default:

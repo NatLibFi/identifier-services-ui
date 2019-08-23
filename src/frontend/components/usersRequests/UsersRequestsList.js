@@ -52,7 +52,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchUsersRequestsList({API_URL: API_URL, inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
+		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
 
 	const handleTableRowClick = id => {

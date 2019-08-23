@@ -51,7 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		// eslint-disable-next-line no-unused-expressions, no-undef
-		API_URL !== undefined && searchPublisher({API_URL: API_URL, searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
+		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
 	// eslint-disable-next-line react-hooks/exhaustive-deps, no-undef
 	}, [API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
@@ -126,7 +126,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.loading,
+		loading: state.publisher.listLoading,
 		searchedPublishers: state.publisher.searchedPublisher,
 		publishersList: state.publisher.publishersList,
 		offset: state.publisher.offset,
