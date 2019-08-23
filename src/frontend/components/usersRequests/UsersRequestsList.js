@@ -36,6 +36,8 @@ import useStyles from '../../styles/publisherLists';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
+import ModalLayout from '../ModalLayout';
+import UserRequestForm from '../form/UserRequestForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
@@ -114,9 +116,11 @@ export default connect(mapStateToProps, actions)(props => {
 					<Tab className={classes.tab} value="rejected" label="Rejected"/>
 					<Tab className={classes.tab} value="" label="ShowAll"/>
 				</Tabs>
-
 				{usersData}
 			</Grid>
+			<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" color="primary">
+				<UserRequestForm {...props}/>
+			</ModalLayout>
 		</Grid>
 	);
 	return {

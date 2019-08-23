@@ -45,8 +45,6 @@ import {getUserInfo} from './store/actions/auth';
 
 run();
 async function run() {
-	await getConf();
-
 	addLocaleData([...en, ...fi, ...sv]);
 
 	const composeEnhancers =
@@ -55,6 +53,8 @@ async function run() {
 			compose;
 
 	const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
+
+	await getConf();
 
 	if (localStorage.allLang) {
 		store.dispatch(setLocale(localStorage.allLang));
