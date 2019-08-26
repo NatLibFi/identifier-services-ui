@@ -27,25 +27,22 @@
  */
 import React from 'react';
 import {connect} from 'react-redux';
-import {Field, FieldArray, reduxForm} from 'redux-form';
+import {Field, reduxForm} from 'redux-form';
 import {Button, Grid} from '@material-ui/core';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import {ToggleButton, ToggleButtonGroup} from '@material-ui/lab';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {useCookies} from 'react-cookie';
 
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
-import renderCheckboxes from './render/renderCheckboxes';
 import renderSelect from './render/renderSelect';
-import renderObjectArray from './render/renderObjectArray';
 
 const roleOption = [
 	{label: 'system', value: 'system'},
 	{label: 'admin', value: 'admin'},
-	{label: 'publisher-admin', value: 'publisherAdmin'},
+	{label: 'publisher admin', value: 'publisher-admin'},
 	{label: 'publisher', value: 'publisher'}
 ];
 
@@ -56,13 +53,6 @@ const selectOption = [
 ];
 
 const fieldArray = [
-	{
-		name: 'role',
-		type: 'select',
-		label: 'Role',
-		option: roleOption,
-		width: 'half'
-	},
 	{
 		name: 'givenName',
 		type: 'text',
@@ -76,11 +66,43 @@ const fieldArray = [
 		width: 'half'
 	},
 	{
-		name: 'defaultLanguage',
+		name: 'email',
+		type: 'email',
+		label: 'Email',
+		width: 'half'
+	},
+	{
+		name: 'publisher',
+		type: 'text',
+		label: 'Publisher',
+		width: 'half'
+	},
+	{
+		name: 'backgroundProcessingState',
+		type: 'text',
+		label: 'Background Processing State',
+		width: 'half'
+	},
+	{
+		name: 'createdResource',
+		type: 'text',
+		label: 'Created Resource',
+		width: 'half'
+	},
+	{
+		name: 'role',
+		type: 'select',
+		label: 'Role',
+		option: roleOption,
+		width: 'half'
+	},
+	{
+		name: 'preferences[defaultLanguage]',
 		type: 'select',
 		label: 'Choose Language',
 		option: selectOption,
-		width: 'half'
+		width: 'half',
+		defaultValue: 'fin'
 	}
 ];
 
@@ -89,10 +111,8 @@ export default connect(null, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, valid, createUser, pristine} = props;
+		const {handleSubmit, clearFields, valid, setNewValues, pristine} = props;
 		const classes = useStyles();
-		const [cookie] = useCookies('login-cookie');
-		const token = cookie['login-cookie'];
 		const [status, setStatus] = React.useState('');
 		const [rejectTextArea, setRejectTextArea] = React.useState(false);
 		const [rejectedText, setRejectText] = React.useState('');
@@ -106,17 +126,15 @@ export default connect(null, actions)(reduxForm({
 				...values,
 				givenName: values.givenName.toLowerCase(),
 				familyName: values.familyName.toLowerCase(),
-				role: values.role[0],
-				preferences: {defaultLanguage: values.defaultLanguage}
+				rejectionReason: rejectedText,
+				role: values.role
 			};
 			// eslint-disable-next-line no-unused-expressions, no-undef, no-alert
 			confirm('Please confirm again to accept') === true ?
 				(
-					/* global API_URL */
-					/* eslint no-undef: "error" */
-					delete newUser.defaultLanguage && createUser({API_URL: API_URL}, newUser, token)
+					delete newUser.defaultLanguage && setNewValues(newUser)
 				) :
-				null;
+				setStatus('');
 		}
 
 		function handleChange(event, values) {
@@ -132,6 +150,8 @@ export default connect(null, actions)(reduxForm({
 		}
 
 		function handleReject() {
+			setRejectText(rejectedText);
+			setRejectTextArea(false);
 		}
 
 		const component = (
@@ -142,11 +162,11 @@ export default connect(null, actions)(reduxForm({
 					</Grid>
 					<Grid>
 						<Grid item>
-							<ToggleButtonGroup exclusive value={status} onChange={handleChange}>
-								<Button disabled={rejectTextArea || !valid || pristine} value="Accept" type="submit">
+							<ToggleButtonGroup exclusive className={classes.toggleBtnGrp} value={status} onChange={handleChange}>
+								<ToggleButton disabled={rejectTextArea || !valid || pristine} value="Accept" type="submit">
 									Accept
-								</Button>
-								<ToggleButton value="Reject" onClick={handleOnClick}>
+								</ToggleButton>
+								<ToggleButton disabled={Boolean(status === 'Accept')} value="Reject" onClick={handleOnClick}>
 									Reject
 								</ToggleButton>
 							</ToggleButtonGroup>
@@ -155,12 +175,13 @@ export default connect(null, actions)(reduxForm({
 							{rejectTextArea ?
 								<div>
 									<TextareaAutosize
+										style={{width: '100%'}}
 										aria-label="Minimum height"
 										rows={5}
-										placeholder="Minimum 3 rows"
+										placeholder="Rejection reason here..."
 										value={rejectedText}
 										onChange={handleRejectTextChange}
-									/>;
+									/>
 									<Button variant="outlined" color="primary" onClick={handleReject}>Submit</Button>
 									<Button variant="outlined" color="primary" onClick={e => setRejectTextArea(false) || handleChange(e, '')}>Cancel</Button>
 								</div> :
@@ -187,52 +208,29 @@ export default connect(null, actions)(reduxForm({
 		};
 	}));
 
-function element(array, classes, clearFields) {
+function element(array, classes) {
 	return array.map(list =>
-		// eslint-disable-next-line no-negated-condition
-		((list.type === 'arrayObject') ?
+		(list.type === 'select') ?
 			<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-				<FieldArray
-					className={`${classes.arrayString} ${list.width}`}
-					component={renderObjectArray}
+				<Field
+					className={`${classes.selectField} ${list.width}`}
+					component={renderSelect}
+					label={list.label}
 					name={list.name}
 					type={list.type}
-					label={list.label}
-					props={{clearFields, list}}
+					options={list.option}
+					props={{defaultValue: list.defaultValue}}
 				/>
 			</Grid> :
-			((list.type === 'check') ?
-				<Grid key={list.name} item xs={(list.width === 'full') ? 12 : 6}>
-					<Field
-						className={`${classes.textField} ${list.width}`}
-						component={renderCheckboxes}
-						label={list.label}
-						name={list.name}
-						type={list.type}
-						options={list.option}
-						props={{name: list.name}}
-					/>
-				</Grid> :
-				((list.type === 'select') ?
-					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderSelect}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							options={list.option}
-						/>
-					</Grid> :
 
-					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderTextField}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-						/>
-					</Grid>)))
+			<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+				<Field
+					className={`${classes.textField} ${list.width}`}
+					component={renderTextField}
+					label={list.label}
+					name={list.name}
+					type={list.type}
+				/>
+			</Grid>
 	);
 }

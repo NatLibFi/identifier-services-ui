@@ -32,8 +32,8 @@ import {setLoader, success, fail} from './commonAction';
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
 			headers: {
@@ -54,20 +54,22 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	}
 };
 
-// Export const createUser = (values, token) => async () => {
-// 	const response = await fetch(`${API_URL}/users`, {
-// 		method: 'POST',
-// 		headers: {
-// 			Authorization: 'Bearer ' + token,
-// 			'Content-Type': 'application/json'
-// 		},
-// 		credentials: 'same-origin',
-// 		body: JSON.stringify(values)
-// 	});
-// 	await response.json();
-// };
+export const createUser = (values, token) => async () => {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
+	const response = await fetch(`${API_URL}/users`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(values)
+	});
+	await response.json();
+};
 
-// export const createUserRequest = (values, token) => async () => {
+// Export const createUserRequest = (values, token) => async () => {
 // 	const response = await fetch(`${API_URL}/requests/users`, {
 // 		method: 'POST',
 // 		headers: {
@@ -83,8 +85,8 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/${id}`, {
 			method: 'GET',
 			headers: {

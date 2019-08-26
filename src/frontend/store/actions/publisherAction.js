@@ -32,8 +32,8 @@ import {setLoader, success, fail} from './commonAction';
 export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'GET',
 			headers: token ? {
@@ -52,8 +52,8 @@ export const fetchPublisher = (id, token) => async dispatch => {
 export const updatePublisher = (id, values, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'PUT',
 			headers: {
@@ -91,8 +91,8 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 			})
 		};
 
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/query`, properties);
 
 		const result = await response.json();
@@ -105,8 +105,8 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 export const fetchPublishersRequestsList = (searchText, token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
 			method: 'POST',
 			headers: {
@@ -130,8 +130,8 @@ export const fetchPublishersRequestsList = (searchText, token, offset) => async 
 export const fetchPublisherRequest = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* eslint-disable no-undef */
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'GET',
 			headers: {

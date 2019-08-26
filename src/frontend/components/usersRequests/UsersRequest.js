@@ -60,19 +60,21 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
+	const token = cookie['login-cookie'];
+	const [newValues, setNewValues] = useState({});
 
 	useEffect(() => {
-		const token = cookie['login-cookie'];
-		// eslint-disable-next-line no-undef
 		fetchUserRequest(match.params.id, token);
+	}, [cookie, fetchUserRequest, match.params.id, token]);
+
+	function handleDoneClick() {
 		const requestToUpdate = {
-			...usersRequest,
+			...newValues,
 			state: 'inProgress',
 			backgroundProcessingState: 'inProgress'
 		};
-		// eslint-disable-next-line no-unused-expressions, no-undef
-		usersRequest.id && updateUserRequest(match.params.id, requestToUpdate, token);
-	}, [cookie, fetchUserRequest, match.params.id, updateUserRequest, usersRequest]);
+		updateUserRequest(match.params.id, requestToUpdate, token);
+	}
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -90,7 +92,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			<>
 				<Grid item xs={12}>
 					{isEdit ?
-						<UserCreationForm/> :
+						<UserCreationForm setNewValues={setNewValues}/> :
 						<List>
 							<Grid container xs={12}>
 								{Object.keys(usersRequest).map(key => (
@@ -129,22 +131,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</Typography>
 				{isEdit ?
 					<div className={classes.publisher}>
-						<form>
-							<Grid container spacing={3} className={classes.publisherSpinner}>
-								{userRequestDetail}
-							</Grid>
-							<div className={classes.btnContainer}>
-								<Button onClick={handleCancel}>Cancel</Button>
-								<Fab
-									color="primary"
-									size="small"
-									title="Done"
-								// OnClick={handleEditClick}
-								>
-									<DoneIcon/>
-								</Fab>
-							</div>
-						</form>
+						<Grid container spacing={3} className={classes.publisherSpinner}>
+							{userRequestDetail}
+						</Grid>
+						<div className={classes.btnContainer}>
+							<Button onClick={handleCancel}>Cancel</Button>
+							<Fab
+								color="primary"
+								size="small"
+								title="Done"
+								onClick={handleDoneClick}
+							>
+								<DoneIcon/>
+							</Fab>
+						</div>
 					</div> :
 					<div className={classes.publisher}>
 						<Grid container spacing={3} className={classes.publisherSpinner}>

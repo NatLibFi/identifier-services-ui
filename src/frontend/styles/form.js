@@ -88,6 +88,12 @@ const useStyles = makeStyles({
 	},
 	authorDetails: {
 		margin: '15px 0'
+	},
+	toggleBtnGrp: {
+		margin: '20px 0',
+		'& button': {
+			height: 'fit-content'
+		}
 	}
 });
 
