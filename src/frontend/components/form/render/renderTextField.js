@@ -35,7 +35,7 @@ import useStyles from '../../../styles/error';
 export default function (props) {
 	const {input, label, className, meta, errors} = props;
 	const {touched, error} = meta;
-
+	console.log('---', error)
 	const classes = useStyles();
 	const component = (
 		<>

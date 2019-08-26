@@ -31,7 +31,6 @@ import {Checkbox, FormControlLabel} from '@material-ui/core';
 
 export default function (props) {
 	const {input, label} = props;
-
 	const component = (
 		<FormControlLabel
 			control={

@@ -62,7 +62,6 @@ const useStyles = makeStyles({
 		flexDirection: 'row'
 	},
 	textArea: {
-		height: '180px',
 		width: '100%'
 	},
 	stepLabel: {
@@ -81,14 +80,18 @@ const useStyles = makeStyles({
 	},
 	formHead: {
 		width: '100%',
-		padding: '10px',
 		background: '#e0dfe4',
 		textAlign: 'center',
-		marginTop: '50px'
+		marginTop: '25px',
+		borderRadius: '5px'
 	},
-	affiliatesAdd: {
+	affiliatesAddBtn: {
 		display: 'flex',
 		alignItems: 'center'
+	},
+	captcha: {
+		marginTop: '10px',
+		width: '40%'
 	}
 });
 

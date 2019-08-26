@@ -43,7 +43,9 @@ export default connect(state => ({
 	const [errors, setErrors] = React.useState();
 	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, valid} = props;
 	const contactDetail = values && {
-		email: values.email
+		email: values.email,
+		givenName: values.givenName,
+		familyName: values.familyName
 	};
 	const affiliate = values && {
 		affiliatesAddress: values.affiliatesAddress,
@@ -75,7 +77,6 @@ export default connect(state => ({
 		setErrors();
 		if (values) {
 			if (affiliate && (affiliate.affiliatesAddress !== undefined ||
-				affiliate.affiliatesAddressDetails !== undefined ||
 				affiliate.affiliatesCity !== undefined ||
 				affiliate.affiliatesZip !== undefined ||
 				affiliate.affiliatesName !== undefined)) {
@@ -83,7 +84,6 @@ export default connect(state => ({
 					if (values.affiliates.some(item => item.affiliatesName === affiliate.affiliatesName)) {
 						setErrors('already exist');
 					} else if (affiliate.affiliatesAddress !== undefined &&
-						affiliate.affiliatesAddressDetails !== undefined &&
 						affiliate.affiliatesCity !== undefined &&
 						affiliate.affiliatesZip !== undefined &&
 						affiliate.affiliatesName !== undefined) {
@@ -91,7 +91,6 @@ export default connect(state => ({
 						clearFields(undefined, false, false, 'affiliatesAddress', 'affiliatesAddressDetails', 'affiliatesCity', 'affiliatesZip', 'affiliatesZip', 'affiliatesName');
 					}
 				} else if (affiliate.affiliatesAddress !== undefined &&
-					affiliate.affiliatesAddressDetails !== undefined &&
 					affiliate.affiliatesCity !== undefined &&
 					affiliate.affiliatesZip !== undefined &&
 					affiliate.affiliatesName !== undefined) {
@@ -162,7 +161,7 @@ export default connect(state => ({
 					})}
 
 				</> || fieldName === 'affiliates' &&
-				<div className={classes.affiliatesAdd}>
+				<div className={classes.affiliatesAddBtn}>
 					<Fab
 						aria-label="Add"
 						size="small"

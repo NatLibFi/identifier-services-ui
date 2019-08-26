@@ -61,7 +61,7 @@ const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'publicationEstimate',
+				name: 'publicationDetails[frequency]',
 				type: 'text',
 				label: 'Publication Estimate*',
 				width: 'half'
@@ -97,38 +97,38 @@ const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'address',
+				name: 'postalAddress[address]',
 				type: 'text',
 				label: 'Address*',
 				width: 'half'
 			},
 			{
-				name: 'addressDetails',
+				name: 'postalAddress[addressDetails]',
 				type: 'text',
 				label: 'Address Details',
 				width: 'half'
 			},
 			{
-				name: 'city',
+				name: 'postalAddress[city]',
 				type: 'text',
 				label: 'City*',
 				width: 'half'
 			},
 			{
-				name: 'zip*',
+				name: 'postalAddress[zip]',
 				type: 'text',
-				label: 'Zip',
+				label: 'Zip*',
 				width: 'half'
 			},
 			{
 				name: 'classification*',
-				type: 'anotherSelect',
+				type: 'multiSelect',
 				label: 'Classification*',
 				options: classificationCodes,
 				width: 'half'
 			},
 			{
-				name: 'public',
+				name: 'postalAddress[public]',
 				type: 'checkbox',
 				label: 'Public',
 				width: 'half'
@@ -171,31 +171,31 @@ const fieldArray = [
 				title: 'AffiliateOf',
 				fields: [
 					{
-						name: 'affiliateOfAddress',
+						name: 'affiliateOf[affiliateOfAddress]',
 						type: 'text',
 						label: 'Address*',
 						width: 'half'
 					},
 					{
-						name: 'affiliateOfAddressDetails',
+						name: 'affiliateOf[affiliateOfAddressDetails]',
 						type: 'text',
 						label: 'Address Details',
 						width: 'half'
 					},
 					{
-						name: 'affiliateOfCity',
+						name: 'affiliateOf[affiliateOfCity]',
 						type: 'text',
 						label: 'City*',
 						width: 'half'
 					},
 					{
-						name: 'affiliateOfZip',
+						name: 'affiliateOf[affiliateOfZip]',
 						type: 'text',
 						label: 'Zip*',
 						width: 'half'
 					},
 					{
-						name: 'affiliateOfName',
+						name: 'affiliateOf[affiliateOfName]',
 						type: 'text',
 						label: 'Name*',
 						width: 'half'
@@ -246,31 +246,31 @@ const fieldArray = [
 				title: 'DistributorOf',
 				fields: [
 					{
-						name: 'distributorOfAddress',
+						name: 'distributorOf[distributorOfAddress]',
 						type: 'text',
 						label: 'Address*',
 						width: 'half'
 					},
 					{
-						name: 'distributorOfAddressDetails',
+						name: 'distributorOf[distributorOfAddressDetails]',
 						type: 'text',
 						label: 'Address Details',
 						width: 'half'
 					},
 					{
-						name: 'distributorOfCity',
+						name: 'distributorOf[distributorOfCity]',
 						type: 'text',
 						label: 'City*',
 						width: 'half'
 					},
 					{
-						name: 'distributorOfZip',
+						name: 'distributorOf[distributorOfZip]',
 						type: 'text',
 						label: 'Zip*',
 						width: 'half'
 					},
 					{
-						name: 'distributorOfName',
+						name: 'distributorOf[distributorOfName]',
 						type: 'text',
 						label: 'Name*',
 						width: 'half'
@@ -281,31 +281,31 @@ const fieldArray = [
 				title: 'Distributor',
 				fields: [
 					{
-						name: 'distributorAddress',
+						name: 'distributor[distributorAddress]',
 						type: 'text',
 						label: 'Address*',
 						width: 'half'
 					},
 					{
-						name: 'distributorAddressDetails',
+						name: 'distributor[distributorAddressDetails]',
 						type: 'text',
 						label: 'Address Details',
 						width: 'half'
 					},
 					{
-						name: 'distributorCity',
+						name: 'distributor[distributorCity]',
 						type: 'text',
 						label: 'City*',
 						width: 'half'
 					},
 					{
-						name: 'distributorZip',
+						name: 'distributor[distributorZip]',
 						type: 'text',
 						label: 'Zip*',
 						width: 'half'
 					},
 					{
-						name: 'distributorName',
+						name: 'distributor[distributorName]',
 						type: 'text',
 						label: 'Name*',
 						width: 'half'
@@ -321,7 +321,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherRegistrationForm',
 	initialValues: {
 		language: 'eng',
-		public: false
+		postalAddress:
+			{
+				public: false
+			}
 	},
 	validate
 })(
@@ -372,6 +375,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					const newPublisher = {
 						...values
 					};
+					console.log('nmew', newPublisher)
 					registerPublisher(newPublisher);
 				} else {
 					// eslint-disable-next-line no-undef
@@ -393,20 +397,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					))}
 				</Stepper>
 				<div className={classes.subContainer}>
-					<Grid container spacing={3} direction="row">
+					<Grid container spacing={2} direction="row">
 						{(getStepContent(activeStep))}
-					</Grid>
-					{
-						activeStep === steps.length - 1 &&
-						<>
-							<Captcha
-								captchaInput={captchaInput}
-								handleCaptchaInput={handleCaptchaInput}/>
-								{/* eslint-disable-next-line react/no-danger */}
-							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-						</>
-					}
 
+						{
+							activeStep === steps.length - 1 &&
+							<Grid item xs={12}>
+								<Captcha
+									captchaInput={captchaInput}
+									handleCaptchaInput={handleCaptchaInput}/>
+								{/* eslint-disable-next-line react/no-danger */}
+								<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+							</Grid>
+						}
+					</Grid>
 					<div className={classes.btnContainer}>
 						<Button disabled={activeStep === 0} onClick={handleBack}>
 							Back
@@ -476,7 +480,7 @@ function element(array, classes, clearFields) {
 						/>
 					</Grid>
 				);
-			case 'anotherSelect':
+			case 'multiSelect':
 				return (
 					<Grid key={list.name} item xs={6}>
 						<Field
@@ -541,7 +545,7 @@ function withFormTitle(arr, classes, fieldName, clearFields) {
 	return (
 		<>
 			{arr.map(item => (
-				<Grid key={item.title} container spacing={3} direction="row">
+				<Grid key={item.title} container spacing={2} direction="row">
 					<div className={classes.formHead}>
 						<Typography variant="h6">
 							{item.title}

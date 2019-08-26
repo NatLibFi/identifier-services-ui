@@ -30,16 +30,21 @@ import React from 'react';
 import CreatableSelect from 'react-select/creatable';
 import {Typography} from '@material-ui/core';
 
-export default function ({input, label, options, meta: {touched, error}, className}) {
+export default function (props) {
+	const {input, label, options, meta, className} = props;
+	console.log('***', meta)
+	const {meta: {touched, error}} = props;
 
 	const component = (
 		<>
 			<Typography variant="caption">Select from dropdown or choose your own</Typography>
 			<CreatableSelect
 				isMulti
+				{...input}
 				options={options}
 				className={className}
 				placeholder={label}
+				value={input.value}
 				onBlur={() => input.onBlur(input.value)}
 				onChange={value => input.onChange(value)}
 			/>
