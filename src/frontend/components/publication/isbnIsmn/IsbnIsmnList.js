@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -48,7 +46,7 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors]);
+	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/publication/isbn-ismn/${id}`, {modal: true});

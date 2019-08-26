@@ -1,6 +1,3 @@
-/* eslint-disable no-negated-condition */
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -64,7 +61,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchIsbnIsmn({id: match.params.id, token: cookie['login-cookie']});
-	}, [isbnIsmn === undefined]);
+	}, [cookie, fetchIsbnIsmn, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -90,23 +87,24 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							return (
 								<ListItem key={key}>
 									<ListItemText>
-										{(typeof isbnIsmn[key] !== 'object') ?
-											<Grid container>
-												<Grid item xs={4}>{key}: </Grid>
-												<Grid item xs={8}>{isbnIsmn[key].toString()}</Grid>
-											</Grid> :
+										{(typeof isbnIsmn[key] === 'object') ?
 											(Array.isArray(isbnIsmn[key]) ?
 												isbnIsmn[key].map(obj =>
 													renderObject(obj)
 												) :
 												renderObject(isbnIsmn[key])
+											) :
+											(
+												<Grid container>
+													<Grid item xs={4}>{key}: </Grid>
+													<Grid item xs={8}>{isbnIsmn[key].toString()}</Grid>
+												</Grid>
 											)
 										}
 									</ListItemText>
 								</ListItem>
 							);
-						}
-						)}
+						})}
 					</Grid>
 				</List>
 			</Grid>

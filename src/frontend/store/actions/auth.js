@@ -41,7 +41,8 @@ export const normalLogin = values => async dispatch => {
 };
 
 export const getUserInfo = token => async dispatch => {
-	// eslint-disable-next-line no-undef
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {

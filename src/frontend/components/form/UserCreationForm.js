@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-alert */
-/* eslint-disable no-unused-expressions */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -112,16 +109,18 @@ export default connect(null, actions)(reduxForm({
 				role: values.role[0],
 				preferences: {defaultLanguage: values.defaultLanguage}
 			};
-			// eslint-disable-next-line no-undef
+			// eslint-disable-next-line no-unused-expressions, no-undef, no-alert
 			confirm('Please confirm again to accept') === true ?
 				(
+					/* global API_URL */
+					/* eslint no-undef: "error" */
 					delete newUser.defaultLanguage && createUser({API_URL: API_URL}, newUser, token)
 				) :
 				null;
 		}
 
 		function handleChange(event, values) {
-			values !== null && setStatus(values);
+			return values !== null && setStatus(values);
 		}
 
 		function handleOnClick() {

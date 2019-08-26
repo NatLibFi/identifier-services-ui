@@ -32,6 +32,7 @@ import {setLoader, success, fail} from './commonAction';
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* eslint-disable no-undef */
 		// eslint-disable-next-line no-undef
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
@@ -82,6 +83,7 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* eslint-disable no-undef */
 		// eslint-disable-next-line no-undef
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/${id}`, {
 			method: 'GET',

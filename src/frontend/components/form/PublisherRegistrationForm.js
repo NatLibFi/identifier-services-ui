@@ -1,9 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-undef */
-/* eslint-disable react/no-danger */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable complexity */
-/* eslint-disable no-negated-condition */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -141,7 +135,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		useEffect(() => {
 			loadSvgCaptcha();
-		}, []);
+		}, [loadSvgCaptcha]);
 
 		const steps = getSteps();
 		function getStepContent(step) {
@@ -171,6 +165,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const handlePublisherRegistration = async values => {
 			if (captchaInput.length === 0) {
+				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
@@ -180,6 +175,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					};
 					registerPublisher(newPublisher);
 				} else {
+					// eslint-disable-next-line no-undef, no-alert
 					alert('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
@@ -207,6 +203,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<Captcha
 								captchaInput={captchaInput}
 								handleCaptchaInput={handleCaptchaInput}/>
+							{/* eslint-disable-next-line react/no-danger */}
 							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 						</>
 					}
@@ -215,10 +212,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Button disabled={activeStep === 0} onClick={handleBack}>
 							Back
 						</Button>
-						{activeStep !== steps.length - 1 ?
+						{activeStep === steps.length - 1 ?
+							null :
 							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
 								Next
-							</Button> : null
+							</Button>
 						}
 						{
 							activeStep === steps.length - 1 &&

@@ -50,7 +50,8 @@ export const sendMessage = values => async dispatch => {
 
 export const createMessageTemplate = values => async dispatch => {
 	dispatch(setLoader());
-	// eslint-disable-next-line no-undef
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/templates`, {
 		method: 'POST',
 		headers: {
@@ -64,7 +65,8 @@ export const createMessageTemplate = values => async dispatch => {
 export const fetchMessagesList = (token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/query`, {
 			method: 'POST',
 			headers: {
@@ -86,7 +88,8 @@ export const fetchMessagesList = (token, offset) => async dispatch => {
 export const fetchMessage = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		// eslint-disable-next-line no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/${id}`, {
 			method: 'GET',
 			headers: {

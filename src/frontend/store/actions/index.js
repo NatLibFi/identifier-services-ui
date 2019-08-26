@@ -60,10 +60,6 @@ export {
 } from './commonAction';
 
 export {
-	handleMenuClick
-} from './navbarActions';
-
-export {
 	createUser,
 	createUserRequest,
 	fetchUser,

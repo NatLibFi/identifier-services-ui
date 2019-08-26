@@ -50,9 +50,10 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions, no-undef
 		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-	// eslint-disable-next-line react-hooks/exhaustive-deps, no-undef
+		/* global API_URL */
+		/* eslint no-undef: "error" */
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
 	const handleChange = name => event => {

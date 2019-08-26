@@ -1,4 +1,3 @@
-/* eslint-disable no-negated-condition */
 
 /**
  *
@@ -97,17 +96,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								{Object.keys(usersRequest).map(key => (
 									<ListItem key={key}>
 										<ListItemText>
-											{(typeof usersRequest[key] !== 'object') ?
-												<Grid container>
-													<Grid item xs={4}>{key}: </Grid>
-													<Grid item xs={8}>{usersRequest[key]}</Grid>
-												</Grid> :
+											{(typeof usersRequest[key] === 'object') ?
 												Object.keys(usersRequest[key]).map(subKey => (
 													<Grid key={subKey} container>
 														<Grid item xs={4}>{subKey}: </Grid>
 														<Grid item xs={8}>{usersRequest[key][subKey]}</Grid>
 													</Grid>
-												))}
+												)) :
+												(
+													<Grid container>
+														<Grid item xs={4}>{key}: </Grid>
+														<Grid item xs={8}>{usersRequest[key]}</Grid>
+													</Grid>
+												)
+											}
 										</ListItemText>
 									</ListItem>
 								))}

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -79,7 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchPublisher(match.params.id, cookie['login-cookie']);
-	}, []);
+	}, [cookie, fetchPublisher, match.params.id]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
