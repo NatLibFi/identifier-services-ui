@@ -31,8 +31,7 @@ import CreatableSelect from 'react-select/creatable';
 import {Typography} from '@material-ui/core';
 
 export default function (props) {
-	const {input, label, options, meta, className} = props;
-	console.log('***', meta)
+	const {input, label, options, className} = props;
 	const {meta: {touched, error}} = props;
 
 	const component = (
@@ -41,6 +40,7 @@ export default function (props) {
 			<CreatableSelect
 				isMulti
 				{...input}
+				error={Boolean}
 				options={options}
 				className={className}
 				placeholder={label}

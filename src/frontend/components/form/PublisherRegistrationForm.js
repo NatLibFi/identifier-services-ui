@@ -121,7 +121,7 @@ const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'classification*',
+				name: 'classification',
 				type: 'multiSelect',
 				label: 'Classification*',
 				options: classificationCodes,
@@ -143,7 +143,7 @@ const fieldArray = [
 		]
 	},
 	{
-		contactDetails: [
+		primaryContact: [
 			{
 				name: 'givenName',
 				type: 'text',
@@ -329,7 +329,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, pristine, valid, registerPublisher, captcha, loadSvgCaptcha, postCaptchaInput} = props;
+		const {handleSubmit, clearFields, pristine, valid, publisherCreationRequest, captcha, loadSvgCaptcha, postCaptchaInput} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
@@ -343,7 +343,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 0:
 					return element(fieldArray[0].basicInformation, classes, clearFields);
 				case 1:
-					return fieldArrayElement(fieldArray[1].contactDetails, 'contactDetails', clearFields);
+					return fieldArrayElement(fieldArray[1].primaryContact, 'primaryContact', clearFields);
 				case 2:
 					return withFormTitle(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 3:
@@ -366,17 +366,28 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
+			console.log('value', values)
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
+				const newClassification = values.classification.map(item => item.value.toString());
+				const organizationDetails = {
+					affiliateOf: {...values.affiliateOf},
+					affiliates: [...values.affiliates],
+					distributorOf: {...values.distributorOf},
+					distributor: {...values.distributor}
+				};
+				const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
+
 				if (result === true) {
 					const newPublisher = {
-						...values
+						...rest,
+						organizationDetails: organizationDetails,
+						classification: newClassification
 					};
-					console.log('nmew', newPublisher)
-					registerPublisher(newPublisher);
+					publisherCreationRequest(newPublisher);
 				} else {
 					// eslint-disable-next-line no-undef
 					alert('Please type the correct word in the image below');
@@ -521,14 +532,12 @@ function element(array, classes, clearFields) {
 
 				return (
 					<Grid key={list.name} item xs={6}>
-						{list.test}
 						<Field
 							className={`${classes.textField} ${list.width}`}
 							component={renderTextField}
 							label={list.label}
 							name={list.name}
 							type={list.type}
-							test={list.test}
 						/>
 					</Grid>
 

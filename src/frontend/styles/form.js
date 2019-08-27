@@ -80,10 +80,8 @@ const useStyles = makeStyles({
 	},
 	formHead: {
 		width: '100%',
-		background: '#e0dfe4',
-		textAlign: 'center',
 		marginTop: '25px',
-		borderRadius: '5px'
+		marginLeft: '5px'
 	},
 	affiliatesAddBtn: {
 		display: 'flex',

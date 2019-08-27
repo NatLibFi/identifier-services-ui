@@ -41,7 +41,7 @@ export default connect(state => ({
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
-	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, valid} = props;
+	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
 	const contactDetail = values && {
 		email: values.email,
 		givenName: values.givenName,
@@ -58,8 +58,8 @@ export default connect(state => ({
 		setErrors();
 		if (values) {
 			if (contactDetail && (contactDetail.email !== undefined)) {
-				if (values.contactDetails) {
-					if (values.contactDetails.some(item => item.email === contactDetail.email)) {
+				if (values.primaryContact) {
+					if (values.primaryContact.some(item => item.email === contactDetail.email)) {
 						setErrors('already exist');
 					} else if (contactDetail.email !== undefined) {
 						fields.push(contactDetail);
@@ -139,7 +139,7 @@ export default connect(state => ({
 			}
 			)}
 			{touched && error && <span>{error}</span>}
-			{fieldName === 'contactDetails' &&
+			{(fieldName === 'primaryContact' &&
 				<>
 					<Fab
 						aria-label="Add"
@@ -150,7 +150,7 @@ export default connect(state => ({
 					>
 						<AddIcon/>
 					</Fab>
-					{values && values.contactDetails && values.contactDetails.map((item, index) => {
+					{values && values.primaryContact && values.primaryContact.map((item, index) => {
 						return (
 							<Chip
 								key={item.email}
@@ -160,7 +160,7 @@ export default connect(state => ({
 						);
 					})}
 
-				</> || fieldName === 'affiliates' &&
+				</>) || (fieldName === 'affiliates' &&
 				<div className={classes.affiliatesAddBtn}>
 					<Fab
 						aria-label="Add"
@@ -180,8 +180,7 @@ export default connect(state => ({
 							/>
 						);
 					})}
-					
-				</div> || null
+				</div>) || null
 			}
 		</>
 	);
@@ -193,7 +192,7 @@ export default connect(state => ({
 		},
 		propTypes: {
 			fields: PropTypes.arrayOf(PropTypes.shape({})),
-			contactDetails: PropTypes.arrayOf(PropTypes.shape({})),
+			primaryContact: PropTypes.arrayOf(PropTypes.shape({})),
 			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
 		}
 	};
