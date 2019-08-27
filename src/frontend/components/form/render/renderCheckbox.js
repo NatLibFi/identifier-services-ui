@@ -27,19 +27,21 @@
  */
 
 import React from 'react';
-import {TextField} from '@material-ui/core';
-import useStyles from '../styles/form';
+import {Checkbox, FormControlLabel} from '@material-ui/core';
 
 export default function (props) {
-	const {captchaInput, handleCaptchaInput} = props;
-	const classes = useStyles();
+	const {input, label} = props;
 	const component = (
-		<TextField
-			variant="outlined"
-			label="Type the word shown in the picture"
-			value={captchaInput}
-			className={classes.captcha}
-			onChange={handleCaptchaInput}/>
+		<FormControlLabel
+			control={
+				<Checkbox
+					color="primary"
+					checked={Boolean(input.value)}
+					onChange={input.onChange}
+				/>
+			}
+			label={label}
+		/>
 	);
 
 	return {

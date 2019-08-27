@@ -45,15 +45,15 @@ const useStyles = makeStyles({
 		}
 	},
 	textField: {
-		height: '60px',
-		width: '100%'
-	},
-	selectField: {
+		height: '40px',
 		width: '100%'
 	},
 	arrayString: {
-		height: '60px',
-		width: '95%'
+		width: '50%'
+	},
+	selectField: {
+		height: '40px',
+		width: '100%'
 	},
 	full: {
 		flexDirection: 'column'
@@ -62,7 +62,6 @@ const useStyles = makeStyles({
 		flexDirection: 'row'
 	},
 	textArea: {
-		height: '180px',
 		width: '100%'
 	},
 	stepLabel: {
@@ -78,6 +77,19 @@ const useStyles = makeStyles({
 	children: {
 		margin: '0 20px 0 0',
 		width: '80%'
+	},
+	formHead: {
+		width: '100%',
+		marginTop: '25px',
+		marginLeft: '5px'
+	},
+	affiliatesAddBtn: {
+		display: 'flex',
+		alignItems: 'center'
+	},
+	captcha: {
+		marginTop: '10px',
+		width: '40%'
 	},
 	authors: {
 		display: 'flex',

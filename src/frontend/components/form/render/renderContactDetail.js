@@ -41,27 +41,61 @@ export default connect(state => ({
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
-	const {fields, array: {contactDetails}, clearFields, meta: {touched, error}, values} = props;
-
+	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
 	const contactDetail = values && {
+		email: values.email,
 		givenName: values.givenName,
-		familyName: values.familyName,
-		email: values.email
+		familyName: values.familyName
+	};
+	const affiliate = values && {
+		affiliatesAddress: values.affiliatesAddress,
+		affiliatesAddressDetails: values.affiliatesAddressDetails,
+		affiliatesCity: values.affiliatesCity,
+		affiliatesZip: values.affiliatesZip,
+		affiliatesName: values.affiliatesName
 	};
 	const handleContactClick = () => {
 		setErrors();
 		if (values) {
-			if (contactDetail && (contactDetail.email !== undefined || contactDetail.givenName !== undefined)) {
-				if (values.contactDetails) {
-					if (values.contactDetails.some(item => item.email === contactDetail.email)) {
+			if (contactDetail && (contactDetail.email !== undefined)) {
+				if (values.primaryContact) {
+					if (values.primaryContact.some(item => item.email === contactDetail.email)) {
 						setErrors('already exist');
-					} else if (contactDetail.email !== undefined && contactDetail.familyName !== undefined && contactDetail.givenName !== undefined) {
+					} else if (contactDetail.email !== undefined) {
 						fields.push(contactDetail);
 						clearFields(undefined, false, false, 'givenName', 'familyName', 'email');
 					}
-				} else if (contactDetail.email !== undefined && contactDetail.familyName !== undefined && contactDetail.givenName !== undefined) {
+				} else if (contactDetail.email !== undefined) {
 					fields.push(contactDetail);
 					clearFields(undefined, false, false, 'givenName', 'familyName', 'email');
+				}
+			}
+		}
+	};
+
+	const handleAffiliatesClick = () => {
+		setErrors();
+		if (values) {
+			if (affiliate && (affiliate.affiliatesAddress !== undefined ||
+				affiliate.affiliatesCity !== undefined ||
+				affiliate.affiliatesZip !== undefined ||
+				affiliate.affiliatesName !== undefined)) {
+				if (values.affiliates) {
+					if (values.affiliates.some(item => item.affiliatesName === affiliate.affiliatesName)) {
+						setErrors('already exist');
+					} else if (affiliate.affiliatesAddress !== undefined &&
+						affiliate.affiliatesCity !== undefined &&
+						affiliate.affiliatesZip !== undefined &&
+						affiliate.affiliatesName !== undefined) {
+						fields.push(affiliate);
+						clearFields(undefined, false, false, 'affiliatesAddress', 'affiliatesAddressDetails', 'affiliatesCity', 'affiliatesZip', 'affiliatesZip', 'affiliatesName');
+					}
+				} else if (affiliate.affiliatesAddress !== undefined &&
+					affiliate.affiliatesCity !== undefined &&
+					affiliate.affiliatesZip !== undefined &&
+					affiliate.affiliatesName !== undefined) {
+					fields.push(affiliate);
+					clearFields(undefined, false, false, 'affiliatesAddress', 'affiliatesAddressDetails', 'affiliatesCity', 'affiliatesZip', 'affiliatesZip', 'affiliatesName');
 				}
 			}
 		}
@@ -71,36 +105,83 @@ export default connect(state => ({
 
 	const component = (
 		<>
-			{contactDetails.map(list =>
-				(
-					<Grid key={list.name} item xs={12}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderTextField}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							props={{errors}}
-						/>
-					</Grid>
-				))}
+			{data.map(list => {
+				switch (list.width) {
+					case 'half':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									props={{errors}}
+								/>
+							</Grid>
+						);
+					case 'full':
+						return (
+							<Grid key={list.name} item xs={12}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									props={{errors}}
+								/>
+							</Grid>
+						);
+					default:
+						return null;
+				}
+			}
+			)}
 			{touched && error && <span>{error}</span>}
-			{values && values.contactDetails && values.contactDetails.map((item, index) => (
-				<Chip
-					key={item.email}
-					label={`${item.givenName}${item.familyName}`}
-					onDelete={() => fields.remove(index)}
-				/>
-			))}
-			<Fab
-				aria-label="Add"
-				color="primary"
-				title="Add more Contact Detail"
-				disabled={touched && Boolean(error)}
-				onClick={handleContactClick}
-			>
-				<AddIcon/>
-			</Fab>
+			{(fieldName === 'primaryContact' &&
+				<>
+					<Fab
+						aria-label="Add"
+						color="primary"
+						size="small"
+						title="Add more Contact Detail"
+						onClick={handleContactClick}
+					>
+						<AddIcon/>
+					</Fab>
+					{values && values.primaryContact && values.primaryContact.map((item, index) => {
+						return (
+							<Chip
+								key={item.email}
+								label={item.email}
+								onDelete={() => fields.remove(index)}
+							/>
+						);
+					})}
+
+				</>) || (fieldName === 'affiliates' &&
+				<div className={classes.affiliatesAddBtn}>
+					<Fab
+						aria-label="Add"
+						size="small"
+						color="primary"
+						title="Add more Contact Detail"
+						onClick={handleAffiliatesClick}
+					>
+						<AddIcon/>
+					</Fab>
+					{values && values.affiliates && values.affiliates.map((item, index) => {
+						return (
+							<Chip
+								key={item.affiliatesName}
+								label={`${item.affiliatesName}${item.affiliatesAddress}`}
+								onDelete={() => fields.remove(index)}
+							/>
+						);
+					})}
+				</div>) || null
+			}
 		</>
 	);
 
@@ -111,7 +192,7 @@ export default connect(state => ({
 		},
 		propTypes: {
 			fields: PropTypes.arrayOf(PropTypes.shape({})),
-			contactDetails: PropTypes.arrayOf(PropTypes.shape({})),
+			primaryContact: PropTypes.arrayOf(PropTypes.shape({})),
 			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
 		}
 	};

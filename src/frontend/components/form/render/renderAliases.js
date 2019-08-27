@@ -68,7 +68,7 @@ export default connect(state => ({
 			<Grid>
 				<Grid item>
 					<Field
-						class={className}
+						className={className}
 						name={subName}
 						type="text"
 						component={renderTextField}

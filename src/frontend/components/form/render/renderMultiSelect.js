@@ -27,19 +27,29 @@
  */
 
 import React from 'react';
-import {TextField} from '@material-ui/core';
-import useStyles from '../styles/form';
+import CreatableSelect from 'react-select/creatable';
+import {Typography} from '@material-ui/core';
 
 export default function (props) {
-	const {captchaInput, handleCaptchaInput} = props;
-	const classes = useStyles();
+	const {input, label, options, className} = props;
+	const {meta: {touched, error}} = props;
+
 	const component = (
-		<TextField
-			variant="outlined"
-			label="Type the word shown in the picture"
-			value={captchaInput}
-			className={classes.captcha}
-			onChange={handleCaptchaInput}/>
+		<>
+			<Typography variant="caption">Select from dropdown or choose your own</Typography>
+			<CreatableSelect
+				isMulti
+				{...input}
+				error={Boolean}
+				options={options}
+				className={className}
+				placeholder={label}
+				value={input.value}
+				onBlur={() => input.onBlur(input.value)}
+				onChange={value => input.onChange(value)}
+			/>
+			{touched && error && <span>{error}</span>}
+		</>
 	);
 
 	return {
