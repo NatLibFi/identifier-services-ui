@@ -43,46 +43,61 @@ import sv from 'react-intl/locale-data/sv';
 import {CookiesProvider} from 'react-cookie';
 import {getUserInfo} from './store/actions/auth';
 
-addLocaleData([...en, ...fi, ...sv]);
+run();
+async function run() {
+	await getConf();
 
-const composeEnhancers =
-process.env.NODE_ENV === 'development' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-	window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
-	compose;
+	addLocaleData([...en, ...fi, ...sv]);
 
-const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
+	const composeEnhancers =
+		__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+			__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
+			compose;
 
-if (localStorage.allLang) {
-	store.dispatch(setLocale(localStorage.allLang));
-}
+	const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
 
-function readCookie(name) {
-	var nameEQ = name + '=';
-	var ca = document.cookie.split(';');
-	for (var i = 0; i < ca.length; i++) {
-		var c = ca[i];
-		while (c.charAt(0) === ' ') {
-			c = c.substring(1, c.length);
-		}
-
-		if (c.indexOf(nameEQ) === 0) {
-			return c.substring(nameEQ.length, c.length);
-		}
+	if (localStorage.allLang) {
+		store.dispatch(setLocale(localStorage.allLang));
 	}
 
-	return null;
-}
+	function readCookie(name) {
+		var nameEQ = name + '=';
+		var ca = document.cookie.split(';');
+		for (var i = 0; i < ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) === ' ') {
+				c = c.substring(1, c.length);
+			}
 
-const cookie = readCookie('login-cookie');
-if (cookie) {
-	store.dispatch(getUserInfo(cookie));
-}
+			if (c.indexOf(nameEQ) === 0) {
+				return c.substring(nameEQ.length, c.length);
+			}
+		}
 
-ReactDOM.render(
-	<Provider store={store}>
-		<CookiesProvider>
-			<Router>
-				<App/>
-			</Router>
-		</CookiesProvider>
-	</Provider>, document.getElementById('app'));
+		return null;
+	}
+
+	async function getConf() {
+		const temp = await fetch('/conf', {
+			method: 'GET'
+		});
+		const result = await temp.json();
+		Object.keys(result).forEach(key => {
+			window[key] = result[key];
+		});
+	}
+
+	const cookie = readCookie('login-cookie');
+	if (cookie) {
+		store.dispatch(getUserInfo(cookie));
+	}
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<CookiesProvider>
+				<Router>
+					<App/>
+				</Router>
+			</CookiesProvider>
+		</Provider>, document.getElementById('app'));
+}

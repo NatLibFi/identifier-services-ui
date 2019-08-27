@@ -31,7 +31,7 @@ import fetch from 'node-fetch';
 
 export const passwordReset = email => async dispatch => {
 	try {
-		const response = await fetch('http://localhost:8080/passwordreset', {
+		const response = await fetch('/passwordreset', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'

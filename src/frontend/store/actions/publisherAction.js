@@ -29,9 +29,11 @@ import fetch from 'node-fetch';
 import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
 import {setLoader, success, fail} from './commonAction';
 
-export const fetchPublisher = ({API_URL}, id, token) => async dispatch => {
+export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'GET',
 			headers: token ? {
@@ -47,9 +49,11 @@ export const fetchPublisher = ({API_URL}, id, token) => async dispatch => {
 	}
 };
 
-export const updatePublisher = ({API_URL}, id, values, token) => async dispatch => {
+export const updatePublisher = (id, values, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'PUT',
 			headers: {
@@ -66,7 +70,7 @@ export const updatePublisher = ({API_URL}, id, values, token) => async dispatch 
 	}
 };
 
-export const searchPublisher = ({API_URL, searchText, token, offset, activeCheck}) => async dispatch => {
+export const searchPublisher = ({searchText, token, offset, activeCheck}) => async dispatch => {
 	dispatch(setLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {$or: [{name: searchText}, {aliases: searchText}], activity: {active: true}} :
 		{$or: [{name: searchText}, {aliases: searchText}]};
@@ -87,6 +91,8 @@ export const searchPublisher = ({API_URL, searchText, token, offset, activeCheck
 			})
 		};
 
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publishers/query`, properties);
 
 		const result = await response.json();
@@ -96,10 +102,11 @@ export const searchPublisher = ({API_URL, searchText, token, offset, activeCheck
 	}
 };
 
-export const fetchPublishersRequestsList = ({API_URL}, searchText, token, offset) => async dispatch => {
-	console.log('req', searchText);
+export const fetchPublishersRequestsList = (searchText, token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
 			method: 'POST',
 			headers: {
@@ -120,9 +127,11 @@ export const fetchPublishersRequestsList = ({API_URL}, searchText, token, offset
 	}
 };
 
-export const fetchPublisherRequest = ({API_URL}, id, token) => async dispatch => {
+export const fetchPublisherRequest = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'GET',
 			headers: {

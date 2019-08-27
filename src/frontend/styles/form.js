@@ -48,6 +48,9 @@ const useStyles = makeStyles({
 		height: '60px',
 		width: '100%'
 	},
+	selectField: {
+		width: '100%'
+	},
 	arrayString: {
 		height: '60px',
 		width: '95%'
@@ -75,6 +78,22 @@ const useStyles = makeStyles({
 	children: {
 		margin: '0 20px 0 0',
 		width: '80%'
+	},
+	authors: {
+		display: 'flex',
+		flexDirection: 'column',
+		'& button': {
+			marginTop: 15
+		}
+	},
+	authorDetails: {
+		margin: '15px 0'
+	},
+	toggleBtnGrp: {
+		margin: '20px 0',
+		'& button': {
+			height: 'fit-content'
+		}
 	}
 });
 

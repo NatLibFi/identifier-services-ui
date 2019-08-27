@@ -56,13 +56,8 @@ export {
 	fail,
 	setLoader,
 	loadSvgCaptcha,
-	postCaptchaInput,
-	getApiUrl
+	postCaptchaInput
 } from './commonAction';
-
-export {
-	handleMenuClick
-} from './navbarActions';
 
 export {
 	createUser,
@@ -77,3 +72,8 @@ export {
 export {
 	passwordReset
 } from './passwordResetAction';
+
+export {
+	fetchIsbnIsmn,
+	fetchIsbnIsmnList
+} from './publicationAction';

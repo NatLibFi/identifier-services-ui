@@ -26,7 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
-import {LOADER, GET_CAPTCHA, ERROR, GET_API_URL} from './types';
+import {LOADER, GET_CAPTCHA, ERROR} from './types';
 
 export function success(type, payload) {
 	return ({
@@ -51,7 +51,7 @@ export const setLoader = () => {
 export const loadSvgCaptcha = () => async dispatch => {
 	dispatch(setLoader());
 	try {
-		const response = await fetch('http://localhost:8080/captcha', {
+		const response = await fetch('/captcha', {
 			method: 'GET'
 		});
 		const result = await response.json();
@@ -68,7 +68,7 @@ export const postCaptchaInput = (inputData, id) => async dispatch => {
 	};
 	dispatch(setLoader());
 	try {
-		const response = await fetch('http://localhost:8080/captcha', {
+		const response = await fetch('/captcha', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -77,18 +77,6 @@ export const postCaptchaInput = (inputData, id) => async dispatch => {
 		});
 		const result = await response.json();
 		return result;
-	} catch (err) {
-		dispatch(fail(ERROR, err));
-	}
-};
-
-export const getApiUrl = () => async dispatch => {
-	try {
-		const temp = await fetch('http://localhost:8080/conf', {
-			method: 'GET'
-		});
-		const result = await temp.json();
-		dispatch(success(GET_API_URL, result.API_URL));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

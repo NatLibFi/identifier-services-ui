@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -41,7 +39,7 @@ import Spinner from '../Spinner';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount, apiURL} = props;
+	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = location.state === undefined ? useState('') : useState(location.state.searchText);
 	const [page, setPage] = React.useState(1);
@@ -52,9 +50,11 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && searchPublisher({API_URL: apiURL, searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-	}, [lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie, apiURL]);
+		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
+		/* global API_URL */
+		/* eslint no-undef: "error" */
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
 	const handleChange = name => event => {
 		setActiveCheck({...activeCheck, [name]: event.target.checked});
@@ -127,12 +127,11 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.loading,
+		loading: state.publisher.listLoading,
 		searchedPublishers: state.publisher.searchedPublisher,
 		publishersList: state.publisher.publishersList,
 		offset: state.publisher.offset,
 		totalDoc: state.publisher.totalDoc,
-		queryDocCount: state.publisher.queryDocCount,
-		apiURL: state.common.apiURL
+		queryDocCount: state.publisher.queryDocCount
 	});
 }

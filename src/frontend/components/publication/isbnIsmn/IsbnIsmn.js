@@ -1,6 +1,3 @@
-/* eslint-disable no-negated-condition */
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -40,35 +37,31 @@ import {
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import {reduxForm, Field} from 'redux-form';
+import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../styles/publisher';
-import useFormStyles from '../../styles/form';
-import * as actions from '../../store/actions';
+import useStyles from '../../../styles/publisher';
+import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
-import Spinner from '../Spinner';
-import renderTextField from '../form/render/renderTextField';
+import ModalLayout from '../../ModalLayout';
+import Spinner from '../../Spinner';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, user, userInfo, loading, fetchUser} = props;
+	const {match, isbnIsmn, userInfo, loading, fetchIsbnIsmn} = props;
 	const classes = useStyles();
-	const formClasses = useFormStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
-		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		fetchUser(match.params.id, token);
-	}, [user === undefined]);
+		fetchIsbnIsmn({id: match.params.id, token: cookie['login-cookie']});
+	}, [cookie, fetchIsbnIsmn, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -78,15 +71,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	let userDetail;
-	let keys = isEdit ? Object.keys(user).filter(key => key !== 'lastUpdated') : Object.keys(user).map(key => key);
-	if (user === undefined || loading) {
-		userDetail = <Spinner/>;
+	let publicationDetail;
+	let keys = isEdit ? Object.keys(isbnIsmn).filter(key => key !== 'lastUpdated') : Object.keys(isbnIsmn).map(key => key);
+	if (isbnIsmn === undefined || loading) {
+		publicationDetail = <Spinner/>;
 	} else {
-		userDetail = (
+		publicationDetail = (
 			<Grid item xs={12}>
 				<Typography variant="h6">
-						User Details
+						Publication Details
 				</Typography>
 				<List>
 					<Grid container xs={12}>
@@ -94,39 +87,39 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							return (
 								<ListItem key={key}>
 									<ListItemText>
-										{(typeof user[key] !== 'object') ?
-											<Grid container>
-												<Grid item xs={4}>{key}: </Grid>
-												{isEdit ?
-													<Grid item xs={8}>
-														<Field name={key} className={formClasses.editForm} component={renderTextField}/>
-													</Grid> :
-													<Grid item xs={8}>{user[key]}</Grid>
-												}
-											</Grid> :
-											Object.keys(user[key]).map(subKey =>
-												(
-													<Grid key={subKey} container>
-														<Grid item xs={4}>{subKey}: </Grid>
-														{isEdit ?
-															<Grid item xs={8}>
-																<Field name={`${key}[${subKey}]`} className={formClasses.editForm} component={renderTextField}/>
-															</Grid> :
-															<Grid item xs={8}>{user[key][subKey]}</Grid>
-														}
-													</Grid>
-												)
+										{(typeof isbnIsmn[key] === 'object') ?
+											(Array.isArray(isbnIsmn[key]) ?
+												isbnIsmn[key].map(obj =>
+													renderObject(obj)
+												) :
+												renderObject(isbnIsmn[key])
+											) :
+											(
+												<Grid container>
+													<Grid item xs={4}>{key}: </Grid>
+													<Grid item xs={8}>{isbnIsmn[key].toString()}</Grid>
+												</Grid>
 											)
 										}
 									</ListItemText>
 								</ListItem>
 							);
-						}
-						)}
+						})}
 					</Grid>
 				</List>
 			</Grid>
 		);
+	}
+
+	function renderObject(obj) {
+		return (Object.keys(obj).map(subKey =>
+			(
+				<Grid key={subKey} container>
+					<Grid item xs={4}>{subKey}: </Grid>
+					<Grid item xs={8}>{obj[subKey]}</Grid>
+				</Grid>
+			)
+		));
 	}
 
 	const component = (
@@ -135,7 +128,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<div className={classes.publisher}>
 					<form>
 						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{userDetail}
+							{publicationDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
@@ -147,14 +140,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</div> :
 				<div className={classes.publisher}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{userDetail}
+						{publicationDetail}
 					</Grid>
 					{role !== undefined && role.some(item => item === 'admin') &&
 						<div className={classes.btnContainer}>
 							<Fab
 								color="primary"
 								size="small"
-								title="Edit User Detail"
+								title="Edit isbnIsmn Detail"
 								onClick={handleEditClick}
 							>
 								<EditIcon/>
@@ -171,9 +164,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		user: state.users.user,
-		loading: state.users.loading,
-		initialValues: state.users.user,
+		isbnIsmn: state.publication.isbnIsmn,
+		loading: state.publication.loading,
+		initialValues: state.publication.isbnIsmn,
 		userInfo: state.login.userInfo
 	});
 }

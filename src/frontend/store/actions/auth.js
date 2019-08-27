@@ -25,14 +25,11 @@
  * for the JavaScript code in this file.
  *
  */
-import {AUTHENTICATION} from './types';
+import {AUTHENTICATION, LOG_OUT} from './types';
 import fetch from 'node-fetch';
 
-const AUTHENTICATION_URL = 'http://localhost:8080/auth';
-const LOGOUT_URL = 'http://localhost:8080/logout';
-
 export const normalLogin = values => async dispatch => {
-	const response = await fetch(AUTHENTICATION_URL, {
+	const response = await fetch('/auth', {
 		method: 'POST',
 		body: JSON.stringify(values),
 		headers: {'Content-Type': 'application/json'}
@@ -44,7 +41,9 @@ export const normalLogin = values => async dispatch => {
 };
 
 export const getUserInfo = token => async dispatch => {
-	const result = await fetch('http://localhost:8081/auth', {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
+	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {
 			Authorization: 'Bearer ' + token
@@ -60,8 +59,11 @@ export const getUserInfo = token => async dispatch => {
 };
 
 export const logOut = () => async dispatch => {
-	await fetch(LOGOUT_URL, {
+	await fetch('/logout', {
 		method: 'GET'
 	});
-	dispatch(getUserInfo({}));
+	dispatch({
+		type: LOG_OUT,
+		payload: false
+	});
 };

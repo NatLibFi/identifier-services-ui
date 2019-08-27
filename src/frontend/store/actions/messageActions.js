@@ -33,7 +33,7 @@ import {setLoader, success, fail} from './commonAction';
 
 export const sendMessage = values => async dispatch => {
 	dispatch(setLoader());
-	const response = await fetch('http://localhost:8080/message', {
+	const response = await fetch('/message', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -48,8 +48,10 @@ export const sendMessage = values => async dispatch => {
 	}
 };
 
-export const createMessageTemplate = ({API_URL}, values) => async dispatch => {
+export const createMessageTemplate = values => async dispatch => {
 	dispatch(setLoader());
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/templates`, {
 		method: 'POST',
 		headers: {
@@ -60,9 +62,11 @@ export const createMessageTemplate = ({API_URL}, values) => async dispatch => {
 	await response.json();
 };
 
-export const fetchMessagesList = ({API_URL}, token, offset) => async dispatch => {
+export const fetchMessagesList = (token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/query`, {
 			method: 'POST',
 			headers: {
@@ -81,9 +85,11 @@ export const fetchMessagesList = ({API_URL}, token, offset) => async dispatch =>
 	}
 };
 
-export const fetchMessage = ({API_URL}, id, token) => async dispatch => {
+export const fetchMessage = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/${id}`, {
 			method: 'GET',
 			headers: {

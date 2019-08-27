@@ -1,4 +1,3 @@
-/* eslint-disable handle-callback-err */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -34,7 +33,7 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, BASE_URL} from './config';
+import {HTTP_PORT, SMTP_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
@@ -58,7 +57,7 @@ process.on('SIGINT', () => {
 	process.exit(-1);
 });
 
-app.use(express.static(path.resolve(__dirname, '..', 'dist', 'public')));
+app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.post('/message', (req, res) => {
 	async function main() {
@@ -118,7 +117,8 @@ app.post('/captcha', (req, res) => {
 });
 
 app.post('/auth', async (req, res) => {
-	const result = await fetch(BASE_URL, {
+	const API_URL = req.body.API_URL;
+	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
 			Authorization: 'Basic ' + base64.encode(req.body.username + ':' + req.body.password)
@@ -143,7 +143,7 @@ app.get('/conf', (_req, res) => {
 });
 
 app.get('*', (req, res) => {
-	res.sendFile(path.join(__dirname, '../dist/public/index.html'));
+	res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
 app.listen(HTTP_PORT, () => console.log('info', `Application Started on PORT ${HTTP_PORT}`));

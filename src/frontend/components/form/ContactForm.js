@@ -1,8 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable no-alert */
-/* eslint-disable react/no-danger */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -60,8 +55,7 @@ export default connect(mapToProps, actions)(reduxForm({
 			userInfo,
 			createMessageTemplate,
 			captcha,
-			language,
-			apiURL
+			language
 		} = props;
 		const initialState = {};
 		const [state, setState] = useState(initialState);
@@ -70,7 +64,7 @@ export default connect(mapToProps, actions)(reduxForm({
 		const classes = useStyles();
 		useEffect(() => {
 			loadSvgCaptcha();
-		}, []);
+		}, [loadSvgCaptcha]);
 
 		const handleCaptchaInput = e => {
 			setCaptchaInput(e.target.value);
@@ -79,16 +73,18 @@ export default connect(mapToProps, actions)(reduxForm({
 		const handleClick = async values => {
 			setState({...state, values});
 			if (captchaInput.length === 0) {
+				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				if (result === true) {
 					const newValues = {...values, user: userInfo.user, language: language, subject: values.email};
 					sendMessage(values);
-					createMessageTemplate({API_URL: apiURL}, newValues);
+					createMessageTemplate(newValues);
 					handleClose();
 					history.push('/');
 				} else {
+					// eslint-disable-next-line no-undef, no-alert
 					alert('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
@@ -146,6 +142,7 @@ export default connect(mapToProps, actions)(reduxForm({
 						<Captcha
 							captchaInput={captchaInput}
 							handleCaptchaInput={handleCaptchaInput}/>
+						{/* eslint-disable-next-line react/no-danger */}
 						<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 					</Grid>
 					<Grid item xs={12} className={classes.btnContainer}>
@@ -179,7 +176,6 @@ function mapToProps(state) {
 		loading: state.contact.loading,
 		captcha: state.common.captcha,
 		userInfo: state.login.userInfo,
-		language: state.locale.lang,
-		apiURL: state.common.apiURL
+		language: state.locale.lang
 	});
 }

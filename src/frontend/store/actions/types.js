@@ -40,7 +40,6 @@ export const ERROR = 'ERROR';
 export const LOCALE_SET = 'LOCALE_SET';
 export const GET_CAPTCHA = 'GET_CAPTCHA';
 export const POST_CAPTCHA = 'POST_CAPTCHA';
-export const GET_API_URL = 'GET_API_URL';
 
 export const CONTACT = 'CONTACT';
 export const FETCH_MESSAGE = 'FETCH_MESSAGE';
@@ -55,3 +54,5 @@ export const FETCH_USER = 'FETCH_USER';
 export const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST';
 export const USERS_REQUESTS_LIST = 'USERS_REQUESTS_LIST';
 
+export const ISBN_ISMN_LIST = 'ISBN_ISMN_LIST';
+export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
