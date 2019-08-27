@@ -43,10 +43,11 @@ import UserRequestForm from '../form/UserRequestForm';
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
 	const modalClasses = useModalStyles();
-	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset} = props;
+	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = useState('');
 	const [sortStateBy, setSortStateBy] = useState('');
+	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
@@ -80,11 +81,13 @@ export default connect(mapStateToProps, actions)(props => {
 				data={usersRequestsList.map(item => usersDataRender(item.id, item.state, item.publisher, item.email))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
-				totalDataCount={totalUsersRequests}
 				offset={offset}
-				totalDoc={totalDoc}
 				cursors={cursors}
+				page={page}
+				setPage={setPage}
 				setLastCursor={setLastCursor}
+				totalDoc={totalDoc}
+				queryDocCount={queryDocCount}
 			/>
 		);
 	}
@@ -136,7 +139,8 @@ function mapStateToProps(state) {
 	return ({
 		loading: state.users.loading,
 		usersRequestsList: state.users.usersRequestsList,
-		offset: state.users.offset,
-		totalDoc: state.users.totalUsersRequests
+		offset: state.users.requestOffset,
+		totalDoc: state.users.totalUsersRequests,
+		queryDocCount: state.users.queryDocCount
 	});
 }

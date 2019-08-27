@@ -38,10 +38,10 @@ import {useCookies} from 'react-cookie';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchUsersList, usersList, totalUsers, endCursor, hasNextPage} = props;
+	const {loading, fetchUsersList, usersList, totalUsers, queryDocCount, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
-	const [cursors, setCursors] = useState([]);
+	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
@@ -67,14 +67,13 @@ export default connect(mapStateToProps, actions)(props => {
 				data={usersList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
-				setEndCursor={setLastCursor}
-				endCursor={endCursor}
+				offset={offset}
+				cursors={cursors}
 				page={page}
 				setPage={setPage}
-				hasNextPage={hasNextPage}
-				cursors={cursors}
-				setCursors={setCursors}
-				totalCount={totalUsers}
+				setLastCursor={setLastCursor}
+				totalDoc={totalUsers}
+				queryDocCount={queryDocCount}
 			/>
 		);
 	}
@@ -107,8 +106,7 @@ function mapStateToProps(state) {
 		usersList: state.users.usersList,
 		userInfo: state.login.userInfo,
 		totalUsers: state.users.totalUsers,
-		pageInfo: state.users.pageInfo,
-		endCursor: state.users.pageInfo.endCursor,
-		hasNextPage: state.users.pageInfo.hasNextPage
+		offset: state.users.offset,
+		queryDocCount: state.users.queryDocCount
 	});
 }

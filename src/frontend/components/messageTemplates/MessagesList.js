@@ -38,10 +38,10 @@ import {useCookies} from 'react-cookie';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchMessagesList, messagesList, totalMessages, endCursor, hasNextPage} = props;
+	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
-	const [cursors, setCursors] = useState([]);
+	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
@@ -71,14 +71,13 @@ export default connect(mapStateToProps, actions)(props => {
 				data={messagesList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
-				setEndCursor={setLastCursor}
-				endCursor={endCursor}
+				offset={offset}
+				cursors={cursors}
 				page={page}
 				setPage={setPage}
-				hasNextPage={hasNextPage}
-				cursors={cursors}
-				setCursors={setCursors}
-				totalCount={totalMessages}
+				setLastCursor={setLastCursor}
+				totalDoc={totalMessages}
+				queryDocCount={queryDocCount}
 			/>
 		);
 	}
@@ -113,8 +112,7 @@ function mapStateToProps(state) {
 		loading: state.contact.loading,
 		messagesList: state.contact.messagesList,
 		totalMessages: state.contact.totalMessages,
-		pageInfo: state.contact.pageInfo,
-		endCursor: state.contact.pageInfo.endCursor,
-		hasNextPage: state.contact.pageInfo.hasNextPage
+		offset: state.contact.offset,
+		queryDocCount: state.contact.queryDocCount
 	});
 }
