@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -27,12 +26,47 @@
  *
  */
 
-export const handleMenuClick = (path, token) => async () => {
-	const result = await fetch(`http://localhost:8081/${path}`, {
-		method: 'GET',
-		headers: {
-			Authorization: 'Bearer ' + token
-		}
-	});
-	console.log(await result.json());
+import {LOADER, ERROR, ISBN_ISMN_LIST, FETCH_ISBN_ISMN} from '../actions/types';
+
+const initialState = {
+	isbnIsmn: {},
+	isbnIsmnList: [],
+	offset: null,
+	totalDoc: null,
+	queryDocCount: null,
+	loading: false,
+	error: {}
 };
+
+export default function (state = initialState, action) {
+	switch (action.type) {
+		case LOADER:
+			return {
+				...state,
+				loading: true
+			};
+		case FETCH_ISBN_ISMN:
+			return {
+				...state,
+				isbnIsmn: action.payload,
+				loading: false
+			};
+		case ISBN_ISMN_LIST:
+			return {
+				...state,
+				isbnIsmnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				loading: false
+			};
+		case ERROR:
+			return {
+				...state,
+				error: action.payload,
+				loading: false
+			};
+		default:
+			return state;
+	}
+}

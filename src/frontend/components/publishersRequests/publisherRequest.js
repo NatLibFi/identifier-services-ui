@@ -1,4 +1,3 @@
-/* eslint-disable no-negated-condition */
 
 /**
  *
@@ -51,14 +50,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, userInfo, loading, isAuthenticated, fetchPublisherRequest, publisherRequest, apiURL} = props;
+	const {match, userInfo, loading, isAuthenticated, fetchPublisherRequest, publisherRequest} = props;
 	const classes = useStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchPublisherRequest({API_URL: apiURL}, match.params.id, cookie['login-cookie']);
-	}, [apiURL, cookie, fetchPublisherRequest, match.params.id]);
+		// eslint-disable-next-line no-undef
+		fetchPublisherRequest({API_URL: API_URL}, match.params.id, cookie['login-cookie']);
+	}, [cookie, fetchPublisherRequest, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -129,7 +128,6 @@ function mapStateToProps(state) {
 		publisherRequest: state.publisher.publisherRequest,
 		loading: state.publisher.loading,
 		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo,
-		apiURL: state.common.apiURL
+		userInfo: state.login.userInfo
 	});
 }

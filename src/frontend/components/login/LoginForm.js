@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -47,12 +46,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const formClasses = useFormStyles();
 
 	const handleLogin = values => {
-		normalLogin(values);
+		// eslint-disable-next-line no-undef
+		normalLogin({...values, API_URL: API_URL});
 		history.push('/publishers');
-		//  Settimeout for firefox to work properly
-		setTimeout(() => {
-			location.reload(true);
-		});
 		handleClose();
 	};
 
@@ -115,7 +111,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		user: state.login.userInfo,
-		isLogin: state.login.isLogin
+		user: state.login.userInfo
 	});
 }

@@ -26,12 +26,11 @@
  *
  */
 
-import {GET_CAPTCHA, LOADER, GET_API_URL} from '../actions/types';
+import {GET_CAPTCHA, LOADER} from '../actions/types';
 
 const initialState = {
 	captcha: {},
 	modelStatus: false,
-	apiURL: null,
 	loading: false
 
 };
@@ -49,13 +48,6 @@ export default function (state = initialState, action) {
 				captcha: action.payload,
 				loading: false
 			};
-		case GET_API_URL:
-			return {
-				...state,
-				apiURL: action.payload,
-				loading: false
-			};
-
 		default:
 			return state;
 	}

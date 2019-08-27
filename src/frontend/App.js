@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-undef */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -29,12 +26,13 @@
  *
  */
 
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {Switch, Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {MuiThemeProvider} from '@material-ui/core/styles';
 import {IntlProvider} from 'react-intl';
+import {useCookies} from 'react-cookie';
 
 import Home from './components/main';
 import TopNav from './components/navbar/topNav';
@@ -44,6 +42,8 @@ import PublishersList from './components/publishers/PublishersList';
 import PublisherRequest from './components/publishersRequests/publisherRequest';
 import User from './components/users/User';
 import UsersList from './components/users/UsersList';
+import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
+import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
 import UsersRequest from './components/usersRequests/UsersRequest';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
 import Message from './components/messageTemplates/Message';
@@ -60,23 +60,27 @@ import SnackBar from './components/SnackBar';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
-	const {lang, userInfo, isAuthenticated, history, location, responseMessage, getApiUrl} = props;
+	const {lang, userInfo, isAuthenticated, history, location, responseMessage} = props;
 	const {modal} = location.state !== undefined && location.state;
+	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
+	const [cookie] = useCookies('login-cookie');
+	const token = cookie['login-cookie'];
 
 	useEffect(() => {
-		getApiUrl();
-	}, []);
+		setIsAuthenticatedState(isAuthenticated);
+	}, [isAuthenticated, token]);
 
 	const routeField = [
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
 		{path: '/publishers/:id', component: PublishersList}
-
 	];
 
 	const privateRoutesList = [
 		{path: '/users', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
 		{path: '/users/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
+		{path: '/publications/isbn-ismn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publications/isbn-ismn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
 		{path: '/requests/users', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
 		{path: '/requests/users/:id', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
 		{path: '/templates', role: ['admin'], component: MessagesList},
@@ -118,12 +122,12 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const component = (
 		<IntlProvider locale={lang} messages={translations[lang]}>
 			<MuiThemeProvider theme={theme}>
-				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticated} history={history}/>
+				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
-				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticated}/>
+				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
 				<section>
 					{
-						isAuthenticated ? (userInfo.role.includes('publisher')) &&
+						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
 						<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}
@@ -131,6 +135,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 						{routes}
 					</Switch>
 					{modal ? <Route path="/publishers/:id" component={Publisher}/> : null}
+					{modal ? <Route path="/publication/isbn-ismn/:id" component={IsbnIsmn}/> : null}
 					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}
 					{modal ? <Route path="/users/:id" component={User}/> : null}
 					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}

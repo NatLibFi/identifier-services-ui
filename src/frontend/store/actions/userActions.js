@@ -29,9 +29,11 @@ import fetch from 'node-fetch';
 import {USERS_LIST, ERROR, USERS_REQUESTS_LIST, FETCH_USER, FETCH_USERS_REQUEST} from './types';
 import {setLoader, success, fail} from './commonAction';
 
-export const fetchUsersList = ({API_URL}, token, offset) => async dispatch => {
+export const fetchUsersList = (token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/users/query`, {
 			method: 'POST',
 			headers: {
@@ -52,7 +54,9 @@ export const fetchUsersList = ({API_URL}, token, offset) => async dispatch => {
 	}
 };
 
-export const createUser = ({API_URL}, values, token) => async () => {
+export const createUser = (values, token) => async () => {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/users`, {
 		method: 'POST',
 		headers: {
@@ -65,7 +69,9 @@ export const createUser = ({API_URL}, values, token) => async () => {
 	await response.json();
 };
 
-export const createUserRequest = ({API_URL}, values, token) => async () => {
+export const createUserRequest = (values, token) => async () => {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/requests/users`, {
 		method: 'POST',
 		headers: {
@@ -78,9 +84,11 @@ export const createUserRequest = ({API_URL}, values, token) => async () => {
 	await response.json();
 };
 
-export const fetchUser = ({API_URL}, id, token) => async dispatch => {
+export const fetchUser = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/users/${id}`, {
 			method: 'GET',
 			headers: {
@@ -94,9 +102,11 @@ export const fetchUser = ({API_URL}, id, token) => async dispatch => {
 	}
 };
 
-export const fetchUserRequest = ({API_URL}, id, token) => async dispatch => {
+export const fetchUserRequest = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/users/${id}`, {
 			method: 'GET',
 			headers: {
@@ -110,7 +120,7 @@ export const fetchUserRequest = ({API_URL}, id, token) => async dispatch => {
 	}
 };
 
-export const fetchUsersRequestsList = ({API_URL, inputVal, sortStateBy, token, offset}) => async dispatch => {
+export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) => async dispatch => {
 	dispatch(setLoader());
 	try {
 		const properties = {
@@ -127,6 +137,8 @@ export const fetchUsersRequestsList = ({API_URL, inputVal, sortStateBy, token, o
 				offset: offset
 			})
 		};
+		/* global API_URL */
+		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/requests/users/query`, properties);
 		const result = await response.json();
 		dispatch(success(USERS_REQUESTS_LIST, result));
@@ -135,7 +147,9 @@ export const fetchUsersRequestsList = ({API_URL, inputVal, sortStateBy, token, o
 	}
 };
 
-export const updateUserRequest = ({API_URL}, id, values, token) => async () => {
+export const updateUserRequest = (id, values, token) => async () => {
+	/* global API_URL */
+	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/requests/users/${id}`, {
 		method: 'PUT',
 		headers: {

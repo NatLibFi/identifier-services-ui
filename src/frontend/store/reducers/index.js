@@ -33,11 +33,13 @@ import localeReducer from './localeReducer';
 import contact from './messageReducer';
 import common from './commonReducer';
 import userReducer from './userReducer';
+import publicationReducer from './publicationReducer';
 
 export default combineReducers({
 	locale: localeReducer,
 	form: forms,
 	publisher: publisherReducer,
+	publication: publicationReducer,
 	login: authReducer,
 	contact: contact,
 	common: common,

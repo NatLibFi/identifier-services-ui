@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -71,16 +70,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		handleSubmit,
 		clearFields,
 		isAuthenticated,
-		userInfo,
-		apiURL} = props;
+		userInfo} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchPublisher({API_URL: apiURL}, match.params.id, cookie['login-cookie']);
-	}, [apiURL]);
+		// eslint-disable-next-line no-undef
+		fetchPublisher(match.params.id, cookie['login-cookie']);
+	}, [cookie, fetchPublisher, match.params.id]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -265,7 +263,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handlePublisherUpdate = values => {
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
-		updatePublisher({API_URL: apiURL}, match.params.id, updateValues, token);
+		// eslint-disable-next-line no-undef
+		updatePublisher({API_URL: API_URL}, match.params.id, updateValues, token);
 		setIsEdit(false);
 	};
 
@@ -315,7 +314,6 @@ function mapStateToProps(state) {
 		loading: state.publisher.loading,
 		initialValues: state.publisher.publisher,
 		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo,
-		apiURL: state.common.apiURL
+		userInfo: state.login.userInfo
 	});
 }

@@ -30,68 +30,71 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
-import useStyles from '../../styles/publisherLists';
-import TableComponent from '../TableComponent';
-import * as actions from '../../store/actions';
-import Spinner from '../Spinner';
+import useStyles from '../../../styles/publisherLists';
+import TableComponent from '../../TableComponent';
+import * as actions from '../../../store/actions';
+import Spinner from '../../Spinner';
 import {useCookies} from 'react-cookie';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchUsersList, usersList, totalUsers, endCursor, hasNextPage} = props;
+	const {loading, fetchIsbnIsmnList, isbnIsmnList, totalpublication, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
-	const [cursors, setCursors] = useState([]);
+	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchUsersList(cookie['login-cookie'], lastCursor);
-	}, [lastCursor, cursors, fetchUsersList, cookie]);
+		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
+	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/users/${id}`, {modal: true});
+		props.history.push(`/publication/isbn-ismn/${id}`, {modal: true});
 	};
 
 	const headRows = [
+		{id: 'title', label: 'Title'},
 		{id: 'publisher', label: 'Publisher'},
-		{id: 'defaultLanguage', label: 'Language'}
+		{id: 'publicationTime', label: 'Publication Time'},
+		{id: 'state', label: 'State'}
 	];
 	let usersData;
 	if (loading) {
 		usersData = <Spinner/>;
-	} else if (usersList === undefined || usersList === null) {
-		usersData = <p>No Users Available</p>;
+	} else if (isbnIsmnList === undefined || isbnIsmnList === null) {
+		usersData = <p>No Publication Available</p>;
 	} else {
 		usersData = (
 			<TableComponent
-				data={usersList.map(item => usersDataRender(item))}
+				data={isbnIsmnList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
-				setEndCursor={setLastCursor}
-				endCursor={endCursor}
+				offset={offset}
 				page={page}
 				setPage={setPage}
-				hasNextPage={hasNextPage}
 				cursors={cursors}
-				setCursors={setCursors}
-				totalCount={totalUsers}
+				setLastCursor={setLastCursor}
+				totalDoc={totalpublication}
+				queryDocCount={queryDocCount}
 			/>
 		);
 	}
 
 	function usersDataRender(item) {
-		const {id, publisher, preferences} = item;
+		const {id, title, state, publisher, publicationTime} = item;
 		return {
 			id: id,
+			title: title,
+			state: state,
 			publisher: publisher,
-			defaultLanguage: preferences.defaultLanguage
+			publicationTime: publicationTime
 		};
 	}
 
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.publisherListSearch}>
-				<Typography variant="h5">List of Avaiable users</Typography>
+				<Typography variant="h5">List of Avaiable Publication</Typography>
 				{usersData}
 			</Grid>
 		</Grid>
@@ -103,12 +106,10 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.users.loading,
-		usersList: state.users.usersList,
-		userInfo: state.login.userInfo,
-		totalUsers: state.users.totalUsers,
-		pageInfo: state.users.pageInfo,
-		endCursor: state.users.pageInfo.endCursor,
-		hasNextPage: state.users.pageInfo.hasNextPage
+		loading: state.publication.loading,
+		isbnIsmnList: state.publication.isbnIsmnList,
+		totalpublication: state.publication.totalDoc,
+		offset: state.publication.offset,
+		queryDocCount: state.publication.queryDocCount
 	});
 }

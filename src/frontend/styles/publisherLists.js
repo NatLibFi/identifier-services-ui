@@ -42,8 +42,7 @@ const useStyles = makeStyles({
 	publisherListSearch: {
 		maxWidth: '1200px',
 		margin: '0 auto',
-		paddingTop: '60px',
-		minHeight: '76vh'
+		paddingTop: '60px'
 	}
 });
 

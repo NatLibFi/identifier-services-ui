@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -368,7 +367,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const handlePublisherRegistration = async values => {
 			console.log('value', values)
 			if (captchaInput.length === 0) {
-				// eslint-disable-next-line no-undef
+				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
@@ -389,7 +388,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					};
 					publisherCreationRequest(newPublisher);
 				} else {
-					// eslint-disable-next-line no-undef
+					// eslint-disable-next-line no-undef, no-alert
 					alert('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
@@ -426,11 +425,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Button disabled={activeStep === 0} onClick={handleBack}>
 							Back
 						</Button>
-						{/* eslint-disable-next-line no-negated-condition */}
-						{activeStep !== steps.length - 1 ?
+						{activeStep === steps.length - 1 ?
+							null :
 							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
 								Next
-							</Button> : null
+							</Button>
 						}
 						{
 							activeStep === steps.length - 1 &&

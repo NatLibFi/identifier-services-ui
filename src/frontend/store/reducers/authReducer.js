@@ -26,7 +26,7 @@
  *
  */
 
-import {AUTHENTICATION, LOADER} from '../actions/types';
+import {AUTHENTICATION, LOADER, LOG_OUT} from '../actions/types';
 
 const initialState = {
 	isAuthenticated: false,
@@ -47,6 +47,12 @@ export default function (state = initialState, action) {
 				...state,
 				isAuthenticated: true,
 				userInfo: action.payload,
+				loading: false
+			};
+		case LOG_OUT:
+			return {
+				...state,
+				isAuthenticated: action.payload,
 				loading: false
 			};
 

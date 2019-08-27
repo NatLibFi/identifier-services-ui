@@ -27,7 +27,7 @@
  */
 import React from 'react';
 import {connect} from 'react-redux';
-import {Field, FieldArray, reduxForm} from 'redux-form';
+import {Field, reduxForm} from 'redux-form';
 import {Button, Grid} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -36,25 +36,13 @@ import {useCookies} from 'react-cookie';
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
-import renderObjectArray from './render/renderObjectArray';
-
-const selectOption = [
-	{label: '', value: ''},
-	{label: 'Work', value: 'work'},
-	{label: 'Home', value: 'home'},
-	{label: 'Other', value: 'other'}
-];
 
 const fieldArray = [
 	{
-		name: 'emails',
-		type: 'arrayObject',
-		label: 'Emails',
-		width: 'full',
-		subName: [
-			{name: 'value', label: 'Email', className: 'children'},
-			{name: 'type', label: 'Type', type: 'select', option: selectOption, className: 'children'}
-		]
+		name: 'email',
+		type: 'email',
+		label: 'Email',
+		width: 'full'
 	},
 	{
 		name: 'givenName',
@@ -70,18 +58,18 @@ const fieldArray = [
 	}
 ];
 
-export default connect(mapStateToProps, actions)(reduxForm({
+export default connect(null, actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, valid, createUserRequest, pristine, apiURL} = props;
+		const {handleSubmit, valid, createUserRequest, pristine} = props;
 		const classes = useStyles();
 		const [cookie] = useCookies('login-cookie');
 		const token = cookie['login-cookie'];
 
 		function getStepContent() {
-			return element(fieldArray, classes, clearFields);
+			return element(fieldArray, classes);
 		}
 
 		function handleCreateUser(values) {
@@ -90,8 +78,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				givenName: values.givenName.toLowerCase(),
 				familyName: values.familyName.toLowerCase()
 			};
-			// eslint-disable-next-line no-unused-expressions
-			apiURL !== null && createUserRequest({API_URL: apiURL}, newUser, token);
+			// eslint-disable-next-line no-undef
+			createUserRequest(newUser, token);
 		}
 
 		const component = (
@@ -124,35 +112,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 	}));
 
-function element(array, classes, clearFields) {
-	return array.map(list =>
-
-		((list.type === 'arrayObject') ?
-			<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-				<FieldArray
-					className={`${classes.arrayString} ${list.width}`}
-					component={renderObjectArray}
-					name={list.name}
-					type={list.type}
-					label={list.label}
-					props={{clearFields, list}}
-				/>
-			</Grid> :
-
-			<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-				<Field
-					className={`${classes.textField} ${list.width}`}
-					component={renderTextField}
-					label={list.label}
-					name={list.name}
-					type={list.type}
-				/>
-			</Grid>)
-	);
-}
-
-function mapStateToProps(state) {
-	return ({
-		apiURL: state.common.apiURL
-	});
+function element(array, classes) {
+	return array.map(list => (
+		<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+			<Field
+				className={`${classes.textField} ${list.width}`}
+				component={renderTextField}
+				label={list.label}
+				name={list.name}
+				type={list.type}
+			/>
+		</Grid>
+	));
 }

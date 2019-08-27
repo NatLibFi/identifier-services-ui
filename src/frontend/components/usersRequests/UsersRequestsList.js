@@ -33,13 +33,17 @@ import {useCookies} from 'react-cookie';
 
 import SearchComponent from '../SearchComponent';
 import useStyles from '../../styles/publisherLists';
+import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
+import ModalLayout from '../ModalLayout';
+import UserRequestForm from '../form/UserRequestForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset, apiURL} = props;
+	const modalClasses = useModalStyles();
+	const {loading, fetchUsersRequestsList, usersRequestsList, totalUsersRequests, totalDoc, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = useState('');
 	const [sortStateBy, setSortStateBy] = useState('');
@@ -47,9 +51,9 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchUsersRequestsList({API_URL: apiURL, inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors, inputVal, sortStateBy, apiURL, fetchUsersRequestsList, cookie]);
+		// eslint-disable-next-line no-undef
+		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
+	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/requests/users/${id}`, {modal: true});
@@ -114,8 +118,12 @@ export default connect(mapStateToProps, actions)(props => {
 					<Tab className={classes.tab} value="rejected" label="Rejected"/>
 					<Tab className={classes.tab} value="" label="ShowAll"/>
 				</Tabs>
-
 				{usersData}
+			</Grid>
+			<Grid item xs={12} className={classes.publisherListSearch}>
+				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
+					<UserRequestForm {...props}/>
+				</ModalLayout>
 			</Grid>
 		</Grid>
 	);
@@ -129,7 +137,6 @@ function mapStateToProps(state) {
 		loading: state.users.loading,
 		usersRequestsList: state.users.usersRequestsList,
 		offset: state.users.offset,
-		totalDoc: state.users.totalUsersRequests,
-		apiURL: state.common.apiURL
+		totalDoc: state.users.totalUsersRequests
 	});
 }

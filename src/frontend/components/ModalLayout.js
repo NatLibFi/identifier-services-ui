@@ -1,7 +1,3 @@
-/* eslint-disable no-alert */
-/* eslint-disable no-undef */
-/* eslint-disable no-negated-condition */
-/* eslint-disable no-unused-expressions */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -45,8 +41,9 @@ export default connect(mapStateToProps)(withRouter(props => {
 	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd} = props;
 	const classes = useStyles();
 	const [open, setOpen] = useState(false);
+
 	useEffect(() => {
-		isTableRow && setOpen(isTableRow);
+		return isTableRow && setOpen(isTableRow);
 	}, [isTableRow]);
 
 	const handleOpen = () => {
@@ -55,8 +52,13 @@ export default connect(mapStateToProps)(withRouter(props => {
 
 	const handleClose = () => {
 		setOpen(false);
-		title === 'Forgot Password ?' && setPwd(false);
-		isTableRow && props.history.goBack();
+		if (title === 'Forgot Password ?') {
+			setPwd(false);
+		}
+
+		if (isTableRow) {
+			props.history.goBack();
+		}
 	};
 
 	const component = (
@@ -76,7 +78,8 @@ export default connect(mapStateToProps)(withRouter(props => {
 				open={open}
 				// eslint-disable-next-line no-alert
 				onClose={(form || fab) ? (() => {
-					if (window.confirm('Do you want to exit?')) {
+					// eslint-disable-next-line no-alert, no-undef
+					if (confirm('Do you want to exit?')) {
 						handleClose();
 					}
 				}) : handleClose}

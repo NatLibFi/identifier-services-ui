@@ -78,15 +78,15 @@ const theme = createMuiTheme({
 				paddingRight: 0
 			}
 		},
-
 		MuiToggleButton: {
-			'&$selected': {
-				'& span': {
-					color: '#ffffff !important'
-				},
-				backgroundColor: 'red !important'
+			root: {
+				'&$selected': {
+					'& span': {
+						color: '#ffffff !important'
+					},
+					backgroundColor: '#00224f !important'
+				}
 			}
-
 		}
 	}
 });

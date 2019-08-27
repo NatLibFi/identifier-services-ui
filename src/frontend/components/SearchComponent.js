@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable react-hooks/exhaustive-deps */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -52,9 +50,9 @@ export default connect(null, actions)(withRouter(props => {
 		e.preventDefault();
 		if (props.homePage) {
 			history.push('/publishers/', {searchText: inputVal});
-			searchFunction(inputVal, cookie['login-cookie']);
+			searchFunction({searchText: inputVal, token: cookie['login-cookie']});
 		} else {
-			searchFunction(inputVal, cookie['login-cookie']);
+			searchFunction({searchText: inputVal, token: cookie['login-cookie']});
 			setSearchInputVal(inputVal);
 		}
 	};

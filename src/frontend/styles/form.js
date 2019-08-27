@@ -90,6 +90,22 @@ const useStyles = makeStyles({
 	captcha: {
 		marginTop: '10px',
 		width: '40%'
+	},
+	authors: {
+		display: 'flex',
+		flexDirection: 'column',
+		'& button': {
+			marginTop: 15
+		}
+	},
+	authorDetails: {
+		margin: '15px 0'
+	},
+	toggleBtnGrp: {
+		margin: '20px 0',
+		'& button': {
+			height: 'fit-content'
+		}
 	}
 });
 

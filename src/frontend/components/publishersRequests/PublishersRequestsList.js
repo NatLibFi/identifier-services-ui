@@ -38,7 +38,7 @@ import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount, apiURL} = props;
+	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const classes = useStyles();
 	const [inputVal, setSearchInputVal] = useState('');
@@ -47,9 +47,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-unused-expressions
-		apiURL !== null && fetchPublishersRequestsList({API_URL: apiURL}, inputVal, cookie['login-cookie'], lastCursor);
-	}, [cookie, fetchPublishersRequestsList, inputVal, lastCursor, apiURL]);
+		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], lastCursor);
+	}, [cookie, fetchPublishersRequestsList, inputVal, lastCursor]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/requests/publishers/${id}`, {modal: true});
@@ -110,7 +109,6 @@ function mapStateToProps(state) {
 		publishersRequestsList: state.publisher.publishersRequestsList,
 		offset: state.publisher.offset,
 		totalDoc: state.publisher.totalDoc,
-		queryDocCount: state.publisher.queryDocCount,
-		apiURL: state.common.apiURL
+		queryDocCount: state.publisher.queryDocCount
 	});
 }

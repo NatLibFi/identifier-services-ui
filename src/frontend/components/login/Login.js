@@ -1,6 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable complexity */
-/* eslint-disable no-negated-condition */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -51,12 +48,10 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const handleLogOut = () => {
+		// eslint-disable-next-line no-undef
 		props.logOut();
 		props.history.push('/');
 		props.handleClose();
-		setTimeout(() => {
-			location.reload(true);
-		});
 	};
 
 	const component = (
