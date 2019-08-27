@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -29,10 +28,11 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
 import {Provider} from 'react-redux';
-import allReducers from './store/reducers';
+import fetch from 'node-fetch';
 import thunk from 'redux-thunk';
+import App from './App';
+import allReducers from './store/reducers';
 import {createStore, applyMiddleware, compose} from 'redux';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {addLocaleData} from 'react-intl';
@@ -50,18 +50,23 @@ async function run() {
 	addLocaleData([...en, ...fi, ...sv]);
 
 	const composeEnhancers =
-		__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+	/* global __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ */
+	/* eslint no-undef: "error" */
+		process.env.NODE_ENV === 'development' && __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
 			__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
 			compose;
 
 	const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
-
+	/* global localStorage */
+	/* eslint no-undef: "error" */
 	if (localStorage.allLang) {
 		store.dispatch(setLocale(localStorage.allLang));
 	}
 
 	function readCookie(name) {
 		var nameEQ = name + '=';
+		/* global document */
+		/* eslint no-undef: "error" */
 		var ca = document.cookie.split(';');
 		for (var i = 0; i < ca.length; i++) {
 			var c = ca[i];
@@ -83,6 +88,8 @@ async function run() {
 		});
 		const result = await temp.json();
 		Object.keys(result).forEach(key => {
+			/* global window */
+			/* eslint no-undef: "error" */
 			window[key] = result[key];
 		});
 	}
