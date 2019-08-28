@@ -55,4 +55,6 @@ export const FETCH_USERS_REQUEST = 'FETCH_USERS_REQUEST';
 export const USERS_REQUESTS_LIST = 'USERS_REQUESTS_LIST';
 
 export const ISBN_ISMN_LIST = 'ISBN_ISMN_LIST';
+export const ISSN_LIST = 'ISSN_LIST';
 export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
+export const FETCH_ISSN = 'FETCH_ISSN';

@@ -44,7 +44,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		fetchUsersList(cookie['login-cookie'], lastCursor);
 	}, [lastCursor, cursors, fetchUsersList, cookie]);
 

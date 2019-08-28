@@ -38,34 +38,34 @@ import {useCookies} from 'react-cookie';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchIsbnIsmnList, isbnIsmnList, totalpublication, offset, queryDocCount} = props;
+	const {loading, fetchIssnList, issnList, totalpublication, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
-		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
+		fetchIssnList({token: cookie['login-cookie'], offset: lastCursor});
+	}, [lastCursor, cursors, fetchIssnList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/publication/isbn-ismn/${id}`, {modal: true});
+		props.history.push(`/publication/issn/${id}`, {modal: true});
 	};
 
 	const headRows = [
 		{id: 'title', label: 'Title'},
-		{id: 'publisher', label: 'Publisher'},
-		{id: 'publicationTime', label: 'Publication Time'},
-		{id: 'state', label: 'State'}
+		{id: 'state', label: 'State'},
+		{id: 'frequency', label: 'Frequency'},
+		{id: 'firstNumber', label: 'First Number'}
 	];
 	let usersData;
 	if (loading) {
 		usersData = <Spinner/>;
-	} else if (isbnIsmnList === undefined || isbnIsmnList === null) {
+	} else if (issnList === undefined || issnList === null) {
 		usersData = <p>No Publication Available</p>;
 	} else {
 		usersData = (
 			<TableComponent
-				data={isbnIsmnList.map(item => usersDataRender(item))}
+				data={issnList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
 				offset={offset}
@@ -80,13 +80,13 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	function usersDataRender(item) {
-		const {id, title, state, publisher, publicationTime} = item;
+		const {id, title, state, firstNumber, frequency} = item;
 		return {
 			id: id,
 			title: title,
 			state: state,
-			publisher: publisher,
-			publicationTime: publicationTime
+			firstNumber: firstNumber,
+			frequency: frequency
 		};
 	}
 
@@ -106,7 +106,7 @@ export default connect(mapStateToProps, actions)(props => {
 function mapStateToProps(state) {
 	return ({
 		loading: state.publication.loading,
-		isbnIsmnList: state.publication.isbnIsmnList,
+		issnList: state.publication.issnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,
 		queryDocCount: state.publication.queryDocCount

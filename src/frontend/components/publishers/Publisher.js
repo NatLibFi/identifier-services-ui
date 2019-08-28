@@ -263,8 +263,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handlePublisherUpdate = values => {
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
-		// eslint-disable-next-line no-undef
-		updatePublisher({API_URL: API_URL}, match.params.id, updateValues, token);
+		updatePublisher(match.params.id, updateValues, token);
 		setIsEdit(false);
 	};
 

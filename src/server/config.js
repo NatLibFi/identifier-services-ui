@@ -33,9 +33,6 @@ export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
 
 export const SMTP_URL = readEnvironmentVariable('SMTP_URL');
 
-export const BASE_URL = readEnvironmentVariable('BASE_URL', {
-	defaultValue: 'http://localhost:8081/auth'
-});
 export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8081'
 });
