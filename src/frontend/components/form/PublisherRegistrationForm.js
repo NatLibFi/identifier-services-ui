@@ -365,26 +365,27 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
-			console.log('value', values)
+			const newClassification = values.classification.map(item => item.value.toString());
+			const organizationDetails = {
+				affiliateOf: {...formatAddress(values.affiliateOf)},
+				affiliates: values.affiliates.map(item => formatAddress(item)),
+				distributorOf: {...formatAddress(values.distributorOf)},
+				distributor: {...formatAddress(values.distributor)}
+			};
+			const publicationDetails = values.publicationDetails;
+			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
-				const newClassification = values.classification.map(item => item.value.toString());
-				const organizationDetails = {
-					affiliateOf: {...values.affiliateOf},
-					affiliates: [...values.affiliates],
-					distributorOf: {...values.distributorOf},
-					distributor: {...values.distributor}
-				};
-				const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 
 				if (result === true) {
 					const newPublisher = {
 						...rest,
 						organizationDetails: organizationDetails,
-						classification: newClassification
+						classification: newClassification,
+						publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
 					};
 					publisherCreationRequest(newPublisher);
 				} else {
@@ -394,6 +395,46 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				}
 			}
 		};
+
+		function formatAddress(obj) {
+			const result = Object.keys(obj).reduce((acc, key) => {
+				return {...acc, [replaceKey(key)]: obj[key]};
+			}, {});
+			return result;
+		}
+
+		// eslint-disable-next-line complexity
+		function replaceKey(key) {
+			switch (key) {
+				case 'affiliateOfAddress':
+				case 'affiliatesAddress':
+				case 'distributorAddress':
+				case 'distributorOfAddress':
+					return 'address';
+				case 'affiliateOfAddressDetails':
+				case 'affiliatesAddressDetails':
+				case 'distributorAddressDetails':
+				case 'distributorOfAddressDetails':
+					return 'addressDetails';
+				case 'affiliateOfCity':
+				case 'affiliatesCity':
+				case 'distributorCity':
+				case 'distributorOfCity':
+					return 'city';
+				case 'affiliateOfName':
+				case 'affiliatesName':
+				case 'distributorName':
+				case 'distributorOfName':
+					return 'name';
+				case 'affiliateOfZip':
+				case 'affiliatesZip':
+				case 'distributorZip':
+				case 'distributorOfZip':
+					return 'zip';
+				default:
+					return null;
+			}
+		}
 
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
@@ -451,7 +492,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				handleSubmit: PropTypes.func.isRequired,
 				pristine: PropTypes.bool.isRequired,
 				formSyncErrors: PropTypes.shape({}),
-				registerPublisher: PropTypes.func.isRequired,
 				valid: PropTypes.bool.isRequired
 			}
 		};

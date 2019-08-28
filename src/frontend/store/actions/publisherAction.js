@@ -103,7 +103,7 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 };
 
 // ****************REQUESTS**********************************
-export const publisherCreationRequest = ({API_URL}, values) => async () => {
+export const publisherCreationRequest = values => async () => {
 	const response = await fetch(`${API_URL}/requests/publishers`, {
 		method: 'POST',
 		headers: {
@@ -116,7 +116,6 @@ export const publisherCreationRequest = ({API_URL}, values) => async () => {
 };
 
 export const fetchPublishersRequestsList = ({API_URL}, searchText, token, offset) => async dispatch => {
-	console.log('req', searchText);
 	dispatch(setLoader());
 	try {
 		/* global API_URL */
