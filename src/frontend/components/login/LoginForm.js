@@ -27,10 +27,11 @@
  */
 
 import React from 'react';
-import {Grid, Button, Link, Typography} from '@material-ui/core';
+import {Grid, Button, Link, Typography, IconButton} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import PersonIcon from '@material-ui/icons/Person';
 import Visibility from '@material-ui/icons/Visibility';
+import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 
@@ -44,6 +45,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
+	const [showPassword, setShowPassword] = React.useState(false);
 
 	const handleLogin = values => {
 		// eslint-disable-next-line no-undef
@@ -71,7 +73,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</Grid>
 				<Grid container className={classes.inputGap} spacing={4} alignItems="flex-end">
 					<Grid item xs={1}>
-						<Visibility className={classes.personIcon}/>
+						<IconButton className={classes.eyeIcon} onClick={() => setShowPassword(!showPassword)}>
+							{showPassword ? <Visibility className={classes.personIcon}/> : <VisibilityOff className={classes.personIcon}/>}
+						</IconButton>
 					</Grid>
 
 					<Grid item xs={11}>
@@ -79,6 +83,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							className={formClasses.textField}
 							name="password"
 							label="Password"
+							type={showPassword ? 'text' : 'password'}
 							component={renderTextField}
 						/>
 					</Grid>
