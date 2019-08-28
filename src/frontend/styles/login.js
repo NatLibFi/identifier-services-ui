@@ -67,6 +67,10 @@ const useStyles = makeStyles({
 	inputGap: {
 		marginBottom: 20
 	},
+	eyeIcon: {
+		padding: 0,
+		color: 'inherit'
+	},
 	personIcon: {
 		height: 30,
 		width: 30
