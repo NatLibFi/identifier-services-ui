@@ -25,15 +25,33 @@
  * for the JavaScript code in this file.
  *
  */
+import React from 'react';
+import {Typography, Tabs, Tab} from '@material-ui/core';
+import useStyles from '../styles/tabComponent';
 
-import {makeStyles} from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-	publisherListSearch: {
-		maxWidth: '1200px',
-		margin: '0 auto',
-		paddingTop: '60px'
-	}
-});
-
-export default useStyles;
+export default function (props) {
+	const classes = useStyles();
+	const {sortStateBy, handleChange} = props;
+	const component = (
+		<>
+			<Tabs
+				className={classes.tabs}
+				value={sortStateBy}
+				indicatorColor="primary"
+				textColor="primary"
+				variant="outlined"
+				onChange={handleChange}
+			>
+				<Typography variant="overline">Filter State By :</Typography>
+				<Tab className={classes.tab} value="new" label="New"/>
+				<Tab className={classes.tab} value="inProgress" label="InProgress"/>
+				<Tab className={classes.tab} value="accepted" label="Accepted"/>
+				<Tab className={classes.tab} value="rejected" label="Rejected"/>
+				<Tab className={classes.tab} value="" label="ShowAll"/>
+			</Tabs>
+		</>
+	);
+	return {
+		...component
+	};
+}
