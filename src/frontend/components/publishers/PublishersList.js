@@ -76,9 +76,7 @@ export default connect(mapStateToProps, actions)(props => {
 	} else {
 		publishersData = (
 			<TableComponent
-				data={activeCheck.checked ? searchedPublishers
-					.map(item => searchResultRender(item._id, item.name, item.phone)) :
-					searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
+				data={searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
 				offset={offset}

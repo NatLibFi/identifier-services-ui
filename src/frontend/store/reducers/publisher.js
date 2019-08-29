@@ -69,9 +69,9 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				publishersRequestsList: action.payload.results,
-				offset: null,
-				totalDoc: null,
-				queryDocCount: null,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
 				loading: false
 			};
 		case PUBLISHER_REQUEST:
