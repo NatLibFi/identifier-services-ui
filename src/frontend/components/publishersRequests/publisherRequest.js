@@ -32,7 +32,10 @@ import {
 	Typography,
 	Button,
 	Grid,
-	Fab
+	Fab,
+	List,
+	ListItem,
+	ListItemText
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
@@ -44,6 +47,7 @@ import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
+import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
@@ -56,7 +60,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchPublisherRequest({API_URL: API_URL}, match.params.id, cookie['login-cookie']);
+		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
 	}, [cookie, fetchPublisherRequest, match.params.id]);
 
 	const handleEditClick = () => {
@@ -66,18 +70,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handleCancel = () => {
 		setIsEdit(false);
 	};
-
+	console.log('*****', publisherRequest)
 	let publisherRequestDetail;
 	if (publisherRequest === undefined || loading) {
 		publisherRequestDetail = <Spinner/>;
 	} else {
 		publisherRequestDetail = (
-			<Grid item xs={12} md={6}>
-				<Typography variant="h6">
-					Publisher Request Detail
-					{publisherRequest.name}
-				</Typography>
-			</Grid>
+			<>
+				<Grid item xs={12} md={6}>
+					<ListComponent label="Name" value={publisherRequest.name}/>
+					{publisherRequest.publisherEmail && <ListComponent label="Email" value={publisherRequest.publisherEmail}/>}
+					<ListComponent label="Phone" value={publisherRequest.phone}/>
+					<ListComponent label="Website" value={publisherRequest.website}/>
+					<ListComponent label="Language" value={publisherRequest.language}/>
+					<ListComponent label="Code" value={publisherRequest.code}/>
+					<ListComponent label="Frequency" value={publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency}/>
+
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<ListComponent label="Aliases" value={publisherRequest.aliases}/>
+					<ListComponent label="Classification" value={publisherRequest.classification}/>
+					<ListComponent label="Postal Address" value={publisherRequest.postalAddress}/>
+				</Grid>
+			</>
 		);
 	}
 
