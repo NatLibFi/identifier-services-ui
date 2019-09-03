@@ -341,13 +341,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			publicationRegistration,
 			publicationStep,
 			setPublicationStep,
-			setPublisher
+			setPublisher,
+			setPublisherRegForm
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
 		useEffect(() => {
 			loadSvgCaptcha();
+			publicationRegistration && setPublisherRegForm(false);
 		}, [loadSvgCaptcha]);
 
 		const steps = getSteps();
@@ -379,16 +381,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
-			console.log('value', values);
 			if (publicationRegistration || captchaInput.length > 0) {
 				const result = publicationRegistration ? true : await postCaptchaInput(captchaInput, captcha.id);
 				const newPublisher = makeNewPublisherObj(values, result);
-				return publicationRegistration ?
-					setPublicationStep(publicationStep + 1) && setPublisher(newPublisher) :
-					publisherCreationRequest(newPublisher);
+				if (publicationRegistration) {
+					setPublicationStep(publicationStep + 1);
+					setPublisher(newPublisher);
+					setPublisherRegForm(true);
+				}
+
+				publisherCreationRequest(newPublisher);
 			}
 
-			if (captchaInput.length === 0) {
+			if (!publicationRegistration && captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
 			}

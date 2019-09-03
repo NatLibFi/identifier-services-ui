@@ -63,6 +63,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
+		const [publisherRegForm, setPublisherRegForm] = useState(true);
 
 		useEffect(() => {
 			loadSvgCaptcha();
@@ -74,11 +75,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				switch (step) {
 					case 0:
 						return (
-								setActiveStep(activeStep + 1)
-							// <>
-							// 	<Typography className={classes.fullWidth} variant="h6" align="center">Publisher Details</Typography>
-							// 	<PublisherRegistrationForm publicationRegistration setPublicationStep={setActiveStep} publicationStep={activeStep} setPublisher={setPublisher}/>
-							// </>
+							<>
+								<Typography className={classes.fullWidth} variant="h6" align="center">Publisher Details</Typography>
+								<PublisherRegistrationForm
+									publicationRegistration
+									setPublicationStep={setActiveStep}
+									publicationStep={activeStep}
+									setPublisher={setPublisher}
+									setPublisherRegForm={setPublisherRegForm}
+								/>
+							</>
 						);
 					case 1:
 						return element(fieldArray[1].basicInformation, undefined, user);
@@ -157,23 +163,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						}
 					</Grid>
-					<div className={classes.btnContainer}>
-						<Button disabled={activeStep === 0} onClick={handleBack}>
-							Back
-						</Button>
-						{activeStep === steps.length - 1 ?
-							null :
-							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-								Next
-							</Button>
-						}
-						{
-							activeStep === steps.length - 1 &&
-								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-									Submit
-								</Button>
-						}
-					</div>
+					{
+						publisherRegForm ?
+							(
+								<div className={classes.btnContainer}>
+									<Button disabled={activeStep === 0} onClick={handleBack}>
+									Back
+									</Button>
+									{activeStep === steps.length - 1 ?
+										null :
+										<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
+										Next
+										</Button>
+									}
+									{
+										activeStep === steps.length - 1 &&
+										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+											Submit
+										</Button>
+									}
+								</div>
+							) :
+							null
+					}
 				</div>
 			</form>
 		);
