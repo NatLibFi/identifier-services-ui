@@ -50,6 +50,11 @@ const useStyles = makeStyles(
 			height: '300px',
 			overflow: 'auto',
 			wordBreak: 'break-all'
+		},
+		textArea: {
+			width: '50%',
+			background: '#ecefec75',
+			borderRadius: '5px'
 		}
 	});
 

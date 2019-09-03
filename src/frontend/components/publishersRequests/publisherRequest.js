@@ -30,14 +30,11 @@
 import React, {useState, useEffect} from 'react';
 import {
 	Typography,
-	Button,
 	Grid,
-	Fab,
-	List,
-	ListItem,
-	ListItemText
+	ButtonGroup,
+	Button,
+	TextareaAutosize
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
@@ -54,29 +51,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, userInfo, loading, isAuthenticated, fetchPublisherRequest, publisherRequest} = props;
+	const {match, loading, fetchPublisherRequest, publisherRequest} = props;
 	const classes = useStyles();
-	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
+	const [reject, setReject] = useState(false);
+
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
 	}, [cookie, fetchPublisherRequest, match.params.id]);
 
-	const handleEditClick = () => {
-		setIsEdit(true);
-	};
+	function handleRejectClick() {
+		setReject(!reject);
+	}
 
-	const handleCancel = () => {
-		setIsEdit(false);
-	};
 	let publisherRequestDetail;
 	if (publisherRequest === undefined || loading) {
 		publisherRequestDetail = <Spinner/>;
 	} else {
 		publisherRequestDetail = (
 			<>
-				<Grid item xs={12} md={12}><Typography>Publisher Request Details</Typography></Grid>
 				<Grid item xs={12} md={6}>
 					<ListComponent label="Name" value={publisherRequest.name}/>
 					{publisherRequest.publisherEmail && <ListComponent label="Email" value={publisherRequest.publisherEmail}/>}
@@ -102,41 +96,40 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		);
 	}
 
-	// NOTICE !!! Edit functionality is not done yet
 
 	const component = (
-		<ModalLayout isTableRow color="primary" label="Publisher Detail">
-			{isEdit ?
-				<div className={classes.publisher}>
-					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{publisherRequestDetail}
+		<ModalLayout isTableRow color="primary" title="Publisher Request Detail">
+			<div className={classes.publisher}>
+				<Grid container spacing={3} className={classes.publisherSpinner}>
+					{publisherRequestDetail}
+					{reject ?
+						null :
+						<Grid item xs={12}>
+							<ButtonGroup color="primary" aria-label="outlined primary button group">
+								<Button>Accept</Button>
+								<Button onClick={handleRejectClick}>Reject</Button>
+							</ButtonGroup>
 						</Grid>
-						<div className={classes.btnContainer}>
-							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary">
-                            UPDATE
-							</Button>
-						</div>
-					</form>
-				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{publisherRequestDetail}
-					</Grid>
-					{isAuthenticated && userInfo.role.some(item => item === 'admin') &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit Publisher Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
-				</div>
-			}
+					}
+					{reject ?
+						<>
+							<Grid item xs={12}>
+								<TextareaAutosize
+									aria-label="Minimum height"
+									rows={8}
+									placeholder="Rejection reason here..."
+									className={classes.textArea}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+								<Button variant="contained" color="primary">Submit</Button>
+							</Grid>
+						</> :
+						null
+					}
+				</Grid>
+			</div>
 		</ModalLayout>
 	);
 	return {
