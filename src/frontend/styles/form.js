@@ -67,6 +67,12 @@ const useStyles = makeStyles({
 	stepLabel: {
 		textTransform: 'capitalize'
 	},
+	smallFontStepLabel: {
+		textTransform: 'capitalize',
+		'& span': {
+			fontSize: '0.65rem'
+		}
+	},
 	editForm: {
 		display: 'flex'
 	},
@@ -77,6 +83,9 @@ const useStyles = makeStyles({
 	children: {
 		margin: '0 20px 0 0',
 		width: '80%'
+	},
+	fullWidth: {
+		width: '100%'
 	},
 	formHead: {
 		width: '100%',
@@ -106,6 +115,14 @@ const useStyles = makeStyles({
 		'& button': {
 			height: 'fit-content'
 		}
+	},
+	radioDirectionRow: {
+		flexDirection: 'row !important'
+	},
+	smallStepper: {
+		width: '60%',
+		margin: '0 auto',
+		padding: '0 0 10px 0'
 	}
 });
 

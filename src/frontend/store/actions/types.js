@@ -58,3 +58,5 @@ export const ISBN_ISMN_LIST = 'ISBN_ISMN_LIST';
 export const ISSN_LIST = 'ISSN_LIST';
 export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
 export const FETCH_ISSN = 'FETCH_ISSN';
+
+export const SET_FORM_NAME = 'SET_FORM_NAME';

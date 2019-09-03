@@ -33,7 +33,7 @@ import {Input, InputLabel, NativeSelect, FormControl} from '@material-ui/core';
 export default function ({label, input, name, options, className, defaultValue, meta: {touched, error}}) {
 	const component = (
 		<FormControl className={className}>
-			<InputLabel shrink htmlFor="language-helper">{label}</InputLabel>
+			<InputLabel htmlFor="language-helper">{label}</InputLabel>
 			<NativeSelect
 				{...input}
 				error={touched && Boolean(error)}

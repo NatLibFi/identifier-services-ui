@@ -26,7 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
-import {LOADER, GET_CAPTCHA, ERROR} from './types';
+import {LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME} from './types';
 
 export function success(type, payload) {
 	return ({
@@ -80,5 +80,12 @@ export const postCaptchaInput = (inputData, id) => async dispatch => {
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
+};
+
+export const setFormName = value => {
+	return {
+		type: SET_FORM_NAME,
+		payload: value
+	};
 };
 

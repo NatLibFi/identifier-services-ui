@@ -44,7 +44,7 @@ import * as actions from '../../store/actions';
 
 const classificationCodes = [0, 13, 24, 29, 32, 37, 40, 45, 100, 120, 130, 200, 210, 211, 270, 300, 310, 315, 316, 320, 330, 340, 350, 370, 375, 380, 390, 400, 410, 420, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 621, 622, 630, 640, 650, 660, 670, 672, 680, 690, 700, 710, 720, 730, 740, 750, 760, 765, 770, 780, 790, 800, 810, 820, 830, 840, 850, 860, 870, 880, 890, 900, 910, 920, 930, 940, 950].map(item => ({label: item, value: item}));
 
-const fieldArray = [
+export const fieldArray = [
 	{
 		basicInformation: [
 			{
@@ -325,10 +325,24 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				public: false
 			}
 	},
-	validate
+	validate,
+	enableReinitialize: true
 })(
 	props => {
-		const {handleSubmit, clearFields, pristine, valid, publisherCreationRequest, captcha, loadSvgCaptcha, postCaptchaInput} = props;
+		const {
+			handleSubmit,
+			clearFields,
+			pristine,
+			valid,
+			publisherCreationRequest,
+			captcha,
+			loadSvgCaptcha,
+			postCaptchaInput,
+			publicationRegistration,
+			publicationStep,
+			setPublicationStep,
+			setPublisher
+		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
@@ -366,41 +380,50 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const handlePublisherRegistration = async values => {
 			console.log('value', values);
+			if (publicationRegistration || captchaInput.length > 0) {
+				const result = publicationRegistration ? true : await postCaptchaInput(captchaInput, captcha.id);
+				const newPublisher = makeNewPublisherObj(values, result);
+				return publicationRegistration ?
+					setPublicationStep(publicationStep + 1) && setPublisher(newPublisher) :
+					publisherCreationRequest(newPublisher);
+			}
+
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
-			} else if (captchaInput.length > 0) {
-				const result = await postCaptchaInput(captchaInput, captcha.id);
-				const newClassification = values.classification.map(item => item.value.toString());
-				const organizationDetails = {
-					affiliateOf: {...values.affiliateOf},
-					affiliates: [...values.affiliates],
-					distributorOf: {...values.distributorOf},
-					distributor: {...values.distributor}
-				};
-				const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
-
-				if (result === true) {
-					const newPublisher = {
-						...rest,
-						organizationDetails: organizationDetails,
-						classification: newClassification
-					};
-					publisherCreationRequest(newPublisher);
-				} else {
-					// eslint-disable-next-line no-undef, no-alert
-					alert('Please type the correct word in the image below');
-					loadSvgCaptcha();
-				}
 			}
 		};
 
+		function makeNewPublisherObj(values, result) {
+			const newClassification = values.classification.map(item => item.value.toString());
+			const organizationDetails = {
+				affiliateOf: {...values.affiliateOf},
+				affiliates: [...values.affiliates],
+				distributorOf: {...values.distributorOf},
+				distributor: {...values.distributor}
+			};
+			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
+
+			if (result === true) {
+				const newPublisher = {
+					...rest,
+					organizationDetails: organizationDetails,
+					classification: newClassification
+				};
+				return newPublisher;
+			}
+
+			// eslint-disable-next-line no-undef, no-alert
+			alert('Please type the correct word in the image below');
+			loadSvgCaptcha();
+		}
+
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
-				<Stepper alternativeLabel activeStep={activeStep}>
+				<Stepper alternativeLabel className={publicationRegistration ? classes.smallStepper : null} activeStep={activeStep}>
 					{steps.map(label => (
 						<Step key={label}>
-							<StepLabel className={classes.stepLabel}>
+							<StepLabel className={publicationRegistration ? classes.smallFontStepLabel : classes.stepLabel}>
 								{label}
 							</StepLabel>
 						</Step>
@@ -410,8 +433,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid container spacing={2} direction="row">
 						{(getStepContent(activeStep))}
 
-						{
-							activeStep === steps.length - 1 &&
+						{(!publicationRegistration &&
+							activeStep === steps.length - 1) &&
 							<Grid item xs={12}>
 								<Captcha
 									captchaInput={captchaInput}
@@ -434,7 +457,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						{
 							activeStep === steps.length - 1 &&
 								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-									Submit
+									{publicationRegistration ? 'Next' : 'Submit'}
 								</Button>
 						}
 					</div>
@@ -500,6 +523,7 @@ function element(array, classes, clearFields) {
 							name={list.name}
 							type={list.type}
 							options={list.options}
+							props={{isMulti: true}}
 						/>
 					</Grid>
 				);

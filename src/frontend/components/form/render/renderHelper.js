@@ -26,58 +26,38 @@
  *
  */
 
-export {
-	fetchPublisher,
-	updatePublisher,
-	searchPublisher,
-	publisherCreationRequest,
-	fetchPublishersRequestsList,
-	fetchPublisherRequest
-} from './publisherAction';
+import React, {useState} from 'react';
+import {Field} from 'redux-form';
+import useStyles from '../../../styles/form';
+import renderInputRadio from './renderInputRadio';
 
-export {
-	normalLogin,
-	getUserInfo,
-	logOut
-} from './auth';
+export default function (props) {
+	const {list, style} = props;
+	const classes = useStyles();
+	const [placeholder, setPlaceholder] = useState('');
 
-export {
-	sendMessage,
-	createMessageTemplate,
-	fetchMessagesList,
-	fetchMessage
-} from './messageActions';
+	const component = (
+		<>
+			<Field
+				className={`${classes.textField} ${list.width}`}
+				component={renderInputRadio}
+				label={list.label}
+				name={placeholder}
+				type={list.type}
+				options={list.options}
+				props={
+					({
+						...props,
+						placeholder,
+						setPlaceholder,
+						style: style
+					})
+				}
+			/>
+		</>
+	);
 
-export {
-	setLocale
-} from './localeAction';
-
-export {
-	success,
-	fail,
-	setLoader,
-	loadSvgCaptcha,
-	postCaptchaInput,
-	setFormName
-} from './commonAction';
-
-export {
-	createUser,
-	createUserRequest,
-	fetchUser,
-	fetchUserRequest,
-	fetchUsersList,
-	fetchUsersRequestsList,
-	updateUserRequest
-} from './userActions';
-
-export {
-	passwordReset
-} from './passwordResetAction';
-
-export {
-	fetchIsbnIsmn,
-	fetchIsbnIsmnList,
-	fetchIssn,
-	fetchIssnList
-} from './publicationAction';
+	return {
+		...component
+	};
+}

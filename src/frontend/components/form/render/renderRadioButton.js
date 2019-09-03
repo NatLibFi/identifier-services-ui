@@ -30,7 +30,7 @@ import React from 'react';
 import {PropTypes} from 'prop-types';
 import {Radio, FormControlLabel, RadioGroup, FormLabel} from '@material-ui/core';
 
-export default function ({option, name, label, input, meta: {touched, error}}) {
+export default function ({options, name, label, input, meta: {touched, error}}) {
 	const component = (
 		<>
 
@@ -42,7 +42,7 @@ export default function ({option, name, label, input, meta: {touched, error}}) {
 				error={touched && Boolean(error)}
 			>
 				{
-					option.map(item => (
+					options.map(item => (
 						<FormControlLabel
 							key={item.value}
 							value={item.value}
@@ -62,7 +62,7 @@ export default function ({option, name, label, input, meta: {touched, error}}) {
 			input: {}
 		},
 		propTypes: {
-			option: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+			options: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 			input: PropTypes.shape({}),
 			label: PropTypes.string.isRequired,
 			name: PropTypes.string.isRequired,

@@ -25,25 +25,48 @@
  * for the JavaScript code in this file.
  *
  */
+
 import React from 'react';
 import {PropTypes} from 'prop-types';
-import {TextField, InputAdornment, Typography} from '@material-ui/core';
+// Import {Radio, FormControlLabel, RadioGroup, FormLabel, TextField} from '@material-ui/core';
+import {TextField, InputAdornment, Typography, RadioGroup, FormControlLabel, Radio} from '@material-ui/core';
 import ErrorIcons from '@material-ui/icons/ErrorOutline';
 
-import useStyles from '../../../styles/error';
+import useStyles from '../../../styles/form';
+import useErrorStyles from '../../../styles/error';
 
 export default function (props) {
-	const {input, label, className, type, meta, disabled, defaultValue, errors} = props;
+	const {input, className, style, options, meta, clearFields, disabled, placeholder, setPlaceholder, defaultValue} = props;
 	const {touched, error} = meta;
+	const errorClasses = useErrorStyles();
 	const classes = useStyles();
+
+	function handleChange(event) {
+		clearFields(undefined, false, false, placeholder);
+		setPlaceholder(event.target.value);
+	}
+
 	const component = (
 		<>
+			<RadioGroup
+				className={classes[`${style}`]}
+				onChange={handleChange}
+			>
+				{options.map(item => (
+					<FormControlLabel
+						key={item.value}
+						value={item.value}
+						control={<Radio color="primary"/>}
+						label={item.label}
+					/>
+				))}
+			</RadioGroup>
 			<TextField
 				{...input}
-				label={label}
+				label={placeholder}
 				disabled={disabled}
 				value={defaultValue}
-				type={type}
+				type="text"
 				className={className}
 				error={touched && Boolean(error)}
 				InputProps={{
@@ -51,10 +74,7 @@ export default function (props) {
 	<InputAdornment position="end">
 		<>
 			{touched && (error &&
-				<Typography variant="caption" color="error" className={classes.errors}><ErrorIcons fontSize="inherit"/>{error}</Typography>
-			)}
-			{touched && (errors &&
-				<Typography variant="caption" color="error" className={classes.errors}><ErrorIcons fontSize="inherit"/>{errors}</Typography>
+				<Typography variant="caption" color="error" className={errorClasses.errors}><ErrorIcons fontSize="inherit"/>{error}</Typography>
 			)}
 		</>
 	</InputAdornment>
@@ -78,3 +98,4 @@ export default function (props) {
 		}
 	};
 }
+
