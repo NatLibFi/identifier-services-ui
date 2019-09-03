@@ -9,19 +9,19 @@ import {Grid,
 	ExpansionPanelDetails,
 	Typography} from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import useStyles from '../styles/listComponent';
 
 export default function (props) {
-	const {label, value} = props;
+	const classes = useStyles();
 
-	function test(value) {
-		var result = '';
-		for (var key in value) {
+	const {label, value} = props;
+	const arr = [];
+	function formatObj(value) {
+		for (let key in value) {
 			if (Object.prototype.hasOwnProperty.call(value, key)) {
-				result += key + ' , ' + value[key] + '<br />';
+				arr.push(key + ': ' + value[key]);
 			}
 		}
-
-		return result;
 	}
 
 	function renderSwitch(value) {
@@ -36,32 +36,56 @@ export default function (props) {
 				);
 			case 'object':
 				if (Array.isArray(value)) {
+					if (value.some(item => typeof item === 'string')) {
+						return (
+							<>
+								<Grid item xs={4}>{label}:</Grid>
+								<Grid item xs={8}>
+									{value.map(item => {
+										return (
+											<Chip key={item} label={item}/>
+										);
+									})}
+								</Grid>
+							</>
+						);
+					}
+
 					return (
-						<>
-							<Grid item xs={4}>{label}:</Grid>
-							<Grid item xs={8}>
-								{value.map(item => {
-									return (
-										<Chip key={item} label={item}/>
-									);
-								})}
-							</Grid>
-						</>
+						<Grid item xs={12}>
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									className={classes.exPanel}
+								>
+									<Typography>{label}</Typography>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails className={classes.objDetail}>
+									{value.map(item => formatObj(item))}
+									{arr.map(item => <li key={item}>{item}</li>)}
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
+						</Grid>
 					);
 				}
 
 				return (
-					<ExpansionPanel>
-						<ExpansionPanelSummary
-							expandIcon={<ExpandMoreIcon/>}
-							aria-controls="panel1a-content"
-						>
-							<Typography>{label}</Typography>
-						</ExpansionPanelSummary>
-						<ExpansionPanelDetails>
-							<div>{test(value)}</div>
-						</ExpansionPanelDetails>
-					</ExpansionPanel>
+					<Grid item xs={12}>
+						<ExpansionPanel>
+							<ExpansionPanelSummary
+								expandIcon={<ExpandMoreIcon/>}
+								aria-controls="panel1a-content"
+								className={classes.exPanel}
+							>
+								<Typography>{label}</Typography>
+							</ExpansionPanelSummary>
+							<ExpansionPanelDetails className={classes.objDetail}>
+								{formatObj(value)}
+								{arr.map(item => <li key={item}>{item}</li>)}
+							</ExpansionPanelDetails>
+						</ExpansionPanel>
+					</Grid>
 				);
 
 			default:

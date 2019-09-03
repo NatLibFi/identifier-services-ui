@@ -70,13 +70,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handleCancel = () => {
 		setIsEdit(false);
 	};
-	console.log('*****', publisherRequest)
 	let publisherRequestDetail;
 	if (publisherRequest === undefined || loading) {
 		publisherRequestDetail = <Spinner/>;
 	} else {
 		publisherRequestDetail = (
 			<>
+				<Grid item xs={12} md={12}><Typography>Publisher Request Details</Typography></Grid>
 				<Grid item xs={12} md={6}>
 					<ListComponent label="Name" value={publisherRequest.name}/>
 					{publisherRequest.publisherEmail && <ListComponent label="Email" value={publisherRequest.publisherEmail}/>}
@@ -85,12 +85,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<ListComponent label="Language" value={publisherRequest.language}/>
 					<ListComponent label="Code" value={publisherRequest.code}/>
 					<ListComponent label="Frequency" value={publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency}/>
+					<ListComponent label="Aliases" value={publisherRequest.aliases}/>
+					<ListComponent label="Classification" value={publisherRequest.classification}/>
 
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<ListComponent label="Aliases" value={publisherRequest.aliases}/>
-					<ListComponent label="Classification" value={publisherRequest.classification}/>
 					<ListComponent label="Postal Address" value={publisherRequest.postalAddress}/>
+					<ListComponent label="Primary Contact" value={publisherRequest.primaryContact}/>
+					<ListComponent label="Affiliate Of" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf}/>
+					<ListComponent label="Affiliates" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliates}/>
+					<ListComponent label="Distributor Of" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf}/>
+					<ListComponent label="Distributor" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor}/>
+
 				</Grid>
 			</>
 		);
