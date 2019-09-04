@@ -325,8 +325,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				public: false
 			}
 	},
-	validate,
-	enableReinitialize: true
+	validate
 })(
 	props => {
 		const {
@@ -339,17 +338,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			loadSvgCaptcha,
 			postCaptchaInput,
 			publicationRegistration,
-			publicationStep,
-			setPublicationStep,
-			setPublisher,
+			handleSetPublisher,
 			setPublisherRegForm
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
+
 		useEffect(() => {
 			loadSvgCaptcha();
-			publicationRegistration && setPublisherRegForm(false);
+			if (publicationRegistration) {
+				setPublisherRegForm(false);
+			}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [loadSvgCaptcha]);
 
 		const steps = getSteps();
@@ -381,21 +382,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
-			if (publicationRegistration || captchaInput.length > 0) {
-				const result = publicationRegistration ? true : await postCaptchaInput(captchaInput, captcha.id);
-				const newPublisher = makeNewPublisherObj(values, result);
-				if (publicationRegistration) {
-					setPublicationStep(publicationStep + 1);
-					setPublisher(newPublisher);
-					setPublisherRegForm(true);
-				}
-
-				publisherCreationRequest(newPublisher);
-			}
-
-			if (!publicationRegistration && captchaInput.length === 0) {
+			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
+			} else if (captchaInput.length > 0) {
+				const result = await postCaptchaInput(captchaInput, captcha.id);
+				const newPublisher = makeNewPublisherObj(values, result);
+				publisherCreationRequest(newPublisher);
 			}
 		};
 
@@ -461,9 +454,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 						{
 							activeStep === steps.length - 1 &&
-								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-									{publicationRegistration ? 'Next' : 'Submit'}
-								</Button>
+								(publicationRegistration ?
+									(
+										<Button type="button" disabled={pristine || !valid} variant="contained" color="primary" onClick={handleSetPublisher}>
+											Next
+										</Button>
+									) : (
+										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+											Submit
+										</Button>
+									)
+								)
 						}
 					</div>
 				</div>

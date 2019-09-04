@@ -26,6 +26,9 @@
  *
  */
 
+/* eslint-disable no-alert */
+/* global alert */
+
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -44,6 +47,7 @@ import PublisherRegistrationForm from './PublisherRegistrationForm';
 import RenderHelper from './render/renderHelper';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
+import RenderPublicationPreview from '../publication/RenderPreview';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRegistrationForm',
@@ -55,8 +59,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(
 	props => {
-		const {loadSvgCaptcha, captcha, pristine, valid, clearFields, publisherValues, user} = props;
-		const [publisher, setPublisher] = useState(publisherValues);
+		const {loadSvgCaptcha, captcha, pristine, valid, postCaptchaInput, publicationValues, clearFields, publisherValues, user, handleSubmit} = props;
+		const [publisher, setPublisher] = useState('');
+		const [newPublication, setNewPublication] = useState({});
 		const [formatDetails, setFormatDetails] = useState('');
 		const [selectType, setSelectType] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -64,11 +69,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
+		const steps = getSteps(fieldArray);
 
 		useEffect(() => {
 			loadSvgCaptcha();
 		}, [loadSvgCaptcha, publisher]);
-		const steps = getSteps(fieldArray);
 
 		function getStepContent(step) {
 			if (user.id === undefined) {
@@ -79,9 +84,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<Typography className={classes.fullWidth} variant="h6" align="center">Publisher Details</Typography>
 								<PublisherRegistrationForm
 									publicationRegistration
-									setPublicationStep={setActiveStep}
-									publicationStep={activeStep}
-									setPublisher={setPublisher}
+									handleSetPublisher={handleSetPublisher}
 									setPublisherRegForm={setPublisherRegForm}
 								/>
 							</>
@@ -97,6 +100,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 					case 3:
 						return element(fieldArray[3].formatDetails, 'formatDetails');
+					case 4:
+						return <RenderPublicationPreview data={{...publicationValues, publisher: publisher}}/>;
 					default:
 						return 'Unknown step';
 				}
@@ -112,14 +117,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case x + 1:
 					return (
 						<>
-                            Authors
 							{fieldArrayElement(fieldArray[x + 1].authors, 'authors')}
-                            Series Details
 							{element(fieldArray[x + 1].seriesDetails, undefined, user)}
 						</>
 					);
 				case x + 2:
 					return element(fieldArray[x + 2].formatDetails, 'formatDetails', user);
+				case x + 3:
+					return <RenderPublicationPreview data={publicationValues}/>;
 				default:
 					return 'Unknown step';
 			}
@@ -137,8 +142,37 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setActiveStep(activeStep - 1);
 		}
 
+		function handleSetPublisher() {
+			handleNext();
+			setPublisher(publisherValues);
+			setPublisherRegForm(true);
+		}
+
+		async function handlePublicationRegistration(values) {
+			if (captchaInput.length === 0) {
+				alert('Captcha not provided');
+			} else if (captchaInput.length > 0) {
+				const result = await postCaptchaInput(captchaInput, captcha.id);
+				setNewPublication(makeNewPublicationObj(values, result));
+				console.log(newPublication);
+			}
+		}
+
+		function makeNewPublicationObj(values, result) {
+			if (result) {
+				return {
+					...values,
+					publisher: values.publisher === undefined ? publisher : values.publisher
+				};
+			}
+
+			alert('Please type the correct word in the image below');
+			loadSvgCaptcha();
+		}
+
 		const component = (
-			<form className={classes.container} onSubmit={() => console.log(publisher)}>
+			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
+				{console.log('3456444232', publicationValues)}
 				<Stepper alternativeLabel activeStep={activeStep}>
 					{steps.map(label => (
 						<Step key={label}>
@@ -309,7 +343,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function subElementFormatDetails(value) {
-			console.log(value);
 			const array = getSubFormatDetailsFieldArray();
 			switch (value) {
 				case 'electronic':
@@ -343,7 +376,8 @@ function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
-		publisherValues: getFormValues('publisherRegistrationForm')(state)
+		publisherValues: getFormValues('publisherRegistrationForm')(state),
+		publicationValues: getFormValues('publicationRegistrationForm')(state)
 	});
 }
 
@@ -476,6 +510,9 @@ function getFieldArray(user) {
 					]
 				}
 			]
+		},
+		{
+			preview: 'preview'
 		}
 	];
 	const fieldsWithoutUser = [{publisher: publisherFieldArray}];
