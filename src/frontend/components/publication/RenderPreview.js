@@ -125,18 +125,7 @@ export default function (props) {
 }
 
 function formatFieldName(string) {
-	const array = string.split(/(?=[A-Z])/);
-	let newString;
-	// eslint-disable-next-line no-return-assign
-	array.forEach(item =>
-		newString = newString === undefined ?
-			`${capitalize(item)}` :
-			`${newString} ${capitalize(item)}`
-	);
-	console.log(newString);
+	const res = string.replace(/([A-Z])/g, ' $1').trim();
+	const newString = res.charAt(0).toUpperCase() + res.slice(1);
 	return newString;
-
-	function capitalize(s) {
-		return typeof s === 'string' && (s.charAt(0).toUpperCase() + s.slice(1));
-	}
 }
