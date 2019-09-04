@@ -33,7 +33,7 @@ import ErrorIcons from '@material-ui/icons/ErrorOutline';
 import useStyles from '../../../styles/error';
 
 export default function (props) {
-	const {input, label, className, type, meta, disabled, defaultValue, errors} = props;
+	const {input, label, className, type, meta, disabled, errors} = props;
 	const {touched, error} = meta;
 	const classes = useStyles();
 	const component = (
@@ -42,7 +42,6 @@ export default function (props) {
 				{...input}
 				label={label}
 				disabled={disabled}
-				value={defaultValue}
 				type={type}
 				className={className}
 				error={touched && Boolean(error)}

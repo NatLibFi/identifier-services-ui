@@ -56,7 +56,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		isPublic: false
 	},
 	validate,
-	enableReinitialize: true
 })(
 	props => {
 		const {loadSvgCaptcha, captcha, pristine, valid, postCaptchaInput, publicationValues, clearFields, publisherValues, user, handleSubmit} = props;
@@ -280,7 +279,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									name={list.name}
 									type={list.type}
 									disabled={Boolean(list.name === 'publisher')}
-									props={{defaultValue: (list.name === 'publisher' && user.id !== undefined) ? user.id : null}}
 								/>
 							</Grid>
 						);
@@ -425,12 +423,6 @@ function getFieldArray(user) {
 					type: 'checkbox',
 					label: 'Is Public*',
 					width: 'full'
-				},
-				{
-					name: 'publisher',
-					type: 'text',
-					label: 'Publisher',
-					width: 'half'
 				},
 				{
 					name: 'type',
