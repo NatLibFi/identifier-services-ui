@@ -27,7 +27,7 @@
  */
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {Field, FieldArray, reduxForm} from 'redux-form';
+import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -39,6 +39,8 @@ import renderContactDetail from './render/renderContactDetail';
 import renderSelect from './render/renderSelect';
 import renderCheckbox from './render/renderCheckbox';
 import renderMultiSelect from './render/renderMultiSelect';
+import RenderPreview from './render/renderPreview';
+import ListComponent from '../ListComponent';
 import Captcha from '../Captcha';
 import * as actions from '../../store/actions';
 
@@ -313,6 +315,9 @@ const fieldArray = [
 			}
 
 		]
+	},
+	{
+		review: 'review'
 	}
 ];
 
@@ -328,7 +333,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, clearFields, pristine, valid, publisherCreationRequest, captcha, loadSvgCaptcha, postCaptchaInput} = props;
+		const {
+			handleSubmit,
+			clearFields,
+			pristine,
+			valid,
+			publisherCreationRequest,
+			captcha,
+			loadSvgCaptcha,
+			postCaptchaInput,
+			publisherValues
+		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
@@ -347,6 +362,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					return withFormTitle(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 3:
 					return withFormTitle(fieldArray[3].organizationalDetails2, classes);
+				case 4:
+					return renderPreview(publisherValues);
 				default:
 					return 'Unknown step';
 			}
@@ -617,8 +634,36 @@ function fieldArrayElement(data, fieldName, clearFields) {
 	);
 }
 
+function renderPreview(publisherValues) {
+	return (
+		<>
+			<Grid item xs={12} md={6}>
+				{
+					Object.keys(publisherValues).map(key => {
+						return typeof publisherValues[key] === 'string' ?
+							(
+								<ListComponent label={key} value={publisherValues[key]}/>
+							) :
+							null;
+					})
+				}
+			</Grid>
+			<Grid item xs={12} md={6}>
+				{
+					Object.keys(publisherValues).map(key => {
+						return typeof publisherValues[key] === 'object' ?
+							<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
+							null;
+					})
+				}
+			</Grid>
+		</>
+	);
+}
+
 function mapStateToProps(state) {
 	return ({
-		captcha: state.common.captcha
+		captcha: state.common.captcha,
+		publisherValues: getFormValues('publisherRegistrationForm')(state)
 	});
 }
