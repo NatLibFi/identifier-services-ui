@@ -30,7 +30,7 @@ import React from 'react';
 import {PropTypes} from 'prop-types';
 import {Radio, FormControlLabel, RadioGroup, FormLabel} from '@material-ui/core';
 
-export default function ({options, name, label, input, meta: {touched, error}}) {
+export default function ({options, name, label, className, input, meta: {touched, error}}) {
 	const component = (
 		<>
 
@@ -39,6 +39,7 @@ export default function ({options, name, label, input, meta: {touched, error}}) 
 				{...input}
 				aria-label={label}
 				name={name}
+				className={className}
 				error={touched && Boolean(error)}
 			>
 				{

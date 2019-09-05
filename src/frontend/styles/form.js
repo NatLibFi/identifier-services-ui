@@ -117,7 +117,8 @@ const useStyles = makeStyles({
 		}
 	},
 	radioDirectionRow: {
-		flexDirection: 'row !important'
+		flexDirection: 'row !important',
+		flexWrap: 'nowrap !important'
 	},
 	smallStepper: {
 		width: '60%',

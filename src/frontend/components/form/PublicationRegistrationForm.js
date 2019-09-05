@@ -93,8 +93,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 2:
 						return (
 							<>
-								{fieldArrayElement(fieldArray[2].authors, 'authors')}
 								{element(fieldArray[2].seriesDetails, undefined, user)}
+								{fieldArrayElement(fieldArray[2].authors, 'authors')}
 							</>
 						);
 					case 3:
@@ -296,7 +296,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 					case 'multiSelect':
 						return (
-							<Grid key={list.name} item xs={6}>
+							<Grid key={list.name} item xs={12}>
 								<Field
 									className={`${classes.selectField} ${list.width}`}
 									component={renderMultiSelect}
@@ -310,7 +310,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 					case 'radio':
 						return (
-							<Grid key={list.name} item xs={6}>
+							<Grid key={list.name} item xs={12}>
 								{fieldName === 'formatDetails' ?
 									(
 										<>
@@ -320,6 +320,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 													name={list.name}
 													type={list.type}
 													options={list.options}
+													props={{className: classes.radioDirectionRow}}
 													onChange={(e, values) => setFormatDetails(values)}
 												/>
 											</form>
