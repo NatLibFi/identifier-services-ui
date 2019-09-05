@@ -19,9 +19,15 @@ export default function (props) {
 	function formatObj(value) {
 		for (let key in value) {
 			if (Object.prototype.hasOwnProperty.call(value, key)) {
-				arr.push(key + ': ' + value[key]);
+				arr.push(formatLabel(key) + ': ' + value[key]);
 			}
 		}
+	}
+
+	function formatLabel(label) {
+		const res = label.replace(/([A-Z])/g, ' $1').trim()
+		const result = res.charAt(0).toUpperCase() + res.slice(1);
+		return result;
 	}
 
 	function renderSwitch(value) {
@@ -30,7 +36,7 @@ export default function (props) {
 			case 'number':
 				return (
 					<>
-						<Grid item xs={4}>{label}:</Grid>
+						<Grid item xs={4}>{formatLabel(label)}:</Grid>
 						<Grid item xs={8}>{value}</Grid>
 					</>
 				);
@@ -39,7 +45,7 @@ export default function (props) {
 					if (value.some(item => typeof item === 'string')) {
 						return (
 							<>
-								<Grid item xs={4}>{label}:</Grid>
+								<Grid item xs={4}>{formatLabel(label)}:</Grid>
 								<Grid item xs={8}>
 									{value.map(item => {
 										return (
@@ -59,7 +65,7 @@ export default function (props) {
 									aria-controls="panel1a-content"
 									className={classes.exPanel}
 								>
-									<Typography>{label}</Typography>
+									<Typography>{formatLabel(label)}</Typography>
 								</ExpansionPanelSummary>
 								<ExpansionPanelDetails className={classes.objDetail}>
 									{value.map(item => formatObj(item))}
@@ -78,7 +84,7 @@ export default function (props) {
 								aria-controls="panel1a-content"
 								className={classes.exPanel}
 							>
-								<Typography>{label}</Typography>
+								<Typography>{formatLabel(label)}</Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails className={classes.objDetail}>
 								{formatObj(value)}

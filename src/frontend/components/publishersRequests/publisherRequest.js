@@ -29,11 +29,11 @@
 
 import React, {useState, useEffect} from 'react';
 import {
-	Typography,
 	Grid,
 	ButtonGroup,
 	Button,
-	TextareaAutosize
+	TextareaAutosize,
+	List
 } from '@material-ui/core';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
@@ -65,52 +65,46 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setReject(!reject);
 	}
 
+	const formatPublisherRequest = {...publisherRequest, ...publisherRequest.organizationDetails};
+	const {organizationDetails, _id, state, ...formattedPublisherRequest} = formatPublisherRequest;
+
 	let publisherRequestDetail;
-	if (publisherRequest === undefined || loading) {
+	if (formattedPublisherRequest === undefined || loading) {
 		publisherRequestDetail = <Spinner/>;
 	} else {
 		publisherRequestDetail = (
 			<>
 				<Grid item xs={12} md={6}>
-					<ListComponent label="Name" value={publisherRequest.name}/>
-					{publisherRequest.publisherEmail && <ListComponent label="Email" value={publisherRequest.publisherEmail}/>}
-					<ListComponent label="Phone" value={publisherRequest.phone}/>
-					<ListComponent label="Website" value={publisherRequest.website}/>
-					<ListComponent label="Language" value={publisherRequest.language}/>
-					<ListComponent label="Code" value={publisherRequest.code}/>
-					<ListComponent label="Frequency" value={publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency}/>
-					<ListComponent label="Aliases" value={publisherRequest.aliases}/>
-					<ListComponent label="Classification" value={publisherRequest.classification}/>
-
+					{
+						Object.keys(formattedPublisherRequest).map(key => {
+							return typeof formattedPublisherRequest[key] === 'string' ?
+								(
+									<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+								) :
+								null;
+						})
+					}
 				</Grid>
 				<Grid item xs={12} md={6}>
-					<ListComponent label="Postal Address" value={publisherRequest.postalAddress}/>
-					<ListComponent label="Primary Contact" value={publisherRequest.primaryContact}/>
-					<ListComponent label="Affiliate Of" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf}/>
-					<ListComponent label="Affiliates" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliates}/>
-					<ListComponent label="Distributor Of" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf}/>
-					<ListComponent label="Distributor" value={publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor}/>
-
+					{
+						Object.keys(formattedPublisherRequest).map(key => {
+							return typeof formattedPublisherRequest[key] === 'object' ?
+								(
+									<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+								) :
+								null;
+						})
+					}
 				</Grid>
 			</>
 		);
 	}
-
 
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publisher Request Detail">
 			<div className={classes.publisher}>
 				<Grid container spacing={3} className={classes.publisherSpinner}>
 					{publisherRequestDetail}
-					{reject ?
-						null :
-						<Grid item xs={12}>
-							<ButtonGroup color="primary" aria-label="outlined primary button group">
-								<Button>Accept</Button>
-								<Button onClick={handleRejectClick}>Reject</Button>
-							</ButtonGroup>
-						</Grid>
-					}
 					{reject ?
 						<>
 							<Grid item xs={12}>
@@ -126,7 +120,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<Button variant="contained" color="primary">Submit</Button>
 							</Grid>
 						</> :
-						null
+						<Grid item xs={12}>
+							<ButtonGroup color="primary" aria-label="outlined primary button group">
+								<Button>Accept</Button>
+								<Button onClick={handleRejectClick}>Reject</Button>
+							</ButtonGroup>
+						</Grid>
 					}
 				</Grid>
 			</div>
