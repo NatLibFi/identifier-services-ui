@@ -39,7 +39,6 @@ import renderContactDetail from './render/renderContactDetail';
 import renderSelect from './render/renderSelect';
 import renderCheckbox from './render/renderCheckbox';
 import renderMultiSelect from './render/renderMultiSelect';
-import RenderPreview from './render/renderPreview';
 import ListComponent from '../ListComponent';
 import Captcha from '../Captcha';
 import * as actions from '../../store/actions';

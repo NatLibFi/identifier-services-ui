@@ -1,6 +1,5 @@
 import React from 'react';
 import {Grid,
-	List,
 	ListItem,
 	ListItemText,
 	Chip,
@@ -25,7 +24,7 @@ export default function (props) {
 	}
 
 	function formatLabel(label) {
-		const res = label.replace(/([A-Z])/g, ' $1').trim()
+		const res = label.replace(/([A-Z])/g, ' $1').trim();
 		const result = res.charAt(0).toUpperCase() + res.slice(1);
 		return result;
 	}
@@ -100,17 +99,13 @@ export default function (props) {
 	}
 
 	const component = (
-		<>
-			<List>
-				<ListItem>
-					<ListItemText>
-						<Grid container>
-							{renderSwitch(value)}
-						</Grid>
-					</ListItemText>
-				</ListItem>
-			</List>
-		</>
+		<ListItem>
+			<ListItemText>
+				<Grid container>
+					{renderSwitch(value)}
+				</Grid>
+			</ListItemText>
+		</ListItem>
 
 	);
 	return {

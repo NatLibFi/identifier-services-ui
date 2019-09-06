@@ -51,18 +51,70 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublisherRequest, publisherRequest} = props;
+	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
+	const [accept, setAccept] = useState('');
 	const [reject, setReject] = useState(false);
-
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id]);
+	}, [cookie, fetchPublisherRequest, match.params.id, accept]);
 
 	function handleRejectClick() {
 		setReject(!reject);
+	}
+
+	function handleRejectSubmit() {
+		const newPublisherRequest = {
+			...publisherRequest,
+			state: 'rejected'
+		};
+		delete newPublisherRequest._id;
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+	}
+
+	function handleAccept() {
+		const newPublisherRequest = {
+			...publisherRequest,
+			state: 'accepted'
+		};
+		delete newPublisherRequest._id;
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		setAccept(publisherRequest.state);
+	}
+
+	function renderButton(state) {
+		switch (state) {
+			case 'new':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			case 'accepted':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="contained" color="primary" size="small" style={{cursor: 'not-allowed'}}>Accepted</Button>
+					</ButtonGroup>
+				);
+			case 'rejected':
+				return (
+					<ButtonGroup color="error" aria-label="outlined primary button group">
+						<Button variant="contained" color="error" size="small">Rejected</Button>
+					</ButtonGroup>
+				);
+			case 'inProgress':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			default:
+				return null;
+		}
 	}
 
 	const formatPublisherRequest = {...publisherRequest, ...publisherRequest.organizationDetails};
@@ -75,26 +127,30 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		publisherRequestDetail = (
 			<>
 				<Grid item xs={12} md={6}>
-					{
-						Object.keys(formattedPublisherRequest).map(key => {
-							return typeof formattedPublisherRequest[key] === 'string' ?
-								(
-									<ListComponent label={key} value={formattedPublisherRequest[key]}/>
-								) :
-								null;
-						})
-					}
+					<List>
+						{
+							Object.keys(formattedPublisherRequest).map(key => {
+								return typeof formattedPublisherRequest[key] === 'string' ?
+									(
+										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
 				</Grid>
 				<Grid item xs={12} md={6}>
-					{
-						Object.keys(formattedPublisherRequest).map(key => {
-							return typeof formattedPublisherRequest[key] === 'object' ?
-								(
-									<ListComponent label={key} value={formattedPublisherRequest[key]}/>
-								) :
-								null;
-						})
-					}
+					<List>
+						{
+							Object.keys(formattedPublisherRequest).map(key => {
+								return typeof formattedPublisherRequest[key] === 'object' ?
+									(
+										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
 				</Grid>
 			</>
 		);
@@ -117,14 +173,32 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 							<Grid item xs={12}>
 								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
-								<Button variant="contained" color="primary">Submit</Button>
+								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
 							</Grid>
 						</> :
 						<Grid item xs={12}>
-							<ButtonGroup color="primary" aria-label="outlined primary button group">
-								<Button>Accept</Button>
-								<Button onClick={handleRejectClick}>Reject</Button>
-							</ButtonGroup>
+							{/* <ButtonGroup color="primary" aria-label="outlined primary button group"> */}
+							{/* <Button onClick={handleAccept}>{publisherRequest.state === 'accepted' ? 'Accepted' : 'Accept'}</Button> */}
+							{/* {publisherRequest.state === 'accepted' ?
+									<Button disabled>Accepted</Button> :
+									<Button color="primary" onClick={handleAccept}>Reject</Button>
+								}
+								{publisherRequest.state === 'rejected' ?
+									<Button disabled>Rejected</Button> :
+									<Button style={{color: 'red'}} onClick={handleAccept}>Accept</Button>
+								} */}
+							{
+								renderButton(publisherRequest.state)
+
+								// publisherRequest.state === 'new' ?
+								// 	<ButtonGroup color="primary" aria-label="outlined primary button group">
+								// 		<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+								// 		<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+								// 	</ButtonGroup> :
+								// 	null
+
+							}
+							{/* </ButtonGroup> */}
 						</Grid>
 					}
 				</Grid>
