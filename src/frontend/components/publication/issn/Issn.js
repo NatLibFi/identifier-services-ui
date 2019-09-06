@@ -1,4 +1,3 @@
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -32,31 +31,37 @@ import {
 	Typography,
 	Button,
 	Grid,
+	List,
+	ListItem,
+	ListItemText,
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../styles/publisher';
-import * as actions from '../../store/actions';
+import useStyles from '../../../styles/publisher';
+import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
-import Spinner from '../Spinner';
+import ModalLayout from '../../ModalLayout';
+import Spinner from '../../Spinner';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, userInfo, loading, isAuthenticated, fetchPublisherRequest, publisherRequest} = props;
+	const {match, issn, userInfo, loading, fetchIssn} = props;
 	const classes = useStyles();
+	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
+
 	useEffect(() => {
-		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id]);
+		// eslint-disable-next-line no-undef
+		fetchIssn({id: match.params.id, token: cookie['login-cookie']});
+	}, [cookie, fetchIssn, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -66,48 +71,83 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	let publisherRequestDetail;
-	if (publisherRequest === undefined || loading) {
-		publisherRequestDetail = <Spinner/>;
+	let publicationDetail;
+	let keys = isEdit ? Object.keys(issn).filter(key => key !== 'lastUpdated') : Object.keys(issn).map(key => key);
+	if (issn === undefined || loading) {
+		publicationDetail = <Spinner/>;
 	} else {
-		publisherRequestDetail = (
-			<Grid item xs={12} md={6}>
+		publicationDetail = (
+			<Grid item xs={12}>
 				<Typography variant="h6">
-					Publisher Request Detail
-					{publisherRequest.name}
+						Publication Details
 				</Typography>
+				<List>
+					<Grid container xs={12}>
+						{keys.map(key => {
+							return (
+								<ListItem key={key}>
+									<ListItemText>
+										{(typeof issn[key] === 'object') ?
+											(Array.isArray(issn[key]) ?
+												issn[key].map(obj =>
+													renderObject(obj)
+												) :
+												renderObject(issn[key])
+											) :
+											(
+												<Grid container>
+													<Grid item xs={4}>{key}: </Grid>
+													<Grid item xs={8}>{issn[key].toString()}</Grid>
+												</Grid>
+											)
+										}
+									</ListItemText>
+								</ListItem>
+							);
+						})}
+					</Grid>
+				</List>
 			</Grid>
 		);
 	}
 
-	// NOTICE !!! Edit functionality is not done yet
+	function renderObject(obj) {
+		return (Object.keys(obj).map(subKey =>
+			(
+				<Grid key={subKey} container>
+					<Grid item xs={4}>{subKey}: </Grid>
+					<Grid item xs={8}>{obj[subKey]}</Grid>
+				</Grid>
+			)
+		));
+	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" label="Publisher Detail">
+		<ModalLayout isTableRow color="primary">
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>
 						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{publisherRequestDetail}
+							{publicationDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
 							<Button variant="contained" color="primary">
-                            UPDATE
+								UPDATE
 							</Button>
 						</div>
 					</form>
 				</div> :
 				<div className={classes.publisher}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{publisherRequestDetail}
+						{publicationDetail}
 					</Grid>
-					{isAuthenticated && userInfo.role.some(item => item === 'admin') &&
+					{role !== undefined && role.some(item => item === 'admin') &&
 						<div className={classes.btnContainer}>
 							<Fab
 								color="primary"
 								size="small"
-								title="Edit Publisher Detail"
+								title="Edit Issn Detail"
 								onClick={handleEditClick}
 							>
 								<EditIcon/>
@@ -124,9 +164,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		publisherRequest: state.publisher.publisherRequest,
-		loading: state.publisher.loading,
-		isAuthenticated: state.login.isAuthenticated,
+		issn: state.publication.issn,
+		loading: state.publication.loading,
+		initialValues: state.publication.issn,
 		userInfo: state.login.userInfo
 	});
 }

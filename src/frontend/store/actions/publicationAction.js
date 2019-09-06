@@ -25,15 +25,15 @@
  * for the JavaScript code in this file.
  *
  */
+/* global API_URL */
+/* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ERROR} from './types';
+import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ISSN_LIST, FETCH_ISSN, ERROR} from './types';
 import {setLoader, success, fail} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* global API_URL */
-		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
 			headers: {
@@ -54,20 +54,41 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	}
 };
 
-export const createUser = (values, token) => async () => {
-	/* global API_URL */
-	/* eslint no-undef: "error" */
-	const response = await fetch(`${API_URL}/users`, {
-		method: 'POST',
-		headers: {
-			Authorization: 'Bearer ' + token,
-			'Content-Type': 'application/json'
-		},
-		credentials: 'same-origin',
-		body: JSON.stringify(values)
-	});
-	await response.json();
+export const fetchIssnList = ({token, offset}) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/publications/issn/query`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: {}
+				}],
+				offset: offset
+			})
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };
+
+// Export const createUser = (values, token) => async () => {
+// 	const response = await fetch(`${API_URL}/users`, {
+// 		method: 'POST',
+// 		headers: {
+// 			Authorization: 'Bearer ' + token,
+// 			'Content-Type': 'application/json'
+// 		},
+// 		credentials: 'same-origin',
+// 		body: JSON.stringify(values)
+// 	});
+// 	await response.json();
+// };
 
 // Export const createUserRequest = (values, token) => async () => {
 // 	const response = await fetch(`${API_URL}/requests/users`, {
@@ -85,8 +106,6 @@ export const createUser = (values, token) => async () => {
 export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* global API_URL */
-		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/${id}`, {
 			method: 'GET',
 			headers: {
@@ -95,6 +114,22 @@ export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 		});
 		const result = await response.json();
 		dispatch(success(FETCH_ISBN_ISMN, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const fetchIssn = ({id, token}) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/publications/issn/${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + token
+			}
+		});
+		const result = await response.json();
+		dispatch(success(FETCH_ISSN, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

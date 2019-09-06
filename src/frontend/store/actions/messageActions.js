@@ -26,7 +26,8 @@
  *
  */
 
-// import axios from 'axios';
+/* global API_URL */
+/* eslint no-undef: "error" */
 import {CONTACT, FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
 import fetch from 'node-fetch';
 import {setLoader, success, fail} from './commonAction';
@@ -50,8 +51,6 @@ export const sendMessage = values => async dispatch => {
 
 export const createMessageTemplate = values => async dispatch => {
 	dispatch(setLoader());
-	/* global API_URL */
-	/* eslint no-undef: "error" */
 	const response = await fetch(`${API_URL}/templates`, {
 		method: 'POST',
 		headers: {
@@ -65,8 +64,6 @@ export const createMessageTemplate = values => async dispatch => {
 export const fetchMessagesList = (token, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* global API_URL */
-		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/query`, {
 			method: 'POST',
 			headers: {
@@ -88,8 +85,6 @@ export const fetchMessagesList = (token, offset) => async dispatch => {
 export const fetchMessage = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		/* global API_URL */
-		/* eslint no-undef: "error" */
 		const response = await fetch(`${API_URL}/templates/${id}`, {
 			method: 'GET',
 			headers: {

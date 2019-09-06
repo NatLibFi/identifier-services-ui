@@ -365,7 +365,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
-			console.log('value', values)
+			console.log('value', values);
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
 				alert('Captcha not provided');
