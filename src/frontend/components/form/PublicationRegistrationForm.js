@@ -55,7 +55,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		language: 'eng',
 		isPublic: false
 	},
-	validate,
+	validate
 })(
 	props => {
 		const {loadSvgCaptcha, captcha, pristine, valid, postCaptchaInput, publicationValues, clearFields, publisherValues, user, handleSubmit} = props;
