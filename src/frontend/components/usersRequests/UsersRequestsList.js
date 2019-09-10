@@ -28,7 +28,7 @@
 
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Typography, Tabs, Tab} from '@material-ui/core';
+import {Grid, Typography} from '@material-ui/core';
 import {useCookies} from 'react-cookie';
 
 import SearchComponent from '../SearchComponent';
@@ -39,6 +39,7 @@ import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import ModalLayout from '../ModalLayout';
 import UserRequestForm from '../form/UserRequestForm';
+import TabComponent from '../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
@@ -52,7 +53,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
 
@@ -106,21 +106,10 @@ export default connect(mapStateToProps, actions)(props => {
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Users Creation Requests</Typography>
 				<SearchComponent offset={offset} searchFunction={fetchUsersRequestsList} setSearchInputVal={setSearchInputVal}/>
-				<Tabs
-					className={classes.tabs}
-					value={sortStateBy}
-					indicatorColor="primary"
-					textColor="primary"
-					variant="outlined"
-					onChange={handleChange}
-				>
-					<Typography variant="overline">Sort State By :</Typography>
-					<Tab className={classes.tab} value="new" label="New"/>
-					<Tab className={classes.tab} value="inProgress" label="InProgress"/>
-					<Tab className={classes.tab} value="accepted" label="Accepted"/>
-					<Tab className={classes.tab} value="rejected" label="Rejected"/>
-					<Tab className={classes.tab} value="" label="ShowAll"/>
-				</Tabs>
+				<TabComponent
+					sortStateBy={sortStateBy}
+					handleChange={handleChange}
+				/>
 				{usersData}
 			</Grid>
 			<Grid item xs={12} className={classes.publisherListSearch}>

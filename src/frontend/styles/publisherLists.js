@@ -29,16 +29,6 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-	tabs: {
-		'& div:first-child': {
-			maxHeight: 30
-		}
-	},
-	tab: {
-		minWidth: 'fit-content',
-		minHeight: 'fit-content',
-		padding: '0px 12px'
-	},
 	publisherListSearch: {
 		maxWidth: '1200px',
 		margin: '0 auto',

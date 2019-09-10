@@ -112,8 +112,7 @@ export const publisherCreationRequest = values => async () => {
 	await response.json();
 };
 
-export const fetchPublishersRequestsList = (searchText, token, offset) => async dispatch => {
-	console.log('req', searchText);
+export const fetchPublishersRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
@@ -124,7 +123,7 @@ export const fetchPublishersRequestsList = (searchText, token, offset) => async 
 			},
 			body: JSON.stringify({
 				queries: [{
-					query: {name: searchText}
+					query: {state: sortStateBy, name: searchText}
 				}],
 				offset: offset
 			})

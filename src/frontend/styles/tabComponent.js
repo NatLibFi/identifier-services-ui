@@ -28,34 +28,17 @@
 
 import {makeStyles} from '@material-ui/core/styles';
 
-const useStyles = makeStyles(
-	{
-		publisher: {
-			maxWidth: '1200px',
-			minWidth: '750px',
-			padding: '20px 0px'
-		},
-		publisherSpinner: {
-			justifyContent: 'center'
-		},
-		btnContainer: {
-			display: 'flex',
-			justifyContent: 'flex-end'
-		},
-		detailHeading: {
-			paddingLeft: '12px',
-			borderBottom: '1px solid'
-		},
-		notesContainer: {
-			height: '300px',
-			overflow: 'auto',
-			wordBreak: 'break-all'
-		},
-		textArea: {
-			width: '50%',
-			background: '#ecefec75',
-			borderRadius: '5px'
+const useStyles = makeStyles({
+	tabs: {
+		'& div:first-child': {
+			maxHeight: 30
 		}
-	});
+	},
+	tab: {
+		minWidth: 'fit-content',
+		minHeight: 'fit-content',
+		padding: '0px 12px'
+	}
+});
 
 export default useStyles;

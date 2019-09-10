@@ -25,7 +25,6 @@
  * for the JavaScript code in this file.
  *
  */
-
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';

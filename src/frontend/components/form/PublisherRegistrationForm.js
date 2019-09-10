@@ -27,7 +27,7 @@
  */
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {Field, FieldArray, reduxForm} from 'redux-form';
+import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -39,6 +39,7 @@ import renderContactDetail from './render/renderContactDetail';
 import renderSelect from './render/renderSelect';
 import renderCheckbox from './render/renderCheckbox';
 import renderMultiSelect from './render/renderMultiSelect';
+import ListComponent from '../ListComponent';
 import Captcha from '../Captcha';
 import * as actions from '../../store/actions';
 
@@ -313,6 +314,9 @@ export const fieldArray = [
 			}
 
 		]
+	},
+	{
+		review: 'review'
 	}
 ];
 
@@ -339,7 +343,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			postCaptchaInput,
 			publicationRegistration,
 			handleSetPublisher,
-			setPublisherRegForm
+			setPublisherRegForm,
+			publisherValues
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -364,6 +369,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					return withFormTitle(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 3:
 					return withFormTitle(fieldArray[3].organizationalDetails2, classes);
+				case 4:
+					return renderPreview(publisherValues);
 				default:
 					return 'Unknown step';
 			}
@@ -395,25 +402,67 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function makeNewPublisherObj(values, result) {
 			const newClassification = values.classification.map(item => item.value.toString());
 			const organizationDetails = {
-				affiliateOf: {...values.affiliateOf},
-				affiliates: [...values.affiliates],
-				distributorOf: {...values.distributorOf},
-				distributor: {...values.distributor}
+				affiliateOf: {...formatAddress(values.affiliateOf)},
+				affiliates: values.affiliates.map(item => formatAddress(item)),
+				distributorOf: {...formatAddress(values.distributorOf)},
+				distributor: {...formatAddress(values.distributor)}
 			};
+			const publicationDetails = values.publicationDetails;
 			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 
 			if (result === true) {
 				const newPublisher = {
 					...rest,
 					organizationDetails: organizationDetails,
-					classification: newClassification
+					classification: newClassification,
+					publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
 				};
-				return newPublisher;
+				publisherCreationRequest(newPublisher);
+			} else {
+				// eslint-disable-next-line no-undef, no-alert
+				alert('Please type the correct word in the image below');
+				loadSvgCaptcha();
 			}
+		}
 
-			// eslint-disable-next-line no-undef, no-alert
-			alert('Please type the correct word in the image below');
-			loadSvgCaptcha();
+		function formatAddress(obj) {
+			const result = Object.keys(obj).reduce((acc, key) => {
+				return {...acc, [replaceKey(key)]: obj[key]};
+			}, {});
+			return result;
+		}
+
+		// eslint-disable-next-line complexity
+		function replaceKey(key) {
+			switch (key) {
+				case 'affiliateOfAddress':
+				case 'affiliatesAddress':
+				case 'distributorAddress':
+				case 'distributorOfAddress':
+					return 'address';
+				case 'affiliateOfAddressDetails':
+				case 'affiliatesAddressDetails':
+				case 'distributorAddressDetails':
+				case 'distributorOfAddressDetails':
+					return 'addressDetails';
+				case 'affiliateOfCity':
+				case 'affiliatesCity':
+				case 'distributorCity':
+				case 'distributorOfCity':
+					return 'city';
+				case 'affiliateOfName':
+				case 'affiliatesName':
+				case 'distributorName':
+				case 'distributorOfName':
+					return 'name';
+				case 'affiliateOfZip':
+				case 'affiliatesZip':
+				case 'distributorZip':
+				case 'distributorOfZip':
+					return 'zip';
+				default:
+					return null;
+			}
 		}
 
 		const component = (
@@ -480,7 +529,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				handleSubmit: PropTypes.func.isRequired,
 				pristine: PropTypes.bool.isRequired,
 				formSyncErrors: PropTypes.shape({}),
-				registerPublisher: PropTypes.func.isRequired,
 				valid: PropTypes.bool.isRequired
 			}
 		};
@@ -607,8 +655,36 @@ function fieldArrayElement(data, fieldName, clearFields) {
 	);
 }
 
+function renderPreview(publisherValues) {
+	return (
+		<>
+			<Grid item xs={12} md={6}>
+				{
+					Object.keys(publisherValues).map(key => {
+						return typeof publisherValues[key] === 'string' ?
+							(
+								<ListComponent label={key} value={publisherValues[key]}/>
+							) :
+							null;
+					})
+				}
+			</Grid>
+			<Grid item xs={12} md={6}>
+				{
+					Object.keys(publisherValues).map(key => {
+						return typeof publisherValues[key] === 'object' ?
+							<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
+							null;
+					})
+				}
+			</Grid>
+		</>
+	);
+}
+
 function mapStateToProps(state) {
 	return ({
-		captcha: state.common.captcha
+		captcha: state.common.captcha,
+		publisherValues: getFormValues('publisherRegistrationForm')(state)
 	});
 }
