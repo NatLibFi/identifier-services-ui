@@ -77,5 +77,7 @@ export {
 
 export {
 	fetchIsbnIsmn,
-	fetchIsbnIsmnList
+	fetchIsbnIsmnList,
+	fetchIssn,
+	fetchIssnList
 } from './publicationAction';

@@ -33,7 +33,7 @@ import ErrorIcons from '@material-ui/icons/ErrorOutline';
 import useStyles from '../../../styles/error';
 
 export default function (props) {
-	const {input, label, className, meta, errors} = props;
+	const {input, label, className, type, meta, errors} = props;
 	const {touched, error} = meta;
 	const classes = useStyles();
 	const component = (
@@ -41,6 +41,7 @@ export default function (props) {
 			<TextField
 				{...input}
 				label={label}
+				type={type}
 				className={className}
 				error={touched && Boolean(error)}
 				InputProps={{
@@ -70,6 +71,7 @@ export default function (props) {
 			input: PropTypes.shape({}).isRequired,
 			label: PropTypes.string.isRequired,
 			className: PropTypes.string.isRequired,
+			type: PropTypes.string.isRequired,
 			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.string})
 		}
 	};

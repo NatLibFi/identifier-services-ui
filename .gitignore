@@ -4,3 +4,5 @@ coverage
 dist
 .nyc_output
 .env
+local.env
+docker.env

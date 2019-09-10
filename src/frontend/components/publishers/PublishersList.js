@@ -25,6 +25,8 @@
  * for the JavaScript code in this file.
  *
  */
+/* global API_URL */
+/* eslint no-undef: "error" */
 
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
@@ -51,8 +53,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-		/* global API_URL */
-		/* eslint no-undef: "error" */
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [API_URL, lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
