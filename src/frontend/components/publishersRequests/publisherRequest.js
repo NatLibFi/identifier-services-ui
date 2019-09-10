@@ -45,33 +45,43 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
+import CustomColor from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
+	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest, sendMessage} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
-	const [accept, setAccept] = useState('');
+	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
+	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id, accept]);
+	}, [cookie, fetchPublisherRequest, match.params.id, buttonState]);
 
 	function handleRejectClick() {
 		setReject(!reject);
 	}
 
+	function handleRejectReason(e) {
+		setRejectReason(e.target.value);
+	}
+
 	function handleRejectSubmit() {
 		const newPublisherRequest = {
 			...publisherRequest,
-			state: 'rejected'
+			state: 'rejected',
+			rejectionReason: rejectReason
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		sendMessage({name: publisherRequest.name, email: publisherRequest.email, description: rejectReason});
+		setReject(!reject);
+		setButtonState(publisherRequest.state);
 	}
 
 	function handleAccept() {
@@ -81,7 +91,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
-		setAccept(publisherRequest.state);
+		setButtonState(publisherRequest.state);
 	}
 
 	function renderButton(state) {
@@ -102,7 +112,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			case 'rejected':
 				return (
 					<ButtonGroup color="error" aria-label="outlined primary button group">
-						<Button variant="contained" color="error" size="small">Rejected</Button>
+						<Button variant="contained" style={CustomColor.palette.red} size="small">Rejected</Button>
 					</ButtonGroup>
 				);
 			case 'inProgress':
@@ -169,6 +179,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									rows={8}
 									placeholder="Rejection reason here..."
 									className={classes.textArea}
+									value={rejectReason}
+									onChange={handleRejectReason}
 								/>
 							</Grid>
 							<Grid item xs={12}>
@@ -177,28 +189,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						</> :
 						<Grid item xs={12}>
-							{/* <ButtonGroup color="primary" aria-label="outlined primary button group"> */}
-							{/* <Button onClick={handleAccept}>{publisherRequest.state === 'accepted' ? 'Accepted' : 'Accept'}</Button> */}
-							{/* {publisherRequest.state === 'accepted' ?
-									<Button disabled>Accepted</Button> :
-									<Button color="primary" onClick={handleAccept}>Reject</Button>
-								}
-								{publisherRequest.state === 'rejected' ?
-									<Button disabled>Rejected</Button> :
-									<Button style={{color: 'red'}} onClick={handleAccept}>Accept</Button>
-								} */}
 							{
 								renderButton(publisherRequest.state)
-
-								// publisherRequest.state === 'new' ?
-								// 	<ButtonGroup color="primary" aria-label="outlined primary button group">
-								// 		<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
-								// 		<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
-								// 	</ButtonGroup> :
-								// 	null
-
 							}
-							{/* </ButtonGroup> */}
 						</Grid>
 					}
 				</Grid>
