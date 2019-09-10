@@ -52,7 +52,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest, sendMessage} = props;
+	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
