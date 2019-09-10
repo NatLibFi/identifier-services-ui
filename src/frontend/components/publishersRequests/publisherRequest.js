@@ -79,7 +79,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
-		sendMessage({name: publisherRequest.name, email: publisherRequest.email, description: rejectReason});
 		setReject(!reject);
 		setButtonState(publisherRequest.state);
 	}
