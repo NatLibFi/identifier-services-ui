@@ -35,7 +35,7 @@ export default function (props) {
 			case 'number':
 				return (
 					<>
-						<Grid item xs={4}>{formatLabel(label)}:</Grid>
+						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
 						<Grid item xs={8}>{value}</Grid>
 					</>
 				);
@@ -44,7 +44,7 @@ export default function (props) {
 					if (value.some(item => typeof item === 'string')) {
 						return (
 							<>
-								<Grid item xs={4}>{formatLabel(label)}:</Grid>
+								<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
 								<Grid item xs={8}>
 									{value.map(item => {
 										return (
@@ -64,7 +64,7 @@ export default function (props) {
 									aria-controls="panel1a-content"
 									className={classes.exPanel}
 								>
-									<Typography>{formatLabel(label)}</Typography>
+									<Typography><strong>{formatLabel(label)}</strong></Typography>
 								</ExpansionPanelSummary>
 								<ExpansionPanelDetails className={classes.objDetail}>
 									{value.map(item => formatObj(item))}
@@ -83,7 +83,7 @@ export default function (props) {
 								aria-controls="panel1a-content"
 								className={classes.exPanel}
 							>
-								<Typography>{formatLabel(label)}</Typography>
+								<Typography><strong>{formatLabel(label)}</strong></Typography>
 							</ExpansionPanelSummary>
 							<ExpansionPanelDetails className={classes.objDetail}>
 								{formatObj(value)}

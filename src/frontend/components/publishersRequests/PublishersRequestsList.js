@@ -60,6 +60,7 @@ export default connect(mapStateToProps, actions)(props => {
 	};
 
 	const headRows = [
+		{id: 'state', label: 'State'},
 		{id: 'name', label: 'Name'},
 		{id: 'language', label: 'Language'}
 	];
@@ -73,7 +74,7 @@ export default connect(mapStateToProps, actions)(props => {
 		publishersRequestsData = (
 			<TableComponent
 				data={publishersRequestsList
-					.map(item => publishersRequestsRender(item.id, item.name, item.language))}
+					.map(item => publishersRequestsRender(item.id, item.state, item.name, item.language))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
 				offset={offset}
@@ -86,9 +87,10 @@ export default connect(mapStateToProps, actions)(props => {
 		);
 	}
 
-	function publishersRequestsRender(id, name, language) {
+	function publishersRequestsRender(id, state, name, language) {
 		return {
 			id: id,
+			state: state,
 			name: name,
 			language: language
 		};

@@ -46,7 +46,9 @@ const theme = createMuiTheme({
 	overrides: {
 		MuiChip: {
 			root: {
-				margin: '3px'
+				margin: '3px',
+				background: '#00224fcc !important',
+				color: '#fff !important'
 			}
 		},
 		MuiList: {
