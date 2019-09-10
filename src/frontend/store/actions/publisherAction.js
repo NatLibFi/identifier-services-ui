@@ -152,3 +152,22 @@ export const fetchPublisherRequest = (id, token) => async dispatch => {
 		dispatch(fail(ERROR, err));
 	}
 };
+
+export const updatePublisherRequest = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(PUBLISHER_REQUEST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
