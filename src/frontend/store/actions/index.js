@@ -32,7 +32,8 @@ export {
 	searchPublisher,
 	publisherCreationRequest,
 	fetchPublishersRequestsList,
-	fetchPublisherRequest
+	fetchPublisherRequest,
+	updatePublisherRequest
 } from './publisherAction';
 
 export {

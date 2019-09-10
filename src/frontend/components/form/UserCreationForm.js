@@ -202,7 +202,6 @@ export default connect(null, actions)(reduxForm({
 				handleSubmit: PropTypes.func.isRequired,
 				pristine: PropTypes.bool.isRequired,
 				formSyncErrors: PropTypes.shape({}),
-				registerPublisher: PropTypes.func.isRequired,
 				valid: PropTypes.bool.isRequired
 			}
 		};

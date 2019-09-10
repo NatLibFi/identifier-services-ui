@@ -112,8 +112,7 @@ export const publisherCreationRequest = values => async () => {
 	await response.json();
 };
 
-export const fetchPublishersRequestsList = (searchText, token, offset) => async dispatch => {
-	console.log('req', searchText);
+export const fetchPublishersRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
 	dispatch(setLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
@@ -124,7 +123,7 @@ export const fetchPublishersRequestsList = (searchText, token, offset) => async 
 			},
 			body: JSON.stringify({
 				queries: [{
-					query: {name: searchText}
+					query: {state: sortStateBy, name: searchText}
 				}],
 				offset: offset
 			})
@@ -145,6 +144,27 @@ export const fetchPublisherRequest = (id, token) => async dispatch => {
 				Authorization: 'Bearer ' + token,
 				'Content-Type': 'application/json'
 			}
+		});
+		const result = await response.json();
+		dispatch(success(PUBLISHER_REQUEST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const updatePublisherRequest = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
+		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
 		});
 		const result = await response.json();
 		dispatch(success(PUBLISHER_REQUEST, result));

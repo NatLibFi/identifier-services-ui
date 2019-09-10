@@ -29,12 +29,12 @@
 
 import React, {useState, useEffect} from 'react';
 import {
-	Typography,
-	Button,
 	Grid,
-	Fab
+	ButtonGroup,
+	Button,
+	TextareaAutosize,
+	List
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
@@ -44,77 +44,157 @@ import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
+import ListComponent from '../ListComponent';
+import CustomColor from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, userInfo, loading, isAuthenticated, fetchPublisherRequest, publisherRequest} = props;
+	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
 	const classes = useStyles();
-	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
+	const [buttonState, setButtonState] = useState('');
+	const [reject, setReject] = useState(false);
+	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
+		// eslint-disable-next-line no-undef
 		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id]);
+	}, [cookie, fetchPublisherRequest, match.params.id, buttonState]);
 
-	const handleEditClick = () => {
-		setIsEdit(true);
-	};
+	function handleRejectClick() {
+		setReject(!reject);
+	}
 
-	const handleCancel = () => {
-		setIsEdit(false);
-	};
+	function handleRejectReason(e) {
+		setRejectReason(e.target.value);
+	}
+
+	function handleRejectSubmit() {
+		const newPublisherRequest = {
+			...publisherRequest,
+			state: 'rejected',
+			rejectionReason: rejectReason
+		};
+		delete newPublisherRequest._id;
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		setReject(!reject);
+		setButtonState(publisherRequest.state);
+	}
+
+	function handleAccept() {
+		const newPublisherRequest = {
+			...publisherRequest,
+			state: 'accepted'
+		};
+		delete newPublisherRequest._id;
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		setButtonState(publisherRequest.state);
+	}
+
+	function renderButton(state) {
+		switch (state) {
+			case 'new':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			case 'accepted':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="contained" color="primary" size="small" style={{cursor: 'not-allowed'}}>Accepted</Button>
+					</ButtonGroup>
+				);
+			case 'rejected':
+				return (
+					<ButtonGroup color="error" aria-label="outlined primary button group">
+						<Button variant="contained" style={CustomColor.palette.red} size="small">Rejected</Button>
+					</ButtonGroup>
+				);
+			case 'inProgress':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			default:
+				return null;
+		}
+	}
+
+	const formatPublisherRequest = {...publisherRequest, ...publisherRequest.organizationDetails};
+	const {organizationDetails, _id, state, ...formattedPublisherRequest} = formatPublisherRequest;
 
 	let publisherRequestDetail;
-	if (publisherRequest === undefined || loading) {
+	if (formattedPublisherRequest === undefined || loading) {
 		publisherRequestDetail = <Spinner/>;
 	} else {
 		publisherRequestDetail = (
-			<Grid item xs={12} md={6}>
-				<Typography variant="h6">
-					Publisher Request Detail
-					{publisherRequest.name}
-				</Typography>
-			</Grid>
+			<>
+				<Grid item xs={12} md={6}>
+					<List>
+						{
+							Object.keys(formattedPublisherRequest).map(key => {
+								return typeof formattedPublisherRequest[key] === 'string' ?
+									(
+										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<List>
+						{
+							Object.keys(formattedPublisherRequest).map(key => {
+								return typeof formattedPublisherRequest[key] === 'object' ?
+									(
+										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
+				</Grid>
+			</>
 		);
 	}
 
-	// NOTICE !!! Edit functionality is not done yet
-
 	const component = (
-		<ModalLayout isTableRow color="primary" label="Publisher Detail">
-			{isEdit ?
-				<div className={classes.publisher}>
-					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{publisherRequestDetail}
+		<ModalLayout isTableRow color="primary" title="Publisher Request Detail">
+			<div className={classes.publisher}>
+				<Grid container spacing={3} className={classes.publisherSpinner}>
+					{publisherRequestDetail}
+					{reject ?
+						<>
+							<Grid item xs={12}>
+								<TextareaAutosize
+									aria-label="Minimum height"
+									rows={8}
+									placeholder="Rejection reason here..."
+									className={classes.textArea}
+									value={rejectReason}
+									onChange={handleRejectReason}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+							</Grid>
+						</> :
+						<Grid item xs={12}>
+							{
+								renderButton(publisherRequest.state)
+							}
 						</Grid>
-						<div className={classes.btnContainer}>
-							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary">
-                            UPDATE
-							</Button>
-						</div>
-					</form>
-				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{publisherRequestDetail}
-					</Grid>
-					{isAuthenticated && userInfo.role.some(item => item === 'admin') &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit Publisher Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
-				</div>
-			}
+					}
+				</Grid>
+			</div>
 		</ModalLayout>
 	);
 	return {

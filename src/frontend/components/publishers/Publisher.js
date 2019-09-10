@@ -93,9 +93,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} else {
 		publisherDetail = (
 			<>
-				<Typography variant="h6">
-					Publisher Detail
-				</Typography>
 				<Grid item xs={12} md={6}>
 					<List>
 						<ListItem>
@@ -268,7 +265,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	};
 
 	const component = (
-		<ModalLayout isTableRow color="primary" label="Publisher Detail">
+		<ModalLayout isTableRow color="primary" title="Publisher Detail">
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>

@@ -36,6 +36,7 @@ import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
 import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
+import TabComponent from '../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
@@ -44,14 +45,18 @@ export default connect(mapStateToProps, actions)(props => {
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
+	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-
 	useEffect(() => {
-		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], lastCursor);
-	}, [cookie, fetchPublishersRequestsList, inputVal, lastCursor]);
+		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
+	}, [cookie, fetchPublishersRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/requests/publishers/${id}`, {modal: true});
+	};
+
+	const handleChange = (event, newValue) => {
+		setSortStateBy(newValue);
 	};
 
 	const headRows = [
@@ -94,6 +99,12 @@ export default connect(mapStateToProps, actions)(props => {
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">Search Publishers Request</Typography>
 				<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
+				<TabComponent
+					tabClass={classes.tab}
+					tabsClass={classes.tabs}
+					sortStateBy={sortStateBy}
+					handleChange={handleChange}
+				/>
 				{publishersRequestsData}
 			</Grid>
 		</Grid>
