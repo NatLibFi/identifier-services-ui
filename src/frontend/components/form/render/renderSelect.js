@@ -38,6 +38,8 @@ export default function ({label, input, name, options, className, defaultValue, 
 				{...input}
 				error={touched && Boolean(error)}
 				input={<Input name={name} id="language-helper"/>}
+				value={input.value}
+				onChange={value => input.onChange(value)}
 			>
 				{
 					options.map(item =>

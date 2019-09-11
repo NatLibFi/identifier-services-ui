@@ -28,7 +28,7 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 import useStyles from '../../styles/form';
@@ -659,24 +659,28 @@ function renderPreview(publisherValues) {
 	return (
 		<>
 			<Grid item xs={12} md={6}>
-				{
-					Object.keys(publisherValues).map(key => {
-						return typeof publisherValues[key] === 'string' ?
-							(
-								<ListComponent label={key} value={publisherValues[key]}/>
-							) :
-							null;
-					})
-				}
+				<List>
+					{
+						Object.keys(publisherValues).map(key => {
+							return typeof publisherValues[key] === 'string' ?
+								(
+									<ListComponent label={key} value={publisherValues[key]}/>
+								) :
+								null;
+						})
+					}
+				</List>
 			</Grid>
 			<Grid item xs={12} md={6}>
-				{
-					Object.keys(publisherValues).map(key => {
-						return typeof publisherValues[key] === 'object' ?
-							<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
-							null;
-					})
-				}
+				<List>
+					{
+						Object.keys(publisherValues).map(key => {
+							return typeof publisherValues[key] === 'object' ?
+								<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
+								null;
+						})
+					}
+				</List>
 			</Grid>
 		</>
 	);

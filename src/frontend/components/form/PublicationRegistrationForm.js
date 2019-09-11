@@ -62,7 +62,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [publisher, setPublisher] = useState('');
 		const [newPublication, setNewPublication] = useState({});
 		const [formatDetails, setFormatDetails] = useState('');
-		const [selectType, setSelectType] = useState('');
 		const fieldArray = getFieldArray(user);
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -89,11 +88,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</>
 						);
 					case 1:
-						return element(fieldArray[1].basicInformation, undefined, user);
+						return element(fieldArray[1].basicInformation, undefined, publicationValues);
 					case 2:
 						return (
 							<>
-								{element(fieldArray[2].seriesDetails, undefined, user)}
+								{element(fieldArray[2].seriesDetails)}
 								{fieldArrayElement(fieldArray[2].authors, 'authors')}
 							</>
 						);
@@ -112,16 +111,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function run(step, x) {
 			switch (step) {
 				case x:
-					return element(fieldArray[x].basicInformation, undefined, user);
+					return element(fieldArray[x].basicInformation, undefined, publicationValues);
 				case x + 1:
 					return (
 						<>
 							{fieldArrayElement(fieldArray[x + 1].authors, 'authors')}
-							{element(fieldArray[x + 1].seriesDetails, undefined, user)}
+							{element(fieldArray[x + 1].seriesDetails)}
 						</>
 					);
 				case x + 2:
-					return element(fieldArray[x + 2].formatDetails, 'formatDetails', user);
+					return element(fieldArray[x + 2].formatDetails, 'formatDetails');
 				case x + 3:
 					return <RenderPublicationPreview data={publicationValues}/>;
 				default:
@@ -232,43 +231,44 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		};
 
-		function element(array, fieldName, user) {
+		function element(array, fieldName, publicationValues) {
 			return array.map(list => {
 				switch (list.type) {
 					case 'select':
+						if (list.name === 'type') {
+							return (
+								<>
+									<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+										<form>
+											<Field
+												className={`${classes.selectField} ${list.width}`}
+												component={renderSelect}
+												label={list.label}
+												name={list.name}
+												type={list.type}
+												options={list.options}
+												props={{isMulti: false}}
+											/>
+										</form>
+									</Grid>
+									{publicationValues && (publicationValues.type === 'map') ? element(getScale()) : null}
+								</>
+							);
+						}
+
 						return (
-							<Grid key={list.name} item xs={6}>
-								{list.name === 'type' ?
-									(
-										<>
-											<form>
-												<Field
-													className={`${classes.selectField} ${list.width}`}
-													component={renderSelect}
-													label={list.label}
-													name={list.name}
-													type={list.type}
-													options={list.options}
-													props={{isMulti: false}}
-													onChange={(e, values) => setSelectType(values)}
-												/>
-											</form>
-											{selectType === 'map' ? element(getScale()) : null}
-										</>
-									) :
-									(
-										<Field
-											className={`${classes.selectField} ${list.width}`}
-											component={renderSelect}
-											label={list.label}
-											name={list.name}
-											type={list.type}
-											options={list.options}
-										/>
-									)
-								}
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+								<Field
+									className={`${classes.selectField} ${list.width}`}
+									component={renderSelect}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									options={list.options}
+								/>
 							</Grid>
 						);
+
 					case 'text':
 						return (
 							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
@@ -320,7 +320,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 													name={list.name}
 													type={list.type}
 													options={list.options}
-													props={{className: classes.radioDirectionRow}}
+													elementprops={{className: classes.radioDirectionRow}}
 													onChange={(e, values) => setFormatDetails(values)}
 												/>
 											</form>
@@ -420,16 +420,10 @@ function getFieldArray(user) {
 					width: 'half'
 				},
 				{
-					name: 'isPublic',
-					type: 'checkbox',
-					label: 'Is Public*',
-					width: 'full'
-				},
-				{
 					name: 'type',
 					type: 'select',
 					label: 'Type',
-					width: 'full',
+					width: 'half',
 					options: [
 						{label: '', value: ''},
 						{label: 'Book', value: 'book'},
@@ -438,7 +432,13 @@ function getFieldArray(user) {
 						{label: 'Music', value: 'music'},
 						{label: 'Other', value: 'other'}
 					]
-				}
+				},
+				{
+					name: 'isPublic',
+					type: 'checkbox',
+					label: 'Is Public*',
+					width: 'full'
+				},
 			]
 		},
 		{
@@ -659,9 +659,9 @@ function getScale() {
 	return [
 		{
 			label: 'Scale',
-			name: 'mapDetails[scale]',
+			name: 'scale',
 			type: 'text',
-			width: 'full'
+			width: 'half'
 		}
 	];
 }
