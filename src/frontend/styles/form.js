@@ -90,7 +90,10 @@ const useStyles = makeStyles({
 	formHead: {
 		width: '100%',
 		marginTop: '25px',
-		marginLeft: '5px'
+		marginLeft: '5px',
+		fontSize: '1rem',
+		fontWeight: 600,
+		textTransform: 'uppercase'
 	},
 	affiliatesAddBtn: {
 		display: 'flex',
@@ -124,6 +127,9 @@ const useStyles = makeStyles({
 		width: '60%',
 		margin: '0 auto',
 		padding: '0 0 10px 0'
+	},
+	addFabBtn: {
+		marginTop: '15px'
 	}
 });
 

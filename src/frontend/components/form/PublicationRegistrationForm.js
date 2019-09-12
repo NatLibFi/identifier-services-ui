@@ -44,7 +44,6 @@ import Captcha from '../Captcha';
 import renderFieldArray from './render/renderFieldArray';
 import {fieldArray as publisherFieldArray} from './PublisherRegistrationForm';
 import PublisherRegistrationForm from './PublisherRegistrationForm';
-import RenderHelper from './render/renderHelper';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
 import RenderPublicationPreview from '../publication/RenderPreview';
@@ -92,12 +91,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 2:
 						return (
 							<>
-								{element(fieldArray[2].seriesDetails)}
-								{fieldArrayElement(fieldArray[2].authors, 'authors')}
+								{withFormTitle(fieldArray[2].AuthorSeries, publicationValues, clearFields)}
 							</>
 						);
 					case 3:
-						return element(fieldArray[3].formatDetails, 'formatDetails');
+						return element(fieldArray[3].formatDetails, 'formatDetails', publicationValues);
 					case 4:
 						return <RenderPublicationPreview data={{...publicationValues, publisher: publisher}}/>;
 					default:
@@ -115,12 +113,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case x + 1:
 					return (
 						<>
-							{fieldArrayElement(fieldArray[x + 1].authors, 'authors')}
-							{element(fieldArray[x + 1].seriesDetails)}
+							{withFormTitle(fieldArray[x + 1].AuthorSeries, publicationValues, clearFields)}
 						</>
 					);
 				case x + 2:
-					return element(fieldArray[x + 2].formatDetails, 'formatDetails');
+					return element(fieldArray[x + 2].formatDetails, 'formatDetails', publicationValues);
 				case x + 3:
 					return <RenderPublicationPreview data={publicationValues}/>;
 				default:
@@ -152,7 +149,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				setNewPublication(makeNewPublicationObj(values, result));
-				console.log(newPublication);
 			}
 		}
 
@@ -238,7 +234,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						if (list.name === 'type') {
 							return (
 								<>
-									<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+									<Grid key={list.name} item xs={12}>
 										<form>
 											<Field
 												className={`${classes.selectField} ${list.width}`}
@@ -247,7 +243,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 												name={list.name}
 												type={list.type}
 												options={list.options}
-												props={{isMulti: false}}
+												props={{publicationValues: publicationValues, clearFields: clearFields}}
 											/>
 										</form>
 									</Grid>
@@ -257,7 +253,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 
 						return (
-							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Grid key={list.name} item xs={12}>
 								<Field
 									className={`${classes.selectField} ${list.width}`}
 									component={renderSelect}
@@ -271,7 +267,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 					case 'text':
 						return (
-							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Grid key={list.name} item xs={12}>
 								<Field
 									className={`${classes.textField} ${list.width}`}
 									component={renderTextField}
@@ -309,29 +305,43 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						);
 					case 'radio':
+						if (fieldName === 'formatDetails') {
+							return (
+								<Grid key={list.name} item xs={12}>
+									<Field
+										component={renderRadioButton}
+										name={list.name}
+										type={list.type}
+										options={list.options}
+										props={{className: classes.radioDirectionRow}}
+									/>
+									{publicationValues && publicationValues.selectFormat && subElementFormatDetails(publicationValues.selectFormat)}
+								</Grid>
+							);
+						}
+
 						return (
 							<Grid key={list.name} item xs={12}>
-								{fieldName === 'formatDetails' ?
-									(
-										<>
-											<form>
-												<Field
-													component={renderRadioButton}
-													name={list.name}
-													type={list.type}
-													options={list.options}
-													elementprops={{className: classes.radioDirectionRow}}
-													onChange={(e, values) => setFormatDetails(values)}
-												/>
-											</form>
-											{subElementFormatDetails(formatDetails)}
-										</>
-									) :
-									(
-										// eslint-disable-next-line react/style-prop-object
-										<RenderHelper clearFields={clearFields} list={list} style="radioDirectionRow"/>
-									)
-								}
+								<>
+									<Field
+										component={renderRadioButton}
+										name={list.name}
+										type={list.type}
+										options={list.options}
+										props={{className: classes.radioDirectionRow, publicationValues: publicationValues, clearFields: clearFields}}
+									/>
+									{ publicationValues && publicationValues.select ?
+										<Field
+											className={`${classes.textField} ${list.width}`}
+											component={renderTextField}
+											label={publicationValues && publicationValues.select}
+											name={publicationValues && publicationValues.select}
+											type="text"
+										/> : null
+
+									}
+								</>
+
 							</Grid>
 						);
 					default:
@@ -353,6 +363,24 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					return null;
 			}
 		}
+
+		function withFormTitle(arr, publicationValues, clearFields) {
+			return (
+				<>
+					{arr.map(item => (
+						<Grid key={item.title} container spacing={2} direction="row">
+							<div className={classes.formHead}>
+								<Typography>
+									{item.title}
+								</Typography>
+							</div>
+							{item.title === 'Author Details' ? fieldArrayElement(item.fields, 'authors', clearFields) : element(item.fields, undefined, publicationValues, clearFields)}
+						</Grid>
+
+					))}
+				</>
+			);
+		}
 	}
 ));
 
@@ -361,6 +389,7 @@ function getSteps(fieldArray) {
 }
 
 function fieldArrayElement(data, fieldName, clearFields) {
+
 	return (
 		<FieldArray
 			name={fieldName}
@@ -442,49 +471,56 @@ function getFieldArray(user) {
 			]
 		},
 		{
-			authors: [
+			AuthorSeries: [
 				{
-					name: 'givenName',
-					type: 'text',
-					label: 'Given Name',
-					width: 'half'
-				},
-				{
-					name: 'familyName',
-					type: 'text',
-					label: 'Family Name',
-					width: 'half'
-				},
-				{
-					name: 'role',
-					type: 'select',
-					label: 'Role*',
-					width: 'half',
-					options: [
-						{label: '', value: ''},
-						{label: 'Author', value: 'author'},
-						{label: 'Illustrator', value: 'illustrator'},
-						{label: 'Translator', value: 'translator'},
-						{label: 'Editor', value: 'editor'}
+					title: 'Author Details',
+					fields: [
+						{
+							name: 'givenName',
+							type: 'text',
+							label: 'Given Name',
+							width: 'half'
+						},
+						{
+							name: 'familyName',
+							type: 'text',
+							label: 'Family Name',
+							width: 'half'
+						},
+						{
+							name: 'role',
+							type: 'select',
+							label: 'Role*',
+							width: 'half',
+							options: [
+								{label: '', value: ''},
+								{label: 'Author', value: 'author'},
+								{label: 'Illustrator', value: 'illustrator'},
+								{label: 'Translator', value: 'translator'},
+								{label: 'Editor', value: 'editor'}
+							]
+						}
 					]
-				}
-			],
-
-			seriesDetails: [
-				{
-					name: 'volume',
-					type: 'text',
-					label: 'Volume',
-					width: 'full'
 				},
 				{
-					name: 'select',
-					type: 'radio',
-					label: 'Select*',
-					width: 'full',
-					options: [
-						{label: 'Title', value: 'title'},
-						{label: 'Identifier', value: 'identifier'}
+					title: 'Series Details',
+					fields: [
+						{
+							name: 'volume',
+							type: 'text',
+							label: 'Volume',
+							width: 'half'
+						},
+						{
+							name: 'select',
+							type: 'radio',
+							label: 'Select*',
+							width: 'half',
+							options: [
+								{label: 'Title', value: 'title'},
+								{label: 'Identifier', value: 'identifier'}
+							]
+						}
 					]
 				}
 			]
@@ -659,7 +695,7 @@ function getScale() {
 	return [
 		{
 			label: 'Scale',
-			name: 'scale',
+			name: 'mapDetails[scale]',
 			type: 'text',
 			width: 'half'
 		}

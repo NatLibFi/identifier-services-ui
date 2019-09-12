@@ -40,6 +40,7 @@ import * as actions from '../../../store/actions';
 export default connect(mapStateToProps, actions)(props => {
 	const [errors, setErrors] = React.useState();
 	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, formName, setFormName} = props;
+	console.log('props', props)
 	setFormName(formName);
 
 	const fieldValues = values && getFieldValue(values);
@@ -107,30 +108,34 @@ export default connect(mapStateToProps, actions)(props => {
 			}
 			)}
 			{touched && error && <span>{error}</span>}
-			{
-				<>
-					<Fab
-						aria-label="Add"
-						color="primary"
-						size="small"
-						title="Add more"
-						onClick={handleOnClick}
-					>
-						<AddIcon/>
-					</Fab>
-					{values && values[fieldName] && values[fieldName].map((item, index) => {
-						const y = Object.keys(fieldValues);
-						return (
-							<Chip
-								key={`${item[y[0]]} ${item[y[1]]}`}
-								label={`${item[y[0]]} ${item[y[1]]}`}
-								onDelete={() => fields.remove(index)}
-							/>
-						);
-					})}
+			<Grid xs={12} className={classes.addFabBtn}>
+				{
+					<>
+						<Fab
+							aria-label="Add"
+							color="primary"
+							size="small"
+							title="Add more"
+							variant="extended"
+							onClick={handleOnClick}
+						>
+							<AddIcon/>
+							{`Add ${fieldName}`}
+						</Fab>
+						{values && values[fieldName] && values[fieldName].map((item, index) => {
+							const y = Object.keys(fieldValues);
+							return (
+								<Chip
+									key={`${item[y[0]]} ${item[y[1]]}`}
+									label={`${item[y[0]]} ${item[y[1]]}`}
+									onDelete={() => fields.remove(index)}
+								/>
+							);
+						})}
 
-				</>
-			}
+					</>
+				}
+			</Grid>
 		</>
 	);
 
