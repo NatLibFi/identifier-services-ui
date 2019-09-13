@@ -40,7 +40,6 @@ import * as actions from '../../../store/actions';
 export default connect(mapStateToProps, actions)(props => {
 	const [errors, setErrors] = React.useState();
 	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, formName, setFormName} = props;
-	console.log('props', props)
 	setFormName(formName);
 
 	const fieldValues = values && getFieldValue(values);

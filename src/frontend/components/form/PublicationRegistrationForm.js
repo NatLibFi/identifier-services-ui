@@ -60,7 +60,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const {loadSvgCaptcha, captcha, pristine, valid, postCaptchaInput, publicationValues, clearFields, publisherValues, user, handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const [newPublication, setNewPublication] = useState({});
-		const [formatDetails, setFormatDetails] = useState('');
 		const fieldArray = getFieldArray(user);
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -89,14 +88,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 1:
 						return element(fieldArray[1].basicInformation, undefined, publicationValues);
 					case 2:
-						return (
-							<>
-								{withFormTitle(fieldArray[2].AuthorSeries, publicationValues, clearFields)}
-							</>
-						);
+						return withFormTitle(fieldArray[2].Authors, publicationValues, clearFields);
 					case 3:
-						return element(fieldArray[3].formatDetails, 'formatDetails', publicationValues);
+						return withFormTitle(fieldArray[3].Series, publicationValues, clearFields);
 					case 4:
+						return element(fieldArray[4].formatDetails, 'formatDetails', publicationValues, clearFields);
+					case 5:
 						return <RenderPublicationPreview data={{...publicationValues, publisher: publisher}}/>;
 					default:
 						return 'Unknown step';
@@ -111,14 +108,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case x:
 					return element(fieldArray[x].basicInformation, undefined, publicationValues);
 				case x + 1:
-					return (
-						<>
-							{withFormTitle(fieldArray[x + 1].AuthorSeries, publicationValues, clearFields)}
-						</>
-					);
+					return withFormTitle(fieldArray[x + 1].Authors, publicationValues, clearFields);
 				case x + 2:
-					return element(fieldArray[x + 2].formatDetails, 'formatDetails', publicationValues);
+					return withFormTitle(fieldArray[x + 2].Series, publicationValues, clearFields);
 				case x + 3:
+					return element(fieldArray[x + 3].formatDetails, 'formatDetails', publicationValues, clearFields);
+				case x + 4:
 					return <RenderPublicationPreview data={publicationValues}/>;
 				default:
 					return 'Unknown step';
@@ -234,7 +229,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						if (list.name === 'type') {
 							return (
 								<>
-									<Grid key={list.name} item xs={12}>
+									<Grid key={list.name} item xs={6}>
 										<form>
 											<Field
 												className={`${classes.selectField} ${list.width}`}
@@ -253,7 +248,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 
 						return (
-							<Grid key={list.name} item xs={12}>
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 								<Field
 									className={`${classes.selectField} ${list.width}`}
 									component={renderSelect}
@@ -267,7 +262,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 					case 'text':
 						return (
-							<Grid key={list.name} item xs={12}>
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 								<Field
 									className={`${classes.textField} ${list.width}`}
 									component={renderTextField}
@@ -307,16 +302,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 'radio':
 						if (fieldName === 'formatDetails') {
 							return (
-								<Grid key={list.name} item xs={12}>
-									<Field
-										component={renderRadioButton}
-										name={list.name}
-										type={list.type}
-										options={list.options}
-										props={{className: classes.radioDirectionRow}}
-									/>
+								<>
+									<Grid key={list.name} item xs={12}>
+										<Field
+											value={publicationValues && publicationValues.selectFormat}
+											component={renderRadioButton}
+											name={list.name}
+											type={list.type}
+											options={list.options}
+											props={{className: classes.radioDirectionRow, publicationValues: publicationValues, clearFields: clearFields}}
+										/>
+									</Grid>
 									{publicationValues && publicationValues.selectFormat && subElementFormatDetails(publicationValues.selectFormat)}
-								</Grid>
+								</>
 							);
 						}
 
@@ -324,6 +322,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<Grid key={list.name} item xs={12}>
 								<>
 									<Field
+										value={publicationValues && publicationValues.select}
 										component={renderRadioButton}
 										name={list.name}
 										type={list.type}
@@ -467,11 +466,11 @@ function getFieldArray(user) {
 					type: 'checkbox',
 					label: 'Is Public*',
 					width: 'full'
-				},
+				}
 			]
 		},
 		{
-			AuthorSeries: [
+			Authors: [
 				{
 					title: 'Author Details',
 					fields: [
@@ -501,7 +500,11 @@ function getFieldArray(user) {
 							]
 						}
 					]
-				},
+				}
+			]
+		},
+		{
+			Series: [
 				{
 					title: 'Series Details',
 					fields: [
@@ -509,7 +512,7 @@ function getFieldArray(user) {
 							name: 'volume',
 							type: 'text',
 							label: 'Volume',
-							width: 'half'
+							width: 'full'
 						},
 						{
 							name: 'select',
@@ -517,7 +520,7 @@ function getFieldArray(user) {
 							label: 'Select*',
 							width: 'half',
 							options: [
-								{label: 'Title', value: 'title'},
+								{label: 'Title', value: 'seriesTitle'},
 								{label: 'Identifier', value: 'identifier'}
 							]
 						}
@@ -581,7 +584,7 @@ function getSubFormatDetailsFieldArray() {
 					label: 'PrintFormat*',
 					name: 'formatDetails[printFormat]',
 					type: 'multiSelect',
-					width: 'full',
+					width: 'half',
 					options: [
 						{label: '', value: ''},
 						{label: 'paperback', value: 'paperback'},
@@ -593,25 +596,25 @@ function getSubFormatDetailsFieldArray() {
 					label: 'Manufacturer',
 					name: 'formatDetails[manufacturer]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'city',
 					name: 'formatDetails[city]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Run',
 					name: 'formatDetails[run]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Edition',
 					name: 'formatDetails[edition]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Format*',
@@ -655,25 +658,25 @@ function getSubFormatDetailsFieldArray() {
 					label: 'Manufacturer',
 					name: 'formatDetails[manufacturer]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'city',
 					name: 'formatDetails[city]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Run',
 					name: 'formatDetails[run]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Edition',
 					name: 'formatDetails[edition]',
 					type: 'text',
-					width: 'full'
+					width: 'half'
 				},
 				{
 					label: 'Format*',
