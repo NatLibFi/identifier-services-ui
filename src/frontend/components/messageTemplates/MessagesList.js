@@ -31,13 +31,17 @@ import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
 import useStyles from '../../styles/publisherLists';
+import useModalStyles from '../../styles/formList';
+import ModalLayout from '../ModalLayout';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import {useCookies} from 'react-cookie';
+import TemplateCreationForm from '../form/TemplateCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
+	const modalClasses = useModalStyles();
 	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
@@ -88,7 +92,7 @@ export default connect(mapStateToProps, actions)(props => {
 			id: id,
 			name: name,
 			subject: subject,
-			body: body,
+			body: body.substr(0, 20) + '...',
 			notes: notes,
 			language: language
 		};
@@ -98,6 +102,9 @@ export default connect(mapStateToProps, actions)(props => {
 		<Grid>
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Avaiable messages</Typography>
+				<ModalLayout form label="New Template" title="New Template" name="template" variant="outlined" classed={modalClasses.button} color="primary">
+					<TemplateCreationForm {...props}/>
+				</ModalLayout>
 				{messageData}
 			</Grid>
 		</Grid>
