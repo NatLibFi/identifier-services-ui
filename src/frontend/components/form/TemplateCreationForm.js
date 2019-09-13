@@ -42,7 +42,7 @@ import * as actions from '../../store/actions/userActions';
 
 const fieldArray = [
 	{
-		name: 'name',
+		name: 'templateName',
 		type: 'text',
 		label: 'Template Name*',
 		width: 'half'
@@ -100,13 +100,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const handleCreateTemplate = async values => {
 			const newValues = {...values,
+				name: values.templateName,
 				body: Buffer.from(values.body).toString('base64'),
 				notes: values.notes.map(note => Buffer.from(note).toString('base64'))
 			};
+			delete newValues.templateName;
 			createMessageTemplate(newValues, cookie['login-cookie']);
 		};
-
-		// eslint-disable-next-line complexity
 
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handleCreateTemplate)}>
