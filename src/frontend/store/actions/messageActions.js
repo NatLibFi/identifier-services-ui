@@ -49,11 +49,12 @@ export const sendMessage = values => async dispatch => {
 	}
 };
 
-export const createMessageTemplate = values => async dispatch => {
+export const createMessageTemplate = (values, token) => async dispatch => {
 	dispatch(setLoader());
 	const response = await fetch(`${API_URL}/templates`, {
 		method: 'POST',
 		headers: {
+			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(values)

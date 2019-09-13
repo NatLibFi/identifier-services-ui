@@ -59,8 +59,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const headRows = [
 		{id: 'name', label: 'Name'},
 		{id: 'subject', label: 'Subject'},
-		{id: 'body', label: 'body'},
-		{id: 'notes', label: 'notes'},
 		{id: 'language', label: 'Language'}
 
 	];
@@ -87,13 +85,11 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	function usersDataRender(item) {
-		const {id, name, language, subject, body, notes} = item;
+		const {id, name, language, subject} = item;
 		return {
 			id: id,
 			name: name,
 			subject: subject,
-			body: body.substr(0, 20) + '...',
-			notes: notes,
 			language: language
 		};
 	}

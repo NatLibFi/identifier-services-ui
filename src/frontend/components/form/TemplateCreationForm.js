@@ -25,19 +25,19 @@
  * for the JavaScript code in this file.
  *
  */
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
+import {useCookies} from 'react-cookie';
 
 import useStyles from '../../styles/form';
 import renderTextField from './render/renderTextField';
 import renderTextArea from './render/renderTextArea';
 import renderStringArray from './render/renderStringArray';
 import renderSelect from './render/renderSelect';
-import Captcha from '../Captcha';
 import * as actions from '../../store/actions/userActions';
 
 const fieldArray = [
@@ -90,38 +90,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	props => {
 		const {
 			handleSubmit,
+			createMessageTemplate,
 			clearFields,
 			pristine,
-			valid,
-			captcha,
-			loadSvgCaptcha,
-			postCaptchaInput
+			valid
 		} = props;
 		const classes = useStyles();
-		const [captchaInput, setCaptchaInput] = useState('');
-		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha]);
-
-		const handleCaptchaInput = e => {
-			setCaptchaInput(e.target.value);
-		};
+		const [cookie] = useCookies('login-cookie');
 
 		const handleCreateTemplate = async values => {
-			if (captchaInput.length === 0) {
-				// eslint-disable-next-line no-undef, no-alert
-				alert('Captcha not provided');
-			} else if (captchaInput.length > 0) {
-				const result = await postCaptchaInput(captchaInput, captcha.id);
-
-				if (result === true) {
-					console.log(values);
-				} else {
-					// eslint-disable-next-line no-undef, no-alert
-					alert('Please type the correct word in the image below');
-					loadSvgCaptcha();
-				}
-			}
+			const newValues = {...values,
+				body: Buffer.from(values.body).toString('base64'),
+				notes: values.notes.map(note => Buffer.from(note).toString('base64'))
+			};
+			createMessageTemplate(newValues, cookie['login-cookie']);
 		};
 
 		// eslint-disable-next-line complexity
@@ -135,13 +117,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								{element(list, classes, clearFields)}
 							</Grid>
 						))}
-					</Grid>
-					<Grid item xs={12}>
-						<Captcha
-							captchaInput={captchaInput}
-							handleCaptchaInput={handleCaptchaInput}/>
-						{/* eslint-disable-next-line react/no-danger */}
-						<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 					</Grid>
 					<div className={classes.btnContainer}>
 						<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
