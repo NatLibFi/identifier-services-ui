@@ -62,6 +62,7 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'language', label: 'Language'}
 
 	];
+
 	let messageData;
 	if (loading) {
 		messageData = <Spinner/>;
