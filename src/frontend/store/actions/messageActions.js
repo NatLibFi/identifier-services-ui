@@ -28,7 +28,7 @@
 
 /* global API_URL */
 /* eslint no-undef: "error" */
-import {CONTACT, FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
+import {SNACKBAR_MESSAGE, FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
 import fetch from 'node-fetch';
 import {setLoader, success, fail} from './commonAction';
 
@@ -43,7 +43,7 @@ export const sendMessage = values => async dispatch => {
 	});
 	if (response.status === 200) {
 		dispatch({
-			type: CONTACT,
+			type: SNACKBAR_MESSAGE,
 			payload: 'Message Sent'
 		});
 	}
@@ -59,7 +59,13 @@ export const createMessageTemplate = (values, token) => async dispatch => {
 		},
 		body: JSON.stringify(values)
 	});
-	await response.json();
+	console.log(response.status);
+	if (response.status === 200) {
+		dispatch({
+			type: SNACKBAR_MESSAGE,
+			payload: 'Message Template created successfully.'
+		});
+	}
 };
 
 export const fetchMessagesList = (token, offset) => async dispatch => {

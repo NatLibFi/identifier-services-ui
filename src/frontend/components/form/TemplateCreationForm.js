@@ -89,6 +89,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 })(
 	props => {
 		const {
+			handleClose,
 			handleSubmit,
 			createMessageTemplate,
 			clearFields,
@@ -106,6 +107,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			};
 			delete newValues.templateName;
 			createMessageTemplate(newValues, cookie['login-cookie']);
+			handleClose();
 		};
 
 		const component = (

@@ -26,7 +26,7 @@
  *
  */
 
-import {CONTACT, LOADER, FETCH_MESSAGE, FETCH_MESSAGES_LIST} from '../actions/types';
+import {SNACKBAR_MESSAGE, LOADER, FETCH_MESSAGE, FETCH_MESSAGES_LIST} from '../actions/types';
 
 const initialState = {
 	messagesList: [],
@@ -45,7 +45,7 @@ export default function (state = initialState, action) {
 				...state,
 				loading: true
 			};
-		case CONTACT:
+		case SNACKBAR_MESSAGE:
 			return {
 				...state,
 				responseMessage: action.payload,
