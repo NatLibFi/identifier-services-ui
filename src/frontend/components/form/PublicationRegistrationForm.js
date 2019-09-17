@@ -58,7 +58,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {loadSvgCaptcha, captcha, pristine, valid, postCaptchaInput, publicationValues, clearFields, publisherValues, user, handleSubmit} = props;
+		const {
+			loadSvgCaptcha,
+			captcha,
+			pristine,
+			valid,
+			postCaptchaInput,
+			publicationValues,
+			clearFields,
+			publisherValues,
+			user,
+			isAuthenticated,
+			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const [newPublication, setNewPublication] = useState({});
 		const fieldArray = getFieldArray(user);
@@ -140,6 +151,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		async function handlePublicationRegistration(values) {
+			console.log('val', values)
+			const {seriesTitle, ...formatTitle} = {...values.seriesDetails, title: values.seriesDetails.seriesTitle};
+			const formatPublicationValue = {...publicationValues, publisher: user.id, seriesDetails: formatTitle, formatDetails: publicationValues.formatDetails.fileFormat ?
+				{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
+				{...publicationValues.formatDetails}
+			};
+			console.log('format', formatPublicationValue)
+
 			if (captchaInput.length === 0) {
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
@@ -178,11 +197,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						{
 							activeStep === steps.length - 1 &&
 							<Grid item xs={12}>
-								<Captcha
-									captchaInput={captchaInput}
-									handleCaptchaInput={handleCaptchaInput}/>
-								{/* eslint-disable-next-line react/no-danger */}
-								<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+								{isAuthenticated ? null :
+								<>
+									<Captcha
+										captchaInput={captchaInput}
+										handleCaptchaInput={handleCaptchaInput}/>
+									{/* eslint-disable-next-line react/no-danger */}
+									<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+								</>
+								}
 							</Grid>
 						}
 					</Grid>
@@ -336,7 +359,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 											className={`${classes.textField} ${list.width}`}
 											component={renderTextField}
 											label={publicationValues && publicationValues.select}
-											name={publicationValues && publicationValues.select}
+											name={publicationValues && `seriesDetails[${publicationValues.select}]`}
 											type="text"
 										/> : null
 
@@ -401,16 +424,19 @@ function fieldArrayElement(data, fieldName, clearFields) {
 }
 
 function renderPreview(publicationValues) {
-	console.log('pub', publicationValues)
+	const formatPublicationValue = {...publicationValues, formatDetails: publicationValues.formatDetails.fileFormat ?
+		{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
+		{...publicationValues.formatDetails}
+	};
 	return (
 		<>
 			<Grid item xs={12} md={6}>
 				<List>
 					{
-						Object.keys(publicationValues).map(key => {
-							return typeof publicationValues[key] === 'string' ?
+						Object.keys(formatPublicationValue).map(key => {
+							return typeof formatPublicationValue[key] === 'string' ?
 								(
-									<ListComponent label={key} value={publicationValues[key]}/>
+									<ListComponent label={key} value={formatPublicationValue[key]}/>
 								) :
 								null;
 						})
@@ -420,10 +446,18 @@ function renderPreview(publicationValues) {
 			<Grid item xs={12} md={6}>
 				<List>
 					{
-						Object.keys(publicationValues).map(key => {
-							return typeof publicationValues[key] === 'object' ?
-								<ListComponent label={key} value={publicationValues[key]}/> :
-								null;
+						Object.keys(formatPublicationValue).map(key => {
+							if (typeof formatPublicationValue[key] === 'object') {
+								if (Array.isArray(formatPublicationValue[key])) {
+									return <ListComponent label={key} value={formatPublicationValue[key]}/>;
+								}
+
+								const obj = formatPublicationValue[key];
+								Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
+								return <ListComponent label={key} value={obj}/>;
+							}
+
+							return null;
 						})
 					}
 				</List>
@@ -436,6 +470,7 @@ function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
+		isAuthenticated: state.login.isAuthenticated,
 		publisherValues: getFormValues('publisherRegistrationForm')(state),
 		publicationValues: getFormValues('publicationRegistrationForm')(state)
 	});
@@ -543,7 +578,7 @@ function getFieldArray(user) {
 					title: 'Series Details',
 					fields: [
 						{
-							name: 'volume',
+							name: 'seriesDetails[volume]',
 							type: 'text',
 							label: 'Volume',
 							width: 'full'
@@ -552,7 +587,7 @@ function getFieldArray(user) {
 							name: 'select',
 							type: 'radio',
 							label: 'Select*',
-							width: 'half',
+							width: 'full',
 							options: [
 								{label: 'Title', value: 'seriesTitle'},
 								{label: 'Identifier', value: 'identifier'}

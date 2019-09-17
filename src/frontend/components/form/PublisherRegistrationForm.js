@@ -344,7 +344,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			publicationRegistration,
 			handleSetPublisher,
 			setPublisherRegForm,
-			publisherValues
+			publisherValues,
+			isAuthenticated
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -483,11 +484,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						{(!publicationRegistration &&
 							activeStep === steps.length - 1) &&
 							<Grid item xs={12}>
-								<Captcha
-									captchaInput={captchaInput}
-									handleCaptchaInput={handleCaptchaInput}/>
-								{/* eslint-disable-next-line react/no-danger */}
-								<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+								{isAuthenticated ? null :
+								<>
+									<Captcha
+										captchaInput={captchaInput}
+										handleCaptchaInput={handleCaptchaInput}/>
+									{/* eslint-disable-next-line react/no-danger */}
+									<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+								</>
+								}
 							</Grid>
 						}
 					</Grid>
@@ -689,6 +694,7 @@ function renderPreview(publisherValues) {
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
+		isAuthenticated: state.login.isAuthenticated,
 		publisherValues: getFormValues('publisherRegistrationForm')(state)
 	});
 }
