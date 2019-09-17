@@ -33,25 +33,35 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import PersonIcon from '@material-ui/icons/Person';
 import EmailIcon from '@material-ui/icons/Email';
-import {PropTypes} from 'prop-types';
 
 import useStyles from '../styles/modalLayout';
+import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
 	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd} = props;
 	const classes = useStyles();
-	const [open, setOpen] = useState(false);
+	const [openModal, setOpen] = useState(false);
+	const [message, setMessage] = useState(null);
+	const [agree, setAgree] = useState(null);
 
 	useEffect(() => {
 		return isTableRow && setOpen(isTableRow);
 	}, [isTableRow]);
 
+	useEffect(() => {
+		if (form) {
+			handleClose();
+		}
+	// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [agree]);
+
 	const handleOpen = () => {
 		setOpen(true);
 	};
 
-	const handleClose = () => {
+	function handleClose() {
 		setOpen(false);
+		setAgree(null);
 		if (title === 'Forgot Password ?') {
 			setPwd(false);
 		}
@@ -59,7 +69,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 		if (isTableRow) {
 			props.history.goBack();
 		}
-	};
+	}
 
 	const component = (
 		<>
@@ -72,14 +82,16 @@ export default connect(mapStateToProps)(withRouter(props => {
 			}
 			<Modal
 				disableRestoreFocus
+				eslint-disable-next-line
+				no-alert
+				open={openModal}
 				className={classes.container}
-				aria-labelledby={`modal-${name}`}
-				aria-describedby="modal-description"
-				open={open}
-				// eslint-disable-next-line no-alert
+				aria-labelledby={`modal-${name}`} aria-describedby="modal-description"
 				onClose={(form || fab) ? (() => {
-					// eslint-disable-next-line no-alert, no-undef
-					if (confirm('Do you want to exit?')) {
+					setMessage('Do you want to Exit?');
+					if (agree) {
+						setAgree(null);
+						setMessage(null);
 						handleClose();
 					}
 				}) : handleClose}
@@ -94,19 +106,12 @@ export default connect(mapStateToProps)(withRouter(props => {
 					{React.cloneElement(children, {handleClose: handleClose})}
 				</div>
 			</Modal>
+			{message && <AlertDialogs openAlert={agree} setOpenAlert={setAgree} setMessage={setMessage} message={message}/>}
 		</>
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			children: null
-		},
-		propTypes: {
-			label: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			children: PropTypes.node
-		}
+		...component
 	};
 }));
 

@@ -26,12 +26,10 @@
  *
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Slide from '@material-ui/core/Slide';
 
@@ -39,46 +37,47 @@ const Transition = React.forwardRef((props, ref) => {
 	return <Slide ref={ref} direction="up" {...props}/>;
 });
 
-export default function () {
-	const [open, setOpen] = React.useState(false);
+export default function (props) {
+	const {openAlert, message, setMessage, setOpenAlert} = props;
+	const [open, setOpen] = React.useState(openAlert);
 
-	function handleClickOpen() {
+	useEffect(() => {
 		setOpen(true);
-	}
+	}, [message, openAlert]);
 
 	function handleClose() {
 		setOpen(false);
+		setMessage(null);
 	}
 
-	return (
+	function handleAgree() {
+		handleClose();
+		setOpenAlert(true);
+	}
+
+	const component = (
 		<div>
-			<Button variant="outlined" color="primary" onClick={handleClickOpen}>
-        Slide in alert dialog
-			</Button>
 			<Dialog
 				keepMounted
 				open={open}
 				TransitionComponent={Transition}
 				aria-labelledby="alert-dialog-slide-title"
 				aria-describedby="alert-dialog-slide-description"
-				onClose={handleClose}
 			>
-				<DialogTitle id="alert-dialog-slide-title">{'Use Google\'s location service?'}</DialogTitle>
-				<DialogContent>
-					<DialogContentText id="alert-dialog-slide-description">
-                        Let Google help apps determine location. This means sending anonymous location data to
-                        Google, even when no apps are running.
-					</DialogContentText>
-				</DialogContent>
+				<DialogTitle id="alert-dialog-slide-title">{message}</DialogTitle>
 				<DialogActions>
 					<Button color="primary" onClick={handleClose}>
                         Disagree
 					</Button>
-					<Button color="primary" onClick={handleClose}>
+					<Button color="primary" onClick={handleAgree}>
                         Agree
 					</Button>
 				</DialogActions>
 			</Dialog>
 		</div>
 	);
+
+	return {
+		...component
+	};
 }
