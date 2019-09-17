@@ -32,7 +32,7 @@
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
 
 import * as actions from '../../store/actions';
@@ -47,6 +47,7 @@ import PublisherRegistrationForm from './PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
 import RenderPublicationPreview from '../publication/RenderPreview';
+import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRegistrationForm',
@@ -94,7 +95,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 4:
 						return element(fieldArray[4].formatDetails, 'formatDetails', publicationValues, clearFields);
 					case 5:
-						return <RenderPublicationPreview data={{...publicationValues, publisher: publisher}}/>;
+						return renderPreview(publicationValues);
 					default:
 						return 'Unknown step';
 				}
@@ -114,7 +115,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case x + 3:
 					return element(fieldArray[x + 3].formatDetails, 'formatDetails', publicationValues, clearFields);
 				case x + 4:
-					return <RenderPublicationPreview data={publicationValues}/>;
+					return renderPreview(publicationValues);
 				default:
 					return 'Unknown step';
 			}
@@ -223,6 +224,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 
 		function element(array, fieldName, publicationValues) {
+			// eslint-disable-next-line complexity
 			return array.map(list => {
 				switch (list.type) {
 					case 'select':
@@ -398,6 +400,38 @@ function fieldArrayElement(data, fieldName, clearFields) {
 	);
 }
 
+function renderPreview(publicationValues) {
+	console.log('pub', publicationValues)
+	return (
+		<>
+			<Grid item xs={12} md={6}>
+				<List>
+					{
+						Object.keys(publicationValues).map(key => {
+							return typeof publicationValues[key] === 'string' ?
+								(
+									<ListComponent label={key} value={publicationValues[key]}/>
+								) :
+								null;
+						})
+					}
+				</List>
+			</Grid>
+			<Grid item xs={12} md={6}>
+				<List>
+					{
+						Object.keys(publicationValues).map(key => {
+							return typeof publicationValues[key] === 'object' ?
+								<ListComponent label={key} value={publicationValues[key]}/> :
+								null;
+						})
+					}
+				</List>
+			</Grid>
+		</>
+	);
+}
+
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
@@ -426,7 +460,7 @@ function getFieldArray(user) {
 				{
 					name: 'language',
 					type: 'select',
-					label: 'Select Language',
+					label: 'Select Language*',
 					width: 'half',
 					defaultValue: 'eng',
 					options: [
@@ -464,7 +498,7 @@ function getFieldArray(user) {
 				{
 					name: 'isPublic',
 					type: 'checkbox',
-					label: 'Is Public*',
+					label: 'Is Public',
 					width: 'full'
 				}
 			]
@@ -475,15 +509,15 @@ function getFieldArray(user) {
 					title: 'Author Details',
 					fields: [
 						{
-							name: 'givenName',
+							name: 'authorGivenName',
 							type: 'text',
-							label: 'Given Name',
+							label: 'Given Name*',
 							width: 'half'
 						},
 						{
-							name: 'familyName',
+							name: 'authorFamilyName',
 							type: 'text',
-							label: 'Family Name',
+							label: 'Family Name*',
 							width: 'half'
 						},
 						{
@@ -583,7 +617,7 @@ function getSubFormatDetailsFieldArray() {
 				{
 					label: 'PrintFormat*',
 					name: 'formatDetails[printFormat]',
-					type: 'multiSelect',
+					type: 'select',
 					width: 'half',
 					options: [
 						{label: '', value: ''},
@@ -645,7 +679,7 @@ function getSubFormatDetailsFieldArray() {
 				{
 					label: 'PrintFormat*',
 					name: 'formatDetails[printFormat]',
-					type: 'multiSelect',
+					type: 'select',
 					width: 'full',
 					options: [
 						{label: '', value: ''},

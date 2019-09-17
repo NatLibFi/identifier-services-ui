@@ -18,7 +18,9 @@ export default function (props) {
 	function formatObj(value) {
 		for (let key in value) {
 			if (Object.prototype.hasOwnProperty.call(value, key)) {
-				arr.push(formatLabel(key) + ': ' + value[key]);
+				if (value[key] !== undefined) {
+					arr.push(formatLabel(key) + ': ' + value[key]);
+				}
 			}
 		}
 	}

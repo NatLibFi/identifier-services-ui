@@ -43,6 +43,7 @@ export default connect(mapStateToProps, actions)(props => {
 	setFormName(formName);
 
 	const fieldValues = values && getFieldValue(values);
+	console.log('val', fieldValues)
 
 	const handleOnClick = () => {
 		setErrors();
@@ -166,8 +167,8 @@ export default connect(mapStateToProps, actions)(props => {
 				return (
 					{
 						role: values.role,
-						givenName: values.givenName,
-						familyName: values.familyName
+						authorGivenName: values.authorGivenName,
+						authorFamilyName: values.authorFamilyName
 					}
 				);
 			default:

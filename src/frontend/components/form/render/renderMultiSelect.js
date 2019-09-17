@@ -36,7 +36,7 @@ export default function (props) {
 
 	const component = (
 		<>
-			<Typography variant="caption">Select from dropdown or choose your own</Typography>
+			<Typography variant="caption">Select from dropdown or type your own</Typography>
 			<CreatableSelect
 				isMulti={isMulti}
 				{...input}
