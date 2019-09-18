@@ -63,7 +63,7 @@ export default connect(mapStateToProps, actions)(props => {
 						<Grid container>
 							<>
 								<Grid item xs={4}>Message:</Grid>
-								<Grid item xs={8}>{messageInfo.body}</Grid>
+								<Grid item xs={8}>{Buffer.from(messageInfo.body, 'base64').toString('utf8')}</Grid>
 							</>
 						</Grid>
 					</ListItemText>

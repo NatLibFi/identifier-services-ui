@@ -31,14 +31,18 @@ import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
 import useStyles from '../../styles/publisherLists';
+import useModalStyles from '../../styles/formList';
+import ModalLayout from '../ModalLayout';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import {useCookies} from 'react-cookie';
+import TemplateCreationForm from '../form/TemplateCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
-	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
+	const modalClasses = useModalStyles();
+	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset, responseMessage} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
@@ -46,7 +50,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchMessagesList(cookie['login-cookie'], lastCursor, page);
-	}, [lastCursor, cursors, fetchMessagesList, cookie, page]);
+	}, [lastCursor, cursors, fetchMessagesList, cookie, page, responseMessage]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/templates/${id}`, {modal: true});
@@ -55,11 +59,10 @@ export default connect(mapStateToProps, actions)(props => {
 	const headRows = [
 		{id: 'name', label: 'Name'},
 		{id: 'subject', label: 'Subject'},
-		{id: 'body', label: 'body'},
-		{id: 'notes', label: 'notes'},
 		{id: 'language', label: 'Language'}
 
 	];
+
 	let messageData;
 	if (loading) {
 		messageData = <Spinner/>;
@@ -83,13 +86,11 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	function usersDataRender(item) {
-		const {id, name, language, subject, body, notes} = item;
+		const {id, name, language, subject} = item;
 		return {
 			id: id,
 			name: name,
 			subject: subject,
-			body: body,
-			notes: notes,
 			language: language
 		};
 	}
@@ -98,6 +99,9 @@ export default connect(mapStateToProps, actions)(props => {
 		<Grid>
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Avaiable messages</Typography>
+				<ModalLayout form label="New Template" title="New Template" name="template" variant="outlined" classed={modalClasses.button} color="primary">
+					<TemplateCreationForm {...props}/>
+				</ModalLayout>
 				{messageData}
 			</Grid>
 		</Grid>
@@ -109,6 +113,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
+		responseMessage: state.contact.responseMessage,
 		loading: state.contact.loading,
 		messagesList: state.contact.messagesList,
 		totalMessages: state.contact.totalMessages,

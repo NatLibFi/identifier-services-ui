@@ -28,7 +28,7 @@
  */
 import {makeStyles} from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
 	container: {
 		maxWidth: 900,
 		margin: '40px 0px 40px 0px',
@@ -49,7 +49,7 @@ const useStyles = makeStyles({
 		width: '100%'
 	},
 	arrayString: {
-		width: '50%'
+		width: '95%'
 	},
 	selectField: {
 		height: '40px',
@@ -106,7 +106,15 @@ const useStyles = makeStyles({
 		'& button': {
 			height: 'fit-content'
 		}
+	},
+	paperRoot: {
+		padding: theme.spacing(1, 1),
+		display: 'flex',
+		justifyContent: 'space-between'
+	},
+	deleteIcon: {
+		margin: theme.spacing(0.5)
 	}
-});
+}));
 
 export default useStyles;
