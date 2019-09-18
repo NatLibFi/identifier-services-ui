@@ -157,6 +157,7 @@ export const updatePublisherRequest = (id, values, token) => async dispatch => {
 	try {
 		/* global API_URL */
 		/* eslint no-undef: "error" */
+		delete values.backgroundProcessingState;
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'PUT',
 			headers: {
