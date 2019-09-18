@@ -31,8 +31,9 @@ import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel, Typography} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
-import useStyles from '../../styles/form';
 
+import useStyles from '../../styles/form';
+import Snackbar from '../SnackBar';
 import renderTextField from './render/renderTextField';
 import renderAliases from './render/renderAliases';
 import renderContactDetail from './render/renderContactDetail';
@@ -346,6 +347,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
+		const [alertMessage, setAlertMessage] = useState(null);
+
 		useEffect(() => {
 			loadSvgCaptcha();
 		}, [loadSvgCaptcha]);
@@ -392,7 +395,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
-				alert('Captcha not provided');
+				setAlertMessage('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 
@@ -406,7 +409,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					publisherCreationRequest(newPublisher);
 				} else {
 					// eslint-disable-next-line no-undef, no-alert
-					alert('Please type the correct word in the image below');
+					setAlertMessage('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
 			}
@@ -496,6 +499,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 					</div>
 				</div>
+				{alertMessage &&
+					<Snackbar
+						anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+						message={alertMessage}
+						setMessage={setAlertMessage}
+						variant="error"
+						openSnackBar={Boolean(alertMessage)}
+					/>
+				}
 			</form>
 		);
 

@@ -38,6 +38,7 @@ import renderTextArea from './render/renderTextArea';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import Captcha from '../Captcha';
+import Snackbar from '../SnackBar';
 
 export default connect(mapToProps, actions)(reduxForm({
 	form: 'contactForm', validate
@@ -48,19 +49,16 @@ export default connect(mapToProps, actions)(reduxForm({
 			pristine,
 			valid,
 			sendMessage,
-			history,
 			handleClose,
 			loadSvgCaptcha,
 			postCaptchaInput,
 			userInfo,
-			createMessageTemplate,
-			captcha,
-			language
+			captcha
 		} = props;
 		const initialState = {};
 		const [state, setState] = useState(initialState);
+		const [alertMessage, setAlertMessage] = useState(null);
 		const [captchaInput, setCaptchaInput] = useState('');
-
 		const classes = useStyles();
 		useEffect(() => {
 			loadSvgCaptcha();
@@ -72,20 +70,20 @@ export default connect(mapToProps, actions)(reduxForm({
 
 		const handleClick = async values => {
 			setState({...state, values});
-			if (captchaInput.length === 0) {
+			if (userInfo.user) {
+				sendMessage(values);
+				handleClose();
+			} else if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
-				alert('Captcha not provided');
+				setAlertMessage('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				if (result === true) {
-					const newValues = {...values, user: userInfo.user, language: language, subject: values.email};
 					sendMessage(values);
-					createMessageTemplate(newValues);
 					handleClose();
-					history.push('/');
 				} else {
 					// eslint-disable-next-line no-undef, no-alert
-					alert('Please type the correct word in the image below');
+					setAlertMessage('Please type the correct word in the image below');
 					loadSvgCaptcha();
 				}
 			}
@@ -157,6 +155,15 @@ export default connect(mapToProps, actions)(reduxForm({
 							Submit
 						</Button>
 					</Grid>
+					{alertMessage &&
+						<Snackbar
+							anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+							message={alertMessage}
+							setMessage={setAlertMessage}
+							variant="error"
+							openSnackBar={Boolean(alertMessage)}
+						/>
+					}
 				</Grid>
 			</form>
 		);
@@ -172,7 +179,6 @@ export default connect(mapToProps, actions)(reduxForm({
 
 function mapToProps(state) {
 	return ({
-		responseMessage: state.contact.responseMessage,
 		loading: state.contact.loading,
 		captcha: state.common.captcha,
 		userInfo: state.login.userInfo,
