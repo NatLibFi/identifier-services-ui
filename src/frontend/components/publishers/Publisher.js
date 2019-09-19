@@ -50,7 +50,7 @@ import renderTextField from '../form/render/renderTextField';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publisherRegistrationForm',
+	form: 'publisherUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {

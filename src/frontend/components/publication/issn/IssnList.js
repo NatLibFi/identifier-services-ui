@@ -28,19 +28,14 @@
 
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
-import {Grid, Typography} from '@material-ui/core';
-
-import useStyles from '../../../styles/publisherLists';
-import TableComponent from '../../TableComponent';
-import * as actions from '../../../store/actions';
-import Spinner from '../../Spinner';
 import {useCookies} from 'react-cookie';
 
+import * as actions from '../../../store/actions';
+import PublicationListRenderComponent from '../PublicationListRenderComponent';
+
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
-	const {loading, fetchIssnList, issnList, totalpublication, offset, queryDocCount} = props;
+	const {fetchIssnList, issnList, loading} = props;
 	const [cookie] = useCookies('login-cookie');
-	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	useEffect(() => {
@@ -57,50 +52,18 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'frequency', label: 'Frequency'},
 		{id: 'firstNumber', label: 'First Number'}
 	];
-	let usersData;
-	if (loading) {
-		usersData = <Spinner/>;
-	} else if (issnList === undefined || issnList === null) {
-		usersData = <p>No Publication Available</p>;
-	} else {
-		usersData = (
-			<TableComponent
-				data={issnList.map(item => usersDataRender(item))}
-				handleTableRowClick={handleTableRowClick}
-				headRows={headRows}
-				offset={offset}
-				page={page}
-				setPage={setPage}
-				cursors={cursors}
-				setLastCursor={setLastCursor}
-				totalDoc={totalpublication}
-				queryDocCount={queryDocCount}
-			/>
-		);
-	}
 
-	function usersDataRender(item) {
-		const {id, title, state, firstNumber, frequency} = item;
-		return {
-			id: id,
-			title: title,
-			state: state,
-			firstNumber: firstNumber,
-			frequency: frequency
-		};
-	}
-
-	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
-				<Typography variant="h5">List of Avaiable Publication</Typography>
-				{usersData}
-			</Grid>
-		</Grid>
+	return (
+		<PublicationListRenderComponent
+			loading={loading}
+			headRows={headRows}
+			handleTableRowClick={handleTableRowClick}
+			cursors={setLastCursor}
+			publicationList={issnList}
+			setLastCursor={setLastCursor}
+			{...props}
+		/>
 	);
-	return {
-		...component
-	};
 });
 
 function mapStateToProps(state) {

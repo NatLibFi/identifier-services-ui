@@ -53,7 +53,7 @@ import Spinner from '../Spinner';
 import renderTextField from '../form/render/renderTextField';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'userCreation',
+	form: 'userUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {

@@ -59,7 +59,6 @@ export const createMessageTemplate = (values, token) => async dispatch => {
 		},
 		body: JSON.stringify(values)
 	});
-	console.log(response.status);
 	if (response.status === 200) {
 		dispatch({
 			type: SNACKBAR_MESSAGE,
