@@ -28,12 +28,8 @@
 
 import React, {useState, useEffect} from 'react';
 import {
-	Typography,
 	Button,
 	Grid,
-	List,
-	ListItem,
-	ListItemText,
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
@@ -45,14 +41,14 @@ import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../../ModalLayout';
-import Spinner from '../../Spinner';
+import PublicationRenderComponent from '../PublicationRenderComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'userCreation',
+	form: 'isbnIsmnUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, isbnIsmn, userInfo, loading, fetchIsbnIsmn} = props;
+	const {match, isbnIsmn, userInfo, loading, fetchIsbnIsmn, handleSubmit} = props;
 	const classes = useStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
@@ -71,68 +67,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	let publicationDetail;
-	let keys = isEdit ? Object.keys(isbnIsmn).filter(key => key !== 'lastUpdated') : Object.keys(isbnIsmn).map(key => key);
-	if (isbnIsmn === undefined || loading) {
-		publicationDetail = <Spinner/>;
-	} else {
-		publicationDetail = (
-			<Grid item xs={12}>
-				<Typography variant="h6">
-						Publication Details
-				</Typography>
-				<List>
-					<Grid container xs={12}>
-						{keys.map(key => {
-							return (
-								<ListItem key={key}>
-									<ListItemText>
-										{(typeof isbnIsmn[key] === 'object') ?
-											(Array.isArray(isbnIsmn[key]) ?
-												isbnIsmn[key].map(obj =>
-													renderObject(obj)
-												) :
-												renderObject(isbnIsmn[key])
-											) :
-											(
-												<Grid container>
-													<Grid item xs={4}>{key}: </Grid>
-													<Grid item xs={8}>{isbnIsmn[key].toString()}</Grid>
-												</Grid>
-											)
-										}
-									</ListItemText>
-								</ListItem>
-							);
-						})}
-					</Grid>
-				</List>
-			</Grid>
-		);
-	}
-
-	function renderObject(obj) {
-		return (Object.keys(obj).map(subKey =>
-			(
-				<Grid key={subKey} container>
-					<Grid item xs={4}>{subKey}: </Grid>
-					<Grid item xs={8}>{obj[subKey]}</Grid>
-				</Grid>
-			)
-		));
-	}
+	const handlePublicationUpdate = values => {
+		const {_id, ...updateValues} = values;
+		const token = cookie['login-cookie'];
+		console.log(updateValues, token);
+		// UpdatePublication(match.params.id, updateValues, token);
+		setIsEdit(false);
+	};
 
 	const component = (
-		<ModalLayout isTableRow color="primary">
+		<ModalLayout isTableRow color="primary" title="Publication Detail">
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>
 						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{publicationDetail}
+							<PublicationRenderComponent publication={isbnIsmn} loading={loading} isEdit={isEdit}/>
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary">
+							<Button variant="contained" color="primary" onClick={handleSubmit(handlePublicationUpdate)}>
 								UPDATE
 							</Button>
 						</div>
@@ -140,7 +93,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</div> :
 				<div className={classes.publisher}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{publicationDetail}
+						<PublicationRenderComponent publication={isbnIsmn} loading={loading} isEdit={isEdit}/>
 					</Grid>
 					{role !== undefined && role.some(item => item === 'admin') &&
 						<div className={classes.btnContainer}>
