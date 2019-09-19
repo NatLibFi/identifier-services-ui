@@ -46,7 +46,7 @@ import {fieldArray as publisherFieldArray} from './PublisherRegistrationForm';
 import PublisherRegistrationForm from './PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
-import RenderPublicationPreview from '../publication/RenderPreview';
+import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
@@ -66,19 +66,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			postCaptchaInput,
 			publicationValues,
 			clearFields,
-			publisherValues,
 			user,
 			isAuthenticated,
+			publicationCreationRequest,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
-		const [newPublication, setNewPublication] = useState({});
 		const fieldArray = getFieldArray(user);
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		const steps = getSteps(fieldArray);
-
 		useEffect(() => {
 			loadSvgCaptcha();
 		}, [loadSvgCaptcha, publisher]);
@@ -144,39 +142,56 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setActiveStep(activeStep - 1);
 		}
 
-		function handleSetPublisher() {
+		function handleSetPublisher(value) {
 			handleNext();
-			setPublisher(publisherValues);
+			setPublisher(value);
 			setPublisherRegForm(true);
 		}
 
-		async function handlePublicationRegistration(values) {
-			console.log('val', values)
-			const {seriesTitle, ...formatTitle} = {...values.seriesDetails, title: values.seriesDetails.seriesTitle};
-			const formatPublicationValue = {...publicationValues, publisher: user.id, seriesDetails: formatTitle, formatDetails: publicationValues.formatDetails.fileFormat ?
-				{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
-				{...publicationValues.formatDetails}
-			};
-			console.log('format', formatPublicationValue)
-
-			if (captchaInput.length === 0) {
-				alert('Captcha not provided');
-			} else if (captchaInput.length > 0) {
-				const result = await postCaptchaInput(captchaInput, captcha.id);
-				setNewPublication(makeNewPublicationObj(values, result));
+		function replaceKey(key) {
+			switch (key) {
+				case 'role':
+					return 'role';
+				case 'authorGivenName':
+					return 'givenName';
+				case 'authorFamilyName':
+					return 'familyName';
+				default:
+					return null;
 			}
 		}
 
-		function makeNewPublicationObj(values, result) {
-			if (result) {
-				return {
-					...values,
-					publisher: values.publisher === undefined ? publisher : values.publisher
-				};
-			}
+		async function handlePublicationRegistration(values) {
+			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
+				return {...acc, [replaceKey(key)]: item[key]};
+			}, {}));
+			const {seriesTitle, ...formatTitle} = {...values.seriesDetails, volume: Number(values.seriesDetails.volume), title: values.seriesDetails.seriesTitle};
+			const formatPublicationValue = {...publicationValues, authors: formatAuthors, publisher: isAuthenticated ? user.id : publisher, seriesDetails: formatTitle, formatDetails: publicationValues.formatDetails.fileFormat ?
+				{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
+				{...publicationValues.formatDetails}
+			};
 
-			alert('Please type the correct word in the image below');
-			loadSvgCaptcha();
+			if (isAuthenticated) {
+				publicationCreationRequest(formatPublicationValue);
+			} else {
+				// eslint-disable-next-line no-lonely-if
+				if (captchaInput.length === 0) {
+					alert('Captcha not provided');
+				} else if (captchaInput.length > 0) {
+					const result = await postCaptchaInput(captchaInput, captcha.id);
+					submitPublication(formatPublicationValue, result);
+				}
+			}
+		}
+
+		function submitPublication(values, result) {
+			if (result === true) {
+				publicationCreationRequest(values);
+			} else {
+				// eslint-disable-next-line no-undef, no-alert
+				alert('Please type the correct word in the image below');
+				loadSvgCaptcha();
+			}
 		}
 
 		const component = (
@@ -310,6 +325,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								/>
 							</Grid>
 						);
+					case 'dateTime':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={classes.dateTimePicker}
+									component={renderDateTime}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+								/>
+							</Grid>
+						);
 					case 'multiSelect':
 						return (
 							<Grid key={list.name} item xs={12}>
@@ -413,7 +440,6 @@ function getSteps(fieldArray) {
 }
 
 function fieldArrayElement(data, fieldName, clearFields) {
-
 	return (
 		<FieldArray
 			name={fieldName}
@@ -512,7 +538,7 @@ function getFieldArray(user) {
 				},
 				{
 					name: 'publicationTime',
-					type: 'text',
+					type: 'dateTime',
 					label: 'Publication Time*',
 					width: 'half'
 				},

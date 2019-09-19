@@ -130,6 +130,10 @@ const useStyles = makeStyles({
 	},
 	addFabBtn: {
 		marginTop: '15px'
+	},
+	dateTimePicker: {
+		width: '50%',
+		marginTop: '0 !important'
 	}
 });
 

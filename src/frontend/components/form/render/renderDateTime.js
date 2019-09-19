@@ -25,61 +25,51 @@
  * for the JavaScript code in this file.
  *
  */
+import 'date-fns';
+import React from 'react';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+	MuiPickersUtilsProvider,
+	KeyboardTimePicker,
+	KeyboardDatePicker
+} from '@material-ui/pickers';
 
-export {
-	fetchPublisher,
-	updatePublisher,
-	searchPublisher,
-	publisherCreationRequest,
-	fetchPublishersRequestsList,
-	fetchPublisherRequest,
-	updatePublisherRequest
-} from './publisherAction';
+export default function MaterialUIPickers(props) {
+	const {input, className} = props;
 
-export {
-	normalLogin,
-	getUserInfo,
-	logOut
-} from './auth';
+	const component = (
+		<MuiPickersUtilsProvider utils={DateFnsUtils}>
+			<>
+				<KeyboardDatePicker
+					{...input}
+					className={className}
+					margin="normal"
+					id="date-picker-dialog"
+					label="Publication date"
+					format="MM/dd/yyyy"
+					value={input.value || null}
+					KeyboardButtonProps={{
+						'aria-label': 'change date'
+					}}
+					onChange={value => input.onChange(value)}
+				/>
+				<KeyboardTimePicker
+					{...input}
+					className={className}
+					margin="normal"
+					id="time-picker"
+					label="Publication time"
+					value={input.value || null}
+					KeyboardButtonProps={{
+						'aria-label': 'change time'
+					}}
+					onChange={value => input.onChange(value)}
+				/>
+			</>
+		</MuiPickersUtilsProvider>
+	);
 
-export {
-	sendMessage,
-	createMessageTemplate,
-	fetchMessagesList,
-	fetchMessage
-} from './messageActions';
-
-export {
-	setLocale
-} from './localeAction';
-
-export {
-	success,
-	fail,
-	setLoader,
-	loadSvgCaptcha,
-	postCaptchaInput,
-	setFormName
-} from './commonAction';
-
-export {
-	createUser,
-	createUserRequest,
-	fetchUser,
-	fetchUserRequest,
-	fetchUsersList,
-	fetchUsersRequestsList,
-	updateUserRequest
-} from './userActions';
-
-export {
-	passwordReset
-} from './passwordResetAction';
-
-export {
-	fetchIsbnIsmn,
-	fetchIsbnIsmnList,
-	fetchIssn,
-	fetchIssnList,
-	publicationCreationRequest
-} from './publicationAction';
+	return {
+		...component
+	};
+}

@@ -188,3 +188,16 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 // 	});
 // 	console.log(await response.json());
 // };
+
+// ****************REQUESTS**********************************
+export const publicationCreationRequest = values => async () => {
+	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(values)
+	});
+	await response.json();
+};

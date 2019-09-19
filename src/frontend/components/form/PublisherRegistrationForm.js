@@ -350,7 +350,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
-
 		useEffect(() => {
 			loadSvgCaptcha();
 			if (publicationRegistration) {
@@ -395,12 +394,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				alert('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
-				const newPublisher = makeNewPublisherObj(values, result);
-				publisherCreationRequest(newPublisher);
+				makeNewPublisherObj(values, result);
 			}
 		};
 
+		function handleFormatPublisher() {
+			handleSetPublisher(formatPublisher(publisherValues));
+		}
+
 		function makeNewPublisherObj(values, result) {
+			const newPublisher = formatPublisher(values);
+			if (result === true) {
+				publisherCreationRequest(newPublisher);
+			} else {
+				// eslint-disable-next-line no-undef, no-alert
+				alert('Please type the correct word in the image below');
+				loadSvgCaptcha();
+			}
+		}
+
+		function formatPublisher(values) {
 			const newClassification = values.classification.map(item => item.value.toString());
 			const organizationDetails = {
 				affiliateOf: {...formatAddress(values.affiliateOf)},
@@ -411,19 +424,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const publicationDetails = values.publicationDetails;
 			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 
-			if (result === true) {
-				const newPublisher = {
-					...rest,
-					organizationDetails: organizationDetails,
-					classification: newClassification,
-					publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
-				};
-				publisherCreationRequest(newPublisher);
-			} else {
-				// eslint-disable-next-line no-undef, no-alert
-				alert('Please type the correct word in the image below');
-				loadSvgCaptcha();
-			}
+			const newPublisher = {
+				...rest,
+				organizationDetails: organizationDetails,
+				classification: newClassification,
+				publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
+			};
+			return newPublisher;
 		}
 
 		function formatAddress(obj) {
@@ -510,7 +517,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							activeStep === steps.length - 1 &&
 								(publicationRegistration ?
 									(
-										<Button type="button" disabled={pristine || !valid} variant="contained" color="primary" onClick={handleSetPublisher}>
+										<Button type="button" disabled={pristine || !valid} variant="contained" color="primary" onClick={handleFormatPublisher}>
 											Next
 										</Button>
 									) : (
