@@ -35,10 +35,11 @@ export default function (props) {
 		switch (typeof value) {
 			case 'string':
 			case 'number':
+			case 'boolean':
 				return (
 					<>
 						<Grid item xs={4}>{formatLabel(label)}:</Grid>
-						<Grid item xs={8}>{value}</Grid>
+						<Grid item xs={8}>{value.toString()}</Grid>
 					</>
 				);
 			case 'object':
