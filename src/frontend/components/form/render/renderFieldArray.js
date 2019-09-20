@@ -43,7 +43,6 @@ export default connect(mapStateToProps, actions)(props => {
 	setFormName(formName);
 
 	const fieldValues = values && getFieldValue(values);
-	console.log('val', fieldValues);
 
 	const handleOnClick = () => {
 		setErrors();
