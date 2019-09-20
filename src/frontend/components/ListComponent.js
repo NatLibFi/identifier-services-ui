@@ -14,16 +14,6 @@ export default function (props) {
 	const classes = useStyles();
 
 	const {label, value} = props;
-	const arr = [];
-	function formatObj(value) {
-		for (let key in value) {
-			if (Object.prototype.hasOwnProperty.call(value, key)) {
-				if (value[key] !== undefined) {
-					arr.push(formatLabel(key) + ': ' + value[key]);
-				}
-			}
-		}
-	}
 
 	function formatLabel(label) {
 		const res = label.replace(/([A-Z])/g, ' $1').trim();
@@ -35,69 +25,96 @@ export default function (props) {
 		switch (typeof value) {
 			case 'string':
 			case 'number':
+				return (
+					<>
+						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+						<Grid item xs={8}>{value}</Grid>
+					</>
+				);
 			case 'boolean':
 				return (
 					<>
-						<Grid item xs={4}>{formatLabel(label)}:</Grid>
+						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
 						<Grid item xs={8}>{value.toString()}</Grid>
 					</>
 				);
 			case 'object':
-				if (Array.isArray(value)) {
-					if (value.some(item => typeof item === 'string')) {
-						return (
-							<>
-								<Grid item xs={4}>{formatLabel(label)}:</Grid>
-								<Grid item xs={8}>
-									{value.map(item => {
-										return (
-											<Chip key={item} label={item}/>
-										);
-									})}
-								</Grid>
-							</>
-						);
-					}
-
-					return (
-						<Grid item xs={12}>
-							<ExpansionPanel>
-								<ExpansionPanelSummary
-									expandIcon={<ExpandMoreIcon/>}
-									aria-controls="panel1a-content"
-									className={classes.exPanel}
-								>
-									<Typography>{formatLabel(label)}</Typography>
-								</ExpansionPanelSummary>
-								<ExpansionPanelDetails className={classes.objDetail}>
-									{value.map(item => formatObj(item))}
-									{arr.map(item => <li key={item}>{item}</li>)}
-								</ExpansionPanelDetails>
-							</ExpansionPanel>
-						</Grid>
-					);
-				}
-
-				return (
-					<Grid item xs={12}>
-						<ExpansionPanel>
-							<ExpansionPanelSummary
-								expandIcon={<ExpandMoreIcon/>}
-								aria-controls="panel1a-content"
-								className={classes.exPanel}
-							>
-								<Typography>{formatLabel(label)}</Typography>
-							</ExpansionPanelSummary>
-							<ExpansionPanelDetails className={classes.objDetail}>
-								{formatObj(value)}
-								{arr.map(item => <li key={item}>{item}</li>)}
-							</ExpansionPanelDetails>
-						</ExpansionPanel>
-					</Grid>
-				);
+				return renderObject(value);
 
 			default:
 				return null;
+		}
+
+		function renderObject(obj) {
+			if (obj.length === 0) {
+				return null;
+			}
+
+			if (Array.isArray(obj)) {
+				if (obj.some(item => typeof item === 'string')) {
+					return (
+						<>
+							<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+							<Grid item xs={8}>
+								{obj.map(item => {
+									return (
+										<Chip key={item} label={item}/>
+									);
+								})}
+							</Grid>
+						</>
+					);
+				}
+
+				return renderExpansion(obj);
+			}
+
+			return renderExpansion(obj);
+		}
+
+		function renderExpansion(value) {
+			const component = (
+				<Grid item xs={12}>
+					<ExpansionPanel>
+						<ExpansionPanelSummary
+							expandIcon={<ExpandMoreIcon/>}
+							aria-controls="panel1a-content"
+							className={classes.exPanel}
+						>
+							<Typography><strong>{formatLabel(label)}</strong></Typography>
+						</ExpansionPanelSummary>
+						<ExpansionPanelDetails className={classes.objDetail}>
+
+							{(Array.isArray(value) && value.length > 0) ? (
+								value.map(item => (
+									<ul key={item} style={{borderBottom: '1px dashed', listStyleType: 'none'}}>
+										{Object.keys(item).map(key => item[key].toString() ?
+											(
+												<li key={key}>
+													<span><strong>{formatLabel(key)}: </strong></span>
+													<span>{item[key].toString()}</span>
+												</li>
+											) : null
+										)}
+									</ul>
+								))
+							) : (
+								Object.keys(value).map(key => value[key].toString() ?
+									(
+										<li key={key}>
+											<span><strong>{formatLabel(key)}: </strong></span>
+											<span>{value[key].toString()}</span>
+										</li>
+									) : null
+								)
+							)
+							}
+						</ExpansionPanelDetails>
+					</ExpansionPanel>
+				</Grid>
+			);
+
+			return component;
 		}
 	}
 

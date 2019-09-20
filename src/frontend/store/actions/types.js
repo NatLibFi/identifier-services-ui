@@ -41,7 +41,7 @@ export const LOCALE_SET = 'LOCALE_SET';
 export const GET_CAPTCHA = 'GET_CAPTCHA';
 export const POST_CAPTCHA = 'POST_CAPTCHA';
 
-export const CONTACT = 'CONTACT';
+export const SNACKBAR_MESSAGE = 'CONTACT';
 export const FETCH_MESSAGE = 'FETCH_MESSAGE';
 export const FETCH_MESSAGES_LIST = 'FETCH_MESSAGES_LIST';
 

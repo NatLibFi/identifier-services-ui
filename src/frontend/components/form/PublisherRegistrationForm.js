@@ -31,8 +31,9 @@ import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
-import useStyles from '../../styles/form';
 
+import useStyles from '../../styles/form';
+import Snackbar from '../SnackBar';
 import renderTextField from './render/renderTextField';
 import renderAliases from './render/renderAliases';
 import renderContactDetail from './render/renderContactDetail';
@@ -350,6 +351,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
+		const [alertMessage, setAlertMessage] = useState(null);
+
 		useEffect(() => {
 			loadSvgCaptcha();
 			if (publicationRegistration) {
@@ -529,6 +532,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 					</div>
 				</div>
+				{alertMessage &&
+					<Snackbar
+						anchorOrigin={{vertical: 'top', horizontal: 'center'}}
+						message={alertMessage}
+						setMessage={setAlertMessage}
+						variant="error"
+						openSnackBar={Boolean(alertMessage)}
+					/>
+				}
 			</form>
 		);
 

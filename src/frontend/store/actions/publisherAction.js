@@ -155,6 +155,7 @@ export const fetchPublisherRequest = (id, token) => async dispatch => {
 export const updatePublisherRequest = (id, values, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
+		delete values.backgroundProcessingState;
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'PUT',
 			headers: {

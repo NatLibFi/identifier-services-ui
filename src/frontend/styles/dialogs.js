@@ -25,12 +25,32 @@
  * for the JavaScript code in this file.
  *
  */
-
 import {makeStyles} from '@material-ui/core/styles';
+import {amber, green} from '@material-ui/core/colors';
 
-const useStyles = makeStyles({
-	snackbarContent: {
-		background: '#43a047'
+const useStyles = makeStyles(theme => ({
+	success: {
+		backgroundColor: green[600]
+	},
+	error: {
+		backgroundColor: theme.palette.red.backgroundColor
+	},
+	info: {
+		backgroundColor: theme.palette.primary.main
+	},
+	warning: {
+		backgroundColor: amber[700]
+	},
+	icon: {
+		fontSize: 20
+	},
+	iconVariant: {
+		opacity: 0.9,
+		marginRight: theme.spacing(1)
+	},
+	message: {
+		display: 'flex',
+		alignItems: 'center'
 	},
 	iconText: {
 		display: 'flex',
@@ -39,6 +59,6 @@ const useStyles = makeStyles({
 			marginRight: '5px'
 		}
 	}
-});
+}));
 
 export default useStyles;
