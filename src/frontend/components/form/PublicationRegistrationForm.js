@@ -162,26 +162,40 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		async function handlePublicationRegistration(values) {
-			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
-				return {...acc, [replaceKey(key)]: item[key]};
-			}, {}));
-			const {seriesTitle, ...formatTitle} = {...values.seriesDetails, volume: Number(values.seriesDetails.volume), title: values.seriesDetails.seriesTitle};
-			const formatPublicationValue = {...publicationValues, authors: formatAuthors, publisher: isAuthenticated ? user.id : publisher, seriesDetails: formatTitle, formatDetails: publicationValues.formatDetails.fileFormat ?
-				{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
-				{...publicationValues.formatDetails}
-			};
-
 			if (isAuthenticated) {
-				publicationCreationRequest(formatPublicationValue);
+				publicationCreationRequest(formatPublicationValues(values));
 			} else {
 				// eslint-disable-next-line no-lonely-if
 				if (captchaInput.length === 0) {
 					alert('Captcha not provided');
 				} else if (captchaInput.length > 0) {
 					const result = await postCaptchaInput(captchaInput, captcha.id);
-					submitPublication(formatPublicationValue, result);
+					submitPublication(formatPublicationValues(values), result);
 				}
 			}
+		}
+
+		function formatPublicationValues(values) {
+			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
+				return {...acc, [replaceKey(key)]: item[key]};
+			}, {}));
+			const {seriesTitle, ...formatTitle} = {
+				...values.seriesDetails,
+				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
+				title: values.seriesDetails.seriesTitle
+			};
+			const formattedPublicationValue = {
+				...values,
+				authors: formatAuthors,
+				publisher: isAuthenticated ? user.id : publisher,
+				seriesDetails: formatTitle,
+				formatDetails: values.formatDetails.fileFormat ?
+					{...values.formatDetails, fileFormat: values.formatDetails.fileFormat.value} :
+					{...values.formatDetails,
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)}
+			};
+			return formattedPublicationValue;
 		}
 
 		function submitPublication(values, result) {
@@ -192,6 +206,47 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				alert('Please type the correct word in the image below');
 				loadSvgCaptcha();
 			}
+		}
+
+		function renderPreview(publicationValues) {
+			publicationValues = {...publicationValues, publicationTime: publicationValues.publicationTime.toLocaleString()};
+			const formatPublicationValue = formatPublicationValues(publicationValues);
+			return (
+				<>
+					<Grid item xs={12} md={6}>
+						<List>
+							{
+								Object.keys(formatPublicationValue).map(key => {
+									return (typeof formatPublicationValue[key] === 'string' || typeof formatPublicationValue[key] === 'boolean') ?
+										(
+											<ListComponent label={key} value={formatPublicationValue[key]}/>
+										) :
+										null;
+								})
+							}
+						</List>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<List>
+							{
+								Object.keys(formatPublicationValue).map(key => {
+									if (typeof formatPublicationValue[key] === 'object') {
+										if (Array.isArray(formatPublicationValue[key])) {
+											return <ListComponent label={key} value={formatPublicationValue[key]}/>;
+										}
+
+										const obj = formatPublicationValue[key];
+										Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
+										return <ListComponent label={key} value={obj}/>;
+									}
+
+									return null;
+								})
+							}
+						</List>
+					</Grid>
+				</>
+			);
 		}
 
 		const component = (
@@ -301,6 +356,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 
 					case 'text':
+						return (
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									disabled={Boolean(list.name === 'publisher')}
+								/>
+							</Grid>
+						);
+					case 'number':
 						return (
 							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 								<Field
@@ -449,49 +517,6 @@ function fieldArrayElement(data, fieldName, clearFields) {
 	);
 }
 
-function renderPreview(publicationValues) {
-	const formatPublicationValue = {...publicationValues, formatDetails: publicationValues.formatDetails.fileFormat ?
-		{...publicationValues.formatDetails, fileFormat: publicationValues.formatDetails.fileFormat.value} :
-		{...publicationValues.formatDetails}
-	};
-	return (
-		<>
-			<Grid item xs={12} md={6}>
-				<List>
-					{
-						Object.keys(formatPublicationValue).map(key => {
-							return typeof formatPublicationValue[key] === 'string' ?
-								(
-									<ListComponent label={key} value={formatPublicationValue[key]}/>
-								) :
-								null;
-						})
-					}
-				</List>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<List>
-					{
-						Object.keys(formatPublicationValue).map(key => {
-							if (typeof formatPublicationValue[key] === 'object') {
-								if (Array.isArray(formatPublicationValue[key])) {
-									return <ListComponent label={key} value={formatPublicationValue[key]}/>;
-								}
-
-								const obj = formatPublicationValue[key];
-								Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
-								return <ListComponent label={key} value={obj}/>;
-							}
-
-							return null;
-						})
-					}
-				</List>
-			</Grid>
-		</>
-	);
-}
-
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
@@ -605,7 +630,7 @@ function getFieldArray(user) {
 					fields: [
 						{
 							name: 'seriesDetails[volume]',
-							type: 'text',
+							type: 'number',
 							label: 'Volume',
 							width: 'full'
 						},
@@ -702,13 +727,13 @@ function getSubFormatDetailsFieldArray() {
 				{
 					label: 'Run',
 					name: 'formatDetails[run]',
-					type: 'text',
+					type: 'number',
 					width: 'half'
 				},
 				{
 					label: 'Edition',
 					name: 'formatDetails[edition]',
-					type: 'text',
+					type: 'number',
 					width: 'half'
 				},
 				{
@@ -764,13 +789,13 @@ function getSubFormatDetailsFieldArray() {
 				{
 					label: 'Run',
 					name: 'formatDetails[run]',
-					type: 'text',
+					type: 'number',
 					width: 'half'
 				},
 				{
 					label: 'Edition',
 					name: 'formatDetails[edition]',
-					type: 'text',
+					type: 'number',
 					width: 'half'
 				},
 				{
