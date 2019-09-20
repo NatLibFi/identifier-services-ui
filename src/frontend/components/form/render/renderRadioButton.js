@@ -27,22 +27,45 @@
  */
 
 import React from 'react';
-import {PropTypes} from 'prop-types';
 import {Radio, FormControlLabel, RadioGroup, FormLabel} from '@material-ui/core';
 
-export default function ({option, name, label, input, meta: {touched, error}}) {
+export default function (props) {
+	const {input, options, name, publicationValues, clearFields, label, className} = props;
+	const {meta: {touched, error}} = props;
+
+	function handleChange(value) {
+		input.onChange(value);
+		const Keys = Object.keys(publicationValues);
+		Keys.map(key => {
+			switch (key) {
+				case 'select':
+					return publicationValues && publicationValues.select !== value &&
+					clearFields(undefined, false, false, publicationValues.select);
+				case 'selectFormat':
+					return publicationValues && publicationValues.selectFormat !== value &&
+					Object.keys(publicationValues && publicationValues.formatDetails).map(item => clearFields(undefined, false, false, `formatDetails[${item}]`));
+				default:
+					return null;
+			}
+		});
+	}
+
 	const component = (
 		<>
-
 			<FormLabel component="legend">{label}</FormLabel>
 			<RadioGroup
 				{...input}
 				aria-label={label}
 				name={name}
+				className={className}
 				error={touched && Boolean(error)}
+				value={input.value}
+				onChange={value => {
+					handleChange(value);
+				}}
 			>
 				{
-					option.map(item => (
+					options.map(item => (
 						<FormControlLabel
 							key={item.value}
 							value={item.value}
@@ -56,17 +79,6 @@ export default function ({option, name, label, input, meta: {touched, error}}) {
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			meta: {},
-			input: {}
-		},
-		propTypes: {
-			option: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-			input: PropTypes.shape({}),
-			label: PropTypes.string.isRequired,
-			name: PropTypes.string.isRequired,
-			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
-		}
+		...component
 	};
 }

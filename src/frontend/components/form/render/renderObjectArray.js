@@ -76,7 +76,7 @@ export default connect(state => ({
 									label={item.label}
 									name={item.name}
 									type={item.type}
-									options={item.option}
+									options={item.options}
 								/>	:
 								<Field
 									key={item.label}

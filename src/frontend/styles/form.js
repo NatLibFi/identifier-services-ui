@@ -67,6 +67,12 @@ const useStyles = makeStyles(theme => ({
 	stepLabel: {
 		textTransform: 'capitalize'
 	},
+	smallFontStepLabel: {
+		textTransform: 'capitalize',
+		'& span': {
+			fontSize: '0.65rem'
+		}
+	},
 	editForm: {
 		display: 'flex'
 	},
@@ -78,10 +84,16 @@ const useStyles = makeStyles(theme => ({
 		margin: '0 20px 0 0',
 		width: '80%'
 	},
+	fullWidth: {
+		width: '100%'
+	},
 	formHead: {
 		width: '100%',
 		marginTop: '25px',
-		marginLeft: '5px'
+		marginLeft: '5px',
+		fontSize: '1rem',
+		fontWeight: 600,
+		textTransform: 'uppercase'
 	},
 	affiliatesAddBtn: {
 		display: 'flex',
@@ -106,6 +118,22 @@ const useStyles = makeStyles(theme => ({
 		'& button': {
 			height: 'fit-content'
 		}
+	},
+	radioDirectionRow: {
+		flexDirection: 'row !important',
+		flexWrap: 'nowrap !important'
+	},
+	smallStepper: {
+		width: '60%',
+		margin: '0 auto',
+		padding: '0 0 10px 0'
+	},
+	addFabBtn: {
+		marginTop: '15px'
+	},
+	dateTimePicker: {
+		width: '50%',
+		marginTop: '0 !important'
 	},
 	paperRoot: {
 		padding: theme.spacing(1, 1),

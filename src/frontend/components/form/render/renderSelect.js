@@ -30,14 +30,30 @@ import React from 'react';
 import {PropTypes} from 'prop-types';
 import {Input, InputLabel, NativeSelect, FormControl} from '@material-ui/core';
 
-export default function ({label, input, name, options, className, defaultValue, meta: {touched, error}}) {
+export default function ({
+	label,
+	input,
+	name,
+	options,
+	className,
+	defaultValue,
+	meta: {touched, error},
+	publicationValues,
+	clearFields}) {
 	const component = (
 		<FormControl className={className}>
-			<InputLabel shrink htmlFor="language-helper">{label}</InputLabel>
+			<InputLabel htmlFor="language-helper">{label}</InputLabel>
 			<NativeSelect
 				{...input}
 				error={touched && Boolean(error)}
 				input={<Input name={name} id="language-helper"/>}
+				value={input.value}
+				onChange={value => {
+					input.onChange(value);
+					if (publicationValues && publicationValues.type !== value) {
+						clearFields(undefined, false, false, 'mapDetails[scale]');
+					}
+				}}
 			>
 				{
 					options.map(item =>

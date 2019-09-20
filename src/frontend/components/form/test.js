@@ -67,7 +67,7 @@ const ContactForm = ({handleSubmit}) => {
 					name="gender"
 					component={renderRadioButton}
 					label="Gender"
-					option={genderOption}
+					options={genderOption}
 				/>
 				<Field
 					name="select"

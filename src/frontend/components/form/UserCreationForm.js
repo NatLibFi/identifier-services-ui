@@ -93,14 +93,14 @@ const fieldArray = [
 		name: 'role',
 		type: 'select',
 		label: 'Role',
-		option: roleOption,
+		options: roleOption,
 		width: 'half'
 	},
 	{
 		name: 'preferences[defaultLanguage]',
 		type: 'select',
 		label: 'Choose Language',
-		option: selectOption,
+		options: selectOption,
 		width: 'half',
 		defaultValue: 'fin'
 	}
@@ -217,7 +217,7 @@ function element(array, classes) {
 					label={list.label}
 					name={list.name}
 					type={list.type}
-					options={list.option}
+					options={list.options}
 					props={{defaultValue: list.defaultValue}}
 				/>
 			</Grid> :

@@ -24,14 +24,20 @@ export default function (props) {
 	function renderSwitch(value) {
 		switch (typeof value) {
 			case 'string':
-			case 'boolean':
 			case 'number':
-				return value.toString() ? (
+				return (
+					<>
+						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+						<Grid item xs={8}>{value}</Grid>
+					</>
+				);
+			case 'boolean':
+				return (
 					<>
 						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
 						<Grid item xs={8}>{value.toString()}</Grid>
 					</>
-				) : null;
+				);
 			case 'object':
 				return renderObject(value);
 

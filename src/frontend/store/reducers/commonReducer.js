@@ -26,10 +26,11 @@
  *
  */
 
-import {GET_CAPTCHA, LOADER} from '../actions/types';
+import {GET_CAPTCHA, LOADER, SET_FORM_NAME} from '../actions/types';
 
 const initialState = {
 	captcha: {},
+	formName: '',
 	modelStatus: false,
 	loading: false
 
@@ -46,6 +47,12 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				captcha: action.payload,
+				loading: false
+			};
+		case SET_FORM_NAME:
+			return {
+				...state,
+				formName: action.payload,
 				loading: false
 			};
 		default:

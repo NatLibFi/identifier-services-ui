@@ -27,7 +27,6 @@
  */
 
 import React from 'react';
-import {PropTypes} from 'prop-types';
 import {TextField} from '@material-ui/core';
 
 export default function ({label, className, id, input, meta: {touched, error}}) {
@@ -44,17 +43,6 @@ export default function ({label, className, id, input, meta: {touched, error}}) 
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			meta: {},
-			input: {}
-		},
-		propTypes: {
-			id: PropTypes.string.isRequired,
-			input: PropTypes.shape({}),
-			label: PropTypes.string.isRequired,
-			className: PropTypes.string.isRequired,
-			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
-		}
+		...component
 	};
 }

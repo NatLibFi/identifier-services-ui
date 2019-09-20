@@ -58,7 +58,8 @@ export {
 	fail,
 	setLoader,
 	loadSvgCaptcha,
-	postCaptchaInput
+	postCaptchaInput,
+	setFormName
 } from './commonAction';
 
 export {
@@ -79,5 +80,6 @@ export {
 	fetchIsbnIsmn,
 	fetchIsbnIsmnList,
 	fetchIssn,
-	fetchIssnList
+	fetchIssnList,
+	publicationCreationRequest
 } from './publicationAction';
