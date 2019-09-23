@@ -28,9 +28,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {NavLink as Link} from 'react-router-dom';
-import {Button, Menu, MenuItem} from '@material-ui/core';
+import {Button, Menu, MenuItem, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography} from '@material-ui/core';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
-
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import useStyles from '../../styles/adminNav';
 import * as actions from '../../store/actions';
 
@@ -49,8 +49,8 @@ export default connect(null, actions)(props => {
 
 	const component = (
 		<>
-			<div className={classes.publicMenu} onMouseOver={handleClick}>
-				<Link exact to={`/${list.path}`} activeClassName={classes.active}><Button>{list.label}</Button></Link>
+			<div className={classes.publicMenu} onClick={handleClick}>
+				<Link exact to={list.path && `/${list.path}`} activeClassName={classes.active}><Button>{list.label}</Button></Link>
 				{list.listItem && <ArrowDropDown/>}
 			</div>
 
@@ -73,9 +73,33 @@ export default connect(null, actions)(props => {
 				onClose={handleClose}
 			>
 				{list.listItem.map(item => item.roleView && role.some(item => list.roleView.includes(item)) &&
-				<Link exact to={`/${item.path}`} activeClassName={classes.active}>
-					<MenuItem key={item.label}>{item.label}</MenuItem>
-				</Link>
+				<>
+					<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
+						{item.listItem ?
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+									className={classes.menuExpansion}
+								>
+									<MenuItem>{item.label}</MenuItem>
+
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<Typography>
+										{item.listItem.map(subItem => (
+											<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
+												<MenuItem>{subItem.label}</MenuItem>
+											</Link>
+										))}
+									</Typography>
+								</ExpansionPanelDetails>
+							</ExpansionPanel> :
+							<MenuItem key={item.label}>{item.label}</MenuItem>
+						}
+					</Link>
+				</>
 				)}
 			</Menu>
 			}

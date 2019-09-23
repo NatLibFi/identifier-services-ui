@@ -88,24 +88,24 @@ export default function (props) {
 							{(Array.isArray(value) && value.length > 0) ? (
 								value.map(item => (
 									<ul key={item} style={{borderBottom: '1px dashed', listStyleType: 'none'}}>
-										{Object.keys(item).map(key => item[key].toString() ?
+										{Object.keys(item).map(key => item[key] ?
 											(
 												<li key={key}>
 													<span><strong>{formatLabel(key)}: </strong></span>
-													<span>{item[key].toString()}</span>
+													<span>{item[key]}</span>
 												</li>
 											) : null
 										)}
 									</ul>
 								))
 							) : (
-								Object.keys(value).map(key => value[key].toString() ?
+								Object.keys(value).map(key =>
 									(
 										<li key={key}>
 											<span><strong>{formatLabel(key)}: </strong></span>
-											<span>{value[key].toString()}</span>
+											<span>{typeof value[key] === 'boolean' ? value[key].toString() : value[key]}</span>
 										</li>
-									) : null
+									)
 								)
 							)
 							}

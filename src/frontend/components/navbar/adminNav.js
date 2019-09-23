@@ -56,7 +56,10 @@ export default function ({userInfo, isAuthenticated}) {
 			roleView: ['admin', 'publisher'],
 			listItem: [
 				{label: 'Publishers', path: 'requests/publishers', roleView: ['admin']},
-				{label: 'Publications', path: 'requests/publications', roleView: ['admin', 'publisher']},
+				{label: 'Publications', roleView: ['admin', 'publisher'], listItem: [
+					{label: 'ISBN-SMN', path: 'requests/publications/isbn-ismn', roleView: ['admin', 'publisher']},
+					{label: 'ISSN', path: 'requests/publications/issn', roleView: ['admin', 'publisher']}
+				]},
 				{label: 'Users', path: 'requests/users', roleView: ['admin', 'publisher']}
 			]
 		},
