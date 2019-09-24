@@ -73,6 +73,11 @@ const theme = createMuiTheme({
 				boxShadow: 'none'
 			}
 		},
+		MuiExpansionPanelSummary: {
+			root: {
+				background: '#fafafa'
+			}
+		},
 		MuiExpansionPanelDetails: {
 			root: {
 				padding: '0 24px 0'
