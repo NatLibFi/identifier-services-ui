@@ -52,7 +52,7 @@ async function run() {
 	const composeEnhancers =
 	/* global __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ */
 	/* eslint no-undef: "error" */
-		process.env.NODE_ENV === 'production' && __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
+		process.env.NODE_ENV === 'development' && __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
 			__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
 			compose;
 

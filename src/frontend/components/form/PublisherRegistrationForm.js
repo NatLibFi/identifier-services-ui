@@ -346,7 +346,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			handleSetPublisher,
 			setPublisherRegForm,
 			publisherValues,
-			isAuthenticated
+			isAuthenticated,
+			handleClose
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -394,7 +395,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const handlePublisherRegistration = async values => {
 			if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
-				alert('Captcha not provided');
+				setAlertMessage('Captcha not provided');
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				makeNewPublisherObj(values, result);
@@ -409,9 +410,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const newPublisher = formatPublisher(values);
 			if (result === true) {
 				publisherCreationRequest(newPublisher);
+				handleClose();
 			} else {
 				// eslint-disable-next-line no-undef, no-alert
-				alert('Please type the correct word in the image below');
+				setAlertMessage('Please type the correct word in the image below');
 				loadSvgCaptcha();
 			}
 		}
