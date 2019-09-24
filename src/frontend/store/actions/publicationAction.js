@@ -226,7 +226,6 @@ export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStat
 };
 
 export const fetchPublicationIsbnIsmnRequest = (id, token) => async dispatch => {
-	console.log('iddddddd', id)
 	dispatch(setLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/${id}`, {

@@ -129,7 +129,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const {_id, state, ...formattedPublicationIsbnIsmnRequest} = publicationIsbnIsmnRequest;
 	const {publisher, ...withoutPublisher} = {...formattedPublicationIsbnIsmnRequest};
-	console.log(formattedPublicationIsbnIsmnRequest && formattedPublicationIsbnIsmnRequest.publisher)
 	const onlyPublisher = formattedPublicationIsbnIsmnRequest && typeof formattedPublicationIsbnIsmnRequest.publisher === 'object' && formattedPublicationIsbnIsmnRequest.publisher;
 	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
