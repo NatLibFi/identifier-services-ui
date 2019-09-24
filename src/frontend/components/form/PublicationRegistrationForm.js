@@ -184,7 +184,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
 				title: values.seriesDetails.seriesTitle
 			};
-			const formattedPublicationValue = {
+			const {select, selectFormat, ...formattedPublicationValue} = {
 				...values,
 				authors: formatAuthors,
 				publisher: isAuthenticated ? user.id : publisher,
