@@ -34,8 +34,12 @@ import {
 	Button,
 	TextareaAutosize,
 	List,
-	Typography
+	Typography,
+	ExpansionPanel,
+	ExpansionPanelDetails,
+	ExpansionPanelSummary
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
@@ -53,7 +57,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublicationIsbnIsmnRequest, publicationIsbnIsmnRequest, updatePublicationIsbnIsmnRequest} = props;
+	const {match,
+		loading,
+		fetchPublicationIsbnIsmnRequest,
+		publicationIsbnIsmnRequest,
+		updatePublicationIsbnIsmnRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
@@ -178,16 +186,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								}
 							</List>
 						</Grid>
-						<Grid item xs={12} md={6} style={{background: 'silver'}}>
-							<List>
-								<Typography variant="h6">Publisher Details</Typography>
-								{
-									Object.keys(formatOnlyPublisher).map(key => {
-										return <ListComponent key={key} label={key} value={formatOnlyPublisher[key]}/>;
-									})
-								}
+						<Grid item xs={12} md={6}>
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+								>
+									<Typography variant="h6">Publisher Details</Typography>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<List>
+										{
+											Object.keys(formatOnlyPublisher).map(key => {
+												return <ListComponent key={key} label={key} value={formatOnlyPublisher[key]}/>;
+											})
+										}
+									</List>
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
 
-							</List>
 						</Grid>
 					</>
 
