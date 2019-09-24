@@ -28,7 +28,7 @@
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ISSN_LIST, FETCH_ISSN, ERROR} from './types';
+import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ISSN_LIST, FETCH_ISSN, ERROR, PUBLICATIONISBNISMN_REQUESTS_LIST, PUBLICATION_ISBN_ISMN_REQUEST} from './types';
 import {setLoader, success, fail} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
@@ -200,4 +200,64 @@ export const publicationCreationRequest = values => async () => {
 		body: JSON.stringify(values)
 	});
 	await response.json();
+};
+
+export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/query`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: {state: sortStateBy, title: searchText}
+				}],
+				offset: offset
+			})
+		});
+		const result = await response.json();
+		dispatch(success(PUBLICATIONISBNISMN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const fetchPublicationIsbnIsmnRequest = (id, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		dispatch(success(PUBLICATION_ISBN_ISMN_REQUEST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		delete values.backgroundProcessingState;
+		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(PUBLICATIONISBNISMN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };

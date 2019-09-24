@@ -67,10 +67,10 @@ export default function (props) {
 				<DialogTitle id="alert-dialog-slide-title">{message}</DialogTitle>
 				<DialogActions>
 					<Button color="primary" onClick={handleClose}>
-                        Disagree
+                        No
 					</Button>
 					<Button color="primary" onClick={handleAgree}>
-                        Agree
+                        Yes
 					</Button>
 				</DialogActions>
 			</Dialog>

@@ -41,6 +41,9 @@ const useStyles = makeStyles({
 	active: {
 		borderBottom: '2px solid #00224F',
 		borderRadius: 0
+	},
+	menuExpansion: {
+		padding: '0 !important'
 	}
 });
 
