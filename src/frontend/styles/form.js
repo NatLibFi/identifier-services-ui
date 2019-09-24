@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => ({
 		}
 	},
 	editForm: {
-		display: 'flex'
+		width: '100%'
 	},
 	editFormAliases: {
 		display: 'flex',
