@@ -26,7 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
-import {LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME} from './types';
+import {LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE} from './types';
 
 export function success(type, payload) {
 	return ({
@@ -89,3 +89,9 @@ export const setFormName = value => {
 	};
 };
 
+export const setMessage = value => {
+	return {
+		type: SNACKBAR_MESSAGE,
+		payload: value
+	};
+};

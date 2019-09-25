@@ -46,7 +46,8 @@ export {
 	sendMessage,
 	createMessageTemplate,
 	fetchMessagesList,
-	fetchMessage
+	fetchMessage,
+	updateMessageTemplate
 } from './messageActions';
 
 export {
@@ -59,7 +60,8 @@ export {
 	setLoader,
 	loadSvgCaptcha,
 	postCaptchaInput,
-	setFormName
+	setFormName,
+	setMessage
 } from './commonAction';
 
 export {

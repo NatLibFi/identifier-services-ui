@@ -26,69 +26,156 @@
  *
  */
 
-import React, {useEffect} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
-	Typography,
 	Grid,
 	List,
 	ListItem,
-	ListItemText
+	ListItemText,
+	Fab,
+	Button
 } from '@material-ui/core';
 import {useCookies} from 'react-cookie';
+import {reduxForm, Field} from 'redux-form';
 
 import useStyles from '../../styles/publisher';
+import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import ModalLayout from '../ModalLayout';
+import EditIcon from '@material-ui/icons/Edit';
+import renderTextArea from '../form/render/renderTextArea';
+import renderTextField from '../form/render/renderTextField';
+import Spinner from '../Spinner';
 
-export default connect(mapStateToProps, actions)(props => {
-	const {match, fetchMessage, messageInfo} = props;
+export default connect(mapStateToProps, actions)(reduxForm({
+	form: 'messageTemplate',
+	enableReinitialize: true
+})(props => {
+	const {match, fetchMessage, messageInfo, handleSubmit, updateMessageTemplate} = props;
 	const classes = useStyles();
+	const formClasses = useFormStyles();
 	const [cookie] = useCookies('login-cookie');
+	const [isEdit, setIsEdit] = useState(false);
 
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		fetchMessage(match.params.id, token);
-	}, [cookie, fetchMessage, match.params.id]);
+	}, [cookie, fetchMessage, messageInfo, match.params.id]);
+
+	const handleEditClick = () => {
+		setIsEdit(true);
+	};
+
+	const handleCancel = () => {
+		setIsEdit(false);
+	};
+
+	const handleMessageUpdate = values => {
+		const {_id, ...updateValue} = {
+			...values,
+			body: Buffer.from(values.body).toString('base64')
+		};
+		updateMessageTemplate(match.params.id, updateValue, cookie['login-cookie']);
+		setIsEdit(false);
+	};
 
 	let messageDetail;
-	messageDetail = (messageInfo !== null &&
-		<Grid item xs={12} md={6}>
-			<Typography variant="h6">
-						Message Detail
-			</Typography>
-			<List>
-				<ListItem>
-					<ListItemText>
-						<Grid container>
-							<>
-								<Grid item xs={4}>Message:</Grid>
-								<Grid item xs={8}>{Buffer.from(messageInfo.body, 'base64').toString('utf8')}</Grid>
-							</>
-						</Grid>
-					</ListItemText>
-				</ListItem>
-			</List>
-		</Grid>
-	);
+	if (messageInfo === null) {
+		messageDetail = <Spinner/>;
+	} else {
+		messageDetail = (
+			<>
+				{isEdit ?
+					<Grid item xs={12} md={12}>
+						<List>
+							<ListItem>
+								<ListItemText>
+									<Grid container>
+										<Grid item xs={4}>Subject:</Grid>
+										<Grid item xs={8}><Field name="subject" className={formClasses.editForm} component={renderTextField}/></Grid>
+									</Grid>
+									<Grid container>
+										<Grid item xs={4}>Body:</Grid>
+										<Grid item xs={8}><Field name="body" className={formClasses.editForm} component={renderTextArea} props={{encoded: true}}/></Grid>
+									</Grid>
+								</ListItemText>
+							</ListItem>
+						</List>
+					</Grid> :
+					<Grid item xs={12} md={12}>
+						<List>
+							<ListItem>
+								<ListItemText>
+									<Grid container>
+										<>
+											<Grid item xs={4}>Subject:</Grid>
+											<Grid item xs={8}>{messageInfo.subject}</Grid>
+										</>
+									</Grid>
+									<hr/>
+									<Grid container>
+										<>
+											<Grid item xs={4}>Message:</Grid>
+											<Grid item xs={8}>{Buffer.from(messageInfo.body, 'base64').toString('utf8')}</Grid>
+										</>
+									</Grid>
+								</ListItemText>
+							</ListItem>
+						</List>
+					</Grid>
+				}
+			</>
+		);
+	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary">
-			<div className={classes.publisher}>
-				<Grid container spacing={3} className={classes.publisherSpinner}>
-					{messageDetail}
-				</Grid>
-			</div>
+		<ModalLayout isTableRow color="primary" title="Message Detail">
+			{isEdit ?
+				<div className={classes.publisher}>
+					<form>
+						<Grid container spacing={3} className={classes.publisherSpinner}>
+							{messageDetail}
+						</Grid>
+						<div className={classes.btnContainer}>
+							<Button onClick={handleCancel}>Cancel</Button>
+							<Button
+								variant="contained"
+								color="primary"
+								onClick={handleSubmit(handleMessageUpdate)}
+							>
+							UPDATE
+							</Button>
+						</div>
+					</form>
+				</div> :
+				<div className={classes.publisher}>
+					<Grid container spacing={3} className={classes.publisherSpinner}>
+						{messageDetail}
+					</Grid>
+					<div className={classes.btnContainer}>
+						<Fab
+							color="primary"
+							size="small"
+							title="Edit Publisher Detail"
+							onClick={handleEditClick}
+						>
+							<EditIcon/>
+						</Fab>
+					</div>
+				</div>
+			}
 		</ModalLayout>
 	);
 	return {
 		...component
 	};
-});
+}));
 
 function mapStateToProps(state) {
 	return ({
 		loading: state.contact.loading,
-		messageInfo: state.contact.messageInfo
+		messageInfo: state.contact.messageInfo,
+		initialValues: {...state.contact.messageInfo, body: state.contact.messageInfo && Buffer.from(state.contact.messageInfo.body, 'base64').toString('utf8')}
 	});
 }

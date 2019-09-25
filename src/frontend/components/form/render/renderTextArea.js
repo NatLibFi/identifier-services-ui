@@ -36,7 +36,7 @@ export default function ({input, label, className, meta: {touched, error}, child
 			multiline
 			label={label}
 			variant="outlined"
-			rows={4}
+			rows={6}
 			className={className}
 			error={touched && Boolean(error)}
 		>

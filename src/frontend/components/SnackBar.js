@@ -43,14 +43,14 @@ const variantIcon = {
 };
 
 export default function (props) {
-	const {message, other, openSnackBar, variant, setMessage} = props;
+	const {other, openSnackBar, variant, responseMessage, setMessage} = props;
 	const classes = useStyles();
 	const [open, setOpen] = React.useState(openSnackBar);
 	const Icon = variantIcon[variant];
 
 	useEffect(() => {
 		setOpen(true);
-	}, [message]);
+	}, [responseMessage.msg]);
 
 	function handleClose() {
 		setOpen(false);
@@ -73,7 +73,7 @@ export default function (props) {
 				message={
 					<span className={classes.iconText}>
 						<Icon className={`${classes.icon} ${classes.iconVariant}`}/>
-						{message}
+						{responseMessage.msg}
 					</span>
 				}
 				className={`${classes[variant]}`}
