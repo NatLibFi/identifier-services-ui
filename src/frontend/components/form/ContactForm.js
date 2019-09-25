@@ -38,7 +38,6 @@ import renderTextArea from './render/renderTextArea';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import Captcha from '../Captcha';
-import Snackbar from '../SnackBar';
 
 export default connect(mapToProps, actions)(reduxForm({
 	form: 'contactForm', validate
