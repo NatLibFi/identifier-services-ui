@@ -53,11 +53,11 @@ export default connect(mapToProps, actions)(reduxForm({
 			loadSvgCaptcha,
 			postCaptchaInput,
 			userInfo,
+			setMessage,
 			captcha
 		} = props;
 		const initialState = {};
 		const [state, setState] = useState(initialState);
-		const [alertMessage, setAlertMessage] = useState(null);
 		const [captchaInput, setCaptchaInput] = useState('');
 		const classes = useStyles();
 		useEffect(() => {
@@ -75,7 +75,7 @@ export default connect(mapToProps, actions)(reduxForm({
 				handleClose();
 			} else if (captchaInput.length === 0) {
 				// eslint-disable-next-line no-undef, no-alert
-				setAlertMessage('Captcha not provided');
+				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				if (result === true) {
@@ -83,7 +83,7 @@ export default connect(mapToProps, actions)(reduxForm({
 					handleClose();
 				} else {
 					// eslint-disable-next-line no-undef, no-alert
-					setAlertMessage('Please type the correct word in the image below');
+					setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 					loadSvgCaptcha();
 				}
 			}
@@ -155,15 +155,6 @@ export default connect(mapToProps, actions)(reduxForm({
 							Submit
 						</Button>
 					</Grid>
-					{alertMessage &&
-						<Snackbar
-							anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-							message={alertMessage}
-							setMessage={setAlertMessage}
-							variant="error"
-							openSnackBar={Boolean(alertMessage)}
-						/>
-					}
 				</Grid>
 			</form>
 		);

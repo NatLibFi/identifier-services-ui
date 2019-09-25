@@ -151,7 +151,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}
 					{modal ? <Route path="/templates/:id" component={Message}/> : null}
 
-					{responseMessage && <SnackBar message={responseMessage} variant="success" openSnackBar={Boolean(responseMessage)}/>}
+					{responseMessage && <SnackBar variant={responseMessage.color} openSnackBar={Boolean(responseMessage)} {...props}/>}
 				</section>
 				<Footer/>
 			</MuiThemeProvider>
