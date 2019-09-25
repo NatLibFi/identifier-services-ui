@@ -29,8 +29,8 @@
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {SNACKBAR_MESSAGE, PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
-import {setLoader, success, fail} from './commonAction';
+import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
+import {setLoader, setMessage, success, fail} from './commonAction';
 
 export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
@@ -110,10 +110,7 @@ export const publisherCreationRequest = values => async dispatch => {
 		body: JSON.stringify(values)
 	});
 	if (response.status === 200) {
-		dispatch({
-			type: SNACKBAR_MESSAGE,
-			payload: 'Registration request sent successfully'
-		});
+		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
 	}
 };
 
