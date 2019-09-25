@@ -118,7 +118,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case x:
 					return element(fieldArray[x].basicInformation, undefined, publicationValues);
 				case x + 1:
-					return withFormTitle(fieldArray[x + 1].Authors, publicationValues, clearFields);
+					if (publicationValues.type === 'book') {
+						return withFormTitle(fieldArray[x + 1].Authors, publicationValues, clearFields);
+					}
+
+					break;
+					//return withFormTitle(fieldArray[x + 1].Authors, publicationValues, clearFields);
 				case x + 2:
 					return withFormTitle(fieldArray[x + 2].Series, publicationValues, clearFields);
 				case x + 3:
@@ -664,6 +669,22 @@ function getFieldArray(user) {
 		},
 		{
 			preview: 'preview'
+		},
+		{
+			issnInfo: [
+				{
+					name: 'manufacturer',
+					type: 'text',
+					label: 'Manufacturer',
+					width: 'half'
+				},
+				{
+					name: 'city',
+					type: 'text',
+					label: 'City*',
+					width: 'half'
+				}
+			]
 		}
 	];
 	const fieldsWithoutUser = [{publisher: publisherFieldArray}];
