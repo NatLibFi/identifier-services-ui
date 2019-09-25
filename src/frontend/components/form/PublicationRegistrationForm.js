@@ -26,9 +26,6 @@
  *
  */
 
-/* eslint-disable no-alert */
-/* global alert */
-
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -69,6 +66,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			user,
 			isAuthenticated,
 			publicationCreationRequest,
+			setMessage,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -167,7 +165,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			} else {
 				// eslint-disable-next-line no-lonely-if
 				if (captchaInput.length === 0) {
-					alert('Captcha not provided');
+					setMessage({color: 'error', msg: 'Captcha not provided'});
 				} else if (captchaInput.length > 0) {
 					const result = await postCaptchaInput(captchaInput, captcha.id);
 					submitPublication(formatPublicationValues(values), result);
@@ -202,8 +200,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (result === true) {
 				publicationCreationRequest(values);
 			} else {
-				// eslint-disable-next-line no-undef, no-alert
-				alert('Please type the correct word in the image below');
+				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 				loadSvgCaptcha();
 			}
 		}

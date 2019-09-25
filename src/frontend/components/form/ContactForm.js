@@ -73,7 +73,6 @@ export default connect(mapToProps, actions)(reduxForm({
 				sendMessage(values);
 				handleClose();
 			} else if (captchaInput.length === 0) {
-				// eslint-disable-next-line no-undef, no-alert
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
@@ -81,7 +80,6 @@ export default connect(mapToProps, actions)(reduxForm({
 					sendMessage(values);
 					handleClose();
 				} else {
-					// eslint-disable-next-line no-undef, no-alert
 					setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 					loadSvgCaptcha();
 				}
