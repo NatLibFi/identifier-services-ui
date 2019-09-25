@@ -109,6 +109,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<ListItemText>
 									<Grid container>
 										<>
+											<Grid item xs={4}>Subject:</Grid>
+											<Grid item xs={8}>{messageInfo.subject}</Grid>
+										</>
+									</Grid>
+									<hr/>
+									<Grid container>
+										<>
 											<Grid item xs={4}>Message:</Grid>
 											<Grid item xs={8}>{Buffer.from(messageInfo.body, 'base64').toString('utf8')}</Grid>
 										</>
