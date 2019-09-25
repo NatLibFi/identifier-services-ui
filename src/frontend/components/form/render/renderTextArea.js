@@ -30,13 +30,14 @@ import {PropTypes} from 'prop-types';
 import {TextField} from '@material-ui/core';
 
 export default function ({input, label, className, meta: {touched, error}, children}) {
+
 	const component = (
 		<TextField
 			{...input}
 			multiline
 			label={label}
 			variant="outlined"
-			rows={4}
+			rows={6}
 			className={className}
 			error={touched && Boolean(error)}
 		>

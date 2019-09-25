@@ -28,9 +28,9 @@
 
 /* global API_URL */
 /* eslint no-undef: "error" */
-import {SNACKBAR_MESSAGE, FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
+import {FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
 import fetch from 'node-fetch';
-import {setLoader, success, fail} from './commonAction';
+import {setLoader, setMessage, success, fail} from './commonAction';
 
 export const sendMessage = values => async dispatch => {
 	dispatch(setLoader());
@@ -42,10 +42,7 @@ export const sendMessage = values => async dispatch => {
 		body: JSON.stringify(values)
 	});
 	if (response.status === 200) {
-		dispatch({
-			type: SNACKBAR_MESSAGE,
-			payload: 'Message Sent'
-		});
+		dispatch(setMessage({color: 'success', msg: 'Message sent successfully.'}));
 	}
 };
 
@@ -60,10 +57,7 @@ export const createMessageTemplate = (values, token) => async dispatch => {
 		body: JSON.stringify(values)
 	});
 	if (response.status === 200) {
-		dispatch({
-			type: SNACKBAR_MESSAGE,
-			payload: 'Message Template created successfully.'
-		});
+		dispatch(setMessage({color: 'success', msg: 'Message Template created successfully.'}));
 	}
 };
 
@@ -103,3 +97,26 @@ export const fetchMessage = (id, token) => async dispatch => {
 		dispatch(fail(ERROR, err));
 	}
 };
+
+export const updateMessageTemplate = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/templates/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(FETCH_MESSAGE, result.value));
+		if (response.status === 200) {
+			dispatch(setMessage({color: 'success', msg: 'Message Updated successfully'}));
+		}
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+

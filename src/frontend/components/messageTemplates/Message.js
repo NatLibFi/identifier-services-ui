@@ -46,12 +46,13 @@ import ModalLayout from '../ModalLayout';
 import EditIcon from '@material-ui/icons/Edit';
 import renderTextArea from '../form/render/renderTextArea';
 import renderTextField from '../form/render/renderTextField';
+import Spinner from '../Spinner';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'messageTemplate',
 	enableReinitialize: true
 })(props => {
-	const {match, fetchMessage, messageInfo} = props;
+	const {match, fetchMessage, messageInfo, handleSubmit, updateMessageTemplate} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const [cookie] = useCookies('login-cookie');
@@ -60,7 +61,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		fetchMessage(match.params.id, token);
-	}, [cookie, fetchMessage, match.params.id]);
+	}, [cookie, fetchMessage, messageInfo, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -70,9 +71,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
+	const handleMessageUpdate = values => {
+		const {_id, ...updateValue} = {
+			...values,
+			body: Buffer.from(values.body).toString('base64')
+		};
+		updateMessageTemplate(match.params.id, updateValue, cookie['login-cookie']);
+		setIsEdit(false);
+	};
+
 	let messageDetail;
 	if (messageInfo === null) {
-		messageDetail = 'No Message';
+		messageDetail = <Spinner/>;
 	} else {
 		messageDetail = (
 			<>
@@ -87,7 +97,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									</Grid>
 									<Grid container>
 										<Grid item xs={4}>Body:</Grid>
-										<Grid item xs={8}><Field name="body" className={formClasses.editForm} component={renderTextArea}/></Grid>
+										<Grid item xs={8}><Field name="body" className={formClasses.editForm} component={renderTextArea} props={{encoded: true}}/></Grid>
 									</Grid>
 								</ListItemText>
 							</ListItem>
@@ -125,7 +135,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<Button
 								variant="contained"
 								color="primary"
-								//onClick={handleSubmit(handlePublisherUpdate)}
+								onClick={handleSubmit(handleMessageUpdate)}
 							>
 							UPDATE
 							</Button>
@@ -159,6 +169,6 @@ function mapStateToProps(state) {
 	return ({
 		loading: state.contact.loading,
 		messageInfo: state.contact.messageInfo,
-		initialValues: state.contact.messageInfo
+		initialValues: {...state.contact.messageInfo, body: state.contact.messageInfo && Buffer.from(state.contact.messageInfo.body, 'base64').toString('utf8')}
 	});
 }
