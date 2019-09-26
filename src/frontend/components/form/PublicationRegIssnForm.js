@@ -27,7 +27,6 @@
  */
 
 /* eslint-disable no-alert */
-/* global alert */
 
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
@@ -45,7 +44,6 @@ import renderFieldArray from './render/renderFieldArray';
 import {fieldArray as publisherFieldArray} from './PublisherRegistrationForm';
 import PublisherRegistrationForm from './PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
-import renderRadioButton from './render/renderRadioButton';
 import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
@@ -172,9 +170,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		// }
 
 		function renderPreview(publicationValues) {
-			console.log('pubval', publicationValues)
-			// publicationValues = {...publicationValues, publicationTime: publicationValues.publicationTime.toLocaleString()};
-			// const formatPublicationValue = formatPublicationValues(publicationValues);
 			return (
 				<>
 					<Grid item xs={12} md={6}>
