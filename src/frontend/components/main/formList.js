@@ -32,14 +32,14 @@ import {withRouter} from 'react-router-dom';
 
 import useStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
-import PublicationRegistrationForm from '../form/PublicationRegistrationForm';
 import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
+import SwitchPublicationForm from '../form/SwitchPublicationForm';
 import ContactForm from '../form/ContactForm';
 
 export default withRouter(props => {
 	const formListsArray = [
 		{label: 'Publisher Registration', name: 'publisherRegistration', component: <PublisherRegistrationForm {...props}/>},
-		{label: 'Publication Registration', name: 'publicationRegistration', component: <PublicationRegistrationForm {...props}/>},
+		{label: 'Publication Registration', name: 'publicationRegistration', component: <SwitchPublicationForm {...props}/>},
 		{label: 'Contact Form', name: 'contactForm', component: <ContactForm {...props}/>}
 	];
 	const classes = useStyles();

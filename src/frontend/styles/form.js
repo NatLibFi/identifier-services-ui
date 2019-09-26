@@ -142,6 +142,10 @@ const useStyles = makeStyles(theme => ({
 	},
 	deleteIcon: {
 		margin: theme.spacing(0.5)
+	},
+	switchPubPaper: {
+		display: 'flex',
+		justifyContent: 'center'
 	}
 }));
 
