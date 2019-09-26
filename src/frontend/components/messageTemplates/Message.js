@@ -61,7 +61,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		fetchMessage(match.params.id, token);
-	}, [cookie, fetchMessage, messageInfo, match.params.id]);
+	}, [cookie, fetchMessage, isEdit, match.params.id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -71,14 +71,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const handleMessageUpdate = values => {
+	function handleMessageUpdate(values) {
 		const {_id, ...updateValue} = {
 			...values,
 			body: Buffer.from(values.body).toString('base64')
 		};
 		updateMessageTemplate(match.params.id, updateValue, cookie['login-cookie']);
 		setIsEdit(false);
-	};
+	}
 
 	let messageDetail;
 	if (messageInfo === null) {

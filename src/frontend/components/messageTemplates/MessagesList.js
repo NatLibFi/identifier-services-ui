@@ -42,7 +42,7 @@ import TemplateCreationForm from '../form/TemplateCreationForm';
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
 	const modalClasses = useModalStyles();
-	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset, responseMessage} = props;
+	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
@@ -50,7 +50,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchMessagesList(cookie['login-cookie'], lastCursor, page);
-	}, [lastCursor, cursors, fetchMessagesList, cookie, page, responseMessage]);
+	}, [lastCursor, cursors, fetchMessagesList, cookie, page]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/templates/${id}`, {modal: true});
@@ -113,7 +113,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		responseMessage: state.contact.responseMessage,
 		loading: state.contact.loading,
 		messagesList: state.contact.messagesList,
 		totalMessages: state.contact.totalMessages,
