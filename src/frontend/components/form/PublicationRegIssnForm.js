@@ -31,7 +31,7 @@
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Fab} from '@material-ui/core';
 import {connect} from 'react-redux';
 
 import * as actions from '../../store/actions';
@@ -65,7 +65,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			clearFields,
 			user,
 			isAuthenticated,
-			publicationCreationRequest,
+			issnCreationRequest,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -145,40 +145,59 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setPublisherRegForm(true);
 		}
 
-		// async function handlePublicationRegistration(values) {
-		// 	if (isAuthenticated) {
-		// 		publicationCreationRequest(formatPublicationValues(values));
-		// 	} else {
-		// 		// eslint-disable-next-line no-lonely-if
-		// 		if (captchaInput.length === 0) {
-		// 			alert('Captcha not provided');
-		// 		} else if (captchaInput.length > 0) {
-		// 			const result = await postCaptchaInput(captchaInput, captcha.id);
-		// 			submitPublication(formatPublicationValues(values), result);
-		// 		}
-		// 	}
-		// }
+		async function handlePublicationRegistration(values) {
+			if (isAuthenticated) {
+				issnCreationRequest(formatPublicationValues(values));
+			} else {
+				// eslint-disable-next-line no-lonely-if
+				if (captchaInput.length === 0) {
+					alert('Captcha not provided');
+				} else if (captchaInput.length > 0) {
+					const result = await postCaptchaInput(captchaInput, captcha.id);
+					submitPublication(formatPublicationValues(values), result);
+				}
+			}
+		}
 
-		// function submitPublication(values, result) {
-		// 	if (result === true) {
-		// 		publicationCreationRequest(values);
-		// 	} else {
-		// 		// eslint-disable-next-line no-undef, no-alert
-		// 		alert('Please type the correct word in the image below');
-		// 		loadSvgCaptcha();
-		// 	}
-		// }
+		function formatPublicationValues(values) {
+			const formattedPublicationValues = {
+				...values,
+				publisher: isAuthenticated ? user.id : publisher,
+				firstNumber: Number(values.firstNumber),
+				firstYear: Number(values.firstYear),
+				frequency: values.frequency.value,
+				previousPublication: {
+					...values.previousPublication,
+					lastYear: Number(values.previousPublication.lastYear),
+					lastNumber: Number(values.previousPublication.lastNumber)
+				},
+				type: values.type.value
+			};
+			return formattedPublicationValues;
+		}
+
+		function submitPublication(values, result) {
+			if (result === true) {
+				issnCreationRequest(values);
+			} else {
+				// eslint-disable-next-line no-undef, no-alert
+				alert('Please type the correct word in the image below');
+				loadSvgCaptcha();
+			}
+		}
 
 		function renderPreview(publicationValues) {
+			const values = formatPublicationValues(publicationValues);
+			const {seriesDetails, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
 			return (
 				<>
 					<Grid item xs={12} md={6}>
 						<List>
 							{
-								Object.keys(publicationValues).map(key => {
-									return (typeof publicationValues[key] === 'string') ?
+								Object.keys(formatValues).map(key => {
+									return (typeof formatValues[key] === 'string') ?
 										(
-											<ListComponent label={key} value={publicationValues[key]}/>
+											<ListComponent label={key} value={formatValues[key]}/>
 										) :
 										null;
 								})
@@ -188,10 +207,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid item xs={12} md={6}>
 						<List>
 							{
-								Object.keys(publicationValues).map(key => {
-									return (typeof publicationValues[key] === 'object') ?
+								Object.keys(formatValues).map(key => {
+									return (typeof formatValues[key] === 'object') ?
 										(
-											<ListComponent label={key} value={publicationValues[key]}/>
+											<ListComponent label={key} value={formatValues[key]}/>
 										) :
 										null;
 								})
@@ -203,7 +222,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const component = (
-			<form className={classes.container}>
+			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
+				<Fab disabled variant="extended">
+					{props.title}
+				</Fab>
 				<Stepper alternativeLabel activeStep={activeStep}>
 					{steps.map(label => (
 						<Step key={label}>
@@ -562,13 +584,13 @@ function getFieldArray(user) {
 					title: 'Other Medium',
 					fields: [
 						{
-							name: 'otherMedium[SeriesDetails[title]]',
+							name: 'otherMedium[title]',
 							type: 'text',
 							label: 'Title',
 							width: 'half'
 						},
 						{
-							name: 'otherMedium[SeriesDetails[identifier]]',
+							name: 'otherMedium[identifier]',
 							type: 'text',
 							label: 'Identifier',
 							width: 'half'
@@ -583,13 +605,13 @@ function getFieldArray(user) {
 					title: 'Main Series',
 					fields: [
 						{
-							name: 'seriesDetails[mainSeries[SeriesDetails[title]]]',
+							name: 'seriesDetails[mainSeries[title]]',
 							type: 'text',
 							label: 'Title',
 							width: 'half'
 						},
 						{
-							name: 'seriesDetails[mainSeries[SeriesDetails[identifier]]]',
+							name: 'seriesDetails[mainSeries[identifier]]',
 							type: 'text',
 							label: 'Identifier',
 							width: 'half'
@@ -600,13 +622,13 @@ function getFieldArray(user) {
 					title: 'Sub Series',
 					fields: [
 						{
-							name: 'seriesDetails[subSeries[SeriesDetails[title]]]',
+							name: 'seriesDetails[subSeries[title]]',
 							type: 'text',
 							label: 'Title',
 							width: 'half'
 						},
 						{
-							name: 'seriesDetails[subSeries[SeriesDetails[identifier]]]',
+							name: 'seriesDetails[subSeries[identifier]]',
 							type: 'text',
 							label: 'Identifier',
 							width: 'half'

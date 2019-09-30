@@ -30,11 +30,12 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
 	main: {
-		maxWidth: 400
+		maxWidth: 400,
+		justifyContent: 'center',
+		display: 'flex'
 	},
 	logoutContainer: {
 		display: 'flex',
-		justifyCcontent: 'center',
 		cursor: 'pointer'
 	},
 	hakaLogo: {

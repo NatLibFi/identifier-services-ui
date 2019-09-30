@@ -25,38 +25,37 @@
  * for the JavaScript code in this file.
  *
  */
-import React from 'react';
-import Paper from '@material-ui/core/Paper';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import React, {useState} from 'react';
+import {Button, Typography} from '@material-ui/core';
 import useStyles from '../../styles/form';
 
 import PublicationRegistrationForm from './PublicationRegistrationForm';
 import PublicationRegIssnForm from './PublicationRegIssnForm';
 
 export default function (props) {
-	const [value, setValue] = React.useState('isbn-ismn');
+	const [value, setValue] = useState('');
 	const classes = useStyles();
 
-	const handleChange = (event, newValue) => {
-		setValue(newValue);
+	const handleIsbnIsmnClick = () => {
+		setValue('isbn-ismn');
+	};
+
+	const handleIssnClick = () => {
+		setValue('issn');
 	};
 
 	const component = (
 		<>
-			<Paper square className={classes.switchPubPaper}>
-				<Tabs
-					value={value}
-					indicatorColor="primary"
-					textColor="primary"
-					aria-label="disabled tabs example"
-					onChange={handleChange}
-				>
-					<Tab label="ISBN-ISMN" value="isbn-ismn"/>
-					<Tab label="ISSN" value="issn"/>
-				</Tabs>
-			</Paper>
-			{value === 'isbn-ismn' ? <PublicationRegistrationForm {...props}/> : <PublicationRegIssnForm {...props}/>}
+			{value === '' ?
+				<>
+					<Typography variant="caption">Choose:</Typography>
+					<div className={classes.pubFormSelect}>
+						<Button variant="contained" color="primary" onClick={handleIsbnIsmnClick}>ISBN-ISMN</Button>
+						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
+					</div>
+				</> :
+				value === 'isbn-ismn' ? <PublicationRegistrationForm title="ISBN-ISMN Form" {...props}/> : <PublicationRegIssnForm title="ISSN Form" {...props}/>
+			}
 		</>
 	);
 

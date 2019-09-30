@@ -261,3 +261,15 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 		dispatch(fail(ERROR, err));
 	}
 };
+
+export const issnCreationRequest = values => async () => {
+	const response = await fetch(`${API_URL}/requests/publications/issn`, {
+		method: 'POST',
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(values)
+	});
+	await response.json();
+};

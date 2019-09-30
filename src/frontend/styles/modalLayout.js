@@ -61,7 +61,7 @@ const useStyles = makeStyles({
 	},
 	main: {
 		minHeight: 90,
-		minWidth: 230,
+		minWidth: 350,
 		maxHeight: 900,
 		overflowY: 'auto',
 		position: 'relative',
