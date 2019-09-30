@@ -67,7 +67,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreationRequest,
 			setMessage,
-			handleSubmit} = props;
+			handleSubmit,
+			handleClose
+		} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
 		const classes = useStyles();
@@ -76,8 +78,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		const steps = getSteps(fieldArray);
 		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha, publisher]);
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+		}, [isAuthenticated, loadSvgCaptcha, publisher]);
 
 		function getStepContent(step) {
 			if (user.id === undefined) {
@@ -171,6 +175,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					submitPublication(formatPublicationValues(values), result);
 				}
 			}
+
+			handleClose();
 		}
 
 		function formatPublicationValues(values) {

@@ -34,14 +34,17 @@ import {Grid, Typography} from '@material-ui/core';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
+import useModalStyles from '../../styles/formList';
 import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
 import TabComponent from '../TabComponent';
-
+import ModalLayout from '../ModalLayout';
+import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const classes = useStyles();
+	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -107,6 +110,9 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
+				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+					<PublisherRegistrationForm {...props}/>
+				</ModalLayout>
 				{publishersRequestsData}
 			</Grid>
 		</Grid>
