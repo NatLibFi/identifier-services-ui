@@ -26,8 +26,6 @@
  *
  */
 
-/* eslint-disable no-alert */
-
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -298,7 +296,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 
 		function element(array, fieldName, publicationValues) {
-			// eslint-disable-next-line complexity
 			return array.map(list => {
 				switch (list.type) {
 					case 'select':
