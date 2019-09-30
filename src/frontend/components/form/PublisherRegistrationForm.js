@@ -33,7 +33,6 @@ import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 
 import useStyles from '../../styles/form';
-import Snackbar from '../SnackBar';
 import renderTextField from './render/renderTextField';
 import renderAliases from './render/renderAliases';
 import renderContactDetail from './render/renderContactDetail';
@@ -347,12 +346,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setPublisherRegForm,
 			publisherValues,
 			isAuthenticated,
-			handleClose
+			handleClose,
+			setMessage
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
-		const [alertMessage, setAlertMessage] = useState(null);
 
 		useEffect(() => {
 			loadSvgCaptcha();
@@ -394,8 +393,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const handlePublisherRegistration = async values => {
 			if (captchaInput.length === 0) {
-				// eslint-disable-next-line no-undef, no-alert
-				setAlertMessage('Captcha not provided');
+				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				makeNewPublisherObj(values, result);
@@ -412,8 +410,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				publisherCreationRequest(newPublisher);
 				handleClose();
 			} else {
-				// eslint-disable-next-line no-undef, no-alert
-				setAlertMessage('Please type the correct word in the image below');
+				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 				loadSvgCaptcha();
 			}
 		}
@@ -534,15 +531,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 					</div>
 				</div>
-				{alertMessage &&
-					<Snackbar
-						anchorOrigin={{vertical: 'top', horizontal: 'center'}}
-						message={alertMessage}
-						setMessage={setAlertMessage}
-						variant="error"
-						openSnackBar={Boolean(alertMessage)}
-					/>
-				}
 			</form>
 		);
 
