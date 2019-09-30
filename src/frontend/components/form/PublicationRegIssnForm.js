@@ -64,8 +64,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			publicationValues,
 			clearFields,
 			user,
+			setMessage,
 			isAuthenticated,
 			issnCreationRequest,
+			handleClose,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -147,15 +149,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				issnCreationRequest(formatPublicationValues(values));
-			} else {
-				// eslint-disable-next-line no-lonely-if
-				if (captchaInput.length === 0) {
-					alert('Captcha not provided');
-				} else if (captchaInput.length > 0) {
-					const result = await postCaptchaInput(captchaInput, captcha.id);
-					submitPublication(formatPublicationValues(values), result);
+				const result = await issnCreationRequest(formatPublicationValues(values));
+				if (result === 200) {
+					handleClose();
 				}
+			}
+
+			if (captchaInput.length === 0) {
+				setMessage({color: 'error', msg: 'Captcha not provided'});
+			} else if (captchaInput.length > 0) {
+				const result = await postCaptchaInput(captchaInput, captcha.id);
+				submitPublication(formatPublicationValues(values), result);
 			}
 		}
 
@@ -176,19 +180,21 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return formattedPublicationValues;
 		}
 
-		function submitPublication(values, result) {
+		async function submitPublication(values, result) {
 			if (result === true) {
-				issnCreationRequest(values);
+				const result = await issnCreationRequest(values);
+				if (result === 200) {
+					handleClose();
+				}
 			} else {
-				// eslint-disable-next-line no-undef, no-alert
-				alert('Please type the correct word in the image below');
+				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 				loadSvgCaptcha();
 			}
 		}
 
 		function renderPreview(publicationValues) {
 			const values = formatPublicationValues(publicationValues);
-			const {seriesDetails, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
+			const {seriesDetails, publisher, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
 			return (
 				<>
 					<Grid item xs={12} md={6}>

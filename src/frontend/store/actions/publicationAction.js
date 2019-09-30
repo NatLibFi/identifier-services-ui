@@ -28,8 +28,16 @@
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ISSN_LIST, FETCH_ISSN, ERROR, PUBLICATIONISBNISMN_REQUESTS_LIST, PUBLICATION_ISBN_ISMN_REQUEST} from './types';
-import {setLoader, success, fail} from './commonAction';
+import {
+	ISBN_ISMN_LIST,
+	FETCH_ISBN_ISMN,
+	ISSN_LIST,
+	FETCH_ISSN,
+	ERROR,
+	PUBLICATIONISBNISMN_REQUESTS_LIST,
+	PUBLICATION_ISBN_ISMN_REQUEST
+} from './types';
+import {setLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 	dispatch(setLoader());
@@ -262,7 +270,7 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 	}
 };
 
-export const issnCreationRequest = values => async () => {
+export const issnCreationRequest = values => async dispatch => {
 	const response = await fetch(`${API_URL}/requests/publications/issn`, {
 		method: 'POST',
 		headers: {
@@ -271,5 +279,9 @@ export const issnCreationRequest = values => async () => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	await response.json();
+	if (response.status === 200) {
+		dispatch(setMessage({color: 'success', msg: 'ISSN creation request sent successfully'}));
+	}
+
+	return response.status;
 };
