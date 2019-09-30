@@ -75,8 +75,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		const steps = getSteps(fieldArray);
 		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha, publisher]);
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+		}, [isAuthenticated, loadSvgCaptcha, publisher]);
 
 		function getStepContent(step) {
 			if (user.id === undefined) {
