@@ -53,6 +53,7 @@ import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
 import PublicationIsbnIsmnRequest from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequest';
+import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -94,7 +95,8 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publishers/:id', role: ['system', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList}
+		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/issn', role: ['publisher', 'admin'], component: IssnRequestList}
 
 	];
 

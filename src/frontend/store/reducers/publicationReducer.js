@@ -26,7 +26,17 @@
  *
  */
 
-import {LOADER, ERROR, ISBN_ISMN_LIST, FETCH_ISBN_ISMN, ISSN_LIST, FETCH_ISSN, PUBLICATIONISBNISMN_REQUESTS_LIST, PUBLICATION_ISBN_ISMN_REQUEST} from '../actions/types';
+import {
+	LOADER,
+	ERROR,
+	ISBN_ISMN_LIST,
+	FETCH_ISBN_ISMN,
+	ISSN_LIST,
+	FETCH_ISSN,
+	PUBLICATIONISBNISMN_REQUESTS_LIST,
+	PUBLICATION_ISBN_ISMN_REQUEST,
+	ISSN_REQUESTS_LIST
+} from '../actions/types';
 
 const initialState = {
 	isbnIsmn: {},
@@ -37,6 +47,8 @@ const initialState = {
 
 	publicationIsbnIsmnRequestList: [],
 	publicationIsbnIsmnRequest: {},
+
+	issnRequestsList: [],
 
 	offset: null,
 	totalDoc: null,
@@ -95,6 +107,15 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				publicationIsbnIsmnRequest: action.payload,
+				loading: false
+			};
+		case ISSN_REQUESTS_LIST:
+			return {
+				...state,
+				issnRequestsList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
 				loading: false
 			};
 		case ERROR:

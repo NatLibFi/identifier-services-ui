@@ -35,7 +35,8 @@ import {
 	FETCH_ISSN,
 	ERROR,
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
-	PUBLICATION_ISBN_ISMN_REQUEST
+	PUBLICATION_ISBN_ISMN_REQUEST,
+	ISSN_REQUESTS_LIST
 } from './types';
 import {setLoader, success, fail, setMessage} from './commonAction';
 
@@ -288,4 +289,27 @@ export const issnCreationRequest = values => async dispatch => {
 	}
 
 	return response.status;
+};
+
+export const fetchIssnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/issn/query`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: {state: sortStateBy, title: searchText}
+				}],
+				offset: offset
+			})
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };
