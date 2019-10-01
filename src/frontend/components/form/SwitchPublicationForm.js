@@ -1,4 +1,3 @@
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -26,66 +25,41 @@
  * for the JavaScript code in this file.
  *
  */
-import {makeStyles} from '@material-ui/core/styles';
+import React, {useState} from 'react';
+import {Button, Typography} from '@material-ui/core';
+import useStyles from '../../styles/form';
 
-const useStyles = makeStyles({
-	main: {
-		maxWidth: 400,
-		justifyContent: 'center',
-		display: 'flex'
-	},
-	logoutContainer: {
-		display: 'flex',
-		cursor: 'pointer'
-	},
-	hakaLogo: {
-		height: 300,
-		display: 'grid',
-		gridTemplateRows: '8fr 2fr',
-		'& img': {
-			width: '100%',
-			alignSelf: 'center'
-		}
+import PublicationRegistrationForm from './PublicationRegistrationForm';
+import PublicationRegIssnForm from './PublicationRegIssnForm';
 
-	},
-	notes: {
-		margin: '10px -20px -20px',
-		padding: '10px 20px',
-		background: '#00224F20',
-		'& p': {
-			fontSize: '0.75rem',
-			'& a': {
-				fontWeight: 700
+export default function (props) {
+	const [value, setValue] = useState('');
+	const classes = useStyles();
+
+	const handleIsbnIsmnClick = () => {
+		setValue('isbn-ismn');
+	};
+
+	const handleIssnClick = () => {
+		setValue('issn');
+	};
+
+	const component = (
+		<>
+			{value === '' ?
+				<>
+					<Typography variant="caption">Choose:</Typography>
+					<div className={classes.pubFormSelect}>
+						<Button variant="contained" color="primary" onClick={handleIsbnIsmnClick}>ISBN-ISMN</Button>
+						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
+					</div>
+				</> :
+				value === 'isbn-ismn' ? <PublicationRegistrationForm title="ISBN-ISMN Form" {...props}/> : <PublicationRegIssnForm title="ISSN Form" {...props}/>
 			}
-		}
-	},
-	loginForm: {
-		display: 'grid',
-		maxWidth: 700,
-		maxHeight: 400,
-		margin: '40px 0px 0px'
-	},
-	inputGap: {
-		marginBottom: 20
-	},
-	eyeIcon: {
-		padding: 0,
-		color: 'inherit'
-	},
-	personIcon: {
-		height: 30,
-		width: 30
-	},
-	pwdresetLink: {
-		cursor: 'pointer'
-	},
-	resetInput: {
-		width: '100%',
-		margin: '10px 0'
-	},
-	resetBtn: {
-		width: '100%'
-	}
-});
+		</>
+	);
 
-export default useStyles;
+	return {
+		...component
+	};
+}
