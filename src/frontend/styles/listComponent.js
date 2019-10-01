@@ -33,7 +33,10 @@ const useStyles = makeStyles({
 		flexDirection: 'column'
 	},
 	exPanel: {
-		padding: '0'
+		paddingLeft: 5
+	},
+	label: {
+		fontWeight: 600
 	}
 });
 
