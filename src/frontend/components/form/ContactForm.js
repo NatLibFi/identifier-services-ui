@@ -51,7 +51,7 @@ export default connect(mapToProps, actions)(reduxForm({
 			handleClose,
 			loadSvgCaptcha,
 			postCaptchaInput,
-			userInfo,
+			isAuthenticated,
 			setMessage,
 			captcha
 		} = props;
@@ -60,8 +60,10 @@ export default connect(mapToProps, actions)(reduxForm({
 		const [captchaInput, setCaptchaInput] = useState('');
 		const classes = useStyles();
 		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha]);
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+		}, [isAuthenticated, loadSvgCaptcha]);
 
 		const handleCaptchaInput = e => {
 			setCaptchaInput(e.target.value);
@@ -69,21 +71,24 @@ export default connect(mapToProps, actions)(reduxForm({
 
 		const handleClick = async values => {
 			setState({...state, values});
-			if (userInfo.user) {
+			if (isAuthenticated) {
 				sendMessage(values);
-				handleClose();
-			} else if (captchaInput.length === 0) {
-				setMessage({color: 'error', msg: 'Captcha not provided'});
-			} else if (captchaInput.length > 0) {
-				const result = await postCaptchaInput(captchaInput, captcha.id);
-				if (result === true) {
-					sendMessage(values);
-					handleClose();
-				} else {
-					setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
-					loadSvgCaptcha();
+			} else {
+				// eslint-disable-next-line no-lonely-if
+				if (captchaInput.length === 0) {
+					setMessage({color: 'error', msg: 'Captcha not provided'});
+				} else if (captchaInput.length > 0) {
+					const result = await postCaptchaInput(captchaInput, captcha.id);
+					if (result === true) {
+						sendMessage(values);
+					} else {
+						setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
+						loadSvgCaptcha();
+					}
 				}
 			}
+
+			handleClose();
 		};
 
 		const fieldArray = [
@@ -134,11 +139,15 @@ export default connect(mapToProps, actions)(reduxForm({
 						))
 					}
 					<Grid item xs={12}>
-						<Captcha
-							captchaInput={captchaInput}
-							handleCaptchaInput={handleCaptchaInput}/>
-						{/* eslint-disable-next-line react/no-danger */}
-						<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+						{isAuthenticated ? null :
+						<>
+							<Captcha
+								captchaInput={captchaInput}
+								handleCaptchaInput={handleCaptchaInput}/>
+							{/* eslint-disable-next-line react/no-danger */}
+							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+						</>
+						}
 					</Grid>
 					<Grid item xs={12} className={classes.btnContainer}>
 						<Button
@@ -168,8 +177,8 @@ export default connect(mapToProps, actions)(reduxForm({
 function mapToProps(state) {
 	return ({
 		loading: state.contact.loading,
+		isAuthenticated: state.login.isAuthenticated,
 		captcha: state.common.captcha,
-		userInfo: state.login.userInfo,
 		language: state.locale.lang
 	});
 }

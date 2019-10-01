@@ -49,7 +49,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 	}, [isTableRow]);
 
 	useEffect(() => {
-		if (form) {
+		if (form || fab) {
 			handleClose();
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps

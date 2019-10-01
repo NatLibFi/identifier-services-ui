@@ -63,7 +63,8 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				publisher: action.payload,
-				loading: false
+				loading: false,
+				listLoading: false
 			};
 		case PUBLISHERS_REQUESTS_LIST:
 			return {
@@ -72,7 +73,8 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				loading: false,
+				listLoading: false
 			};
 		case PUBLISHER_REQUEST:
 			return {
