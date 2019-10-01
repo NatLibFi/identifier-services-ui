@@ -50,9 +50,8 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
 	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
-console.log('----', issnRequestList)
 	const handleTableRowClick = id => {
-		props.history.push(`/requests/publications/isbn-ismn/${id}`, {modal: true});
+		props.history.push(`/requests/publications/issn/${id}`, {modal: true});
 	};
 
 	const handleChange = (event, newValue) => {
