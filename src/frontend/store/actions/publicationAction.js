@@ -198,7 +198,7 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 // };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = values => async () => {
+export const publicationCreationRequest = values => async dispatch => {
 	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
 		method: 'POST',
 		headers: {
@@ -207,7 +207,11 @@ export const publicationCreationRequest = values => async () => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	await response.json();
+	if (response.status === 200) {
+		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+	}
+
+	return response.status;
 };
 
 export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
