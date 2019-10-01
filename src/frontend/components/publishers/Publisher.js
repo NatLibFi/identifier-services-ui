@@ -162,7 +162,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid container spacing={3} className={classes.publisherSpinner}>
 						{publisherDetail}
 					</Grid>
-					{isAuthenticated && userInfo.role.some(item => item === 'publisher') &&
+					{isAuthenticated && userInfo.role === 'publisher' &&
 						<div className={classes.btnContainer}>
 							<Fab
 								color="primary"

@@ -191,7 +191,7 @@ export default function (props) {
 
 function TablePaginationActions(props) {
 	const theme = useTheme();
-	const count = 5;
+	const count = 10;
 	const {
 		offset,
 		cursors,

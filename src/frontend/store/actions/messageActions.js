@@ -30,6 +30,7 @@
 /* eslint no-undef: "error" */
 import {FETCH_MESSAGE, FETCH_MESSAGES_LIST, ERROR} from './types';
 import fetch from 'node-fetch';
+import HttpStatus from 'http-status';
 import {setLoader, setMessage, success, fail} from './commonAction';
 
 export const sendMessage = values => async dispatch => {
@@ -41,7 +42,7 @@ export const sendMessage = values => async dispatch => {
 		},
 		body: JSON.stringify(values)
 	});
-	if (response.status === 200) {
+	if (response.status === HttpStatus.OK) {
 		dispatch(setMessage({color: 'success', msg: 'Message sent successfully.'}));
 	}
 };
@@ -56,7 +57,7 @@ export const createMessageTemplate = (values, token) => async dispatch => {
 		},
 		body: JSON.stringify(values)
 	});
-	if (response.status === 200) {
+	if (response.status === HttpStatus.OK) {
 		dispatch(setMessage({color: 'success', msg: 'Message Template created successfully.'}));
 	}
 };
@@ -112,7 +113,7 @@ export const updateMessageTemplate = (id, values, token) => async dispatch => {
 		});
 		const result = await response.json();
 		dispatch(success(FETCH_MESSAGE, result.value));
-		if (response.status === 200) {
+		if (response.status === HttpStatus.OK) {
 			dispatch(setMessage({color: 'success', msg: 'Message Updated successfully'}));
 		}
 	} catch (err) {

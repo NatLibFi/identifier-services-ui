@@ -90,7 +90,7 @@ export default function ({userInfo, isAuthenticated}) {
 					<div>
 						<div className={classes.adminMenu}>
 							{isAuthenticated ?
-								obj.map(list => userInfo.role.some(item => list.roleView.includes(item)) && (
+								obj.map(list => list.roleView.includes(userInfo.role) && (
 									<MenuTabs key={list.label} role={userInfo.role} list={list}/>
 								)) :
 								<div className={classes.publicMenu}>

@@ -150,7 +150,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid container spacing={3} className={classes.publisherSpinner}>
 							{userRequestDetail}
 						</Grid>
-						{role !== undefined && role.some(item => item === 'admin') &&
+						{role !== undefined && role === 'admin' &&
 							<div className={classes.btnContainer}>
 								<Fab
 									color="primary"

@@ -72,7 +72,7 @@ export default connect(null, actions)(props => {
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 			>
-				{list.listItem.map(item => item.roleView && role.some(item => list.roleView.includes(item)) &&
+				{list.listItem.map(item => item.roleView && list.roleView.includes(role) &&
 				<>
 					<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
 						{item.listItem ?

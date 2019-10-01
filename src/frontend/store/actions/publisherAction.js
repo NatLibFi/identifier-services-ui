@@ -31,6 +31,8 @@
 import fetch from 'node-fetch';
 import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
 import {setLoader, setMessage, success, fail} from './commonAction';
+import HttpStatus from 'http-status';
+
 
 export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
@@ -109,7 +111,7 @@ export const publisherCreationRequest = values => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	if (response.status === 200) {
+	if (response.status === HttpStatus.OK) {
 		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
 	}
 };

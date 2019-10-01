@@ -42,7 +42,7 @@ import * as actions from '../../store/actions';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'login', validate})(props => {
-	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
+	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd, userInfo} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const [showPassword, setShowPassword] = React.useState(false);
@@ -50,7 +50,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handleLogin = values => {
 		// eslint-disable-next-line no-undef
 		normalLogin({...values, API_URL: API_URL});
-		history.push('/publishers');
+		// eslint-disable-next-line no-unused-expressions
+		userInfo.role !== undefined && userInfo.role === 'publisher' ? history.push(`/publishers/${userInfo.publisher}`) : history.push('/publishers')
 		handleClose();
 	};
 
@@ -116,6 +117,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		user: state.login.userInfo
+		userInfo: state.login.userInfo
 	});
 }

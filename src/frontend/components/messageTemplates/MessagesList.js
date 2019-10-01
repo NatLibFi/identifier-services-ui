@@ -49,8 +49,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 
 	useEffect(() => {
-		fetchMessagesList(cookie['login-cookie'], lastCursor, page);
-	}, [lastCursor, cursors, fetchMessagesList, cookie, page]);
+		fetchMessagesList(cookie['login-cookie'], lastCursor);
+	}, [lastCursor, cursors, fetchMessagesList, cookie]);
 
 	const handleTableRowClick = id => {
 		props.history.push(`/templates/${id}`, {modal: true});

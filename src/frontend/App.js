@@ -135,7 +135,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
 				<section>
 					{
-						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
+						isAuthenticatedState ? (userInfo.role === 'publisher') &&
 						<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}

@@ -25,45 +25,18 @@
  * for the JavaScript code in this file.
  *
  */
-import {AUTHENTICATION, LOG_OUT} from './types';
-import fetch from 'node-fetch';
-import { updateUserRequest } from './userActions';
 
-export const normalLogin = values => async dispatch => {
-	const response = await fetch('/auth', {
-		method: 'POST',
-		body: JSON.stringify(values),
-		headers: {'Content-Type': 'application/json'}
-	});
-	const result = await response.json();
+import React, {useState, useEffect} from 'react';
 
-	dispatch(getUserInfo(result));
-	return response.status;
-};
+export default function (props) {
+	const component = (
+		<div>
+            Hello World
+			{console.log(props)}
+		</div>
+	);
 
-export const getUserInfo = token => async dispatch => {
-	/* global API_URL */
-	/* eslint no-undef: "error" */
-	const result = await fetch(`${API_URL}/auth`, {
-		method: 'GET',
-		headers: {
-			Authorization: 'Bearer ' + token
-		}
-	});
-	const user = await result.json();
-	const updatedUser = {...user};
-	dispatch({
-		type: AUTHENTICATION,
-		payload: updatedUser
-	});
-};
-
-export const logOut = () => async dispatch => {
-	await fetch('/logout', {
-		method: 'GET'
-	});
-	dispatch({
-		type: LOG_OUT,
-		payload: false
-	});
-};
+	return {
+		...component
+	};
+}
