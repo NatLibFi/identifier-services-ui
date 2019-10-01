@@ -67,6 +67,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreationRequest,
 			setMessage,
+			handleClose,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -161,15 +162,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				publicationCreationRequest(formatPublicationValues(values));
-			} else {
-				// eslint-disable-next-line no-lonely-if
-				if (captchaInput.length === 0) {
-					setMessage({color: 'error', msg: 'Captcha not provided'});
-				} else if (captchaInput.length > 0) {
-					const result = await postCaptchaInput(captchaInput, captcha.id);
-					submitPublication(formatPublicationValues(values), result);
+				const result = await publicationCreationRequest(formatPublicationValues(values));
+				if (result === 200) {
+					handleClose();
 				}
+			}
+
+			if (captchaInput.length === 0) {
+				setMessage({color: 'error', msg: 'Captcha not provided'});
+			} else if (captchaInput.length > 0) {
+				const result = await postCaptchaInput(captchaInput, captcha.id);
+				submitPublication(formatPublicationValues(values), result);
 			}
 		}
 
@@ -196,9 +199,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return formattedPublicationValue;
 		}
 
-		function submitPublication(values, result) {
+		async function submitPublication(values, result) {
 			if (result === true) {
-				publicationCreationRequest(values);
+				const result = await publicationCreationRequest(values);
+				if (result === 200) {
+					handleClose();
+				}
 			} else {
 				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 				loadSvgCaptcha();
