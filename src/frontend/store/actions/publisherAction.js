@@ -33,7 +33,6 @@ import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_
 import {setLoader, setMessage, success, fail} from './commonAction';
 import HttpStatus from 'http-status';
 
-
 export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {

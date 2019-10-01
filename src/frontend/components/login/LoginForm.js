@@ -51,7 +51,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		// eslint-disable-next-line no-undef
 		normalLogin({...values, API_URL: API_URL});
 		// eslint-disable-next-line no-unused-expressions
-		userInfo.role !== undefined && userInfo.role === 'publisher' ? history.push(`/publishers/${userInfo.publisher}`) : history.push('/publishers')
+		userInfo.role !== undefined && userInfo.role === 'publisher' ? history.push(`/publishers/${userInfo.publisher}`) : history.push('/publishers');
 		handleClose();
 	};
 

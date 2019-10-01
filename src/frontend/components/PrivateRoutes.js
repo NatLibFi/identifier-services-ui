@@ -35,7 +35,7 @@ export default connect(mapStateToProps)(({isAuthenticated, userInfo, role, compo
 		<Route
 			{...rest}
 			render={props => isAuthenticated === true ? (
-				userInfo.role === role ?
+				role.includes(userInfo.role) ?
 					<Component {...props}/> : 'Denied'
 			) : <div>Login</div>}/>
 	);

@@ -27,16 +27,157 @@
  */
 
 import React, {useState, useEffect} from 'react';
+import {
+	Button,
+	Grid,
+	List,
+	ListItem,
+	ListItemText
+} from '@material-ui/core';
+import {reduxForm, Field} from 'redux-form';
+import {useCookies} from 'react-cookie';
 
-export default function (props) {
+import useStyles from '../../styles/publisher';
+import useFormStyles from '../../styles/form';
+import * as actions from '../../store/actions';
+import {connect} from 'react-redux';
+import {validate} from '@natlibfi/identifier-services-commons';
+import Spinner from '../Spinner';
+import renderTextField from '../form/render/renderTextField';
+import ListComponent from '../ListComponent';
+
+export default connect(mapStateToProps, actions)(reduxForm({
+	form: 'publisherUpdateForm',
+	validate,
+	enableReinitialize: true
+})(props => {
+	const {
+		fetchPublisher,
+		updatePublisher,
+		match,
+		publisher,
+		loading,
+		handleSubmit,
+		isAuthenticated,
+		userInfo} = props;
+	const classes = useStyles();
+	const formClasses = useFormStyles();
+	const [isEdit, setIsEdit] = useState(false);
+	const [cookie] = useCookies('login-cookie');
+	useEffect(() => {
+		// eslint-disable-next-line no-undef
+		fetchPublisher(match.params.id, cookie['login-cookie']);
+	}, [cookie, fetchPublisher, match.params.id]);
+	const handleEditClick = () => {
+		setIsEdit(true);
+	};
+
+	const handleCancel = () => {
+		setIsEdit(false);
+	};
+
+	const formatPublisherDetail = {...publisher, ...publisher.organizationDetails};
+	const {organizationDetails, _id, ...formattedPublisherDetail} = formatPublisherDetail;
+	let publisherDetail;
+	if ((Object.keys(publisher).length === 0) || loading) {
+		publisherDetail = <Spinner/>;
+	} else {
+		publisherDetail = (
+			<>
+				{isEdit ?
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								<ListItem>
+									<ListItemText>
+										<Grid container>
+											<Grid item xs={4}>Name:</Grid>
+											<Grid item xs={8}><Field name="name" className={formClasses.editForm} component={renderTextField}/></Grid>
+										</Grid>
+									</ListItemText>
+								</ListItem>
+							</List>
+						</Grid>
+					</> :
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedPublisherDetail).map(key => {
+										return typeof formattedPublisherDetail[key] === 'string' ?
+											(
+												<ListComponent label={key} value={formattedPublisherDetail[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+							<List>
+								{
+									Object.keys(formattedPublisherDetail).map(key => {
+										return typeof formattedPublisherDetail[key] === 'object' ?
+											(
+												<ListComponent label={key} value={formattedPublisherDetail[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+					</>
+				}
+			</>
+		);
+	}
+
+	const handlePublisherUpdate = values => {
+		const {_id, ...updateValues} = values;
+		const token = cookie['login-cookie'];
+		updatePublisher(match.params.id, updateValues, token);
+		setIsEdit(false);
+	};
+
 	const component = (
-		<div>
-            Hello World
-			{console.log(props)}
-		</div>
+		<section className={classes.publisherProfileContainer}>
+			{isEdit ?
+				<div className={classes.publisherProfile}>
+					<form>
+						<Grid container spacing={3} className={classes.publisherSpinner}>
+							{publisherDetail}
+							<Grid item className={classes.btnContainer}xs={12} md={6}>
+								<Button onClick={handleCancel}>Cancel</Button>
+								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
+								UPDATE
+								</Button>
+							</Grid>
+						</Grid>
+					</form>
+				</div> :
+				<div className={classes.publisherProfile}>
+					<Grid container spacing={3} className={classes.publisherSpinner}>
+						{publisherDetail}
+						{isAuthenticated && userInfo.role === 'publisher' &&
+						<Grid item className={classes.btnContainer}xs={12} md={6}>
+							<Button color="primary" variant="outlined" onClick={handleEditClick}>
+								Edit
+							</Button>
+						</Grid>}
+					</Grid>
+				</div>
+			}
+		</section>
 	);
-
 	return {
 		...component
 	};
+}));
+
+function mapStateToProps(state) {
+	return ({
+		publisher: state.publisher.publisher,
+		loading: state.publisher.loading,
+		initialValues: state.publisher.publisher,
+		isAuthenticated: state.login.isAuthenticated,
+		userInfo: state.login.userInfo
+	});
 }

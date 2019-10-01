@@ -27,7 +27,6 @@
  */
 import {AUTHENTICATION, LOG_OUT} from './types';
 import fetch from 'node-fetch';
-import { updateUserRequest } from './userActions';
 
 export const normalLogin = values => async dispatch => {
 	const response = await fetch('/auth', {
@@ -52,6 +51,7 @@ export const getUserInfo = token => async dispatch => {
 	});
 	const user = await result.json();
 	const updatedUser = {...user};
+	delete updatedUser.groups;
 	dispatch({
 		type: AUTHENTICATION,
 		payload: updatedUser

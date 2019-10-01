@@ -35,6 +35,14 @@ const useStyles = makeStyles(
 			minWidth: '750px',
 			padding: '20px 0px'
 		},
+		publisherProfileContainer: {
+			maxWidth: 1200,
+			minHeight: '100vh',
+			margin: '0px auto'
+		},
+		publisherProfile: {
+			padding: '20px 0px'
+		},
 		publisherSpinner: {
 			justifyContent: 'center'
 		},

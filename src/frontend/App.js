@@ -39,6 +39,7 @@ import TopNav from './components/navbar/topNav';
 import AdminNav from './components/navbar/adminNav';
 import Publisher from './components/publishers/Publisher';
 import PublishersList from './components/publishers/PublishersList';
+import PublisherProfile from './components/publishers/PublisherProfile';
 import PublisherRequest from './components/publishersRequests/publisherRequest';
 import User from './components/users/User';
 import UsersList from './components/users/UsersList';
@@ -76,25 +77,24 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 
 	const routeField = [
 		{path: '/', component: Home},
-		{path: '/publishers', component: PublishersList},
-		{path: '/publishers/:id', component: PublishersList}
+		{path: '/publishers', component: PublishersList}
 	];
 
 	const privateRoutesList = [
-		{path: '/users', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
-		{path: '/users/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
-		{path: '/publications/isbn-ismn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
-		{path: '/publication/isbn-ismn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
-		{path: '/publications/issn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IssnList},
-		{path: '/publication/issn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IssnList},
-		{path: '/requests/users', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
-		{path: '/requests/users/:id', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
+		{path: '/users', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
+		{path: '/users/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
+		{path: '/publications/isbn-ismn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publication/isbn-ismn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publications/issn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
+		{path: '/publication/issn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
+		{path: '/requests/users', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
+		{path: '/requests/users/:id', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
 		{path: '/templates', role: ['admin'], component: MessagesList},
 		{path: '/templates/:id', role: ['admin'], component: MessagesList},
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publishers/:id', role: ['system', 'admin'], component: PublishersRequestsList},
-		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList}
+		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList}
 
 	];
 
@@ -142,7 +142,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 					<Switch>
 						{routes}
 					</Switch>
-					{modal ? <Route path="/publishers/:id" component={Publisher}/> : null}
+					{modal ? <Route path="/publishers/:id" component={Publisher}/> : <Route path="/publishers/:id" component={PublisherProfile}/>}
 					{modal ? <Route path="/publication/isbn-ismn/:id" component={IsbnIsmn}/> : null}
 					{modal ? <Route path="/publication/issn/:id" component={Issn}/> : null}
 					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}

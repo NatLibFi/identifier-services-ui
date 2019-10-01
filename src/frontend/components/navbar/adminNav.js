@@ -39,33 +39,33 @@ export default function ({userInfo, isAuthenticated}) {
 	const obj = [
 		{
 			label: 'Publishers',
-			roleView: ['admin', 'publisher'],
+			roleView: ['admin', 'publisher', 'publisher-admin'],
 			path: 'publishers'
 		},
 		{
 			label: 'Publications',
-			roleView: ['admin', 'publisher'],
+			roleView: ['admin', 'publisher', 'publisher-admin'],
 			listItem: [
-				{label: 'ISBN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher']},
-				{label: 'ISMN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher']},
-				{label: 'ISSN', path: 'publications/issn', roleView: ['admin', 'publisher']}
+				{label: 'ISBN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
+				{label: 'ISMN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
+				{label: 'ISSN', path: 'publications/issn', roleView: ['admin', 'publisher', 'publisher-admin']}
 			]
 		},
 		{
 			label: 'Requests',
-			roleView: ['admin', 'publisher'],
+			roleView: ['admin', 'system', 'publisher', 'publisher-admin'],
 			listItem: [
-				{label: 'Publishers', path: 'requests/publishers', roleView: ['admin']},
-				{label: 'Publications', roleView: ['admin', 'publisher'], listItem: [
-					{label: 'ISBN-SMN', path: 'requests/publications/isbn-ismn', roleView: ['admin', 'publisher']},
-					{label: 'ISSN', path: 'requests/publications/issn', roleView: ['admin', 'publisher']}
+				{label: 'Publishers', path: 'requests/publishers', roleView: ['admin', 'system']},
+				{label: 'Publications', roleView: ['admin', 'system', 'publisher', 'publisher-admin'], listItem: [
+					{label: 'ISBN-SMN', path: 'requests/publications/isbn-ismn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']},
+					{label: 'ISSN', path: 'requests/publications/issn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']}
 				]},
-				{label: 'Users', path: 'requests/users', roleView: ['admin', 'publisher']}
+				{label: 'Users', path: 'requests/users', roleView: ['admin', 'system', 'publisher-admin']}
 			]
 		},
 		{
 			label: 'Users',
-			roleView: ['admin', 'publisher'],
+			roleView: ['admin', 'publisher-admin'],
 			path: 'users'
 		},
 		{
