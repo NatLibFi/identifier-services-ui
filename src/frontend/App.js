@@ -133,7 +133,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
-				<section>
+				<section style={{minHeight: '80vh'}}>
 					{
 						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
 						<Tooltips label="contact form" title="contactForm"/> :
