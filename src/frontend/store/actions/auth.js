@@ -36,8 +36,7 @@ export const normalLogin = values => async dispatch => {
 	});
 	const result = await response.json();
 
-	dispatch(getUserInfo(result));
-	return response.status;
+	return dispatch(getUserInfo(result));
 };
 
 export const getUserInfo = token => async dispatch => {
@@ -56,6 +55,7 @@ export const getUserInfo = token => async dispatch => {
 		type: AUTHENTICATION,
 		payload: updatedUser
 	});
+	return updatedUser;
 };
 
 export const logOut = () => async dispatch => {

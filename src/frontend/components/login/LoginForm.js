@@ -42,16 +42,17 @@ import * as actions from '../../store/actions';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'login', validate})(props => {
-	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd, userInfo} = props;
+	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const [showPassword, setShowPassword] = React.useState(false);
 
-	const handleLogin = values => {
-		// eslint-disable-next-line no-undef
-		normalLogin({...values, API_URL: API_URL});
+	const handleLogin = async values => {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
+		const response = await normalLogin({...values, API_URL: API_URL});
 		// eslint-disable-next-line no-unused-expressions
-		userInfo.role !== undefined && userInfo.role === 'publisher' ? history.push(`/publishers/${userInfo.publisher}`) : history.push('/publishers');
+		response && response.role === 'publisher' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
 		handleClose();
 	};
 
