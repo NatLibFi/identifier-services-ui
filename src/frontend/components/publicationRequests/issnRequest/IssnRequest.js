@@ -53,15 +53,15 @@ import ListComponent from '../../ListComponent';
 import CustomColor from '../../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publicationRequestIsbnIsmn',
+	form: 'publicationRequestIssn',
 	validate,
 	enableReinitialize: true
 })(props => {
 	const {match,
 		loading,
-		fetchPublicationIsbnIsmnRequest,
-		publicationIsbnIsmnRequest,
-		updatePublicationIsbnIsmnRequest} = props;
+		fetchIssnRequest,
+		issnRequest,
+		uodateIssnRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
@@ -69,8 +69,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchPublicationIsbnIsmnRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublicationIsbnIsmnRequest, match.params.id, buttonState]);
+		fetchIssnRequest(match.params.id, cookie['login-cookie']);
+	}, [cookie, fetchIssnRequest, match.params.id, buttonState]);
 
 	function handleRejectClick() {
 		setReject(!reject);
@@ -81,25 +81,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handleRejectSubmit() {
-		const newPublicationIsbnIsmnRequest = {
-			...publicationIsbnIsmnRequest,
+		const newIssnRequest = {
+			...issnRequest,
 			state: 'rejected',
 			rejectionReason: rejectReason
 		};
-		delete newPublicationIsbnIsmnRequest._id;
-		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie['login-cookie']);
+		delete newIssnRequest._id;
+		uodateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
 		setReject(!reject);
-		setButtonState(publicationIsbnIsmnRequest.state);
+		setButtonState(issnRequest.state);
 	}
 
 	function handleAccept() {
-		const newPublicationIsbnIsmnRequest = {
-			...publicationIsbnIsmnRequest,
+		console.log('saf')
+		const newIssnRequest = {
+			...issnRequest,
 			state: 'accepted'
 		};
-		delete newPublicationIsbnIsmnRequest._id;
-		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie['login-cookie']);
-		setButtonState(publicationIsbnIsmnRequest.state);
+		delete newIssnRequest._id;
+		uodateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		setButtonState(issnRequest.state);
 	}
 
 	function renderButton(state) {
@@ -135,26 +136,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 	}
 
-	const {_id, state, ...formattedPublicationIsbnIsmnRequest} = publicationIsbnIsmnRequest;
-	const {publisher, ...withoutPublisher} = {...formattedPublicationIsbnIsmnRequest};
-	const onlyPublisher = formattedPublicationIsbnIsmnRequest && typeof formattedPublicationIsbnIsmnRequest.publisher === 'object' && formattedPublicationIsbnIsmnRequest.publisher;
+	const {_id, state, seriesDetails, ...formattedIssnRequest} = {...issnRequest, ...issnRequest.seriesDetails};
+	const {publisher, ...withoutPublisher} = {...formattedIssnRequest};
+	const onlyPublisher = formattedIssnRequest && typeof formattedIssnRequest.publisher === 'object' && formattedIssnRequest.publisher;
 	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
-	let publicationIsbnIsmnRequestDetail;
-	if (formattedPublicationIsbnIsmnRequest === undefined || loading) {
-		publicationIsbnIsmnRequestDetail = <Spinner/>;
+	let issnRequestDetail;
+	if (formattedIssnRequest === undefined || loading) {
+		issnRequestDetail = <Spinner/>;
 	} else {
-		publicationIsbnIsmnRequestDetail = (
+		issnRequestDetail = (
 			<>
-				{typeof formattedPublicationIsbnIsmnRequest.publisher === 'string' ?
+				{typeof formattedIssnRequest.publisher === 'string' ?
 					<>
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedPublicationIsbnIsmnRequest).map(key => {
-										return typeof formattedPublicationIsbnIsmnRequest[key] === 'string' ?
+									Object.keys(formattedIssnRequest).map(key => {
+										return typeof formattedIssnRequest[key] === 'string' ?
 											(
-												<ListComponent label={key} value={formattedPublicationIsbnIsmnRequest[key]}/>
+												<ListComponent label={key} value={formattedIssnRequest[key]}/>
 											) :
 											null;
 									})
@@ -164,10 +165,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedPublicationIsbnIsmnRequest).map(key => {
-										return typeof formattedPublicationIsbnIsmnRequest[key] === 'object' ?
+									Object.keys(formattedIssnRequest).map(key => {
+										return typeof formattedIssnRequest[key] === 'object' ?
 											(
-												<ListComponent label={key} value={formattedPublicationIsbnIsmnRequest[key]}/>
+												<ListComponent label={key} value={formattedIssnRequest[key]}/>
 											) :
 											null;
 									})
@@ -215,10 +216,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publication Request Detail">
+		<ModalLayout isTableRow color="primary" title="Publication ISSN Request Detail">
 			<div className={classes.publisher}>
 				<Grid container spacing={3} className={classes.publisherSpinner}>
-					{publicationIsbnIsmnRequestDetail}
+					{issnRequestDetail}
 					{reject ?
 						<>
 							<Grid item xs={12}>
@@ -238,7 +239,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</> :
 						<Grid item xs={12}>
 							{
-								renderButton(publicationIsbnIsmnRequest.state)
+								renderButton(issnRequest.state)
 							}
 						</Grid>
 					}
@@ -253,7 +254,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		publicationIsbnIsmnRequest: state.publication.publicationIsbnIsmnRequest,
+		issnRequest: state.publication.issnRequest,
 		loading: state.publication.loading,
 		isAuthenticated: state.login.isAuthenticated,
 		userInfo: state.login.userInfo

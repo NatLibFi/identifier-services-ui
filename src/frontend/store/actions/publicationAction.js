@@ -36,7 +36,8 @@ import {
 	ERROR,
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
 	PUBLICATION_ISBN_ISMN_REQUEST,
-	ISSN_REQUESTS_LIST
+	ISSN_REQUESTS_LIST,
+	ISSN_REQUEST
 } from './types';
 import {setLoader, success, fail, setMessage} from './commonAction';
 
@@ -306,6 +307,44 @@ export const fetchIssnRequestsList = (searchText, token, sortStateBy, offset) =>
 				}],
 				offset: offset
 			})
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const fetchIssnRequest = (id, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUEST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const updateIssnRequest = (id, values, token) => async dispatch => {
+	console.log('id', id)
+	dispatch(setLoader());
+	try {
+		delete values.backgroundProcessingState;
+		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
 		});
 		const result = await response.json();
 		dispatch(success(ISSN_REQUESTS_LIST, result));

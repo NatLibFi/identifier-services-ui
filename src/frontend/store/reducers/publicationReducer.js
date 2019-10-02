@@ -35,7 +35,8 @@ import {
 	FETCH_ISSN,
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
 	PUBLICATION_ISBN_ISMN_REQUEST,
-	ISSN_REQUESTS_LIST
+	ISSN_REQUESTS_LIST,
+	ISSN_REQUEST
 } from '../actions/types';
 
 const initialState = {
@@ -49,6 +50,7 @@ const initialState = {
 	publicationIsbnIsmnRequest: {},
 
 	issnRequestsList: [],
+	issnRequest: {},
 
 	offset: null,
 	totalDoc: null,
@@ -116,6 +118,12 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
+				loading: false
+			};
+		case ISSN_REQUEST:
+			return {
+				...state,
+				issnRequest: action.payload,
 				loading: false
 			};
 		case ERROR:
