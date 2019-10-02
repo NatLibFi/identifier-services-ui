@@ -275,12 +275,11 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 };
 
 export const issnCreationRequest = values => async dispatch => {
-	const response = await fetch(`${API_URL}/requests/publications/issn`, {
+	const response = await fetch('/requests/publications/issn', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
 	if (response.status === 200) {
