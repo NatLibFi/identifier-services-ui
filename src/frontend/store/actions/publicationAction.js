@@ -333,7 +333,6 @@ export const fetchIssnRequest = (id, token) => async dispatch => {
 };
 
 export const updateIssnRequest = (id, values, token) => async dispatch => {
-	console.log('id', id)
 	dispatch(setLoader());
 	try {
 		delete values.backgroundProcessingState;

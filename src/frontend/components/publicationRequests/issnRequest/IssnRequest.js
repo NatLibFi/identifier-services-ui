@@ -61,7 +61,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		loading,
 		fetchIssnRequest,
 		issnRequest,
-		uodateIssnRequest} = props;
+		updateIssnRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
@@ -87,19 +87,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			rejectionReason: rejectReason
 		};
 		delete newIssnRequest._id;
-		uodateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
 		setReject(!reject);
 		setButtonState(issnRequest.state);
 	}
 
 	function handleAccept() {
-		console.log('saf')
 		const newIssnRequest = {
 			...issnRequest,
 			state: 'accepted'
 		};
 		delete newIssnRequest._id;
-		uodateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
 		setButtonState(issnRequest.state);
 	}
 
