@@ -101,7 +101,7 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 
 // ****************REQUESTS**********************************
 export const publisherCreationRequest = values => async dispatch => {
-	const response = await fetch(`${API_URL}/requests/publishers`, {
+	const response = await fetch('/requests/publishers', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
