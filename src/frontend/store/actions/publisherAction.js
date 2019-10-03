@@ -30,7 +30,7 @@
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
 import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
-import {setLoader, setMessage, success, fail} from './commonAction';
+import {setLoader, setListLoader, setMessage, success, fail} from './commonAction';
 import HttpStatus from 'http-status';
 
 export const fetchPublisher = (id, token) => async dispatch => {
@@ -71,7 +71,7 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 };
 
 export const searchPublisher = ({searchText, token, offset, activeCheck}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {$or: [{name: searchText}, {aliases: searchText}], activity: {active: true}} :
 		{$or: [{name: searchText}, {aliases: searchText}]};
 
@@ -116,7 +116,7 @@ export const publisherCreationRequest = values => async dispatch => {
 };
 
 export const fetchPublishersRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
 			method: 'POST',

@@ -39,6 +39,7 @@ import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
 	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd, modal, setModal} = props;
+	console.log(props);
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
@@ -46,7 +47,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 
 	useEffect(() => {
 		return isTableRow && setOpen(modal);
-	}, [modal]);
+	}, [isTableRow, modal]);
 
 	useEffect(() => {
 		if (form || fab) {
@@ -87,7 +88,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 				open={openModal}
 				className={classes.container}
 				aria-labelledby={`modal-${name}`} aria-describedby="modal-description"
-				onClose={(form || fab) ? (() => {
+				onClose={(form === true || fab) ? (() => {
 					setMessage('Do you want to Exit?');
 					if (agree) {
 						setAgree(null);

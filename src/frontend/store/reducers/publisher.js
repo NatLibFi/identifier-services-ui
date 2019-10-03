@@ -26,7 +26,7 @@
  *
  */
 
-import {PUBLISHERS_LIST, PUBLISHER, LOADER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from '../actions/types';
+import {PUBLISHERS_LIST, PUBLISHER, LOADER, LIST_LOADER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from '../actions/types';
 
 const initialState = {
 	publishersList: [],
@@ -50,7 +50,11 @@ export default function (state = initialState, action) {
 		case LOADER:
 			return {
 				...state,
-				loading: true,
+				loading: true
+			};
+		case LIST_LOADER:
+			return {
+				...state,
 				listLoading: true
 			};
 		case PUBLISHERS_LIST:
@@ -63,8 +67,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				publisher: action.payload,
-				loading: false,
-				listLoading: false
+				loading: false
 			};
 		case PUBLISHERS_REQUESTS_LIST:
 			return {
@@ -73,7 +76,6 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false,
 				listLoading: false
 			};
 		case PUBLISHER_REQUEST:
