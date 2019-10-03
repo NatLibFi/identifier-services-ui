@@ -199,7 +199,7 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 
 // ****************REQUESTS**********************************
 export const publicationCreationRequest = values => async dispatch => {
-	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
+	const response = await fetch('/requests/publications/isbn-ismn', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

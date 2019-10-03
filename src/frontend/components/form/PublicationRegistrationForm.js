@@ -166,9 +166,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (result === 200) {
 					handleClose();
 				}
-			}
-
-			if (captchaInput.length === 0) {
+			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
@@ -213,7 +211,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publicationValues) {
 			publicationValues = {...publicationValues, publicationTime: publicationValues.publicationTime.toLocaleString()};
-			const formatPublicationValue = formatPublicationValues(publicationValues);
+			const {publisher, ...formatPublicationValue} = formatPublicationValues(publicationValues);
 			return (
 				<>
 					<Grid item xs={12} md={6}>
