@@ -38,12 +38,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cookie] = useCookies('login-cookie');
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [isbnIsmnId, setIsbnIsmnId] = useState(null);
+
 	useEffect(() => {
 		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/publication/isbn-ismn/${id}`, {modal: true});
+		setIsbnIsmnId(id);
+		setModal(true);
 	};
 
 	const headRows = [
@@ -61,6 +65,9 @@ export default connect(mapStateToProps, actions)(props => {
 			cursors={setLastCursor}
 			publicationList={isbnIsmnList}
 			setLastCursor={setLastCursor}
+			modal={modal}
+			id={isbnIsmnId}
+			setModal={setModal}
 			{...props}
 		/>
 	);
