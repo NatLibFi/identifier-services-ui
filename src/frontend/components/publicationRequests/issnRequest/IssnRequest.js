@@ -57,21 +57,23 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match,
+	const {
 		loading,
 		fetchIssnRequest,
 		issnRequest,
-		updateIssnRequest} = props;
+		updateIssnRequest,
+		id
+	} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
-		fetchIssnRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchIssnRequest, match.params.id, buttonState]);
-
+		if (id !== null) {
+			fetchIssnRequest(id, cookie['login-cookie']);
+		}
+	}, [cookie, fetchIssnRequest, buttonState, id]);
 	function handleRejectClick() {
 		setReject(!reject);
 	}
@@ -107,7 +109,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
-						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button disabled={issnRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
 					</ButtonGroup>
 				);

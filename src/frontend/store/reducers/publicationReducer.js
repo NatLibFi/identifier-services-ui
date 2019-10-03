@@ -28,6 +28,7 @@
 
 import {
 	LOADER,
+	LIST_LOADER,
 	ERROR,
 	ISBN_ISMN_LIST,
 	FETCH_ISBN_ISMN,
@@ -55,6 +56,7 @@ const initialState = {
 	offset: null,
 	totalDoc: null,
 	queryDocCount: null,
+	listLoading: false,
 	loading: false,
 	error: {}
 };
@@ -65,6 +67,11 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				loading: true
+			};
+		case LIST_LOADER:
+			return {
+				...state,
+				listLoading: true
 			};
 		case FETCH_ISBN_ISMN:
 			return {

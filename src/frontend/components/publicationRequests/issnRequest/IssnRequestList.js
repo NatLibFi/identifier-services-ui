@@ -37,6 +37,7 @@ import TableComponent from '../../TableComponent';
 import useStyles from '../../../styles/publisherLists';
 import SearchComponent from '../../SearchComponent';
 import TabComponent from '../../TabComponent';
+import IssnRequest from './IssnRequest';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
@@ -47,11 +48,14 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [issnId, setIssnId] = useState(null);
+	const [modal, setModal] = useState(false);
+
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
 	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
 	const handleTableRowClick = id => {
-		props.history.push(`/requests/publications/issn/${id}`, {modal: true});
+		setIssnId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -107,6 +111,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				{issnRequestData}
+				<IssnRequest modal={modal} setModal={setModal} id={issnId} setIssnId={setIssnId}/>
 			</Grid>
 		</Grid>
 	);

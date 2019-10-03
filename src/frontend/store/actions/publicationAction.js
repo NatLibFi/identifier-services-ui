@@ -39,10 +39,10 @@ import {
 	ISSN_REQUESTS_LIST,
 	ISSN_REQUEST
 } from './types';
-import {setLoader, success, fail, setMessage} from './commonAction';
+import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
@@ -65,7 +65,7 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 };
 
 export const fetchIssnList = ({token, offset}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/publications/issn/query`, {
 			method: 'POST',
@@ -217,7 +217,7 @@ export const publicationCreationRequest = values => async dispatch => {
 };
 
 export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/query`, {
 			method: 'POST',
@@ -293,7 +293,7 @@ export const issnCreationRequest = values => async dispatch => {
 };
 
 export const fetchIssnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/issn/query`, {
 			method: 'POST',
@@ -351,3 +351,4 @@ export const updateIssnRequest = (id, values, token) => async dispatch => {
 		dispatch(fail(ERROR, err));
 	}
 };
+

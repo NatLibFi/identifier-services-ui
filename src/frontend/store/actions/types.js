@@ -25,6 +25,8 @@
  * for the JavaScript code in this file.
  *
  */
+export const LOADER = 'LOADER';
+export const LIST_LOADER = 'LIST_LOADER';
 
 export const PUBLISHER_REGISTRATION = 'PUBLISHER_REGISTRATION';
 export const PUBLISHERS_LIST = 'PUBLISHERS_LIST';
@@ -40,7 +42,6 @@ export const PUBLICATION_ISBN_ISMN_REQUEST = 'PUBLICATION_ISBN_ISMN_REQUEST';
 export const ISSN_REQUESTS_LIST = 'ISSN_REQUESTS_LIST';
 export const ISSN_REQUEST = 'ISSN_REQUEST';
 
-export const LOADER = 'LOADER';
 export const SEARCH_PUBLISHER = 'SEARCH_PUBLISHER';
 export const ERROR = 'ERROR';
 export const LOCALE_SET = 'LOCALE_SET';
