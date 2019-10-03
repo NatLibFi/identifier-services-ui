@@ -57,7 +57,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {
 		fetchPublisher,
 		updatePublisher,
-		match,
+		id,
 		publisher,
 		loading,
 		handleSubmit,
@@ -69,8 +69,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchPublisher(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisher, match.params.id]);
+		if (id !== null) {
+			fetchPublisher(id, cookie['login-cookie']);
+		}
+	}, [cookie, fetchPublisher, id]);
+
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -138,12 +141,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handlePublisherUpdate = values => {
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
-		updatePublisher(match.params.id, updateValues, token);
+		updatePublisher(id, updateValues, token);
 		setIsEdit(false);
 	};
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publisher Detail">
+		<ModalLayout isTableRow color="primary" title="Publisher Detail" {...props}>
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>

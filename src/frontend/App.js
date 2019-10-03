@@ -37,23 +37,15 @@ import {useCookies} from 'react-cookie';
 import Home from './components/main';
 import TopNav from './components/navbar/topNav';
 import AdminNav from './components/navbar/adminNav';
-import Publisher from './components/publishers/Publisher';
 import PublishersList from './components/publishers/PublishersList';
 import PublisherProfile from './components/publishers/PublisherProfile';
-import PublisherRequest from './components/publishersRequests/publisherRequest';
-import User from './components/users/User';
 import UsersList from './components/users/UsersList';
-import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
 import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
-import Issn from './components/publication/issn/Issn';
 import IssnList from './components/publication/issn/IssnList';
-import UsersRequest from './components/usersRequests/UsersRequest';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
-import Message from './components/messageTemplates/Message';
 import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
-import PublicationIsbnIsmnRequest from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequest';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -65,8 +57,7 @@ import SnackBar from './components/SnackBar';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
-	const {lang, userInfo, isAuthenticated, history, location, responseMessage} = props;
-	const {modal} = location.state !== undefined && location.state;
+	const {lang, userInfo, isAuthenticated, history, responseMessage} = props;
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	const token = cookie['login-cookie'];
@@ -77,7 +68,8 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 
 	const routeField = [
 		{path: '/', component: Home},
-		{path: '/publishers', component: PublishersList}
+		{path: '/publishers', component: PublishersList},
+		{path: '/publishers/:id', component: PublisherProfile}
 	];
 
 	const privateRoutesList = [
@@ -142,15 +134,6 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 					<Switch>
 						{routes}
 					</Switch>
-					{modal ? <Route path="/publishers/:id" component={Publisher}/> : <Route path="/publishers/:id" component={PublisherProfile}/>}
-					{modal ? <Route path="/publication/isbn-ismn/:id" component={IsbnIsmn}/> : null}
-					{modal ? <Route path="/publication/issn/:id" component={Issn}/> : null}
-					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}
-					{modal ? <Route path="/requests/publications/isbn-ismn/:id" component={PublicationIsbnIsmnRequest}/> : null}
-					{modal ? <Route path="/users/:id" component={User}/> : null}
-					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}
-					{modal ? <Route path="/templates/:id" component={Message}/> : null}
-
 					{responseMessage && <SnackBar variant={responseMessage.color} openSnackBar={Boolean(responseMessage)} {...props}/>}
 				</section>
 				<Footer/>

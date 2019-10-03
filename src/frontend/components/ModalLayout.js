@@ -38,15 +38,15 @@ import useStyles from '../styles/modalLayout';
 import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
-	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd} = props;
+	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd, modal, setModal} = props;
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [agree, setAgree] = useState(null);
 
 	useEffect(() => {
-		return isTableRow && setOpen(isTableRow);
-	}, [isTableRow]);
+		return isTableRow && setOpen(modal);
+	}, [modal]);
 
 	useEffect(() => {
 		if (form || fab) {
@@ -67,7 +67,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 		}
 
 		if (isTableRow) {
-			props.history.goBack();
+			setModal(false);
 		}
 	}
 
