@@ -110,12 +110,10 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				{usersData}
-			</Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
 				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
 					<UserRequestForm {...props}/>
 				</ModalLayout>
+				{usersData}
 			</Grid>
 		</Grid>
 	);

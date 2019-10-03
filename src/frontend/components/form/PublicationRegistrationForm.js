@@ -77,8 +77,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		const steps = getSteps(fieldArray);
 		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha, publisher]);
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+		}, [isAuthenticated, loadSvgCaptcha, publisher]);
 
 		function getStepContent(step) {
 			if (user.id === undefined) {
@@ -172,6 +174,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				submitPublication(formatPublicationValues(values), result);
 			}
+
+			handleClose();
 		}
 
 		function formatPublicationValues(values) {
