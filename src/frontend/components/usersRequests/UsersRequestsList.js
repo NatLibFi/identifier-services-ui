@@ -32,6 +32,7 @@ import {Grid, Typography} from '@material-ui/core';
 import {useCookies} from 'react-cookie';
 
 import SearchComponent from '../SearchComponent';
+import UserRequest from './UsersRequest';
 import useStyles from '../../styles/publisherLists';
 import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
@@ -51,13 +52,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [userRequestId, setUserRequestId] = useState(null);
 
 	useEffect(() => {
 		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/requests/users/${id}`, {modal: true});
+		setUserRequestId(id);
+		setModal(true);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -114,6 +118,7 @@ export default connect(mapStateToProps, actions)(props => {
 					<UserRequestForm {...props}/>
 				</ModalLayout>
 				{usersData}
+				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -124,7 +129,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.users.loading,
+		loading: state.users.listLoading,
 		usersRequestsList: state.users.usersRequestsList,
 		offset: state.users.requestOffset,
 		totalDoc: state.users.totalUsersRequests,

@@ -39,7 +39,6 @@ import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
 	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd, modal, setModal} = props;
-	console.log(props);
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
