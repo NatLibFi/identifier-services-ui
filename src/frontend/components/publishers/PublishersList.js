@@ -72,7 +72,6 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'name', label: 'Name'},
 		{id: 'phone', label: 'Phone'}
 	];
-	console.log(searchedPublishers);
 	let publishersData;
 	if (loading) {
 		publishersData = <Spinner/>;

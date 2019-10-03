@@ -34,6 +34,7 @@ import {Grid, Typography} from '@material-ui/core';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
+import PublisherRequest from './publisherRequest';
 import useModalStyles from '../../styles/formList';
 import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
@@ -50,12 +51,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [publisherRequestId, setPublisherRequestId] = useState(null);
+
 	useEffect(() => {
 		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
 	}, [cookie, fetchPublishersRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/requests/publishers/${id}`, {modal: true});
+		setPublisherRequestId(id);
+		setModal(true);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -114,6 +119,7 @@ export default connect(mapStateToProps, actions)(props => {
 					<PublisherRegistrationForm {...props}/>
 				</ModalLayout>
 				{publishersRequestsData}
+				<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -124,7 +130,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.loading,
+		loading: state.publisher.listLoading,
 		publishersRequestsList: state.publisher.publishersRequestsList,
 		offset: state.publisher.offset,
 		totalDoc: state.publisher.totalDoc,
