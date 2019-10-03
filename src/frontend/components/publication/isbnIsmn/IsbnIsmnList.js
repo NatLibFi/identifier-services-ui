@@ -68,7 +68,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publication.loading,
+		loading: state.publication.listLoading,
 		isbnIsmnList: state.publication.isbnIsmnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,
