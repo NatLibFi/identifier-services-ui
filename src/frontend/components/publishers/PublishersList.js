@@ -38,6 +38,7 @@ import useStyles from '../../styles/publisherLists';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
+import Publisher from './Publisher';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = useStyles();
@@ -50,6 +51,8 @@ export default connect(mapStateToProps, actions)(props => {
 	});
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [publisherId, setPublisherId] = useState(null);
 
 	useEffect(() => {
 		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
@@ -61,7 +64,8 @@ export default connect(mapStateToProps, actions)(props => {
 	};
 
 	const handleTableRowClick = id => {
-		props.history.push({pathname: `/publishers/${id}`, state: {modal: true, searchText: ''}});
+		setPublisherId(id);
+		setModal(true);
 	};
 
 	const headRows = [
@@ -115,6 +119,7 @@ export default connect(mapStateToProps, actions)(props => {
 					label="Show only active publishers"
 				/>
 				{publishersData}
+				<Publisher id={publisherId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);

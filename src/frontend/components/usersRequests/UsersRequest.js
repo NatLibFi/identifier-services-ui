@@ -55,7 +55,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
+	const {id, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
 	const classes = useStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
@@ -64,8 +64,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [newValues, setNewValues] = useState({});
 
 	useEffect(() => {
-		fetchUserRequest(match.params.id, token);
-	}, [cookie, fetchUserRequest, match.params.id, token]);
+		if (id !== null) {
+			fetchUserRequest(id, token);
+		}
+	}, [cookie, fetchUserRequest, id, token]);
 
 	function handleDoneClick() {
 		const requestToUpdate = {
@@ -73,7 +75,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'inProgress',
 			backgroundProcessingState: 'inProgress'
 		};
-		updateUserRequest(match.params.id, requestToUpdate, token);
+		updateUserRequest(id, requestToUpdate, token);
 	}
 
 	const handleEditClick = () => {
@@ -124,7 +126,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary">
+		<ModalLayout isTableRow color="primary" {...props}>
 			<>
 				<Typography variant="h6">
 					Users Request Details
@@ -150,7 +152,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid container spacing={3} className={classes.publisherSpinner}>
 							{userRequestDetail}
 						</Grid>
-						{role !== undefined && role.some(item => item === 'admin') &&
+						{role !== undefined && role === 'admin' &&
 							<div className={classes.btnContainer}>
 								<Fab
 									color="primary"

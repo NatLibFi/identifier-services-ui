@@ -34,6 +34,7 @@ import {Grid, Typography} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
+import IsbnIsmnRequest from './IsbnIsmnRequest';
 import useModalStyles from '../../../styles/formList';
 import useStyles from '../../../styles/publisherLists';
 import SearchComponent from '../../SearchComponent';
@@ -51,12 +52,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
+
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
 	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/requests/publications/isbn-ismn/${id}`, {modal: true});
+		setIsbnIsmnRequestId(id);
+		setModal(true);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -115,6 +120,7 @@ export default connect(mapStateToProps, actions)(props => {
 					<PublicationRegistrationForm {...props}/>
 				</ModalLayout>
 				{publicationIsbnIsmnRequestData}
+				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -125,7 +131,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publication.loading,
+		loading: state.publication.listLoading,
 		publicationIsbnIsmnRequestList: state.publication.publicationIsbnIsmnRequestList,
 		offset: state.publication.offset,
 		totalDoc: state.publication.totalDoc,

@@ -37,24 +37,16 @@ import {useCookies} from 'react-cookie';
 import Home from './components/main';
 import TopNav from './components/navbar/topNav';
 import AdminNav from './components/navbar/adminNav';
-import Publisher from './components/publishers/Publisher';
 import PublishersList from './components/publishers/PublishersList';
-import PublisherRequest from './components/publishersRequests/publisherRequest';
-import User from './components/users/User';
+import PublisherProfile from './components/publishers/PublisherProfile';
 import UsersList from './components/users/UsersList';
-import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
 import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
-import Issn from './components/publication/issn/Issn';
 import IssnList from './components/publication/issn/IssnList';
-import UsersRequest from './components/usersRequests/UsersRequest';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
-import Message from './components/messageTemplates/Message';
 import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
-import PublicationIsbnIsmnRequest from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequest';
 import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
-import IssnRequest from './components/publicationRequests/issnRequest/IssnRequest';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -66,8 +58,7 @@ import SnackBar from './components/SnackBar';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
-	const {lang, userInfo, isAuthenticated, history, location, responseMessage} = props;
-	const {modal} = location.state !== undefined && location.state;
+	const {lang, userInfo, isAuthenticated, history, responseMessage} = props;
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	const token = cookie['login-cookie'];
@@ -79,26 +70,26 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const routeField = [
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
-		{path: '/publishers/:id', component: PublishersList}
+		{path: '/publishers/:id', component: PublisherProfile}
 	];
 
 	const privateRoutesList = [
-		{path: '/users', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
-		{path: '/users/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: UsersList},
-		{path: '/publications/isbn-ismn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
-		{path: '/publication/isbn-ismn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IsbnIsmnList},
-		{path: '/publications/issn', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IssnList},
-		{path: '/publication/issn/:id', role: ['admin', 'publisherAdmin', 'publisher', 'system'], component: IssnList},
-		{path: '/requests/users', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
-		{path: '/requests/users/:id', role: ['admin', 'publisherAdmin'], component: UsersRequestsList},
+		{path: '/users', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
+		{path: '/users/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
+		{path: '/publications/isbn-ismn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publication/isbn-ismn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publications/issn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
+		{path: '/publication/issn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
+		{path: '/requests/users', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
+		{path: '/requests/users/:id', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
 		{path: '/templates', role: ['admin'], component: MessagesList},
 		{path: '/templates/:id', role: ['admin'], component: MessagesList},
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publishers/:id', role: ['system', 'admin'], component: PublishersRequestsList},
-		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/issn', role: ['publisher', 'admin'], component: IssnRequestList},
-		{path: '/requests/publications/issn/:id', role: ['publisher', 'admin'], component: IssnRequestList}
+		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/issn', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
+		{path: '/requests/publications/issn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList}
 
 	];
 
@@ -139,23 +130,13 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
 				<section style={{minHeight: '80vh'}}>
 					{
-						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
+						isAuthenticatedState ? (userInfo.role === 'publisher') &&
 						<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}
 					<Switch>
 						{routes}
 					</Switch>
-					{modal ? <Route path="/publishers/:id" component={Publisher}/> : null}
-					{modal ? <Route path="/publication/isbn-ismn/:id" component={IsbnIsmn}/> : null}
-					{modal ? <Route path="/publication/issn/:id" component={Issn}/> : null}
-					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}
-					{modal ? <Route path="/requests/publications/isbn-ismn/:id" component={PublicationIsbnIsmnRequest}/> : null}
-					{modal ? <Route path="/requests/publications/issn/:id" component={IssnRequest}/> : null}
-					{modal ? <Route path="/users/:id" component={User}/> : null}
-					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}
-					{modal ? <Route path="/templates/:id" component={Message}/> : null}
-
 					{responseMessage && <SnackBar variant={responseMessage.color} openSnackBar={Boolean(responseMessage)} {...props}/>}
 				</section>
 				<Footer/>

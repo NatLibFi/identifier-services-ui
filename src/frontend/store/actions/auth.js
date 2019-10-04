@@ -36,8 +36,7 @@ export const normalLogin = values => async dispatch => {
 	});
 	const result = await response.json();
 
-	dispatch(getUserInfo(result));
-	return response.status;
+	return dispatch(getUserInfo(result));
 };
 
 export const getUserInfo = token => async dispatch => {
@@ -50,12 +49,13 @@ export const getUserInfo = token => async dispatch => {
 		}
 	});
 	const user = await result.json();
-	const updatedUser = {...user, role: user.groups};
+	const updatedUser = {...user};
 	delete updatedUser.groups;
 	dispatch({
 		type: AUTHENTICATION,
 		payload: updatedUser
 	});
+	return updatedUser;
 };
 
 export const logOut = () => async dispatch => {

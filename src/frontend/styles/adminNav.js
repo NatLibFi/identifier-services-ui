@@ -30,12 +30,13 @@ import {makeStyles} from '@material-ui/core/styles';
 const useStyles = makeStyles({
 	publicMenu: {
 		display: 'flex',
-		alignItems: 'center'
+		alignItems: 'center',
+		minWidth: 200
 	},
 	adminMenu: {
 		display: 'flex',
 		maxWidth: '1200px',
-		justifyContent: 'space-between',
+		justifyContent: 'start',
 		margin: '0 auto'
 	},
 	active: {

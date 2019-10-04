@@ -38,12 +38,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cookie] = useCookies('login-cookie');
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [issnId, setIssnId] = useState(null);
+
 	useEffect(() => {
 		fetchIssnList({token: cookie['login-cookie'], offset: lastCursor});
 	}, [lastCursor, cursors, fetchIssnList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/publication/issn/${id}`, {modal: true});
+		setIssnId(id);
+		setModal(true);
 	};
 
 	const headRows = [
@@ -55,12 +59,16 @@ export default connect(mapStateToProps, actions)(props => {
 
 	return (
 		<PublicationListRenderComponent
+			issn
 			loading={loading}
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}
 			cursors={setLastCursor}
 			publicationList={issnList}
 			setLastCursor={setLastCursor}
+			id={issnId}
+			modal={modal}
+			setModal={setModal}
 			{...props}
 		/>
 	);
@@ -68,7 +76,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publication.loading,
+		loading: state.publication.listLoading,
 		issnList: state.publication.issnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,

@@ -38,18 +38,18 @@ import useStyles from '../styles/modalLayout';
 import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
-	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd} = props;
+	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd, modal, setModal} = props;
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
 	const [agree, setAgree] = useState(null);
 
 	useEffect(() => {
-		return isTableRow && setOpen(isTableRow);
-	}, [isTableRow]);
+		return isTableRow && setOpen(modal);
+	}, [isTableRow, modal]);
 
 	useEffect(() => {
-		if (form) {
+		if (form || fab) {
 			handleClose();
 		}
 	// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +67,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 		}
 
 		if (isTableRow) {
-			props.history.goBack();
+			setModal(false);
 		}
 	}
 
@@ -87,7 +87,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 				open={openModal}
 				className={classes.container}
 				aria-labelledby={`modal-${name}`} aria-describedby="modal-description"
-				onClose={(form || fab) ? (() => {
+				onClose={(form === true || fab) ? (() => {
 					setMessage('Do you want to Exit?');
 					if (agree) {
 						setAgree(null);

@@ -1,6 +1,3 @@
-/* eslint-disable no-negated-condition */
-/* eslint-disable react-hooks/exhaustive-deps */
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -57,7 +54,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, user, userInfo, loading, fetchUser} = props;
+	const {id, user, userInfo, loading, fetchUser} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
@@ -67,8 +64,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		const token = cookie['login-cookie'];
 		// eslint-disable-next-line no-undef
-		fetchUser(match.params.id, token);
-	}, [user === undefined]);
+		if (id !== null) {
+			fetchUser(id, token);
+		}
+	}, [cookie, fetchUser, id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -94,6 +93,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							return (
 								<ListItem key={key}>
 									<ListItemText>
+										{/* eslint-disable-next-line no-negated-condition */}
 										{(typeof user[key] !== 'object') ?
 											<Grid container>
 												<Grid item xs={4}>{key}: </Grid>
@@ -130,7 +130,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary">
+		<ModalLayout isTableRow color="primary" {...props}>
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>
@@ -149,7 +149,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid container spacing={3} className={classes.publisherSpinner}>
 						{userDetail}
 					</Grid>
-					{role !== undefined && role.some(item => item === 'admin') &&
+					{role !== undefined && role === 'admin' &&
 						<div className={classes.btnContainer}>
 							<Fab
 								color="primary"

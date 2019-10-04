@@ -32,6 +32,7 @@ import {Grid, Typography} from '@material-ui/core';
 
 import useStyles from '../../styles/publisherLists';
 import TableComponent from '../TableComponent';
+import User from './User';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import {useCookies} from 'react-cookie';
@@ -43,12 +44,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
+	const [modal, setModal] = useState(false);
+	const [userId, setUserId] = useState(null);
+
 	useEffect(() => {
 		fetchUsersList(cookie['login-cookie'], lastCursor);
 	}, [lastCursor, cursors, fetchUsersList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/users/${id}`, {modal: true});
+		setUserId(id);
+		setModal(true);
 	};
 
 	const headRows = [
@@ -91,6 +96,7 @@ export default connect(mapStateToProps, actions)(props => {
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Avaiable users</Typography>
 				{usersData}
+				<User id={userId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -101,7 +107,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.users.loading,
+		loading: state.users.listLoading,
 		usersList: state.users.usersList,
 		userInfo: state.login.userInfo,
 		totalUsers: state.users.totalUsers,

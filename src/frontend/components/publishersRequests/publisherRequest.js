@@ -52,16 +52,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
+	const {id, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
+
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id, buttonState]);
+		if (id !== null) {
+			fetchPublisherRequest(id, cookie['login-cookie']);
+		}
+	}, [cookie, fetchPublisherRequest, id, buttonState]);
 
 	function handleRejectClick() {
 		setReject(!reject);
@@ -166,7 +169,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publisher Request Detail">
+		<ModalLayout isTableRow color="primary" title="Publisher Request Detail" {...props}>
 			<div className={classes.publisher}>
 				<Grid container spacing={3} className={classes.publisherSpinner}>
 					{publisherRequestDetail}

@@ -92,7 +92,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case ISSN_LIST:
 			return {
@@ -101,7 +101,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case PUBLICATIONISBNISMN_REQUESTS_LIST:
 			return {
@@ -110,7 +110,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case PUBLICATION_ISBN_ISMN_REQUEST:
 			return {
@@ -125,7 +125,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case ISSN_REQUEST:
 			return {

@@ -52,7 +52,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'messageTemplate',
 	enableReinitialize: true
 })(props => {
-	const {match, fetchMessage, messageInfo, handleSubmit, updateMessageTemplate} = props;
+	const {id, fetchMessage, messageInfo, handleSubmit, updateMessageTemplate} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
 	const [cookie] = useCookies('login-cookie');
@@ -60,8 +60,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		const token = cookie['login-cookie'];
-		fetchMessage(match.params.id, token);
-	}, [cookie, fetchMessage, isEdit, match.params.id]);
+		if (id !== null) {
+			fetchMessage(id, token);
+		}
+	}, [cookie, fetchMessage, isEdit, id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -76,7 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			...values,
 			body: Buffer.from(values.body).toString('base64')
 		};
-		updateMessageTemplate(match.params.id, updateValue, cookie['login-cookie']);
+		updateMessageTemplate(id, updateValue, cookie['login-cookie']);
 		setIsEdit(false);
 	}
 
@@ -130,7 +132,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Message Detail">
+		<ModalLayout isTableRow color="primary" title="Message Detail" {...props}>
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>

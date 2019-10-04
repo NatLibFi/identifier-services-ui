@@ -48,7 +48,6 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const handleLogOut = () => {
-		// eslint-disable-next-line no-undef
 		props.logOut();
 		props.history.push('/');
 		props.handleClose();
@@ -81,7 +80,7 @@ export default connect(mapStateToProps, actions)(props => {
 								<Tab label="Normal Login"/>
 								<Tab label="HAKA Login"/>
 							</Tabs>
-							{value === 0 && <TabContainer><LoginForm redirectTo={props.redirectTo} setPwd={setPwd} {...props}/></TabContainer>}
+							{value === 0 && <TabContainer><LoginForm setPwd={setPwd} {...props}/></TabContainer>}
 							{value === 1 && <TabContainer><HakaLogin/></TabContainer>}
 						</div>
 					}

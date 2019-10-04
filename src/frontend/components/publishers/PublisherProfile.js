@@ -32,10 +32,8 @@ import {
 	Grid,
 	List,
 	ListItem,
-	ListItemText,
-	Fab
+	ListItemText
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
@@ -44,7 +42,6 @@ import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import renderTextField from '../form/render/renderTextField';
 import ListComponent from '../ListComponent';
@@ -57,7 +54,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {
 		fetchPublisher,
 		updatePublisher,
-		id,
+		match,
 		publisher,
 		loading,
 		handleSubmit,
@@ -67,14 +64,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const formClasses = useFormStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
-
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
-		if (id !== null) {
-			fetchPublisher(id, cookie['login-cookie']);
-		}
-	}, [cookie, fetchPublisher, id]);
-
+		fetchPublisher(match.params.id, cookie['login-cookie']);
+	}, [cookie, fetchPublisher, match.params.id]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -93,7 +86,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			<>
 				{isEdit ?
 					<>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={9}>
 							<List>
 								<ListItem>
 									<ListItemText>
@@ -107,7 +100,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Grid>
 					</> :
 					<>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={9}>
 							<List>
 								{
 									Object.keys(formattedPublisherDetail).map(key => {
@@ -119,8 +112,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									})
 								}
 							</List>
-						</Grid>
-						<Grid item xs={12} md={6}>
 							<List>
 								{
 									Object.keys(formattedPublisherDetail).map(key => {
@@ -142,44 +133,39 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handlePublisherUpdate = values => {
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
-		updatePublisher(id, updateValues, token);
+		updatePublisher(match.params.id, updateValues, token);
 		setIsEdit(false);
 	};
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publisher Detail" {...props}>
+		<section className={classes.publisherProfileContainer}>
 			{isEdit ?
-				<div className={classes.publisher}>
+				<div className={classes.publisherProfile}>
 					<form>
 						<Grid container spacing={3} className={classes.publisherSpinner}>
 							{publisherDetail}
+							<Grid item className={classes.btnContainer}xs={12} md={3}>
+								<Button onClick={handleCancel}>Cancel</Button>
+								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
+								UPDATE
+								</Button>
+							</Grid>
 						</Grid>
-						<div className={classes.btnContainer}>
-							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
-                            UPDATE
-							</Button>
-						</div>
 					</form>
 				</div> :
-				<div className={classes.publisher}>
+				<div className={classes.publisherProfile}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
 						{publisherDetail}
+						{isAuthenticated && userInfo.role === 'publisher-admin' &&
+						<Grid item className={classes.btnContainer}xs={12} md={3}>
+							<Button color="primary" variant="outlined" onClick={handleEditClick}>
+								Edit
+							</Button>
+						</Grid>}
 					</Grid>
-					{isAuthenticated && userInfo.role === 'publisher' &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit Publisher Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
 				</div>
 			}
-		</ModalLayout>
+		</section>
 	);
 	return {
 		...component

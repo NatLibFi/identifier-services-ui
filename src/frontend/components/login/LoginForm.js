@@ -47,10 +47,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const formClasses = useFormStyles();
 	const [showPassword, setShowPassword] = React.useState(false);
 
-	const handleLogin = values => {
-		// eslint-disable-next-line no-undef
-		normalLogin({...values, API_URL: API_URL});
-		history.push('/publishers');
+	const handleLogin = async values => {
+		/* global API_URL */
+		/* eslint no-undef: "error" */
+		const response = await normalLogin({...values, API_URL: API_URL});
+		// eslint-disable-next-line no-unused-expressions
+		response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
 		handleClose();
 	};
 
@@ -116,6 +118,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		user: state.login.userInfo
+		userInfo: state.login.userInfo
 	});
 }

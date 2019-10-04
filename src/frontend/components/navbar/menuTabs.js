@@ -72,34 +72,35 @@ export default connect(null, actions)(props => {
 				open={Boolean(anchorEl)}
 				onClose={handleClose}
 			>
-				{list.listItem.map(item => item.roleView && role.some(item => list.roleView.includes(item)) &&
-				<>
-					<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
-						{item.listItem ?
-							<ExpansionPanel>
-								<ExpansionPanelSummary
-									expandIcon={<ExpandMoreIcon/>}
-									aria-controls="panel1a-content"
-									id="panel1a-header"
-									className={classes.menuExpansion}
-								>
-									<MenuItem>{item.label}</MenuItem>
+				{list.listItem.map(item => item.roleView && item.roleView.includes(role) ?
+					<>
+						<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
+							{item.listItem ?
+								<ExpansionPanel>
+									<ExpansionPanelSummary
+										expandIcon={<ExpandMoreIcon/>}
+										aria-controls="panel1a-content"
+										id="panel1a-header"
+										className={classes.menuExpansion}
+									>
+										<MenuItem>{item.label}</MenuItem>
 
-								</ExpansionPanelSummary>
-								<ExpansionPanelDetails>
-									<Typography>
-										{item.listItem.map(subItem => (
-											<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
-												<MenuItem>{subItem.label}</MenuItem>
-											</Link>
-										))}
-									</Typography>
-								</ExpansionPanelDetails>
-							</ExpansionPanel> :
-							<MenuItem key={item.label}>{item.label}</MenuItem>
-						}
-					</Link>
-				</>
+									</ExpansionPanelSummary>
+									<ExpansionPanelDetails>
+										<Typography>
+											{item.listItem.map(subItem => (
+												<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
+													<MenuItem>{subItem.label}</MenuItem>
+												</Link>
+											))}
+										</Typography>
+									</ExpansionPanelDetails>
+								</ExpansionPanel> :
+								<MenuItem key={item.label}>{item.label}</MenuItem>
+							}
+						</Link>
+					</> :
+					null
 				)}
 			</Menu>
 			}

@@ -217,7 +217,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publication ISSN Request Detail">
+		<ModalLayout isTableRow color="primary" title="Publication ISSN Request Detail" {...props}>
 			<div className={classes.publisher}>
 				<Grid container spacing={3} className={classes.publisherSpinner}>
 					{issnRequestDetail}

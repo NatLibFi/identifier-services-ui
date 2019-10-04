@@ -48,14 +48,16 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [issnId, setIssnId] = useState(null);
+	const [issnRequestId, setIssnRequestId] = useState(null);
 	const [modal, setModal] = useState(false);
 
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
 	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
+
 	const handleTableRowClick = id => {
-		setIssnId(id);
+		setIssnRequestId(id);
+		setModal(true);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -111,7 +113,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				{issnRequestData}
-				<IssnRequest modal={modal} setModal={setModal} id={issnId} setIssnId={setIssnId}/>
+				<IssnRequest modal={modal} setModal={setModal} id={issnRequestId} setIssnId={setIssnRequestId}/>
 			</Grid>
 		</Grid>
 	);
@@ -122,7 +124,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publication.loading,
+		loading: state.publication.listLoading,
 		issnRequestList: state.publication.issnRequestsList,
 		offset: state.publication.offset,
 		totalDoc: state.publication.totalDoc,

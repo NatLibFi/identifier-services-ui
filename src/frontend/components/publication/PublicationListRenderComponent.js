@@ -32,6 +32,8 @@ import {Grid, Typography} from '@material-ui/core';
 import useStyles from '../../styles/publisherLists';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
+import IsbnIsmn from './isbnIsmn/IsbnIsmn';
+import Issn from './issn/Issn';
 
 export default function (props) {
 	const classes = useStyles();
@@ -44,6 +46,8 @@ export default function (props) {
 		headRows,
 		cursors,
 		setLastCursor,
+		isbnIsmn,
+		issn,
 		handleTableRowClick
 	} = props;
 
@@ -88,6 +92,9 @@ export default function (props) {
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
 				{usersData}
+				{issn ?	<Issn {...props}/> : (
+					isbnIsmn ?	<IsbnIsmn {...props}/> : null
+				)}
 			</Grid>
 		</Grid>
 	);

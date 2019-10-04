@@ -48,16 +48,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, isbnIsmn, userInfo, loading, fetchIsbnIsmn, handleSubmit} = props;
+	const {id, isbnIsmn, userInfo, loading, fetchIsbnIsmn, handleSubmit} = props;
 	const classes = useStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
-		fetchIsbnIsmn({id: match.params.id, token: cookie['login-cookie']});
-	}, [cookie, fetchIsbnIsmn, match.params.id]);
+		if (id !== null) {
+			fetchIsbnIsmn({id: id, token: cookie['login-cookie']});
+		}
+	}, [cookie, fetchIsbnIsmn, id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -71,12 +72,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const {_id, ...updateValues} = values;
 		const token = cookie['login-cookie'];
 		console.log(updateValues, token);
-		// UpdatePublication(match.params.id, updateValues, token);
+		// UpdatePublication(id, updateValues, token);
 		setIsEdit(false);
 	};
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publication Detail">
+		<ModalLayout isTableRow color="primary" title="Publication Detail" {...props}>
 			{isEdit ?
 				<div className={classes.publisher}>
 					<form>
@@ -95,7 +96,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid container spacing={3} className={classes.publisherSpinner}>
 						<PublicationRenderComponent publication={isbnIsmn} loading={loading} isEdit={isEdit}/>
 					</Grid>
-					{role !== undefined && role.some(item => item === 'admin') &&
+					{role !== undefined && role === 'admin' &&
 						<div className={classes.btnContainer}>
 							<Fab
 								color="primary"

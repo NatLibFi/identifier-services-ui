@@ -31,6 +31,7 @@ import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
 import useStyles from '../../styles/publisherLists';
+import Message from './Message';
 import useModalStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
 import TableComponent from '../TableComponent';
@@ -47,13 +48,15 @@ export default connect(mapStateToProps, actions)(props => {
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-
+	const [modal, setModal] = useState(false);
+	const [templateId, setTemplateId] = useState(null);
 	useEffect(() => {
-		fetchMessagesList(cookie['login-cookie'], lastCursor, page);
-	}, [lastCursor, cursors, fetchMessagesList, cookie, page]);
+		fetchMessagesList(cookie['login-cookie'], lastCursor);
+	}, [lastCursor, cursors, fetchMessagesList, cookie]);
 
 	const handleTableRowClick = id => {
-		props.history.push(`/templates/${id}`, {modal: true});
+		setTemplateId(id);
+		setModal(true);
 	};
 
 	const headRows = [
@@ -103,6 +106,7 @@ export default connect(mapStateToProps, actions)(props => {
 					<TemplateCreationForm {...props}/>
 				</ModalLayout>
 				{messageData}
+				<Message id={templateId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -113,7 +117,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.contact.loading,
+		loading: state.contact.listLoading,
 		messagesList: state.contact.messagesList,
 		totalMessages: state.contact.totalMessages,
 		offset: state.contact.offset,
