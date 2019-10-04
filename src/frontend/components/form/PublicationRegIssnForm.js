@@ -153,14 +153,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (result === 200) {
 					handleClose();
 				}
-			} else {
-				// eslint-disable-next-line no-lonely-if
-				if (captchaInput.length === 0) {
-					setMessage({color: 'error', msg: 'Captcha not provided'});
-				} else if (captchaInput.length > 0) {
-					const result = await postCaptchaInput(captchaInput, captcha.id);
-					submitPublication(formatPublicationValues(values), result);
-				}
+			} else if (captchaInput.length === 0) {
+				setMessage({color: 'error', msg: 'Captcha not provided'});
+			} else if (captchaInput.length > 0) {
+				const result = await postCaptchaInput(captchaInput, captcha.id);
+				submitPublication(formatPublicationValues(values), result);
 			}
 		}
 

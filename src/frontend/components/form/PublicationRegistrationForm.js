@@ -174,8 +174,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				submitPublication(formatPublicationValues(values), result);
 			}
-
-			handleClose();
 		}
 
 		function formatPublicationValues(values) {
