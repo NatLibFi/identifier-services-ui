@@ -53,6 +53,8 @@ import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
 import PublicationIsbnIsmnRequest from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequest';
+import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
+import IssnRequest from './components/publicationRequests/issnRequest/IssnRequest';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -94,7 +96,9 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publishers/:id', role: ['system', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList}
+		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/issn', role: ['publisher', 'admin'], component: IssnRequestList},
+		{path: '/requests/publications/issn/:id', role: ['publisher', 'admin'], component: IssnRequestList}
 
 	];
 
@@ -133,7 +137,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
-				<section>
+				<section style={{minHeight: '80vh'}}>
 					{
 						isAuthenticatedState ? (userInfo.role.includes('publisher')) &&
 						<Tooltips label="contact form" title="contactForm"/> :
@@ -147,6 +151,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 					{modal ? <Route path="/publication/issn/:id" component={Issn}/> : null}
 					{modal ? <Route path="/requests/publishers/:id" component={PublisherRequest}/> : null}
 					{modal ? <Route path="/requests/publications/isbn-ismn/:id" component={PublicationIsbnIsmnRequest}/> : null}
+					{modal ? <Route path="/requests/publications/issn/:id" component={IssnRequest}/> : null}
 					{modal ? <Route path="/users/:id" component={User}/> : null}
 					{modal ? <Route path="/requests/users/:id" component={UsersRequest}/> : null}
 					{modal ? <Route path="/templates/:id" component={Message}/> : null}

@@ -27,14 +27,14 @@ export default function (props) {
 			case 'number':
 				return (
 					<>
-						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+						<Grid item xs={4}><span className={classes.label}>{formatLabel(label)}:</span></Grid>
 						<Grid item xs={8}>{value}</Grid>
 					</>
 				);
 			case 'boolean':
 				return (
 					<>
-						<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+						<Grid item xs={4}><span className={classes.label}>{formatLabel(label)}:</span></Grid>
 						<Grid item xs={8}>{value.toString()}</Grid>
 					</>
 				);
@@ -54,7 +54,7 @@ export default function (props) {
 				if (obj.some(item => typeof item === 'string')) {
 					return (
 						<>
-							<Grid item xs={4}><strong>{formatLabel(label)}:</strong></Grid>
+							<Grid item xs={4}><span className={classes.label}>{formatLabel(label)}:</span></Grid>
 							<Grid item xs={8}>
 								{obj.map(item => {
 									return (
@@ -81,7 +81,7 @@ export default function (props) {
 							aria-controls="panel1a-content"
 							className={classes.exPanel}
 						>
-							<Typography><strong>{formatLabel(label)}</strong></Typography>
+							<Typography><span className={classes.label}>{formatLabel(label)}</span></Typography>
 						</ExpansionPanelSummary>
 						<ExpansionPanelDetails className={classes.objDetail}>
 
@@ -91,7 +91,7 @@ export default function (props) {
 										{Object.keys(item).map(key => item[key] ?
 											(
 												<li key={key}>
-													<span><strong>{formatLabel(key)}: </strong></span>
+													<span className={classes.label}>{formatLabel(key)}: </span>
 													<span>{item[key]}</span>
 												</li>
 											) : null
@@ -102,7 +102,7 @@ export default function (props) {
 								Object.keys(value).map(key =>
 									(
 										<li key={key}>
-											<span><strong>{formatLabel(key)}: </strong></span>
+											<span className={classes.label}>{formatLabel(key)}: </span>
 											<span>{typeof value[key] === 'boolean' ? value[key].toString() : value[key]}</span>
 										</li>
 									)
