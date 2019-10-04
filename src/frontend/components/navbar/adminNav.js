@@ -29,6 +29,7 @@ import React from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {AppBar, Button, Grid} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
 import useStyles from '../../styles/adminNav';
 import MenuTabs from './menuTabs';
@@ -89,14 +90,12 @@ export default function ({userInfo, isAuthenticated}) {
 				<AppBar position="static" color="secondary">
 					<div>
 						<div className={classes.adminMenu}>
-							{isAuthenticated ?
-								obj.map(list => list.roleView.includes(userInfo.role) && (
-									<MenuTabs key={list.label} role={userInfo.role} list={list}/>
-								)) :
+							{isAuthenticated ? renderMenuTabs() : (
 								<div className={classes.publicMenu}>
 									<Link exact to="/" activeClassName={classes.active}><Button><HomeIcon fontSize="default" color="primary"/></Button></Link>
 									<Link exact to="/publishers" activeClassName={classes.active}><Button>Publishers</Button></Link>
 								</div>
+							)
 							}
 						</div>
 					</div>
@@ -104,6 +103,24 @@ export default function ({userInfo, isAuthenticated}) {
 			</Grid>
 		</Grid>
 	);
+
+	function renderMenuTabs() {
+		const profileTab = userInfo.role === 'publisher-admin' ?
+			(
+				<>
+					<Link exact to={`/publishers/${userInfo.publisher}`} activeClassName={classes.active}>
+						<Button><AccountBoxIcon fontSize="default" color="primary"/></Button>
+					</Link>
+					{obj.map(list => list.roleView.includes(userInfo.role) && (
+						<MenuTabs key={list.label} role={userInfo.role} list={list}/>
+					))}
+				</>
+			) : obj.map(list => list.roleView.includes(userInfo.role) && (
+				<MenuTabs key={list.label} role={userInfo.role} list={list}/>
+			));
+
+		return profileTab;
+	}
 
 	return {
 		...nav

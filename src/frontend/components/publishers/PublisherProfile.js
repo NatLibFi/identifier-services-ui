@@ -86,7 +86,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			<>
 				{isEdit ?
 					<>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={9}>
 							<List>
 								<ListItem>
 									<ListItemText>
@@ -100,7 +100,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Grid>
 					</> :
 					<>
-						<Grid item xs={12} md={6}>
+						<Grid item xs={12} md={9}>
 							<List>
 								{
 									Object.keys(formattedPublisherDetail).map(key => {
@@ -144,7 +144,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<form>
 						<Grid container spacing={3} className={classes.publisherSpinner}>
 							{publisherDetail}
-							<Grid item className={classes.btnContainer}xs={12} md={6}>
+							<Grid item className={classes.btnContainer}xs={12} md={3}>
 								<Button onClick={handleCancel}>Cancel</Button>
 								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
 								UPDATE
@@ -156,8 +156,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<div className={classes.publisherProfile}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
 						{publisherDetail}
-						{isAuthenticated && userInfo.role === 'publisher' &&
-						<Grid item className={classes.btnContainer}xs={12} md={6}>
+						{isAuthenticated && userInfo.role === 'publisher-admin' &&
+						<Grid item className={classes.btnContainer}xs={12} md={3}>
 							<Button color="primary" variant="outlined" onClick={handleEditClick}>
 								Edit
 							</Button>

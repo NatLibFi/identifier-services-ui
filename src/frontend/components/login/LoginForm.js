@@ -52,7 +52,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		/* eslint no-undef: "error" */
 		const response = await normalLogin({...values, API_URL: API_URL});
 		// eslint-disable-next-line no-unused-expressions
-		response && response.role === 'publisher' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
+		response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
 		handleClose();
 	};
 

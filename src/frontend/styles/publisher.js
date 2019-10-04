@@ -48,7 +48,8 @@ const useStyles = makeStyles(
 		},
 		btnContainer: {
 			display: 'flex',
-			justifyContent: 'flex-end'
+			justifyContent: 'flex-end',
+			maxHeight: 100
 		},
 		detailHeading: {
 			paddingLeft: '12px',
