@@ -40,7 +40,7 @@ export default function ({userInfo, isAuthenticated}) {
 	const obj = [
 		{
 			label: 'Publishers',
-			roleView: ['admin', 'publisher', 'publisher-admin'],
+			roleView: ['admin', 'publisher'],
 			path: 'publishers'
 		},
 		{

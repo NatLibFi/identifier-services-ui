@@ -46,6 +46,8 @@ export default function (props) {
 		headRows,
 		cursors,
 		setLastCursor,
+		isbnIsmn,
+		issn,
 		handleTableRowClick
 	} = props;
 
@@ -90,8 +92,9 @@ export default function (props) {
 			<Grid item xs={12} className={classes.publisherListSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
 				{usersData}
-				<IsbnIsmn {...props}/>
-				<Issn {...props}/>
+				{issn ?	<Issn {...props}/> : (
+					isbnIsmn ?	<IsbnIsmn {...props}/> : null
+				)}
 			</Grid>
 		</Grid>
 	);

@@ -55,7 +55,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchIsbnIsmn({id: id, token: cookie['login-cookie']});
 		}

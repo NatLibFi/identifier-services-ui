@@ -59,6 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	return (
 		<PublicationListRenderComponent
+			isbnIsmn
 			loading={loading}
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}

@@ -35,12 +35,14 @@ import {
 	FETCH_ISSN,
 	ERROR,
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
-	PUBLICATION_ISBN_ISMN_REQUEST
+	PUBLICATION_ISBN_ISMN_REQUEST,
+	ISSN_REQUESTS_LIST,
+	ISSN_REQUEST
 } from './types';
-import {setLoader, success, fail, setMessage} from './commonAction';
+import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
@@ -63,7 +65,7 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 };
 
 export const fetchIssnList = ({token, offset}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/publications/issn/query`, {
 			method: 'POST',
@@ -198,7 +200,7 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 // };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = values => async () => {
+export const publicationCreationRequest = values => async dispatch => {
 	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
 		method: 'POST',
 		headers: {
@@ -207,11 +209,15 @@ export const publicationCreationRequest = values => async () => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	await response.json();
+	if (response.status === 200) {
+		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+	}
+
+	return response.status;
 };
 
 export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/query`, {
 			method: 'POST',
@@ -285,3 +291,64 @@ export const issnCreationRequest = values => async dispatch => {
 
 	return response.status;
 };
+
+export const fetchIssnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+	dispatch(setListLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/issn/query`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: {state: sortStateBy, title: searchText}
+				}],
+				offset: offset
+			})
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const fetchIssnRequest = (id, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
+			method: 'GET',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			}
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUEST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const updateIssnRequest = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		delete values.backgroundProcessingState;
+		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_REQUESTS_LIST, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
