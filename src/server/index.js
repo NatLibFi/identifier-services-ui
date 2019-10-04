@@ -33,7 +33,7 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
@@ -128,6 +128,55 @@ app.post('/auth', async (req, res) => {
 	res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
 	res.status(200).json(token);
 });
+
+app.post('/requests/publishers', async (req, res) => {
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/requests/publishers`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + systemToken,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(req.body)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/requests/publications/isbn-ismn', async (req, res) => {
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + systemToken,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(req.body)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/requests/publications/issn', async (req, res) => {
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/requests/publications/issn`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + systemToken,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(req.body)
+	});
+	res.status(response.status).json();
+});
+
+async function systemAuth() {
+	const result = await fetch(`${API_URL}/auth`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Basic ' + base64.encode(SYSTEM_USERNAME + ':' + SYSTEM_PASSWORD)
+		}
+	});
+	return result.headers.get('Token');
+}
 
 app.get('/logOut', (req, res) => {
 	res.clearCookie('login-cookie');

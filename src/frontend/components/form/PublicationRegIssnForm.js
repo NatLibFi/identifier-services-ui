@@ -153,9 +153,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (result === 200) {
 					handleClose();
 				}
-			}
-
-			if (captchaInput.length === 0) {
+			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
