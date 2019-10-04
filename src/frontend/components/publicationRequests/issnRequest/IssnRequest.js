@@ -33,36 +33,47 @@ import {
 	ButtonGroup,
 	Button,
 	TextareaAutosize,
-	List
+	List,
+	Typography,
+	ExpansionPanel,
+	ExpansionPanelDetails,
+	ExpansionPanelSummary
 } from '@material-ui/core';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../styles/publisher';
-import * as actions from '../../store/actions';
+import useStyles from '../../../styles/publisher';
+import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
-import Spinner from '../Spinner';
-import ListComponent from '../ListComponent';
-import CustomColor from '../../styles/app';
+import ModalLayout from '../../ModalLayout';
+import Spinner from '../../Spinner';
+import ListComponent from '../../ListComponent';
+import CustomColor from '../../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'userCreation',
+	form: 'publicationRequestIssn',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {match, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
+	const {
+		loading,
+		fetchIssnRequest,
+		issnRequest,
+		updateIssnRequest,
+		id
+	} = props;
 	const classes = useStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
-		fetchPublisherRequest(match.params.id, cookie['login-cookie']);
-	}, [cookie, fetchPublisherRequest, match.params.id, buttonState]);
-
+		if (id !== null) {
+			fetchIssnRequest(id, cookie['login-cookie']);
+		}
+	}, [cookie, fetchIssnRequest, buttonState, id]);
 	function handleRejectClick() {
 		setReject(!reject);
 	}
@@ -72,25 +83,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handleRejectSubmit() {
-		const newPublisherRequest = {
-			...publisherRequest,
+		const newIssnRequest = {
+			...issnRequest,
 			state: 'rejected',
 			rejectionReason: rejectReason
 		};
-		delete newPublisherRequest._id;
-		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		delete newIssnRequest._id;
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
 		setReject(!reject);
-		setButtonState(publisherRequest.state);
+		setButtonState(issnRequest.state);
 	}
 
 	function handleAccept() {
-		const newPublisherRequest = {
-			...publisherRequest,
+		const newIssnRequest = {
+			...issnRequest,
 			state: 'accepted'
 		};
-		delete newPublisherRequest._id;
-		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
-		setButtonState(publisherRequest.state);
+		delete newIssnRequest._id;
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		setButtonState(issnRequest.state);
 	}
 
 	function renderButton(state) {
@@ -98,7 +109,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
-						<Button disabled={publisherRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button disabled={issnRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
 					</ButtonGroup>
 				);
@@ -126,50 +137,90 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 	}
 
-	const formatPublisherRequest = {...publisherRequest, ...publisherRequest.organizationDetails};
-	const {organizationDetails, _id, state, ...formattedPublisherRequest} = formatPublisherRequest;
+	const {_id, state, seriesDetails, ...formattedIssnRequest} = {...issnRequest, ...issnRequest.seriesDetails};
+	const {publisher, ...withoutPublisher} = {...formattedIssnRequest};
+	const onlyPublisher = formattedIssnRequest && typeof formattedIssnRequest.publisher === 'object' && formattedIssnRequest.publisher;
+	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
-	let publisherRequestDetail;
-	if (formattedPublisherRequest === undefined || loading) {
-		publisherRequestDetail = <Spinner/>;
+	let issnRequestDetail;
+	if (formattedIssnRequest === undefined || loading) {
+		issnRequestDetail = <Spinner/>;
 	} else {
-		publisherRequestDetail = (
+		issnRequestDetail = (
 			<>
-				<Grid item xs={12} md={6}>
-					<List>
-						{
-							Object.keys(formattedPublisherRequest).map(key => {
-								return typeof formattedPublisherRequest[key] === 'string' ?
-									(
-										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
-									) :
-									null;
-							})
-						}
-					</List>
-				</Grid>
-				<Grid item xs={12} md={6}>
-					<List>
-						{
-							Object.keys(formattedPublisherRequest).map(key => {
-								return typeof formattedPublisherRequest[key] === 'object' ?
-									(
-										<ListComponent label={key} value={formattedPublisherRequest[key]}/>
-									) :
-									null;
-							})
-						}
-					</List>
-				</Grid>
+				{typeof formattedIssnRequest.publisher === 'string' ?
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedIssnRequest).map(key => {
+										return typeof formattedIssnRequest[key] === 'string' ?
+											(
+												<ListComponent label={key} value={formattedIssnRequest[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedIssnRequest).map(key => {
+										return typeof formattedIssnRequest[key] === 'object' ?
+											(
+												<ListComponent label={key} value={formattedIssnRequest[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+					</> :
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+
+								{
+									Object.keys(withoutPublisher).map(key => {
+										return <ListComponent key={key} label={key} value={withoutPublisher[key]}/>;
+									})
+								}
+							</List>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+								>
+									<Typography variant="h6">Publisher Details</Typography>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<List>
+										{
+											Object.keys(formatOnlyPublisher).map(key => {
+												return <ListComponent key={key} label={key} value={formatOnlyPublisher[key]}/>;
+											})
+										}
+									</List>
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
+
+						</Grid>
+					</>
+
+				}
 			</>
 		);
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publisher Request Detail">
+		<ModalLayout isTableRow color="primary" title="Publication ISSN Request Detail">
 			<div className={classes.publisher}>
 				<Grid container spacing={3} className={classes.publisherSpinner}>
-					{publisherRequestDetail}
+					{issnRequestDetail}
 					{reject ?
 						<>
 							<Grid item xs={12}>
@@ -189,7 +240,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</> :
 						<Grid item xs={12}>
 							{
-								renderButton(publisherRequest.state)
+								renderButton(issnRequest.state)
 							}
 						</Grid>
 					}
@@ -204,8 +255,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		publisherRequest: state.publisher.publisherRequest,
-		loading: state.publisher.loading,
+		issnRequest: state.publication.issnRequest,
+		loading: state.publication.loading,
 		isAuthenticated: state.login.isAuthenticated,
 		userInfo: state.login.userInfo
 	});

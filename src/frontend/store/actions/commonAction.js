@@ -26,7 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
-import {LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE} from './types';
+import {LOADER, LIST_LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE} from './types';
 
 export function success(type, payload) {
 	return ({
@@ -45,6 +45,12 @@ export function fail(type, payload) {
 export const setLoader = () => {
 	return {
 		type: LOADER
+	};
+};
+
+export const setListLoader = () => {
+	return {
+		type: LIST_LOADER
 	};
 };
 
