@@ -32,7 +32,8 @@ import {
 	Grid,
 	List,
 	ListItem,
-	ListItemText
+	ListItemText,
+	Typography
 } from '@material-ui/core';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
@@ -45,6 +46,7 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import Spinner from '../Spinner';
 import renderTextField from '../form/render/renderTextField';
 import ListComponent from '../ListComponent';
+import EditIcon from '@material-ui/icons/Edit';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherUpdateForm',
@@ -155,11 +157,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</div> :
 				<div className={classes.publisherProfile}>
 					<Grid container spacing={3} className={classes.publisherSpinner}>
+						<Grid item xs={12}>
+							<Typography variant="h4">My Information</Typography>
+						</Grid>
 						{publisherDetail}
 						{isAuthenticated && userInfo.role === 'publisher-admin' &&
-						<Grid item className={classes.btnContainer}xs={12} md={3}>
-							<Button color="primary" variant="outlined" onClick={handleEditClick}>
-								Edit
+						<Grid item className={classes.btnContainer} xs={12} md={3}>
+							<Button color="primary" variant="outlined" size="large" onClick={handleEditClick}>
+								<EditIcon/> Edit
 							</Button>
 						</Grid>}
 					</Grid>
