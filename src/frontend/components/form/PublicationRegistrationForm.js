@@ -213,7 +213,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publicationValues) {
 			publicationValues = {...publicationValues, publicationTime: publicationValues.publicationTime.toLocaleString()};
-			const formatPublicationValue = formatPublicationValues(publicationValues);
+			const {publisher, ...formatPublicationValue} = formatPublicationValues(publicationValues);
 			return (
 				<>
 					<Grid item xs={12} md={6}>
