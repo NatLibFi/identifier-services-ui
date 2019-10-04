@@ -77,8 +77,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		const steps = getSteps(fieldArray);
 		useEffect(() => {
-			loadSvgCaptcha();
-		}, [loadSvgCaptcha, publisher]);
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+		}, [isAuthenticated, loadSvgCaptcha, publisher]);
 
 		function getStepContent(step) {
 			if (user.id === undefined) {
@@ -166,9 +168,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (result === 200) {
 					handleClose();
 				}
-			}
-
-			if (captchaInput.length === 0) {
+			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);

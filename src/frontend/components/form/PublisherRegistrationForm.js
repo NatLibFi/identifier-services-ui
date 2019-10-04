@@ -354,12 +354,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [captchaInput, setCaptchaInput] = useState('');
 
 		useEffect(() => {
-			loadSvgCaptcha();
+			if (!isAuthenticated) {
+				loadSvgCaptcha();
+			}
+
 			if (publicationRegistration) {
 				setPublisherRegForm(false);
 			}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		}, [loadSvgCaptcha]);
+		}, [isAuthenticated, loadSvgCaptcha]);
 
 		const steps = getSteps();
 		function getStepContent(step) {
@@ -392,12 +395,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		const handlePublisherRegistration = async values => {
-			if (captchaInput.length === 0) {
+			if (isAuthenticated) {
+				publisherCreationRequest(formatPublisher(values));
+			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				makeNewPublisherObj(values, result);
 			}
+
+			handleClose();
 		};
 
 		function handleFormatPublisher() {
