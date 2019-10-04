@@ -30,7 +30,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
 	container: {
-		maxWidth: 900,
+		width: 900,
 		margin: '40px 0px 40px 0px',
 		flexGrow: 1
 	},
@@ -142,6 +142,12 @@ const useStyles = makeStyles(theme => ({
 	},
 	deleteIcon: {
 		margin: theme.spacing(0.5)
+	},
+	pubFormSelect: {
+		display: 'flex',
+		justifyContent: 'space-between',
+		flexDirection: 'column',
+		height: 100
 	}
 }));
 

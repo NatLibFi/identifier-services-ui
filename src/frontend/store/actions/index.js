@@ -86,5 +86,6 @@ export {
 	publicationCreationRequest,
 	fetchPublicationIsbnIsmnRequestsList,
 	fetchPublicationIsbnIsmnRequest,
-	updatePublicationIsbnIsmnRequest
+	updatePublicationIsbnIsmnRequest,
+	issnCreationRequest
 } from './publicationAction';

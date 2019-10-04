@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Fab} from '@material-ui/core';
 import {connect} from 'react-redux';
 
 import * as actions from '../../store/actions';
@@ -254,6 +254,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
+				<Fab disabled variant="extended">
+					{props.title}
+				</Fab>
 				<Stepper alternativeLabel activeStep={activeStep}>
 					{steps.map(label => (
 						<Step key={label}>
