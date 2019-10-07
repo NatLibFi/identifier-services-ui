@@ -33,15 +33,18 @@ import IsbnIsmnRegForm from './IsbnIsmnRegForm';
 import PublicationRegIssnForm from './PublicationRegIssnForm';
 
 export default function (props) {
+	const {setTitle} = props;
 	const [value, setValue] = useState('');
 	const classes = useStyles();
 
 	const handleIsbnIsmnClick = () => {
 		setValue('isbn-ismn');
+		setTitle('ISBN-ISMN');
 	};
 
 	const handleIssnClick = () => {
 		setValue('issn');
+		setTitle('ISSN');
 	};
 
 	const component = (
@@ -54,7 +57,7 @@ export default function (props) {
 						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
 					</div>
 				</> :
-				value === 'isbn-ismn' ? <IsbnIsmnRegForm title="ISBN-ISMN Form" {...props}/> : <PublicationRegIssnForm title="ISSN Form" {...props}/>
+				value === 'isbn-ismn' ? <IsbnIsmnRegForm {...props}/> : <PublicationRegIssnForm {...props}/>
 			}
 		</>
 	);

@@ -37,10 +37,11 @@ import SwitchPublicationForm from '../form/SwitchPublicationForm';
 import ContactForm from '../form/ContactForm';
 
 export default withRouter(props => {
+	const [dynamicTitle, setDynamicTitle] = React.useState('');
 	const formListsArray = [
-		{label: 'Publisher Registration', name: 'publisherRegistration', component: <PublisherRegistrationForm {...props}/>},
-		{label: 'Publication Registration', name: 'publicationRegistration', component: <SwitchPublicationForm {...props}/>},
-		{label: 'Contact Form', name: 'contactForm', component: <ContactForm {...props}/>}
+		{label: 'Publisher Registration', title: 'Publisher Registration', name: 'publisherRegistration', component: <PublisherRegistrationForm {...props}/>},
+		{label: 'Publication Registration', title: `Publication Registration ${dynamicTitle}`, name: 'publicationRegistration', component: <SwitchPublicationForm title={dynamicTitle} setTitle={setDynamicTitle} {...props}/>},
+		{label: 'Contact Form', title: 'Contact Form', name: 'contactForm', component: <ContactForm {...props}/>}
 	];
 	const classes = useStyles();
 	return (
@@ -51,7 +52,7 @@ export default withRouter(props => {
 				</Grid>
 
 				{formListsArray.map(item => (
-					<ModalLayout key={item.label} form label={item.label} title={item.label} name={item.name} variant="outlined" classed={classes.button} color="primary">
+					<ModalLayout key={item.label} form label={item.label} title={item.title} dynamicTitle={dynamicTitle} setDynamicTitle={setDynamicTitle} name={item.name} variant="outlined" classed={classes.button} color="primary">
 						{item.component}
 					</ModalLayout>
 				))}
