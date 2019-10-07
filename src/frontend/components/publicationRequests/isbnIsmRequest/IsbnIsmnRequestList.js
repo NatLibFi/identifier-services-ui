@@ -39,7 +39,7 @@ import useModalStyles from '../../../styles/formList';
 import useStyles from '../../../styles/publisherLists';
 import SearchComponent from '../../SearchComponent';
 import ModalLayout from '../../ModalLayout';
-import PublicationRegistrationForm from '../../form/PublicationRegistrationForm';
+import IsbnIsmnRegForm from '../../form/IsbnIsmnRegForm';
 import TabComponent from '../../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
@@ -117,7 +117,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<PublicationRegistrationForm {...props}/>
+					<IsbnIsmnRegForm {...props}/>
 				</ModalLayout>
 				{publicationIsbnIsmnRequestData}
 				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>

@@ -418,7 +418,7 @@ function fieldArrayElement(data, fieldName, clearFields) {
 		<FieldArray
 			name={fieldName}
 			component={renderFieldArray}
-			props={{clearFields, data, fieldName, formName: 'publicationRegistrationForm'}}
+			props={{clearFields, data, fieldName, formName: 'issnRegForm'}}
 		/>
 	);
 }
