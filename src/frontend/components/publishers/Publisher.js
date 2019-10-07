@@ -83,8 +83,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const formatPublisherDetail = {...publisher, ...publisher.organizationDetails};
-	const {organizationDetails, _id, ...formattedPublisherDetail} = formatPublisherDetail;
+	const {organizationDetails, _id, ...formattedPublisherDetail} = {...publisher, ...publisher.organizationDetails, notes: publisher && publisher.notes && publisher.notes.map(item => {
+		return {note: Buffer.from(item).toString('base64')};
+	})};
 	let publisherDetail;
 	if ((Object.keys(publisher).length === 0) || loading) {
 		publisherDetail = <Spinner/>;
