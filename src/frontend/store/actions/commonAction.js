@@ -26,7 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
-import {LOADER, LIST_LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE} from './types';
+import {LOADER, LIST_LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE, GET_NOTIFICATION} from './types';
 
 export function success(type, payload) {
 	return ({
@@ -100,4 +100,19 @@ export const setMessage = value => {
 		type: SNACKBAR_MESSAGE,
 		payload: value
 	};
+};
+
+export const getNotification = () => async dispatch => {
+	try {
+		const response = await fetch('/notification', {
+			method: 'GET'
+		});
+		const result = await response.json();
+		return dispatch({
+			type: GET_NOTIFICATION,
+			payload: result
+		});
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };
