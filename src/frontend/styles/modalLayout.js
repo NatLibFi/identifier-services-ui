@@ -47,7 +47,8 @@ const useStyles = makeStyles({
 		},
 		body: {
 			overflow: 'auto !important',
-			paddingRight: '0 !important'
+			paddingRight: '0 !important',
+			background: '#ffffff'
 		},
 		a: {
 			textDecoration: 'none',

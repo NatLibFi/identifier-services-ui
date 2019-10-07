@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Fab} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
 
 import * as actions from '../../store/actions';
@@ -47,7 +47,7 @@ import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publicationRegistrationForm',
+	form: 'isbnIsmnRegForm',
 	initialValues: {
 		language: 'eng',
 		isPublic: false
@@ -254,9 +254,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
-				<Fab disabled variant="extended">
-					{props.title}
-				</Fab>
 				<Stepper alternativeLabel activeStep={activeStep}>
 					{steps.map(label => (
 						<Step key={label}>
@@ -518,7 +515,7 @@ function fieldArrayElement(data, fieldName, clearFields) {
 		<FieldArray
 			name={fieldName}
 			component={renderFieldArray}
-			props={{clearFields, data, fieldName, formName: 'publicationRegistrationForm'}}
+			props={{clearFields, data, fieldName, formName: 'isbnIsmnRegForm'}}
 		/>
 	);
 }
@@ -528,8 +525,7 @@ function mapStateToProps(state) {
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
-		publisherValues: getFormValues('publisherRegistrationForm')(state),
-		publicationValues: getFormValues('publicationRegistrationForm')(state)
+		publicationValues: getFormValues('isbnIsmnRegForm')(state)
 	});
 }
 
