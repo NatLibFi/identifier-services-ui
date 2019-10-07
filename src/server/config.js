@@ -51,5 +51,7 @@ function readEnvironmentVariable(name, {defaultValue = undefined, hideDefault = 
 	return format(process.env[name]);
 }
 
+export const NOTIFICATION_URL = readEnvironmentVariable('NOTIFICATION_URL');
+
 export const SYSTEM_USERNAME = readEnvironmentVariable('SYSTEM_USERNAME');
 export const SYSTEM_PASSWORD = readEnvironmentVariable('SYSTEM_PASSWORD');

@@ -33,12 +33,13 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, NOTIFICATION_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
 import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
+import fs from 'fs';
 
 function bodyParse() {
 	validateContentType({
@@ -177,6 +178,11 @@ async function systemAuth() {
 	});
 	return result.headers.get('Token');
 }
+
+app.get('/notification', (req, res) => {
+	const data = fs.readFileSync(`${NOTIFICATION_URL}`, 'utf8');
+	res.json(data);
+});
 
 app.get('/logOut', (req, res) => {
 	res.clearCookie('login-cookie');

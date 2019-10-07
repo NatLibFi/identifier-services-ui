@@ -25,7 +25,7 @@
  * for the JavaScript code in this file.
  *
  */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {AppBar, Typography, Grid, Menu, MenuItem} from '@material-ui/core';
 
 import LanguageIcon from '@material-ui/icons/Language';
@@ -41,11 +41,16 @@ import * as actions from '../../store/actions';
 import LoginLayout from '../login/LoginLayout';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {setLocale, userInfo, isAuthenticated} = props;
+	const {setLocale, userInfo, isAuthenticated, getNotification, notification} = props;
 	const classes = useStyles();
-	const [openNotification, setOpenNotification] = useState(true);
+	const [openNotification, setOpenNotification] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [forgotPwd, setPwd] = useState(false);
+
+	useEffect(() => {
+		getNotification();
+		setOpenNotification(notification !== null && notification.length > 0);
+	}, [getNotification, notification]);
 
 	function handleClick(event) {
 		setAnchorEl(event.currentTarget);
@@ -85,7 +90,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<>
-			{openNotification && <NotificationBar handleClose={handleCloseNotification}/>}
+			{openNotification && <NotificationBar notification={notification} handleClose={handleCloseNotification}/>}
 			<Grid container className={classes.topBarContainer}>
 				<Grid item xs={12} className={classes.topBar}>
 					<AppBar position="static">
@@ -142,6 +147,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		lang: state.locale.lang
+		lang: state.locale.lang,
+		notification: state.common.notification
 	});
 }

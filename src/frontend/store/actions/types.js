@@ -67,3 +67,5 @@ export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
 export const FETCH_ISSN = 'FETCH_ISSN';
 
 export const SET_FORM_NAME = 'SET_FORM_NAME';
+
+export const GET_NOTIFICATION = 'GET_NOTIFICATION';

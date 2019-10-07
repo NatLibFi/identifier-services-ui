@@ -61,7 +61,8 @@ export {
 	loadSvgCaptcha,
 	postCaptchaInput,
 	setFormName,
-	setMessage
+	setMessage,
+	getNotification
 } from './commonAction';
 
 export {
