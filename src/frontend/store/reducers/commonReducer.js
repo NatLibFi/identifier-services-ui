@@ -26,14 +26,14 @@
  *
  */
 
-import {GET_CAPTCHA, LOADER, SET_FORM_NAME} from '../actions/types';
+import {GET_CAPTCHA, LOADER, SET_FORM_NAME, GET_NOTIFICATION} from '../actions/types';
 
 const initialState = {
 	captcha: {},
 	formName: '',
 	modelStatus: false,
-	loading: false
-
+	loading: false,
+	notification: null
 };
 
 export default function (state = initialState, action) {
@@ -54,6 +54,11 @@ export default function (state = initialState, action) {
 				...state,
 				formName: action.payload,
 				loading: false
+			};
+		case GET_NOTIFICATION:
+			return {
+				...state,
+				notification: action.payload
 			};
 		default:
 			return state;
