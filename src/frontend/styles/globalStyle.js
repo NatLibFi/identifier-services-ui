@@ -25,25 +25,31 @@
  * for the JavaScript code in this file.
  *
  */
-import {combineReducers} from 'redux';
-import {reducer as forms} from 'redux-form';
-import publisherReducer from './publisher';
-import authReducer from './authReducer';
-import localeReducer from './localeReducer';
-import contact from './messageReducer';
-import common from './commonReducer';
-import userReducer from './userReducer';
-import publicationReducer from './publicationReducer';
-import identifierRangesReducer from './identifierRangesReducer';
 
-export default combineReducers({
-	locale: localeReducer,
-	form: forms,
-	publisher: publisherReducer,
-	publication: publicationReducer,
-	identifierRanges: identifierRangesReducer,
-	login: authReducer,
-	contact: contact,
-	common: common,
-	users: userReducer
+import {makeStyles} from '@material-ui/core/styles';
+
+const useStyles = makeStyles({
+	listSearch: {
+		maxWidth: '1200px',
+		margin: '0 auto',
+		paddingTop: '60px'
+	},
+	listItemSpinner: {
+		justifyContent: 'center'
+	},
+	listItem: {
+		width: 900,
+		minWidth: '750px',
+		padding: '20px 0px'
+	},
+	btnContainer: {
+		display: 'flex',
+		justifyContent: 'flex-end',
+		maxHeight: 100
+	},
+	editForm: {
+		width: '100%'
+	}
 });
+
+export default useStyles;
