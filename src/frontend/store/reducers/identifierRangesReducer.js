@@ -25,25 +25,61 @@
  * for the JavaScript code in this file.
  *
  */
-import {combineReducers} from 'redux';
-import {reducer as forms} from 'redux-form';
-import publisherReducer from './publisher';
-import authReducer from './authReducer';
-import localeReducer from './localeReducer';
-import contact from './messageReducer';
-import common from './commonReducer';
-import userReducer from './userReducer';
-import publicationReducer from './publicationReducer';
-import identifierRangesReducer from './identifierRangesReducer';
 
-export default combineReducers({
-	locale: localeReducer,
-	form: forms,
-	publisher: publisherReducer,
-	publication: publicationReducer,
-	identifierRanges: identifierRangesReducer,
-	login: authReducer,
-	contact: contact,
-	common: common,
-	users: userReducer
-});
+import {
+	LOADER,
+	LIST_LOADER,
+	ERROR,
+	IDR_ISBN_LIST,
+	IDR_ISBN
+} from '../actions/types';
+
+const initialState = {
+	isbnList: [],
+	isbn: {},
+
+	offset: null,
+	totalDoc: null,
+	queryDocCount: null,
+	listLoading: false,
+	loading: false,
+	error: {}
+};
+
+export default function (state = initialState, action) {
+	switch (action.type) {
+		case LOADER:
+			return {
+				...state,
+				loading: true
+			};
+		case LIST_LOADER:
+			return {
+				...state,
+				listLoading: true
+			};
+		case IDR_ISBN_LIST:
+			return {
+				...state,
+				isbnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				listLoading: false
+			};
+		case IDR_ISBN:
+			return {
+				...state,
+				isbn: action.payload,
+				loading: false
+			};
+		case ERROR:
+			return {
+				...state,
+				error: action.payload,
+				loading: false
+			};
+		default:
+			return state;
+	}
+}

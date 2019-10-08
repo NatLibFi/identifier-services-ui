@@ -46,11 +46,11 @@ const useStyles = makeStyles(
 		publisherSpinner: {
 			justifyContent: 'center'
 		},
-		// btnContainer: {
-		// 	display: 'flex',
-		// 	justifyContent: 'flex-end',
-		// 	maxHeight: 100
-		// },
+		btnContainer: {
+			display: 'flex',
+			justifyContent: 'flex-end',
+			maxHeight: 100
+		},
 		detailHeading: {
 			paddingLeft: '12px',
 			borderBottom: '1px solid'
