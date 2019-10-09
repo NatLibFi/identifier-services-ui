@@ -87,32 +87,6 @@ export const fetchIssnList = ({token, offset}) => async dispatch => {
 	}
 };
 
-// Export const createUser = (values, token) => async () => {
-// 	const response = await fetch(`${API_URL}/users`, {
-// 		method: 'POST',
-// 		headers: {
-// 			Authorization: 'Bearer ' + token,
-// 			'Content-Type': 'application/json'
-// 		},
-// 		credentials: 'same-origin',
-// 		body: JSON.stringify(values)
-// 	});
-// 	await response.json();
-// };
-
-// Export const createUserRequest = (values, token) => async () => {
-// 	const response = await fetch(`${API_URL}/requests/users`, {
-// 		method: 'POST',
-// 		headers: {
-// 			Authorization: 'Bearer ' + token,
-// 			'Content-Type': 'application/json'
-// 		},
-// 		credentials: 'same-origin',
-// 		body: JSON.stringify(values)
-// 	});
-// 	await response.json();
-// };
-
 export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 	dispatch(setLoader());
 	try {
@@ -144,60 +118,6 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 		dispatch(fail(ERROR, err));
 	}
 };
-
-// Export const fetchUserRequest = (id, token) => async dispatch => {
-// 	dispatch(setLoader());
-// 	try {
-// 		const response = await fetch(`${API_URL}/requests/users/${id}`, {
-// 			method: 'GET',
-// 			headers: {
-// 				Authorization: 'Bearer ' + token
-// 			}
-// 		});
-// 		const result = await response.json();
-// 		dispatch(success(FETCH_USERS_REQUEST, result));
-// 	} catch (err) {
-// 		dispatch(fail(ERROR, err));
-// 	}
-// };
-
-// export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) => async dispatch => {
-// 	dispatch(setLoader());
-// 	try {
-// 		const properties = {
-// 			method: 'POST',
-// 			headers: token ? {
-// 				Authorization: 'Bearer ' + token,
-// 				'Content-Type': 'application/json'
-// 			} :
-// 				{'Content-Type': 'application/json'},
-// 			body: JSON.stringify({
-// 				queries: [{
-// 					query: {state: sortStateBy, publisher: inputVal}
-// 				}],
-// 				offset: offset
-// 			})
-// 		};
-// 		const response = await fetch(`${API_URL}/requests/users/query`, properties);
-// 		const result = await response.json();
-// 		dispatch(success(USERS_REQUESTS_LIST, result));
-// 	} catch (err) {
-// 		dispatch(fail(ERROR, err));
-// 	}
-// };
-
-// export const updateUserRequest = (id, values, token) => async () => {
-// 	const response = await fetch(`${API_URL}/requests/users/${id}`, {
-// 		method: 'PUT',
-// 		headers: {
-// 			Authorization: 'Bearer ' + token,
-// 			'Content-Type': 'application/json'
-// 		},
-// 		credentials: 'same-origin',
-// 		body: JSON.stringify(values)
-// 	});
-// 	console.log(await response.json());
-// };
 
 // ****************REQUESTS**********************************
 export const publicationCreationRequest = values => async dispatch => {
