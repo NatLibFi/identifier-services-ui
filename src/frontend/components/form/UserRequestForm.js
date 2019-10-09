@@ -63,7 +63,7 @@ export default connect(null, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createUserRequest, pristine} = props;
+		const {handleSubmit, valid, createUserRequest, pristine, handleClose, setIsCreating} = props;
 		const classes = useStyles();
 		const [cookie] = useCookies('login-cookie');
 		const token = cookie['login-cookie'];
@@ -72,14 +72,16 @@ export default connect(null, actions)(reduxForm({
 			return element(fieldArray, classes);
 		}
 
-		function handleCreateUser(values) {
+		async function handleCreateUser(values) {
 			const newUser = {
 				...values,
 				givenName: values.givenName.toLowerCase(),
 				familyName: values.familyName.toLowerCase()
 			};
-			// eslint-disable-next-line no-undef
-			createUserRequest(newUser, token);
+			await createUserRequest(newUser, token);
+
+			handleClose();
+			setIsCreating(true);
 		}
 
 		const component = (

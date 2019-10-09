@@ -29,10 +29,11 @@
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
 import {USERS_LIST, ERROR, USERS_REQUESTS_LIST, FETCH_USER, FETCH_USERS_REQUEST} from './types';
-import {setLoader, success, fail} from './commonAction';
+import {setLoader, setListLoader, success, setMessage, fail} from './commonAction';
+import HttpStatus from 'http-status';
 
 export const fetchUsersList = (token, offset) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/users/query`, {
 			method: 'POST',
@@ -67,7 +68,7 @@ export const createUser = (values, token) => async () => {
 	await response.json();
 };
 
-export const createUserRequest = (values, token) => async () => {
+export const createUserRequest = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/requests/users`, {
 		method: 'POST',
 		headers: {
@@ -77,7 +78,11 @@ export const createUserRequest = (values, token) => async () => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	await response.json();
+
+	if (response.status === HttpStatus.OK) {
+		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
+		return response.status;
+	}
 };
 
 export const fetchUser = (id, token) => async dispatch => {
@@ -113,7 +118,7 @@ export const fetchUserRequest = (id, token) => async dispatch => {
 };
 
 export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const properties = {
 			method: 'POST',
@@ -124,7 +129,7 @@ export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) =
 				{'Content-Type': 'application/json'},
 			body: JSON.stringify({
 				queries: [{
-					query: {state: sortStateBy, publisher: inputVal}
+					query: {state: sortStateBy, $or: [{publisher: inputVal}, {givenName: inputVal}]}
 				}],
 				offset: offset
 			})
@@ -137,15 +142,26 @@ export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) =
 	}
 };
 
-export const updateUserRequest = (id, values, token) => async () => {
-	const response = await fetch(`${API_URL}/requests/users/${id}`, {
-		method: 'PUT',
-		headers: {
-			Authorization: 'Bearer ' + token,
-			'Content-Type': 'application/json'
-		},
-		credentials: 'same-origin',
-		body: JSON.stringify(values)
-	});
-	console.log(await response.json());
+export const updateUserRequest = (id, values, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		delete values.backgroundProcessingState;
+		const response = await fetch(`${API_URL}/requests/users/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			credentials: 'same-origin',
+			body: JSON.stringify(values)
+		});
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(success(FETCH_USERS_REQUEST, result.value));
+			dispatch(setMessage({color: 'success', msg: 'Record Successfully Updated!!!'}));
+			return response.status;
+		}
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };

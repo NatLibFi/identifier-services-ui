@@ -46,7 +46,7 @@ const useStyles = makeStyles(
 		publisherSpinner: {
 			justifyContent: 'center'
 		},
-		// btnContainer: {
+		// BtnContainer: {
 		// 	display: 'flex',
 		// 	justifyContent: 'flex-end',
 		// 	maxHeight: 100

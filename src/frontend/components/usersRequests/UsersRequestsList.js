@@ -53,11 +53,13 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
+	const [isCreating, setIsCreating] = useState(false);
 	const [userRequestId, setUserRequestId] = useState(null);
 
 	useEffect(() => {
 		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setUserRequestId(id);
@@ -115,7 +117,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
-					<UserRequestForm {...props}/>
+					<UserRequestForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{usersData}
 				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>

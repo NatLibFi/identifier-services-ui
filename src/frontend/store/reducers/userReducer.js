@@ -26,7 +26,7 @@
  *
  */
 
-import {USERS_LIST, LOADER, ERROR, USERS_REQUESTS_LIST, FETCH_USER, FETCH_USERS_REQUEST} from '../actions/types';
+import {USERS_LIST, LOADER, LIST_LOADER, ERROR, USERS_REQUESTS_LIST, FETCH_USER, FETCH_USERS_REQUEST} from '../actions/types';
 
 const initialState = {
 	usersList: [],
@@ -41,6 +41,7 @@ const initialState = {
 	queryDocCount: null,
 	user: {},
 	loading: false,
+	listLoading: false,
 	error: {}
 };
 
@@ -50,6 +51,11 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				loading: true
+			};
+		case LIST_LOADER:
+			return {
+				...state,
+				listLoading: true
 			};
 		case FETCH_USER:
 			return {
@@ -64,7 +70,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalUsers: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case USERS_REQUESTS_LIST:
 			return {
@@ -73,7 +79,7 @@ export default function (state = initialState, action) {
 				requestOffset: action.payload.offset,
 				totalUsersRequests: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case FETCH_USERS_REQUEST:
 			return {
