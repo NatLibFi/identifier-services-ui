@@ -26,4 +26,4 @@
  *
  */
 
-export {API_URL} from './config';
+export {API_URL, QUERY_LIMIT} from './config';
