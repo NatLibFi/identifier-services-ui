@@ -56,6 +56,7 @@ import enMessages from './intl/translations/en.json';
 import fiMessages from './intl/translations/fi.json';
 import svMessages from './intl/translations/sv.json';
 import SnackBar from './components/SnackBar';
+import {globalStyles} from './styles/app';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
@@ -63,7 +64,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	const token = cookie['login-cookie'];
-
+	const classes = globalStyles();
 	useEffect(() => {
 		setIsAuthenticatedState(isAuthenticated);
 	}, [isAuthenticated, token]);
@@ -131,7 +132,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
-				<section style={{minHeight: '80vh'}}>
+				<section className={classes.bodyContainer}>
 					{
 						isAuthenticatedState ? (userInfo.role === 'publisher') &&
 						<Tooltips label="contact form" title="contactForm"/> :
