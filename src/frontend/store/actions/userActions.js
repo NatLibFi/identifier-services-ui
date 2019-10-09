@@ -157,7 +157,6 @@ export const updateUserRequest = (id, values, token) => async dispatch => {
 		});
 		if (response.status === HttpStatus.OK) {
 			const result = await response.json();
-			console.log(result);
 			dispatch(success(FETCH_USERS_REQUEST, result.value));
 			dispatch(setMessage({color: 'success', msg: 'Record Successfully Updated!!!'}));
 			return response.status;
