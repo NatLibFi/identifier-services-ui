@@ -26,58 +26,60 @@
  *
  */
 
-import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
+import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {Grid, Typography, Checkbox, FormControlLabel} from '@material-ui/core';
+import {connect} from 'react-redux';
+import {Grid, Typography, FormControlLabel, Checkbox} from '@material-ui/core';
 
-import SearchComponent from '../SearchComponent';
-import useStyles from '../../styles/publisherLists';
-import TableComponent from '../TableComponent';
-import * as actions from '../../store/actions';
-import Spinner from '../Spinner';
-import Publisher from './Publisher';
+import * as actions from '../../../store/actions';
+import Spinner from '../../Spinner';
+import TableComponent from '../../TableComponent';
+import useStyles from '../../../styles/globalStyle';
+import SearchComponent from '../../SearchComponent';
+import Isbn from './Isbn';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
-	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
+	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const [inputVal, setSearchInputVal] = location.state === undefined ? useState('') : useState(location.state.searchText);
+	const classes = useStyles();
+	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
-	const [activeCheck, setActiveCheck] = useState({
-		checked: false
-	});
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
-	const [publisherId, setPublisherId] = useState(null);
+	const [isbnId, setIsbnId] = useState(null);
+	const [activeCheck, setActiveCheck] = useState({
+		checked: false
+	});
 
 	useEffect(() => {
-		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-	}, [lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
+		fetchIDRIsbnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
+	}, [activeCheck, cookie, fetchIDRIsbnList, inputVal, lastCursor]);
+	const handleTableRowClick = id => {
+		setIsbnId(id);
+		setModal(true);
+	};
 
 	const handleChange = name => event => {
 		setActiveCheck({...activeCheck, [name]: event.target.checked});
 	};
 
-	const handleTableRowClick = id => {
-		setPublisherId(id);
-		setModal(true);
-	};
-
 	const headRows = [
-		{id: 'name', label: 'Name'},
-		{id: 'phone', label: 'Phone'}
+		{id: 'prefix', label: 'Prefix'},
+		{id: 'rangeStart', label: 'RangeStart'},
+		{id: 'rangeEnd', label: 'RangeEnd'}
 	];
-	let publishersData;
-	if (loading) {
-		publishersData = <Spinner/>;
-	} else if (searchedPublishers.length === 0) {
-		publishersData = <p>No Search Result</p>;
+
+	let isbnIsmnData;
+	if ((isbnList === undefined) || (loading)) {
+		isbnIsmnData = <Spinner/>;
+	} else if (isbnList.length === 0) {
+		isbnIsmnData = <p>No Data</p>;
 	} else {
-		publishersData = (
+		isbnIsmnData = (
 			<TableComponent
-				data={searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
+				data={isbnList
+					.map(item => isbnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
 				offset={offset}
@@ -85,25 +87,25 @@ export default connect(mapStateToProps, actions)(props => {
 				page={page}
 				setPage={setPage}
 				setLastCursor={setLastCursor}
-				totalDoc={totalDoc}
 				queryDocCount={queryDocCount}
 			/>
 		);
 	}
 
-	function searchResultRender(id, name, phone) {
+	function isbnListRender(id, prefix, rangeStart, rangeEnd) {
 		return {
 			id: id,
-			name: name,
-			phone: phone
+			prefix: prefix,
+			rangeStart: rangeStart,
+			rangeEnd: rangeEnd
 		};
 	}
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
-				<Typography variant="h5">Search Publisher By Name or Aliases</Typography>
-				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
+			<Grid item xs={12} className={classes.listSearch}>
+				<Typography variant="h5">Search Identifier Ranges ISBN</Typography>
+				<SearchComponent searchFunction={fetchIDRIsbnList} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel
 					control={
 						<Checkbox
@@ -113,10 +115,10 @@ export default connect(mapStateToProps, actions)(props => {
 							onChange={handleChange('checked')}
 						/>
 					}
-					label="Show only active publishers"
+					label="Show only active ISBN"
 				/>
-				{publishersData}
-				<Publisher id={publisherId} modal={modal} setModal={setModal}/>
+				{isbnIsmnData}
+				<Isbn id={isbnId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -127,11 +129,10 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.listLoading,
-		searchedPublishers: state.publisher.searchedPublisher,
-		publishersList: state.publisher.publishersList,
-		offset: state.publisher.offset,
-		totalDoc: state.publisher.totalDoc,
-		queryDocCount: state.publisher.queryDocCount
+		loading: state.identifierRanges.listLoading,
+		isbnList: state.identifierRanges.isbnList,
+		offset: state.identifierRanges.offset,
+		totalDoc: state.identifierRanges.totalDoc,
+		queryDocCount: state.identifierRanges.queryDocCount
 	});
 }

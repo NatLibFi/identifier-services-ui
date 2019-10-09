@@ -39,40 +39,34 @@ import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../styles/publisher';
-import useFormStyles from '../../styles/form';
-import * as actions from '../../store/actions';
+import useStyles from '../../../styles/globalStyle';
+import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
-import Spinner from '../Spinner';
-import renderTextField from '../form/render/renderTextField';
-import ListComponent from '../ListComponent';
+import ModalLayout from '../../ModalLayout';
+import Spinner from '../../Spinner';
+import renderTextField from '../../form/render/renderTextField';
+import ListComponent from '../../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publisherUpdateForm',
+	form: 'isbnUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
 	const {
-		fetchPublisher,
-		updatePublisher,
+		fetchIDRIsbn,
 		id,
-		publisher,
-		loading,
-		handleSubmit,
-		isAuthenticated,
-		userInfo} = props;
+		isbn,
+		loading} = props;
 	const classes = useStyles();
-	const formClasses = useFormStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchPublisher(id, cookie['login-cookie']);
+			fetchIDRIsbn(id, cookie['login-cookie']);
 		}
-	}, [cookie, fetchPublisher, id]);
+	}, [cookie, fetchIDRIsbn, id]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -82,14 +76,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const {organizationDetails, _id, ...formattedPublisherDetail} = {...publisher, ...publisher.organizationDetails, notes: publisher && publisher.notes && publisher.notes.map(item => {
+	const {_id, ...formattedIsbn} = {...isbn, notes: isbn && isbn.notes && isbn.notes.map(item => {
 		return {note: Buffer.from(item).toString('base64')};
 	})};
-	let publisherDetail;
-	if ((Object.keys(publisher).length === 0) || loading) {
-		publisherDetail = <Spinner/>;
+	let isbnDetail;
+	if ((Object.keys(isbn).length === 0) || loading) {
+		isbnDetail = <Spinner/>;
 	} else {
-		publisherDetail = (
+		isbnDetail = (
 			<>
 				{isEdit ?
 					<>
@@ -98,8 +92,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<ListItem>
 									<ListItemText>
 										<Grid container>
-											<Grid item xs={4}>Name:</Grid>
-											<Grid item xs={8}><Field name="name" className={formClasses.editForm} component={renderTextField}/></Grid>
+											<Grid item xs={4}>Prefix:</Grid>
+											<Grid item xs={8}><Field name="prefix" className={classes.editForm} component={renderTextField}/></Grid>
 										</Grid>
 									</ListItemText>
 								</ListItem>
@@ -110,10 +104,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedPublisherDetail).map(key => {
-										return typeof formattedPublisherDetail[key] === 'string' ?
+									Object.keys(formattedIsbn).map(key => {
+										return typeof formattedIsbn[key] === 'string' ?
 											(
-												<ListComponent label={key} value={formattedPublisherDetail[key]}/>
+												<ListComponent label={key} value={formattedIsbn[key]}/>
 											) :
 											null;
 									})
@@ -123,10 +117,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedPublisherDetail).map(key => {
-										return typeof formattedPublisherDetail[key] === 'object' ?
+									Object.keys(formattedIsbn).map(key => {
+										return typeof formattedIsbn[key] === 'object' ?
 											(
-												<ListComponent label={key} value={formattedPublisherDetail[key]}/>
+												<ListComponent label={key} value={formattedIsbn[key]}/>
 											) :
 											null;
 									})
@@ -139,44 +133,36 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		);
 	}
 
-	const handlePublisherUpdate = values => {
-		const {_id, ...updateValues} = values;
-		const token = cookie['login-cookie'];
-		updatePublisher(id, updateValues, token);
-		setIsEdit(false);
-	};
-
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publisher Detail" {...props}>
+		<ModalLayout isTableRow color="primary" title="Identifier Ranges ISBN" {...props}>
 			{isEdit ?
-				<div className={classes.publisher}>
+				<div className={classes.listItem}>
 					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{publisherDetail}
+						<Grid container spacing={3} className={classes.listItemSpinner}>
+							{isbnDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
+							<Button variant="contained" color="primary">
                             UPDATE
 							</Button>
 						</div>
 					</form>
 				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
-						{publisherDetail}
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
+						{isbnDetail}
 					</Grid>
-					{isAuthenticated && userInfo.role === 'publisher' &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit Publisher Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
+					<div className={classes.btnContainer}>
+						<Fab
+							color="primary"
+							size="small"
+							title="Edit Isbn Detail"
+							onClick={handleEditClick}
+						>
+							<EditIcon/>
+						</Fab>
+					</div>
 				</div>
 			}
 		</ModalLayout>
@@ -188,10 +174,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		publisher: state.publisher.publisher,
-		loading: state.publisher.loading,
-		initialValues: state.publisher.publisher,
-		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo
+		isbn: state.identifierRanges.isbn,
+		loading: state.identifierRanges.loading,
+		initialValues: state.identifierRanges.isbn
 	});
 }

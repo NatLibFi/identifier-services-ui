@@ -93,3 +93,8 @@ export {
 	fetchIssnRequest,
 	updateIssnRequest
 } from './publicationAction';
+
+export {
+	fetchIDRIsbnList,
+	fetchIDRIsbn
+} from './identifierRangesActions';
