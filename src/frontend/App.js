@@ -58,7 +58,7 @@ import enMessages from './intl/translations/en.json';
 import fiMessages from './intl/translations/fi.json';
 import svMessages from './intl/translations/sv.json';
 import SnackBar from './components/SnackBar';
-import {globalStyles} from './styles/app';
+import {commonStyles} from './styles/app';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
@@ -66,7 +66,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	const token = cookie['login-cookie'];
-	const classes = globalStyles();
+	const classes = commonStyles();
 	useEffect(() => {
 		setIsAuthenticatedState(isAuthenticated);
 	}, [isAuthenticated, token]);

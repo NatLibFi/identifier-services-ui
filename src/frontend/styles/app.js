@@ -113,7 +113,7 @@ const theme = createMuiTheme({
 	}
 });
 
-export const globalStyles = makeStyles({
+export const commonStyles = makeStyles({
 
 	'@global': {
 		body: {
@@ -146,7 +146,6 @@ export const globalStyles = makeStyles({
 	btnContainer: {
 		display: 'flex',
 		justifyContent: 'flex-end',
-		maxHeight: 100
 	},
 	editForm: {
 		width: '100%'

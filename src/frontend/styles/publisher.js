@@ -30,6 +30,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(
 	{
+		//delete later
 		publisher: {
 			width: 900,
 			minWidth: '750px',
@@ -43,6 +44,7 @@ const useStyles = makeStyles(
 		publisherProfile: {
 			padding: '20px 0px'
 		},
+		//delete later
 		publisherSpinner: {
 			justifyContent: 'center'
 		},
