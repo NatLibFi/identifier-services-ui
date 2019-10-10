@@ -48,7 +48,8 @@ import PublishersRequestsList from './components/publishersRequests/PublishersRe
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
 import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
 import IDRIsbnList from './components/identifierRanges/isbn/IsbnList';
-import IDRIsmnList from './components/identifierRanges/isbn/IsbnList';
+import IDRIsmnList from './components/identifierRanges/ismn/IsmnList';
+import IDRIssnList from './components/identifierRanges/issn/IssnList';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -95,7 +96,10 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/requests/publications/issn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
 		{path: '/ranges/isbn', role: ['admin'], component: IDRIsbnList},
 		{path: '/ranges/isbn/:id', role: ['admin'], component: IDRIsbnList},
-		{path: '/ranges/ismn', role: ['admin'], component: IDRIsmnList}
+		{path: '/ranges/ismn', role: ['admin'], component: IDRIsmnList},
+		{path: '/ranges/ismn/:id', role: ['admin'], component: IDRIsbnList},
+		{path: '/ranges/issn', role: ['admin'], component: IDRIssnList},
+		{path: '/ranges/issn/:id', role: ['admin'], component: IDRIssnList}
 
 	];
 

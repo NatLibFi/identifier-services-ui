@@ -96,5 +96,9 @@ export {
 
 export {
 	fetchIDRIsbnList,
-	fetchIDRIsbn
+	fetchIDRIsbn,
+	fetchIDRIsmnList,
+	fetchIDRIsmn,
+	fetchIDRIssnList,
+	fetchIDRIssn
 } from './identifierRangesActions';
