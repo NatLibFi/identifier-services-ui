@@ -54,10 +54,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor]);
+		setIsCreating(false);
+	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnRequestId(id);
@@ -117,7 +119,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<IsbnIsmnRegForm {...props}/>
+					<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{publicationIsbnIsmnRequestData}
 				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>

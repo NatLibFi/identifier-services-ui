@@ -191,7 +191,6 @@ export default function (props) {
 
 function TablePaginationActions(props) {
 	const theme = useTheme();
-	const count = 10;
 	const {
 		offset,
 		cursors,
@@ -231,7 +230,9 @@ function TablePaginationActions(props) {
 			</IconButton>
 			<span>Page{page}</span>
 			<IconButton
-				disabled={(count * page) >= queryDocCount}
+				/* global QUERY_LIMIT */
+				/* eslint no-undef: "error" */
+				disabled={queryDocCount <= QUERY_LIMIT}
 				aria-label="Next Page"
 				onClick={handleNextButtonClick}
 			>

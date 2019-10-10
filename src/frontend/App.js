@@ -48,6 +48,8 @@ import PublishersRequestsList from './components/publishersRequests/PublishersRe
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
 import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
 import IDRIsbnList from './components/identifierRanges/isbn/IsbnList';
+import IDRIsmnList from './components/identifierRanges/ismn/IsmnList';
+import IDRIssnList from './components/identifierRanges/issn/IssnList';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -56,6 +58,7 @@ import enMessages from './intl/translations/en.json';
 import fiMessages from './intl/translations/fi.json';
 import svMessages from './intl/translations/sv.json';
 import SnackBar from './components/SnackBar';
+import {globalStyles} from './styles/app';
 import * as actions from './store/actions';
 
 export default connect(mapStateToProps, actions)(withRouter(props => {
@@ -63,7 +66,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	const token = cookie['login-cookie'];
-
+	const classes = globalStyles();
 	useEffect(() => {
 		setIsAuthenticatedState(isAuthenticated);
 	}, [isAuthenticated, token]);
@@ -92,7 +95,11 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/requests/publications/issn', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
 		{path: '/requests/publications/issn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
 		{path: '/ranges/isbn', role: ['admin'], component: IDRIsbnList},
-		{path: '/ranges/isbn/:id', role: ['admin'], component: IDRIsbnList}
+		{path: '/ranges/isbn/:id', role: ['admin'], component: IDRIsbnList},
+		{path: '/ranges/ismn', role: ['admin'], component: IDRIsmnList},
+		{path: '/ranges/ismn/:id', role: ['admin'], component: IDRIsbnList},
+		{path: '/ranges/issn', role: ['admin'], component: IDRIssnList},
+		{path: '/ranges/issn/:id', role: ['admin'], component: IDRIssnList}
 
 	];
 
@@ -131,7 +138,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
 				<CssBaseline/>
 				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
-				<section style={{minHeight: '80vh'}}>
+				<section className={classes.bodyContainer}>
 					{
 						isAuthenticatedState ? (userInfo.role === 'publisher') &&
 						<Tooltips label="contact form" title="contactForm"/> :

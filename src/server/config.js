@@ -51,6 +51,10 @@ function readEnvironmentVariable(name, {defaultValue = undefined, hideDefault = 
 	return format(process.env[name]);
 }
 
+export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
+	defaultValue: 5
+});
+
 export const NOTIFICATION_URL = readEnvironmentVariable('NOTIFICATION_URL');
 
 export const SYSTEM_USERNAME = readEnvironmentVariable('SYSTEM_USERNAME');
