@@ -49,25 +49,23 @@ import renderTextField from '../../form/render/renderTextField';
 import ListComponent from '../../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'isbnUpdateForm',
+	form: 'issnUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
 	const {
-		fetchIDRIsbn,
+		fetchIDRIssn,
 		id,
-		isbn,
+		issn,
 		loading} = props;
 	const classes = globalStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
-
 	useEffect(() => {
 		if (id !== null) {
-			fetchIDRIsbn(id, cookie['login-cookie']);
+			fetchIDRIssn(id, cookie['login-cookie']);
 		}
-	}, [cookie, fetchIDRIsbn, id]);
-
+	}, [cookie, fetchIDRIssn, id]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -76,14 +74,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const {_id, ...formattedIsbn} = {...isbn, notes: isbn && isbn.notes && isbn.notes.map(item => {
+	const {_id, ...formattedIssn} = {...issn, notes: issn && issn.notes && issn.notes.map(item => {
 		return {note: Buffer.from(item).toString('base64')};
 	})};
-	let isbnDetail;
-	if ((Object.keys(isbn).length === 0) || loading) {
-		isbnDetail = <Spinner/>;
+	let issnDetail;
+	if ((Object.keys(issn).length === 0) || loading) {
+		issnDetail = <Spinner/>;
 	} else {
-		isbnDetail = (
+		issnDetail = (
 			<>
 				{isEdit ?
 					<>
@@ -104,10 +102,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedIsbn).map(key => {
-										return typeof formattedIsbn[key] === 'string' ?
+									Object.keys(formattedIssn).map(key => {
+										return typeof formattedIssn[key] === 'string' ?
 											(
-												<ListComponent label={key} value={formattedIsbn[key]}/>
+												<ListComponent label={key} value={formattedIssn[key]}/>
 											) :
 											null;
 									})
@@ -117,10 +115,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Grid item xs={12} md={6}>
 							<List>
 								{
-									Object.keys(formattedIsbn).map(key => {
-										return typeof formattedIsbn[key] === 'object' ?
+									Object.keys(formattedIssn).map(key => {
+										return typeof formattedIssn[key] === 'object' ?
 											(
-												<ListComponent label={key} value={formattedIsbn[key]}/>
+												<ListComponent label={key} value={formattedIssn[key]}/>
 											) :
 											null;
 									})
@@ -134,12 +132,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Identifier Ranges ISBN" {...props}>
+		<ModalLayout isTableRow color="primary" title="Identifier Ranges ISSN" {...props}>
 			{isEdit ?
 				<div className={classes.listItem}>
 					<form>
 						<Grid container spacing={3} className={classes.listItemSpinner}>
-							{isbnDetail}
+							{issnDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
@@ -151,13 +149,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				</div> :
 				<div className={classes.listItem}>
 					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{isbnDetail}
+						{issnDetail}
 					</Grid>
 					<div className={classes.btnContainer}>
 						<Fab
 							color="primary"
 							size="small"
-							title="Edit Isbn Detail"
+							title="Edit Issn Detail"
 							onClick={handleEditClick}
 						>
 							<EditIcon/>
@@ -174,8 +172,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		isbn: state.identifierRanges.isbn,
+		issn: state.identifierRanges.issn,
 		loading: state.identifierRanges.loading,
-		initialValues: state.identifierRanges.isbn
+		initialValues: state.identifierRanges.issn
 	});
 }

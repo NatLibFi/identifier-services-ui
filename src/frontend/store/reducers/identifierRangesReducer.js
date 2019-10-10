@@ -31,12 +31,22 @@ import {
 	LIST_LOADER,
 	ERROR,
 	IDR_ISBN_LIST,
-	IDR_ISBN
+	IDR_ISBN,
+	IDR_ISMN_LIST,
+	IDR_ISMN,
+	IDR_ISSN_LIST,
+	IDR_ISSN
 } from '../actions/types';
 
 const initialState = {
 	isbnList: [],
 	isbn: {},
+
+	ismnList: [],
+	ismn: {},
+
+	issnList: [],
+	issn: {},
 
 	offset: null,
 	totalDoc: null,
@@ -71,6 +81,36 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				isbn: action.payload,
+				loading: false
+			};
+		case IDR_ISMN_LIST:
+			return {
+				...state,
+				ismnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				listLoading: false
+			};
+		case IDR_ISMN:
+			return {
+				...state,
+				ismn: action.payload,
+				loading: false
+			};
+		case IDR_ISSN_LIST:
+			return {
+				...state,
+				issnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				listLoading: false
+			};
+		case IDR_ISSN:
+			return {
+				...state,
+				issn: action.payload,
 				loading: false
 			};
 		case ERROR:

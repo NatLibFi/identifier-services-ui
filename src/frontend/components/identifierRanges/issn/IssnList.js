@@ -36,10 +36,10 @@ import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
 import {globalStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
-import Isbn from './Isbn';
+import Issn from './Issn';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount} = props;
+	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const classes = globalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
@@ -47,17 +47,17 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
-	const [isbnId, setIsbnId] = useState(null);
+	const [issnId, setIssnId] = useState(null);
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
 
 	useEffect(() => {
-		fetchIDRIsbnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
-	}, [activeCheck, cookie, fetchIDRIsbnList, inputVal, lastCursor]);
+		fetchIDRIssnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
+	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor]);
 
 	const handleTableRowClick = id => {
-		setIsbnId(id);
+		setIssnId(id);
 		setModal(true);
 	};
 
@@ -71,16 +71,16 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'rangeEnd', label: 'RangeEnd'}
 	];
 
-	let isbnData;
-	if ((isbnList === undefined) || (loading)) {
-		isbnData = <Spinner/>;
-	} else if (isbnList.length === 0) {
-		isbnData = <p>No Data</p>;
+	let issnData;
+	if ((issnList === undefined) || (loading)) {
+		issnData = <Spinner/>;
+	} else if (issnList.length === 0) {
+		issnData = <p>No Data</p>;
 	} else {
-		isbnData = (
+		issnData = (
 			<TableComponent
-				data={isbnList
-					.map(item => isbnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
+				data={issnList
+					.map(item => issnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
 				offset={offset}
@@ -93,7 +93,7 @@ export default connect(mapStateToProps, actions)(props => {
 		);
 	}
 
-	function isbnListRender(id, prefix, rangeStart, rangeEnd) {
+	function issnListRender(id, prefix, rangeStart, rangeEnd) {
 		return {
 			id: id,
 			prefix: prefix,
@@ -105,8 +105,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">Search Identifier Ranges ISBN</Typography>
-				<SearchComponent searchFunction={fetchIDRIsbnList} setSearchInputVal={setSearchInputVal}/>
+				<Typography variant="h5">Search Identifier Ranges ISSN</Typography>
+				<SearchComponent searchFunction={fetchIDRIssnList} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel
 					control={
 						<Checkbox
@@ -116,10 +116,10 @@ export default connect(mapStateToProps, actions)(props => {
 							onChange={handleChange('checked')}
 						/>
 					}
-					label="Show only active ISBN"
+					label="Show only active ISSN"
 				/>
-				{isbnData}
-				<Isbn id={isbnId} modal={modal} setModal={setModal}/>
+				{issnData}
+				<Issn id={issnId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -131,7 +131,7 @@ export default connect(mapStateToProps, actions)(props => {
 function mapStateToProps(state) {
 	return ({
 		loading: state.identifierRanges.listLoading,
-		isbnList: state.identifierRanges.isbnList,
+		issnList: state.identifierRanges.issnList,
 		offset: state.identifierRanges.offset,
 		totalDoc: state.identifierRanges.totalDoc,
 		queryDocCount: state.identifierRanges.queryDocCount

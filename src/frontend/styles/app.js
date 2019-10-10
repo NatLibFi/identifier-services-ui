@@ -26,6 +26,7 @@
  *
  */
 import {createMuiTheme} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
 	palette: {
@@ -110,6 +111,47 @@ const theme = createMuiTheme({
 			}
 		}
 	}
+});
+
+export const globalStyles = makeStyles({
+
+	'@global': {
+		body: {
+			overflow: 'auto !important',
+			paddingRight: '0 !important',
+			background: '#ffffff'
+		},
+		a: {
+			textDecoration: 'none',
+			color: '#00224f'
+		}
+	},
+
+	bodyContainer: {
+		minHeight: '80vh'
+	},
+	listSearch: {
+		maxWidth: '1200px',
+		margin: '0 auto',
+		paddingTop: '60px'
+	},
+	listItemSpinner: {
+		justifyContent: 'center'
+	},
+	listItem: {
+		width: 900,
+		minWidth: '750px',
+		padding: '20px 0px'
+	},
+	btnContainer: {
+		display: 'flex',
+		justifyContent: 'flex-end',
+		maxHeight: 100
+	},
+	editForm: {
+		width: '100%'
+	}
+
 });
 
 export default theme;
