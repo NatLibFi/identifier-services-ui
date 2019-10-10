@@ -31,12 +31,15 @@ import {
 	LIST_LOADER,
 	ERROR,
 	IDR_ISBN_LIST,
-	IDR_ISBN
+	IDR_ISBN,
+	IDR_ISMN_LIST
 } from '../actions/types';
 
 const initialState = {
 	isbnList: [],
 	isbn: {},
+
+	ismnList: [],
 
 	offset: null,
 	totalDoc: null,
@@ -72,6 +75,15 @@ export default function (state = initialState, action) {
 				...state,
 				isbn: action.payload,
 				loading: false
+			};
+		case IDR_ISMN_LIST:
+			return {
+				...state,
+				ismnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				listLoading: false
 			};
 		case ERROR:
 			return {

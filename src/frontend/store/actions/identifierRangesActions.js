@@ -26,10 +26,11 @@
  *
  */
 /* global API_URL */
-/* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {ERROR, IDR_ISBN_LIST, IDR_ISBN} from './types';
+import {ERROR, IDR_ISBN_LIST, IDR_ISBN, IDR_ISMN_LIST} from './types';
 import {setLoader, setListLoader, success, fail} from './commonAction';
+
+// ***************ISBN****************************
 
 export const fetchIDRIsbnList = (searchText, token, offset, activeCheck) => async dispatch => {
 	dispatch(setListLoader());
@@ -69,6 +70,34 @@ export const fetchIDRIsbn = (id, token) => async dispatch => {
 		});
 		const result = await response.json();
 		dispatch(success(IDR_ISBN, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+// ***************ISMN****************************
+
+export const fetchIDRIsmnList = (searchText, token, offset, activeCheck) => async dispatch => {
+	dispatch(setListLoader());
+	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
+		{prefix: searchText};
+
+	try {
+		const response = await fetch(`${API_URL}/ranges/ismn/query`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: query
+				}],
+				offset: offset
+			})
+		});
+		const result = await response.json();
+		dispatch(success(IDR_ISMN_LIST, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

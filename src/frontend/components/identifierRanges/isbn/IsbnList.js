@@ -34,14 +34,14 @@ import {Grid, Typography, FormControlLabel, Checkbox} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
-import useStyles from '../../../styles/globalStyle';
+import {globalStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Isbn from './Isbn';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = globalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -55,6 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		fetchIDRIsbnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
 	}, [activeCheck, cookie, fetchIDRIsbnList, inputVal, lastCursor]);
+
 	const handleTableRowClick = id => {
 		setIsbnId(id);
 		setModal(true);
@@ -70,13 +71,13 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'rangeEnd', label: 'RangeEnd'}
 	];
 
-	let isbnIsmnData;
+	let isbnData;
 	if ((isbnList === undefined) || (loading)) {
-		isbnIsmnData = <Spinner/>;
+		isbnData = <Spinner/>;
 	} else if (isbnList.length === 0) {
-		isbnIsmnData = <p>No Data</p>;
+		isbnData = <p>No Data</p>;
 	} else {
-		isbnIsmnData = (
+		isbnData = (
 			<TableComponent
 				data={isbnList
 					.map(item => isbnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
@@ -117,7 +118,7 @@ export default connect(mapStateToProps, actions)(props => {
 					}
 					label="Show only active ISBN"
 				/>
-				{isbnIsmnData}
+				{isbnData}
 				<Isbn id={isbnId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
