@@ -31,7 +31,7 @@ import {makeStyles} from '@material-ui/core/styles';
 const useStyles = makeStyles({
 
 	formListContainer: {
-		background: '#b7bed629',
+		background: 'whitesmoke',
 		height: '200px',
 		display: 'flex',
 		alignSelf: 'center'

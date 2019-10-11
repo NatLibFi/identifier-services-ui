@@ -55,6 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [isCreating, setIsCreating] = useState(false);
 	const [userRequestId, setUserRequestId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
@@ -64,6 +65,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setUserRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -86,6 +88,7 @@ export default connect(mapStateToProps, actions)(props => {
 			<TableComponent
 				data={usersRequestsList.map(item => usersDataRender(item.id, item.state, item.publisher, item.email))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}

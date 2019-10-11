@@ -46,6 +46,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [userId, setUserId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchUsersList(cookie['login-cookie'], lastCursor);
@@ -54,6 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setUserId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const headRows = [
@@ -70,6 +72,7 @@ export default connect(mapStateToProps, actions)(props => {
 			<TableComponent
 				data={usersList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}

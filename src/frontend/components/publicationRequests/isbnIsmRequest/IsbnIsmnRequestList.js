@@ -55,6 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
 	const [isCreating, setIsCreating] = useState(false);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
@@ -64,6 +65,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setIsbnIsmnRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -87,6 +89,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={publicationIsbnIsmnRequestList
 					.map(item => publicationIsbnIsmnRequestRender(item.id, item.state, item.title, item.language))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}

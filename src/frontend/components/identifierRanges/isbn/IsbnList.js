@@ -51,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchIDRIsbnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
@@ -59,6 +60,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setIsbnId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = name => event => {
@@ -82,6 +84,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={isbnList
 					.map(item => isbnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}

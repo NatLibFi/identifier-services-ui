@@ -50,6 +50,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [issnRequestId, setIssnRequestId] = useState(null);
 	const [modal, setModal] = useState(false);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
@@ -58,6 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setIssnRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -82,6 +84,7 @@ export default connect(mapStateToProps, actions)(props => {
 					.map(item => issnRequestRender(item.id, item.state, item.title, item.language))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
+				rowSelectedId={rowSelectedId}
 				offset={offset}
 				cursors={cursors}
 				page={page}

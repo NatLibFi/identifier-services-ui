@@ -48,7 +48,8 @@ export default function (props) {
 		setLastCursor,
 		isbnIsmn,
 		issn,
-		handleTableRowClick
+		handleTableRowClick,
+		rowSelectedId
 	} = props;
 
 	const [page, setPage] = useState(1);
@@ -63,6 +64,7 @@ export default function (props) {
 			<TableComponent
 				data={publicationList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				page={page}

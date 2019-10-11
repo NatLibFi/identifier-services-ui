@@ -53,6 +53,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [publisherRequestId, setPublisherRequestId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
@@ -61,6 +62,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setPublisherRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -84,6 +86,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={publishersRequestsList
 					.map(item => publishersRequestsRender(item.id, item.state, item.name, item.language))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
