@@ -66,6 +66,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			issnCreationRequest,
 			handleClose,
+			setIsCreating,
 			handleSubmit} = props;
 		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
@@ -152,6 +153,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				const result = await issnCreationRequest(formatPublicationValues(values));
 				if (result === 200) {
 					handleClose();
+					setIsCreating(true);
 				}
 			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});

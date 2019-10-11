@@ -54,10 +54,11 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [publisherRequestId, setPublisherRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchPublishersRequestsList, inputVal, sortStateBy, lastCursor]);
+	}, [cookie, fetchPublishersRequestsList, isCreating, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setPublisherRequestId(id);
@@ -119,7 +120,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<PublisherRegistrationForm {...props}/>
+					<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{publishersRequestsData}
 				<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>

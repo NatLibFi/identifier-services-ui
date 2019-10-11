@@ -38,6 +38,9 @@ import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import TabComponent from '../../TabComponent';
 import IssnRequest from './IssnRequest';
+import ModalLayout from '../../ModalLayout';
+import useModalStyles from '../../../styles/formList';
+import IssnRegForm from '../../form/PublicationRegIssnForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
@@ -51,10 +54,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [issnRequestId, setIssnRequestId] = useState(null);
 	const [modal, setModal] = useState(false);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const modalClasses = useModalStyles();
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
+	}, [cookie, fetchIssnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIssnRequestId(id);
@@ -115,6 +120,9 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
+				<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+					<IssnRegForm setIsCreating={setIsCreating} {...props}/>
+				</ModalLayout>
 				{issnRequestData}
 				<IssnRequest modal={modal} setModal={setModal} id={issnRequestId} setIssnId={setIssnRequestId}/>
 			</Grid>
