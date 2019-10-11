@@ -154,6 +154,12 @@ export const commonStyles = makeStyles({
 		width: '50%',
 		background: '#ecefec75',
 		borderRadius: '5px'
+	},
+	deniedContainer: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		marginTop: 40
 	}
 
 });

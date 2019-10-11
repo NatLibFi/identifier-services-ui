@@ -87,7 +87,7 @@ export default function ({userInfo, isAuthenticated}) {
 	const nav = (
 		<Grid container>
 			<Grid item xs={12}>
-				<AppBar position="static" color="secondary">
+				<AppBar position="static" color="secondary" className={classes.appBar}>
 					<div>
 						<div className={classes.adminMenu}>
 							{isAuthenticated ? renderMenuTabs() : (

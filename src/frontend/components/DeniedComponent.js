@@ -25,35 +25,20 @@
  * for the JavaScript code in this file.
  *
  */
-import {makeStyles} from '@material-ui/core/styles';
 
-const useStyles = makeStyles({
-	publicMenu: {
-		display: 'flex',
-		alignItems: 'center',
-		minWidth: 200
-	},
-	adminMenu: {
-		display: 'flex',
-		maxWidth: '1200px',
-		justifyContent: 'start',
-		margin: '0 auto'
-	},
-	active: {
-		'& button': {
-			fontWeight: 'bold'
-		}
-	},
-	menuExpansion: {
-		padding: '0 !important'
-	},
-	appBar: {
-		height: 50,
-		justifyContent: 'center',
-		boxShadow: 'none',
-		borderBottom: '1px solid rgba(0, 34, 79, 0.33)',
-		background: 'whitesmoke'
-	}
+import React from 'react';
+import {Typography} from '@material-ui/core';
+import {commonStyles} from '../styles/app';
+
+export default (() => {
+	const classes = commonStyles();
+	const component = (
+		<div className={classes.deniedContainer}>
+			<Typography variant="h3">Access Denied</Typography>
+			<Typography variant="caption">You are not authorized to access this page.</Typography>
+		</div>
+	);
+	return {
+		...component
+	};
 });
-
-export default useStyles;
