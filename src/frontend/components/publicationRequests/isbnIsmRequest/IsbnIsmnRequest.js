@@ -50,6 +50,7 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../../ModalLayout';
 import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
+import CustomColor from '../../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRequestIsbnIsmn',

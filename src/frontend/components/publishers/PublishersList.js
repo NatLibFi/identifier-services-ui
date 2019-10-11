@@ -51,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [publisherId, setPublisherId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
@@ -63,6 +64,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setPublisherId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const headRows = [
@@ -80,6 +82,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
+				rowSelectedId={rowSelectedId}
 				offset={offset}
 				cursors={cursors}
 				page={page}
