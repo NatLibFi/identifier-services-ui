@@ -34,14 +34,14 @@ import {Grid, Typography, FormControlLabel, Checkbox} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
-import {globalStyles} from '../../../styles/app';
+import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Issn from './Issn';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = globalStyles();
+	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);

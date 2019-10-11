@@ -39,7 +39,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import {globalStyles} from '../../../styles/app';
+import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -58,7 +58,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		id,
 		ismn,
 		loading} = props;
-	const classes = globalStyles();
+	const classes = commonStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 

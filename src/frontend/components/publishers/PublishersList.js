@@ -32,14 +32,14 @@ import {useCookies} from 'react-cookie';
 import {Grid, Typography, Checkbox, FormControlLabel} from '@material-ui/core';
 
 import SearchComponent from '../SearchComponent';
-import useStyles from '../../styles/publisherLists';
+import {commonStyles} from '../../styles/app';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import Publisher from './Publisher';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
 	const [inputVal, setSearchInputVal] = location.state === undefined ? useState('') : useState(location.state.searchText);
@@ -101,7 +101,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publisher By Name or Aliases</Typography>
 				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel

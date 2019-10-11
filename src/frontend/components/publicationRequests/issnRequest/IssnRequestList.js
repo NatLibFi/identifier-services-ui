@@ -34,7 +34,7 @@ import {Grid, Typography} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
-import useStyles from '../../../styles/publisherLists';
+import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import TabComponent from '../../TabComponent';
 import IssnRequest from './IssnRequest';
@@ -42,7 +42,7 @@ import IssnRequest from './IssnRequest';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -103,7 +103,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publication Requests for ISSN</Typography>
 				<SearchComponent searchFunction={fetchIssnRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent

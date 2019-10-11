@@ -40,6 +40,7 @@ import {useCookies} from 'react-cookie';
 
 import useStyles from '../../styles/publisher';
 import useFormStyles from '../../styles/form';
+import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -64,6 +65,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		userInfo} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
+	const commonStyle = commonStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 	useEffect(() => {
@@ -144,9 +146,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			{isEdit ?
 				<div className={classes.publisherProfile}>
 					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
+						<Grid container spacing={3} className={commonStyle.listItemSpinner}>
 							{publisherDetail}
-							<Grid item className={classes.btnContainer}xs={12} md={3}>
+							<Grid item className={commonStyle.btnContainer}xs={12} md={3}>
 								<Button onClick={handleCancel}>Cancel</Button>
 								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
 								UPDATE
@@ -156,13 +158,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</form>
 				</div> :
 				<div className={classes.publisherProfile}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
+					<Grid container spacing={3} className={commonStyle.listItemSpinner}>
 						<Grid item xs={12}>
 							<Typography variant="h4">My Information</Typography>
 						</Grid>
 						{publisherDetail}
 						{isAuthenticated && userInfo.role === 'publisher-admin' &&
-						<Grid item className={classes.btnContainer} xs={12} md={3}>
+						<Grid item xs={12} md={3}>
 							<Button color="primary" variant="outlined" size="large" onClick={handleEditClick}>
 								<EditIcon/> Edit
 							</Button>

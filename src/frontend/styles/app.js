@@ -113,7 +113,7 @@ const theme = createMuiTheme({
 	}
 });
 
-export const globalStyles = makeStyles({
+export const commonStyles = makeStyles({
 
 	'@global': {
 		body: {
@@ -145,11 +145,15 @@ export const globalStyles = makeStyles({
 	},
 	btnContainer: {
 		display: 'flex',
-		justifyContent: 'flex-end',
-		maxHeight: 100
+		justifyContent: 'flex-end'
 	},
 	editForm: {
 		width: '100%'
+	},
+	textArea: {
+		width: '50%',
+		background: '#ecefec75',
+		borderRadius: '5px'
 	}
 
 });

@@ -32,6 +32,7 @@ const useStyles = makeStyles({
 	main: {
 		maxWidth: 400,
 		justifyContent: 'center',
+		flexDirection: 'column',
 		display: 'flex'
 	},
 	logoutContainer: {

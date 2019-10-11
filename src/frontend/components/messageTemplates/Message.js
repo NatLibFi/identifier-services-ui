@@ -38,7 +38,7 @@ import {
 import {useCookies} from 'react-cookie';
 import {reduxForm, Field} from 'redux-form';
 
-import useStyles from '../../styles/publisher';
+import {commonStyles} from '../../styles/app';
 import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
@@ -53,7 +53,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {id, fetchMessage, messageInfo, handleSubmit, updateMessageTemplate} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [isEdit, setIsEdit] = useState(false);
@@ -134,9 +134,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Message Detail" {...props}>
 			{isEdit ?
-				<div className={classes.publisher}>
+				<div className={classes.listItem}>
 					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
 							{messageDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
@@ -151,8 +151,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</div>
 					</form>
 				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
 						{messageDetail}
 					</Grid>
 					<div className={classes.btnContainer}>
