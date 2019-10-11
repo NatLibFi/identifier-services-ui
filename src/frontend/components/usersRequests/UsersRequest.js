@@ -39,7 +39,7 @@ import {
 
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
-import useStyles from '../../styles/publisher';
+import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -54,7 +54,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {id, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {role} = userInfo;
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
@@ -174,8 +174,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<Typography variant="h6">
 					Users Request Details
 				</Typography>
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
 						{userRequestDetail}
 					</Grid>
 					{role !== undefined && role === 'admin' &&

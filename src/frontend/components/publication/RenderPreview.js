@@ -35,12 +35,12 @@ import {
 	ListItemText
 } from '@material-ui/core';
 
-import useStyles from '../../styles/publisher';
+import {commonStyles} from '../../styles/app';
 import Spinner from '../Spinner';
 
 export default function (props) {
 	const {data} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 
 	let dataDetail;
 	let keys = Object.keys(data).map(key => key);
@@ -113,8 +113,8 @@ export default function (props) {
 	}
 
 	const component = (
-		<div className={classes.publisher}>
-			<Grid container spacing={3} className={classes.publisherSpinner}>
+		<div className={classes.listItem}>
+			<Grid container spacing={3} className={classes.listItemSpinner}>
 				{dataDetail}
 			</Grid>
 		</div>

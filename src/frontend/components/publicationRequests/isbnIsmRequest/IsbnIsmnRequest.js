@@ -43,14 +43,13 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../../styles/publisher';
+import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../../ModalLayout';
 import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
-import CustomColor from '../../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRequestIsbnIsmn',
@@ -64,7 +63,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		publicationIsbnIsmnRequest,
 		updatePublicationIsbnIsmnRequest
 	} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
@@ -221,8 +220,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publication Request Detail" {...props}>
-			<div className={classes.publisher}>
-				<Grid container spacing={3} className={classes.publisherSpinner}>
+			<div className={classes.listItem}>
+				<Grid container spacing={3} className={classes.listItemSpinner}>
 					{publicationIsbnIsmnRequestDetail}
 					{reject ?
 						<>

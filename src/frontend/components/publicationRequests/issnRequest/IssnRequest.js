@@ -43,7 +43,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../../styles/publisher';
+import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -64,7 +64,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		updateIssnRequest,
 		id
 	} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const [cookie] = useCookies('login-cookie');
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
@@ -218,8 +218,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publication ISSN Request Detail" {...props}>
-			<div className={classes.publisher}>
-				<Grid container spacing={3} className={classes.publisherSpinner}>
+			<div className={classes.listItem}>
+				<Grid container spacing={3} className={classes.listItemSpinner}>
 					{issnRequestDetail}
 					{reject ?
 						<>

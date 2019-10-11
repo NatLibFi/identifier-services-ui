@@ -145,10 +145,15 @@ export const commonStyles = makeStyles({
 	},
 	btnContainer: {
 		display: 'flex',
-		justifyContent: 'flex-end',
+		justifyContent: 'flex-end'
 	},
 	editForm: {
 		width: '100%'
+	},
+	textArea: {
+		width: '50%',
+		background: '#ecefec75',
+		borderRadius: '5px'
 	}
 
 });

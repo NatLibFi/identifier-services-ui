@@ -30,12 +30,6 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(
 	{
-		//delete later
-		publisher: {
-			width: 900,
-			minWidth: '750px',
-			padding: '20px 0px'
-		},
 		publisherProfileContainer: {
 			maxWidth: 1200,
 			minHeight: '100vh',
@@ -44,15 +38,6 @@ const useStyles = makeStyles(
 		publisherProfile: {
 			padding: '20px 0px'
 		},
-		//delete later
-		publisherSpinner: {
-			justifyContent: 'center'
-		},
-		// BtnContainer: {
-		// 	display: 'flex',
-		// 	justifyContent: 'flex-end',
-		// 	maxHeight: 100
-		// },
 		detailHeading: {
 			paddingLeft: '12px',
 			borderBottom: '1px solid'
@@ -61,11 +46,6 @@ const useStyles = makeStyles(
 			height: '300px',
 			overflow: 'auto',
 			wordBreak: 'break-all'
-		},
-		textArea: {
-			width: '50%',
-			background: '#ecefec75',
-			borderRadius: '5px'
 		}
 	});
 

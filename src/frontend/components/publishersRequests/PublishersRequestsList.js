@@ -36,15 +36,15 @@ import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
 import PublisherRequest from './publisherRequest';
 import useModalStyles from '../../styles/formList';
-import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
 import TabComponent from '../TabComponent';
 import ModalLayout from '../ModalLayout';
 import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
+import {commonStyles} from '../../styles/app';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
@@ -106,7 +106,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publishers Request</Typography>
 				<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
