@@ -1,4 +1,44 @@
 {
+    "app.topNav.login": "Login",
+
+    "app.publicMenu.publishers": "Publishers",
+
+    "app.menu.publishers": "Publishers",
+    "app.menu.publications": "Publications",
+        "app.subMenu.ISBN": "ISBN",
+        "app.subMenu.ISMN": "ISBN",
+        "app.subMenu.ISSN": "ISBN",
+    "app.menu.requests": "Requests",
+        "app.subMenu.publishers": "Publishers",
+        "app.subMenu.publications": "Publications",
+            "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
+            "app.subSubMenu.ISSN": "ISSN",
+        "app.subMenu.users": "Users",
+    "app.menu.users": "Users",
+    "app.menu.identifierRanges": "Identifier Ranges",
+        "app.subMenu.IRISBN": "ISBN",
+        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISSN": "ISSN",
+    "app.menu.messageTemplates": "Message Templates",
+
     "app.home.title": "Identifier Services",
-    "app.home.description": "ISBN identifies books, ISMN notated music publications and ISSN serial publications. In Finland, these identifiers are applied for from the Finnish ISBN and ISSN Agencies operating at the National Library of Finland. The identifiers are free of charge."
+    "app.home.description": "ISBN identifies books, ISMN notated music publications and ISSN serial publications. In Finland, these identifiers are applied for from the Finnish ISBN and ISSN Agencies operating at the National Library of Finland. The identifiers are free of charge.",
+    "app.home.searchTitle": "Explore Finnish Publisher",
+    "app.home.inputPlaceholder": "Search...",
+    "app.home.formHeading": "Forms",
+    "app.home.formButtons.publisherRegistration": "Publisher Registration",
+    "app.home.formButtons.publicationRegistration": "Publication Registration",
+    "app.home.formButtons.contactForm": "Contact Form",
+
+    "login.loginForm.title": "Login",
+    "login.normal.login": "Normal Login",
+    "login.normal.username": "UserName",
+    "login.normal.password": "Password",
+    "login.normal.button": "Login",
+    "login.normal.info": "Read about management of personal information on the",
+    "login.normal.infoLink": "Data protection page.",
+    "login.normal.forgotPassword": "Forgot Password ?",
+    "login.haka.login": "Haka Login",
+    "login.haka.info": "When you log in using Haka, the service will store your user id, name and email address. Read more about management of personal information on the",
+    "login.haka.infoLink": "Data protection page."
 }

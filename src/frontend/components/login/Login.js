@@ -31,6 +31,7 @@ import {Typography, Tabs, Tab, Button} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import LogOutIcon from '@material-ui/icons/ExitToApp';
 import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import LoginForm from './LoginForm';
 import HakaLogin from './HakaLogin';
@@ -77,8 +78,8 @@ export default connect(mapStateToProps, actions)(props => {
 								textColor="primary"
 								onChange={handleChange}
 							>
-								<Tab label="Normal Login"/>
-								<Tab label="HAKA Login"/>
+								<Tab label={<FormattedMessage id="login.normal.login"/>}/>
+								<Tab label={<FormattedMessage id="login.haka.login"/>}/>
 							</Tabs>
 							{value === 0 && <TabContainer><LoginForm setPwd={setPwd} {...props}/></TabContainer>}
 							{value === 1 && <TabContainer><HakaLogin/></TabContainer>}

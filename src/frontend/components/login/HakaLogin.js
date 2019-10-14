@@ -30,6 +30,8 @@
 
 import React from 'react';
 import {Typography, Link} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
+
 import useStyles from '../../styles/login';
 import Logo from '../../assets/logo/Haka_login_vaaka.svg';
 
@@ -39,8 +41,8 @@ export default function () {
 		<div className={classes.hakaLogo}>
 			<img src={Logo}/>
 			<div className={classes.notes}>
-				<Typography>When you log in using Haka, the service will store your user id, name and email address. Read more about management of personal information on the
-					<Link> Data protection page.</Link>
+				<Typography><FormattedMessage id="login.haka.info"/>
+					<Link><FormattedMessage id="login.haka.infoLink"/></Link>
 				</Typography>
 			</div>
 		</div>

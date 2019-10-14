@@ -1,4 +1,44 @@
 {
+    "app.topNav.login": "Logga In",
+
+    "app.publicMenu.publishers": "--",
+    
+    "app.menu.publishers": "add later",
+    "app.menu.publications": "add later",
+        "app.subMenu.ISBN": "ISBN",
+        "app.subMenu.ISMN": "ISBN",
+        "app.subMenu.ISSN": "ISBN",
+    "app.menu.requests": "add later",
+        "app.subMenu.publishers": "--",
+        "app.subMenu.publications": "--",
+            "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
+            "app.subSubMenu.ISSN": "ISSN",
+        "app.subMenu.users": "--",
+    "app.menu.users": "--",
+    "app.menu.identifierRanges": "--",
+        "app.subMenu.IRISBN": "ISBN",
+        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISSN": "ISSN",
+    "app.menu.messageTemplates": "--",
+
     "app.home.title": "Identifikatorservice",
-    "app.home.description": "ISBN identifierar böcker,  ISMN notpublikationer och ISSN seriella och fortlöpande publikationer. I Finland sker ansökan om dessa nummer via Finlands ISBN- och ISSN-centraler. Numren är avgiftsfria."
+    "app.home.description": "ISBN identifierar böcker,  ISMN notpublikationer och ISSN seriella och fortlöpande publikationer. I Finland sker ansökan om dessa nummer via Finlands ISBN- och ISSN-centraler. Numren är avgiftsfria.",
+    "app.home.searchTitle": "Explore Finnish Publisher",
+    "app.home.inputPlaceholder": "sök...",
+    "app.home.formHeading": "--",
+    "app.home.formButtons.publisherRegistration": "--",
+    "app.home.formButtons.publicationRegistration": "--",
+    "app.home.formButtons.contactForm": "--",
+
+    "login.loginForm.title": "Logga In",
+    "login.normal.login": "--",
+    "login.normal.info": "--",
+    "login.normal.password": "--",
+    "login.normal.button": "Loga In",
+    "login.normal.username": "--",
+    "login.normal.infoLink": "--.",
+    "login.normal.forgotPassword": "-- ?",
+    "login.haka.login": "--",
+    "login.haka.info": "--",
+    "login.haka.infoLink": "--."
 }
