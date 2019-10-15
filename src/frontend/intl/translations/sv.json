@@ -3,12 +3,12 @@
 
     "app.publicMenu.publishers": "--",
     
-    "app.menu.publishers": "add later",
-    "app.menu.publications": "add later",
+    "app.menu.publishers": "--",
+    "app.menu.publications": "--",
         "app.subMenu.ISBN": "ISBN",
         "app.subMenu.ISMN": "ISBN",
         "app.subMenu.ISSN": "ISBN",
-    "app.menu.requests": "add later",
+    "app.menu.requests": "--",
         "app.subMenu.publishers": "--",
         "app.subMenu.publications": "--",
             "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
