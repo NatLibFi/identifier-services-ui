@@ -50,7 +50,11 @@ export default connect(null, actions)(props => {
 	const component = (
 		<>
 			<div className={classes.publicMenu} onClick={handleClick}>
-				<Link exact to={list.path && `/${list.path}`} activeClassName={classes.active}><Button>{list.label}</Button></Link>
+				{
+					list.path ?
+						<Link exact to={`/${list.path}`} activeClassName={classes.active}><Button>{list.label}</Button></Link> :
+						<Button>{list.label}</Button>
+				}
 				{list.listItem && <ArrowDropDown/>}
 			</div>
 
@@ -74,31 +78,31 @@ export default connect(null, actions)(props => {
 			>
 				{list.listItem.map(item => item.roleView && item.roleView.includes(role) ?
 					<>
-						<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
-							{item.listItem ?
-								<ExpansionPanel>
-									<ExpansionPanelSummary
-										expandIcon={<ExpandMoreIcon/>}
-										aria-controls="panel1a-content"
-										id="panel1a-header"
-										className={classes.menuExpansion}
-									>
-										<MenuItem>{item.label}</MenuItem>
+						{item.listItem ?
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+									className={classes.menuExpansion}
+								>
+									<MenuItem>{item.label}</MenuItem>
 
-									</ExpansionPanelSummary>
-									<ExpansionPanelDetails>
-										<Typography>
-											{item.listItem.map(subItem => (
-												<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
-													<MenuItem>{subItem.label}</MenuItem>
-												</Link>
-											))}
-										</Typography>
-									</ExpansionPanelDetails>
-								</ExpansionPanel> :
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<Typography>
+										{item.listItem.map(subItem => (
+											<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
+												<MenuItem>{subItem.label}</MenuItem>
+											</Link>
+										))}
+									</Typography>
+								</ExpansionPanelDetails>
+							</ExpansionPanel> :
+							<Link exact to={`/${item.path}`} activeClassName={classes.active}>
 								<MenuItem key={item.label}>{item.label}</MenuItem>
-							}
-						</Link>
+							</Link>
+						}
 					</> :
 					null
 				)}
