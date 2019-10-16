@@ -30,6 +30,7 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
 import {Grid, Typography, Checkbox, FormControlLabel} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 
 import SearchComponent from '../SearchComponent';
 import {commonStyles} from '../../styles/app';
@@ -105,7 +106,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">Search Publisher By Name or Aliases</Typography>
+				<Typography variant="h5"><FormattedMessage id="publisher.search.title"/></Typography>
 				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel
 					control={
@@ -116,7 +117,7 @@ export default connect(mapStateToProps, actions)(props => {
 							onChange={handleChange('checked')}
 						/>
 					}
-					label="Show only active publishers"
+					label={<FormattedMessage id="publisher.search.filter"/>}
 				/>
 				{publishersData}
 				<Publisher id={publisherId} modal={modal} setModal={setModal}/>

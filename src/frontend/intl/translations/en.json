@@ -40,5 +40,20 @@
     "login.normal.forgotPassword": "Forgot Password ?",
     "login.haka.login": "Haka Login",
     "login.haka.info": "When you log in using Haka, the service will store your user id, name and email address. Read more about management of personal information on the",
-    "login.haka.infoLink": "Data protection page."
+    "login.haka.infoLink": "Data protection page.",
+
+    "publisher.search.title": "Search Publisher By Name or Aliases",
+    "publisher.search.filter": "Show only active publishers",
+
+    "request.publisher.search-title": "Search Publishers Request By Name",
+    "request.button.publisher-registration": "Publisher Registration",
+
+    "tab.filter.state": "Filter State By :",
+    "tab.filter.new": "New",
+    "tab.filter.inProgress": "InProgress",
+    "tab.filter.accepted": "Accepted",
+    "tab.filter.rejected": "Rejected",
+    "tab.filter.showall": "Show All",
+
+    "table.footer.page": " Page"
 }

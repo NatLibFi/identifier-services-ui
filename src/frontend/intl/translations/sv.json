@@ -40,5 +40,20 @@
     "login.normal.forgotPassword": "-- ?",
     "login.haka.login": "--",
     "login.haka.info": "--",
-    "login.haka.infoLink": "--."
+    "login.haka.infoLink": "--.",
+
+    "publisher.search.title": "Sök utgivare med namn eller alias",
+    "publisher.search.filter": "Visa endast aktiva utgivare",
+
+    "request.publisher.search-title": "Sök efter förläggare efter namn",
+    "request.button.publisher-registration": "--",
+
+    "tab.filter.state": "Filtrera tillstånd efter :",
+    "tab.filter.new": "Ny",
+    "tab.filter.inProgress": "Pågående",
+    "tab.filter.accepted": "Accepterad",
+    "tab.filter.rejected": "Avvisade",
+    "tab.filter.showall": "Visa allt",
+
+    "table.footer.page": " Sida"
 }

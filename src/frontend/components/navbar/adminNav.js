@@ -46,21 +46,21 @@ export default function ({userInfo, isAuthenticated}) {
 		},
 		{
 			label: <FormattedMessage id="app.menu.publications"/>,
-			roleView: ['admin', 'publisher', 'publisher-admin'],
+			roleView: ['admin', 'publisher-admin', 'publisher'],
 			listItem: [
-				{label: <FormattedMessage id="app.subMenu.ISBN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
-				{label: <FormattedMessage id="app.subMenu.ISMN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
-				{label: <FormattedMessage id="app.subMenu.ISSN"/>, path: 'publications/issn', roleView: ['admin', 'publisher', 'publisher-admin']}
+				{label: <FormattedMessage id="app.subMenu.ISBN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher-admin', 'publisher']},
+				{label: <FormattedMessage id="app.subMenu.ISMN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher-admin', 'publisher']},
+				{label: <FormattedMessage id="app.subMenu.ISSN"/>, path: 'publications/issn', roleView: ['admin', 'publisher-admin', 'publisher']}
 			]
 		},
 		{
 			label: <FormattedMessage id="app.menu.requests"/>,
-			roleView: ['admin', 'system', 'publisher', 'publisher-admin'],
+			roleView: ['admin', 'system', 'publisher-admin', 'publisher'],
 			listItem: [
 				{label: <FormattedMessage id="app.subMenu.publishers"/>, path: 'requests/publishers', roleView: ['admin', 'system']},
-				{label: <FormattedMessage id="app.subMenu.publications"/>, roleView: ['admin', 'system', 'publisher', 'publisher-admin'], listItem: [
-					{label: <FormattedMessage id="app.subSubMenu.ISBN-ISMN"/>, path: 'requests/publications/isbn-ismn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']},
-					{label: <FormattedMessage id="app.subSubMenu.ISSN"/>, path: 'requests/publications/issn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']}
+				{label: <FormattedMessage id="app.subMenu.publications"/>, roleView: ['admin', 'system', 'publisher-admin', 'publisher'], listItem: [
+					{label: <FormattedMessage id="app.subSubMenu.ISBN-ISMN"/>, path: 'requests/publications/isbn-ismn', roleView: ['admin', 'system', 'publisher-admin', 'publisher']},
+					{label: <FormattedMessage id="app.subSubMenu.ISSN"/>, path: 'requests/publications/issn', roleView: ['admin', 'system', 'publisher-admin', 'publisher']}
 				]},
 				{label: <FormattedMessage id="app.subMenu.users"/>, path: 'requests/users', roleView: ['admin', 'system', 'publisher-admin']}
 			]
