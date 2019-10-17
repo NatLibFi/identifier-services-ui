@@ -40,11 +40,19 @@ const useStyles = makeStyles({
 		margin: '0 auto'
 	},
 	active: {
-		borderBottom: '2px solid #00224F',
-		borderRadius: 0
+		'& button': {
+			fontWeight: 'bold'
+		}
 	},
 	menuExpansion: {
 		padding: '0 !important'
+	},
+	appBar: {
+		height: 50,
+		justifyContent: 'center',
+		boxShadow: 'none',
+		borderBottom: '1px solid rgba(0, 34, 79, 0.33)',
+		background: 'whitesmoke'
 	}
 });
 

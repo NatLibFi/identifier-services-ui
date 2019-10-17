@@ -34,14 +34,14 @@ import {Grid, Typography, FormControlLabel, Checkbox} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
-import {globalStyles} from '../../../styles/app';
+import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Isbn from './Isbn';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = globalStyles();
+	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -51,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchIDRIsbnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
@@ -59,6 +60,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setIsbnId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = name => event => {
@@ -82,6 +84,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={isbnList
 					.map(item => isbnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}

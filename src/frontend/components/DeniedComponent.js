@@ -26,10 +26,19 @@
  *
  */
 
-import {makeStyles} from '@material-ui/core/styles';
+import React from 'react';
+import {Typography} from '@material-ui/core';
+import {commonStyles} from '../styles/app';
 
-const useStyles = makeStyles({
-
+export default (() => {
+	const classes = commonStyles();
+	const component = (
+		<div className={classes.deniedContainer}>
+			<Typography variant="h3">Access Denied</Typography>
+			<Typography variant="caption">You are not authorized to access this page.</Typography>
+		</div>
+	);
+	return {
+		...component
+	};
 });
-
-export default useStyles;

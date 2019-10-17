@@ -30,7 +30,7 @@ import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
-import useStyles from '../../styles/publisherLists';
+import {commonStyles} from '../../styles/app';
 import Message from './Message';
 import useModalStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
@@ -41,7 +41,7 @@ import {useCookies} from 'react-cookie';
 import TemplateCreationForm from '../form/TemplateCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
+	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
 	const [cookie] = useCookies('login-cookie');
@@ -50,6 +50,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [templateId, setTemplateId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
+
 	useEffect(() => {
 		fetchMessagesList(cookie['login-cookie'], lastCursor);
 	}, [lastCursor, cursors, fetchMessagesList, cookie]);
@@ -57,6 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setTemplateId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const headRows = [
@@ -76,6 +79,7 @@ export default connect(mapStateToProps, actions)(props => {
 			<TableComponent
 				data={messagesList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
@@ -100,7 +104,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable messages</Typography>
 				<ModalLayout form label="New Template" title="New Template" name="template" variant="outlined" classed={modalClasses.button} color="primary">
 					<TemplateCreationForm {...props}/>

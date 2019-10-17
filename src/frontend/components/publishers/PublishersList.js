@@ -32,17 +32,17 @@ import {useCookies} from 'react-cookie';
 import {Grid, Typography, Checkbox, FormControlLabel} from '@material-ui/core';
 
 import SearchComponent from '../SearchComponent';
-import useStyles from '../../styles/publisherLists';
+import {commonStyles} from '../../styles/app';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import Publisher from './Publisher';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const [inputVal, setSearchInputVal] = location.state === undefined ? useState('') : useState(location.state.searchText);
+	const [inputVal, setSearchInputVal] = (location.state === undefined || location.state === null) ? useState('') : useState(location.state.searchText);
 	const [page, setPage] = React.useState(1);
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
@@ -51,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [publisherId, setPublisherId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
@@ -63,6 +64,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setPublisherId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const headRows = [
@@ -80,6 +82,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
+				rowSelectedId={rowSelectedId}
 				offset={offset}
 				cursors={cursors}
 				page={page}
@@ -101,7 +104,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publisher By Name or Aliases</Typography>
 				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel

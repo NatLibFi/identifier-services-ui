@@ -28,7 +28,10 @@
 
 import React from 'react';
 import {Route} from 'react-router-dom';
+import {Typography} from '@material-ui/core';
+
 import {connect} from 'react-redux';
+import DeniedComponent from './DeniedComponent';
 
 export default connect(mapStateToProps)(({isAuthenticated, userInfo, role, component: Component, ...rest}) => {
 	const component = (
@@ -36,8 +39,8 @@ export default connect(mapStateToProps)(({isAuthenticated, userInfo, role, compo
 			{...rest}
 			render={props => isAuthenticated === true ? (
 				role.includes(userInfo.role) ?
-					<Component {...props}/> : 'Denied'
-			) : <div>Login</div>}/>
+					<Component {...props}/> : <DeniedComponent/>
+			) : <Typography variant="h4" style={{display: 'flex', justifyContent: 'center', marginTop: 40}}>Please Login to Continue</Typography>}/>
 	);
 	return {
 		...component
