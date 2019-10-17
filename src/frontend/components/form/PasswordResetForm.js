@@ -41,13 +41,13 @@ const fieldArray = [
 		name: 'newPassword',
 		type: 'password',
 		label: 'New Password*',
-		width: 'half'
+		width: 'full'
 	},
 	{
 		name: 'confirmPassword',
 		type: 'password',
 		label: 'Re-type Password*',
-		width: 'half'
+		width: 'full'
 	}
 ];
 
@@ -62,27 +62,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} = props;
 	const classes = useStyles();
 	const component = (
-		<form className={classes.container} onSubmit={console.log('submit')}>
-			<div className={classes.subContainer}>
-				<Grid container spacing={2} direction="row">
-					{fieldArray.map(list => (
-						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-							<Field
-								className={`${classes.textField} ${list.width}`}
-								component={renderTextField}
-								label={list.label}
-								name={list.name}
-								type={list.type}
-							/>
-						</Grid>
-					))}
-				</Grid>
-				<div className={classes.btnContainer}>
+		<form className={classes.passwordResetContainer} onSubmit={console.log('submit')}>
+			<Grid container spacing={2}>
+				{fieldArray.map(list => (
+					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+						<Field
+							className={`${classes.textField} ${list.width}`}
+							component={renderTextField}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+						/>
+					</Grid>
+				))}
+				<Grid item xs={12} className={classes.btnContainer}>
 					<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-                        Submit
+						Submit
 					</Button>
-				</div>
-			</div>
+				</Grid>
+			</Grid>
 		</form>
 	);
 

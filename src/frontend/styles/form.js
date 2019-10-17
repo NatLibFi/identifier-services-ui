@@ -34,6 +34,13 @@ const useStyles = makeStyles(theme => ({
 		margin: '40px 0px 40px 0px',
 		flexGrow: 1
 	},
+	passwordResetContainer: {
+		width: '30%',
+		margin: '0 auto',
+		display: 'flex',
+		height: 'calc(100vh - 300px)',
+		alignItems: 'center'
+	},
 	subContainer: {
 		flexGrow: 1,
 		padding: '0 10px'
