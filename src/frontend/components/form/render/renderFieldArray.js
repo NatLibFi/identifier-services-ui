@@ -108,32 +108,30 @@ export default connect(mapStateToProps, actions)(props => {
 			)}
 			{touched && error && <span>{error}</span>}
 			<Grid xs={12} className={classes.addFabBtn}>
-				{
-					<>
-						<Fab
-							aria-label="Add"
-							color="primary"
-							size="small"
-							title="Add more"
-							variant="extended"
-							onClick={handleOnClick}
-						>
-							<AddIcon/>
-							{`Add ${fieldName}`}
-						</Fab>
-						{values && values[fieldName] && values[fieldName].map((item, index) => {
-							const y = Object.keys(fieldValues);
-							return (
-								<Chip
-									key={`${item[y[0]]} ${item[y[1]]}`}
-									label={`${item[y[0]]} ${item[y[1]]}`}
-									onDelete={() => fields.remove(index)}
-								/>
-							);
-						})}
+				<>
+					<Fab
+						aria-label="Add"
+						color="primary"
+						size="small"
+						title="Add more"
+						variant="extended"
+						onClick={handleOnClick}
+					>
+						<AddIcon/>
+						{`Add ${fieldName}`}
+					</Fab>
+					{values && values[fieldName] && values[fieldName].map((item, index) => {
+						const y = Object.keys(fieldValues);
+						return (
+							<Chip
+								key={`${item[y[0]]} ${item[y[1]]}`}
+								label={`${item[y[0]]} ${item[y[1]]}`}
+								onDelete={() => fields.remove(index)}
+							/>
+						);
+					})}
 
-					</>
-				}
+				</>
 			</Grid>
 		</>
 	);

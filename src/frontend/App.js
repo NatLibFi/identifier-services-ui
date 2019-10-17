@@ -37,7 +37,7 @@ import {useCookies} from 'react-cookie';
 import Home from './components/main';
 import TopNav from './components/navbar/topNav';
 import AdminNav from './components/navbar/adminNav';
-import PasswordResetForm from './components/form/PasswordResetForm';
+import NewUserPasswordResetForm from './components/form/NewUserPasswordResetForm';
 import PublishersList from './components/publishers/PublishersList';
 import PublisherProfile from './components/publishers/PublisherProfile';
 import UsersList from './components/users/UsersList';
@@ -75,7 +75,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const routeField = [
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
-		{path: '/users/passwordReset/:token', component: PasswordResetForm},
+		{path: '/users/passwordReset/:token', component: NewUserPasswordResetForm},
 		{path: '/publishers/:id', component: PublisherProfile}
 	];
 

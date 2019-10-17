@@ -25,73 +25,48 @@
  * for the JavaScript code in this file.
  *
  */
-
-import React from 'react';
+import React, {useState} from 'react';
+import {TextField, Button} from '@material-ui/core';
+import useStyles from '../../styles/login';
+import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
-import {Field, reduxForm} from 'redux-form';
-import {Button, Grid} from '@material-ui/core';
-import {validate} from '@natlibfi/identifier-services-commons';
-
-import useStyles from '../../styles/form';
-import renderTextField from './render/renderTextField';
-import * as actions from '../../store/actions/userActions';
-
-const fieldArray = [
-	{
-		name: 'newPassword',
-		type: 'password',
-		label: 'New Password*',
-		width: 'full'
-	},
-	{
-		name: 'confirmPassword',
-		type: 'password',
-		label: 'Re-type Password*',
-		width: 'full'
-	}
-];
-
-export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'passwordResetForm',
-	validate
-})(props => {
-	const {
-		handleSubmit,
-		pristine,
-		valid
-	} = props;
+export default connect(null, actions)(props => {
+	const {passwordReset} = props;
+	const [email, setEmail] = useState('');
 	const classes = useStyles();
-	const component = (
-		<form className={classes.passwordResetContainer} onSubmit={console.log('submit')}>
-			<Grid container spacing={2}>
-				{fieldArray.map(list => (
-					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderTextField}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-						/>
-					</Grid>
-				))}
-				<Grid item xs={12} className={classes.btnContainer}>
-					<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-						Submit
-					</Button>
-				</Grid>
-			</Grid>
-		</form>
-	);
+	const handleEmailChange = e => {
+		setEmail(e.target.value);
+	};
 
+	const handleEmailSubmit = e => {
+		e.preventDefault();
+		passwordReset(email);
+	};
+
+	const component = (
+		<>
+			<div>
+                Enter your email address and we will send you a link to reset your password.
+			</div>
+			<form onSubmit={handleEmailSubmit}>
+				<TextField
+					variant="outlined"
+					placeholder="Enter Your email address"
+					className={classes.resetInput}
+					value={email}
+					onChange={handleEmailChange}/>
+				<Button
+					variant="contained"
+					color="primary"
+					className={classes.resetBtn}
+					onClick={handleEmailSubmit}
+				>
+                Send password reset email
+				</Button>
+			</form>
+		</>
+	);
 	return {
 		...component
 	};
-}));
-
-function mapStateToProps(state) {
-	return ({
-		captcha: state.common.captcha
-	});
-}
-
+});

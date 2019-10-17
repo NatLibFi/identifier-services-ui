@@ -190,18 +190,17 @@ app.get('/logOut', (req, res) => {
 });
 
 app.post('/passwordreset', async (req, res) => {
-	console.log('22222', req.body);
 	const systemToken = await systemAuth();
-	// const response = await fetch(`${API_URL}/password`, {
-	// 	method: 'POST',
-	// 	header: {
-	// 		Authorization: 'Bearer ' + systemToken,
-	// 		'Content-Type': 'application/json'
-	// 	},
-	// 	body: JSON.stringify(req.body)
-	// });
-
-	// res.json(response);
+	const response = await fetch(`${API_URL}/users/${req.body.email}/password`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + systemToken,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(req.body)
+	});
+	const result = await response.json();
+	res.json({status: result});
 });
 
 app.get('/users/passwordReset/:token', async (req, res) => {
@@ -214,12 +213,14 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
 		const passportLocalList = JSON.parse(readResponse);
 		const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
-		await fetch(`${API_URL}/auth`, {
+		const result = await fetch(`${API_URL}/auth`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Basic ' + base64.encode(passportLocal.id + ':' + passportLocal.password)
+				Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
 			}
 		});
+		const token = result.headers.get('Token');
+		res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	} else {
 		res.send('Link Expired !!!');
