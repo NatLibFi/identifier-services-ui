@@ -81,7 +81,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handleRejectClick() {
-		setReject(true);
+		setReject(!reject);
 	}
 
 	function handleRejectReason(e) {
@@ -95,7 +95,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			rejectionReason: rejectReason
 		};
 		updateUserRequest(id, requestToUpdate, cookie['login-cookie']);
-		setReject(false);
+		setReject(!reject);
 		setButtonState(usersRequest.state);
 	}
 

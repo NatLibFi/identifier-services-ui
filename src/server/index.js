@@ -33,14 +33,14 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, NOTIFICATION_URL} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, PASSPORT_LOCAL, NOTIFICATION_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
 import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
 import fs from 'fs';
-
+import * as jwtEncrypt from 'jwt-token-encrypt';
 function bodyParse() {
 	validateContentType({
 		type: ['application/json']
@@ -189,8 +189,42 @@ app.get('/logOut', (req, res) => {
 	res.send('cookie cleared');
 });
 
-app.post('/passwordreset', req => {
-	console.log('password reset', req.body);
+app.post('/passwordreset', async (req, res) => {
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/users/${req.body.email}/password`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + systemToken,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(req.body)
+	});
+	const result = await response.json();
+	res.json({status: result});
+});
+
+app.get('/users/passwordReset/:token', async (req, res) => {
+	const response = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+	const encryptionKey = JSON.parse(response);
+	const token = req.params.token;
+
+	const decrypted = jwtEncrypt.readJWT(token, encryptionKey[0]);
+	if (Date.now() <= decrypted.exp * 1000) {
+		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		const passportLocalList = JSON.parse(readResponse);
+		const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
+		const result = await fetch(`${API_URL}/auth`, {
+			method: 'POST',
+			headers: {
+				Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
+			}
+		});
+		const token = result.headers.get('Token');
+		res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
+		res.sendFile(path.join(__dirname, 'public/index.html'));
+	} else {
+		res.send('Link Expired !!!');
+	}
 });
 
 app.get('/conf', (_req, res) => {

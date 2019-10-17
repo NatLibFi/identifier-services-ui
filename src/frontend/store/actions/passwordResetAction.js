@@ -26,20 +26,24 @@
  *
  */
 
-import {ERROR} from './types';
 import fetch from 'node-fetch';
+import HttpStatus from 'http-status';
+import {ERROR} from './types';
+import {setMessage} from './commonAction';
 
-export const passwordReset = email => async dispatch => {
+export const passwordReset = values => async dispatch => {
 	try {
 		const response = await fetch('/passwordreset', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
 			},
-			body: JSON.stringify({email})
+			body: JSON.stringify(values)
 		});
 		const result = await response.json();
-		return result;
+		if (result.status === HttpStatus.OK) {
+			dispatch(setMessage({color: 'success', msg: 'Password Changed successfully'}));
+		}
 	} catch (err) {
 		dispatch({
 			type: ERROR,
