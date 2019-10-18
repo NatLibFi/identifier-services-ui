@@ -191,6 +191,7 @@ app.get('/logOut', (req, res) => {
 
 app.post('/passwordreset', async (req, res) => {
 	const systemToken = await systemAuth();
+	console.log(req.body);
 	const response = await fetch(`${API_URL}/users/${req.body.email}/password`, {
 		method: 'POST',
 		headers: {
@@ -210,17 +211,17 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 
 	const decrypted = jwtEncrypt.readJWT(token, encryptionKey[0]);
 	if (Date.now() <= decrypted.exp * 1000) {
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
-		const result = await fetch(`${API_URL}/auth`, {
-			method: 'POST',
-			headers: {
-				Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
-			}
-		});
-		const token = result.headers.get('Token');
-		res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
+		// Const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		// const passportLocalList = JSON.parse(readResponse);
+		// const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
+		// const result = await fetch(`${API_URL}/auth`, {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
+		// 	}
+		// });
+		// const token = result.headers.get('Token');
+		// res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	} else {
 		res.send('Link Expired !!!');

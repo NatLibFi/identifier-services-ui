@@ -38,6 +38,12 @@ import * as actions from '../../store/actions';
 
 const fieldArray = [
 	{
+		name: 'email',
+		type: 'email',
+		label: 'Email',
+		width: 'full'
+	},
+	{
 		name: 'newPassword',
 		type: 'password',
 		label: 'New Password*',
@@ -69,7 +75,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const {newPassword, confirmPassword} = values;
 		if (confirmPassword === newPassword) {
 			setError(null);
-			passwordReset({...values, email: email});
+			passwordReset(values);
 			props.history.push('/');
 		} else {
 			setError('Password does not match');
