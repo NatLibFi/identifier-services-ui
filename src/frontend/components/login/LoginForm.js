@@ -58,8 +58,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	};
 
 	const component = (
-		<form className={classes.loginForm} onSubmit={handleSubmit(handleLogin)}>
-			<section>
+		<form onSubmit={handleSubmit(handleLogin)}>
+			<section className={classes.loginForm}>
 				<Grid container className={classes.inputGap} spacing={4} alignItems="flex-end">
 					<Grid item xs={1}>
 						<PersonIcon className={classes.personIcon}/>

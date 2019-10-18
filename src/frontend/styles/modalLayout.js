@@ -34,14 +34,18 @@ const useStyles = makeStyles({
 		display: 'grid',
 		alignItems: 'center'
 	},
+	modaltitle: {
+		borderBottom: '1px solid #c0c0c091',
+		background: '#00224f',
+		color: '#fff',
+		padding: '10px 20px'
+	},
 	main: {
 		minHeight: 90,
-		minWidth: 350,
 		maxHeight: 900,
 		overflowY: 'auto',
 		position: 'relative',
 		margin: '0px auto',
-		padding: 20,
 		borderRadius: 5,
 		backgroundColor: '#fff',
 		outline: 'none'
@@ -53,6 +57,7 @@ const useStyles = makeStyles({
 			fontSize: '1rem',
 			borderRadius: '50%'
 		},
+		color: '#fff',
 		position: 'absolute',
 		cursor: 'pointer',
 		right: 0,

@@ -130,7 +130,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" {...props}>
+		<ModalLayout isTableRow color="primary" {...props} title="User details">
 			{isEdit ?
 				<div className={classes.listItem}>
 					<form>
