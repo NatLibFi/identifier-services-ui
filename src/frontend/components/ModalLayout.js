@@ -106,7 +106,6 @@ export default connect(mapStateToProps)(withRouter(props => {
 					</IconButton>
 					<Typography variant="h5" id={`modal-${name}`}>
 						{title}
-						{title && <hr/>}
 					</Typography>
 					{React.cloneElement(children, {handleClose: handleClose})}
 				</div>

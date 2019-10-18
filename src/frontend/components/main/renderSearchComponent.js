@@ -28,6 +28,8 @@
 
 import React from 'react';
 import {Grid, Typography} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
+
 import SearchComponent from '../SearchComponent';
 import useStyles from '../../styles/searchComponent';
 import {searchPublisher} from '../../store/actions';
@@ -38,7 +40,7 @@ export default function () {
 	return (
 		<Grid container>
 			<Grid item xs={12} className={classes.searchContianer}>
-				<Typography variant="h4" align="center">Explore Finnish Publisher</Typography>
+				<Typography variant="h4" align="center"><FormattedMessage id="app.home.searchTitle"/></Typography>
 				<SearchComponent homePage searchFunction={searchPublisher}/>
 			</Grid>
 		</Grid>

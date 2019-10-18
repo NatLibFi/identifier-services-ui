@@ -128,7 +128,7 @@ export const commonStyles = makeStyles({
 	},
 
 	bodyContainer: {
-		minHeight: '80vh'
+		minHeight: 'calc(100vh - 300px)'
 	},
 	listSearch: {
 		maxWidth: '1200px',

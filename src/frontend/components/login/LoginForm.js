@@ -34,6 +34,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import renderTextField from '../form/render/renderTextField';
 import useStyles from '../../styles/login';
@@ -68,7 +69,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Field
 							className={formClasses.textField}
 							name="username"
-							label="UserName"
+							label={<FormattedMessage id="login.normal.username"/>}
 							component={renderTextField}
 						/>
 					</Grid>
@@ -84,7 +85,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Field
 							className={formClasses.textField}
 							name="password"
-							label="Password"
+							label={<FormattedMessage id="login.normal.password"/>}
 							type={showPassword ? 'text' : 'password'}
 							component={renderTextField}
 						/>
@@ -97,15 +98,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					size="large"
 					disabled={pristine || !valid}
 				>
-					Login
+					<FormattedMessage id="login.normal.button"/>
 				</Button>
 				<div className={classes.pwdresetLink}>
-					<span onClick={() => setPwd(true)}>Forgot Password ?</span>
+					<span onClick={() => setPwd(true)}><FormattedMessage id="login.normal.forgotPassword"/></span>
 				</div>
 			</section>
 			<div className={classes.notes}>
-				<Typography>Read about management of personal information on the
-					<Link> Data protection page.</Link>
+				<Typography><FormattedMessage id="login.normal.info"/>
+					<Link><FormattedMessage id="login.normal.infoLink"/></Link>
 				</Typography>
 			</div>
 		</form>

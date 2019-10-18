@@ -30,6 +30,7 @@ import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
@@ -111,7 +112,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">Search Publishers Request</Typography>
+				<Typography variant="h5"><FormattedMessage id="request.publisher.search-title"/></Typography>
 				<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
 					tabClass={classes.tab}
@@ -119,7 +120,7 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+				<ModalLayout form label="Publisher Registration" title={<FormattedMessage id="request.button.publisher-registration"/>} name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
 					<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{publishersRequestsData}
