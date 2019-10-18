@@ -127,9 +127,9 @@ export default connect(mapStateToProps, actions)(props => {
 									}}
 									onClose={handleClose}
 								>
-									<MenuItem onClick={changeLangEn}>English</MenuItem>
-									<MenuItem onClick={changeLangFi}>Suomi</MenuItem>
-									<MenuItem onClick={changeLangSv}>Svenska</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangEn}>English</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangFi}>Suomi</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangSv}>Svenska</MenuItem>
 								</Menu>
 							</div>
 						</div>

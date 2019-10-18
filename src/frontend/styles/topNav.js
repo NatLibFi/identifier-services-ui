@@ -81,6 +81,9 @@ const useStyles = makeStyles({
 		height: 30,
 		width: 30,
 		cursor: 'pointer'
+	},
+	langMenu: {
+		paddingLeft: '10px !important'
 	}
 });
 

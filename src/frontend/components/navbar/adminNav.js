@@ -93,8 +93,8 @@ export default function ({userInfo, isAuthenticated}) {
 						<div className={classes.adminMenu}>
 							{isAuthenticated ? renderMenuTabs() : (
 								<div className={classes.publicMenu}>
-									<Link exact to="/" activeClassName={classes.active}><Button><HomeIcon fontSize="default" color="primary"/></Button></Link>
-									<Link exact to="/publishers" activeClassName={classes.active}><Button><FormattedMessage id="app.publicMenu.publishers"/></Button></Link>
+									<Link exact to="/" activeClassName={classes.active}><div className={classes.menuIcon}><HomeIcon fontSize="default" color="primary"/></div></Link>
+									<Link exact to="/publishers" activeClassName={classes.active}><div className={classes.menuItem}><FormattedMessage id="app.publicMenu.publishers"/></div></Link>
 								</div>
 							)
 							}
@@ -110,10 +110,10 @@ export default function ({userInfo, isAuthenticated}) {
 			(
 				<>
 					<Link exact to={`/publishers/${userInfo.publisher}`} activeClassName={classes.active}>
-						<Button><AccountBoxIcon fontSize="default" color="primary"/></Button>
+						<div className={classes.menuIcon}><AccountBoxIcon fontSize="default" color="primary"/></div>
 					</Link>
 					{obj.map(list => list.roleView.includes(userInfo.role) && (
-						<MenuTabs key={list.label} role={userInfo.role} list={list}/>
+						<MenuTabs role={userInfo.role} list={list}/>
 					))}
 				</>
 			) : obj.map(list => list.roleView.includes(userInfo.role) && (
