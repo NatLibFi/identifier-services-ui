@@ -33,7 +33,7 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, PASSPORT_LOCAL, NOTIFICATION_URL} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
@@ -210,17 +210,17 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 
 	const decrypted = jwtEncrypt.readJWT(token, encryptionKey[0]);
 	if (Date.now() <= decrypted.exp * 1000) {
-		const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-		const passportLocalList = JSON.parse(readResponse);
-		const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
-		const result = await fetch(`${API_URL}/auth`, {
-			method: 'POST',
-			headers: {
-				Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
-			}
-		});
-		const token = result.headers.get('Token');
-		res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
+		// Const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
+		// const passportLocalList = JSON.parse(readResponse);
+		// const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
+		// const result = await fetch(`${API_URL}/auth`, {
+		// 	method: 'POST',
+		// 	headers: {
+		// 		Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
+		// 	}
+		// });
+		// const token = result.headers.get('Token');
+		// res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	} else {
 		res.send('Link Expired !!!');
