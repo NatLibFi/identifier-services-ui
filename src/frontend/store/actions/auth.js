@@ -27,6 +27,7 @@
  */
 import {AUTHENTICATION, LOG_OUT} from './types';
 import fetch from 'node-fetch';
+import {setMessage} from './commonAction';
 
 export const normalLogin = values => async dispatch => {
 	const response = await fetch('/auth', {
@@ -35,7 +36,11 @@ export const normalLogin = values => async dispatch => {
 		headers: {'Content-Type': 'application/json'}
 	});
 	const result = await response.json();
+	if (result === null) {
+		return 'unauthorize';
+	}
 
+	dispatch(setMessage({color: 'success', msg: 'Login successful'}));
 	return dispatch(getUserInfo(result));
 };
 

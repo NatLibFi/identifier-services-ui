@@ -26,7 +26,7 @@
  *
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Grid, Button, Link, Typography, IconButton} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import PersonIcon from '@material-ui/icons/Person';
@@ -35,6 +35,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
+import CloseIcon from '@material-ui/icons/Close';
 
 import renderTextField from '../form/render/renderTextField';
 import useStyles from '../../styles/login';
@@ -46,20 +47,30 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
 	const formClasses = useFormStyles();
-	const [showPassword, setShowPassword] = React.useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [loginError, setLoginError] = useState(null);
 
 	const handleLogin = async values => {
 		/* global API_URL */
 		/* eslint no-undef: "error" */
 		const response = await normalLogin({...values, API_URL: API_URL});
-		// eslint-disable-next-line no-unused-expressions
-		response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
-		handleClose();
+		if (response === 'unauthorize') {
+			setLoginError('Incorrect username or Password');
+		} else {
+			// eslint-disable-next-line no-unused-expressions
+			response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
+			handleClose();
+		}
+	};
+
+	const hideError = () => {
+		setLoginError(null);
 	};
 
 	const component = (
 		<form onSubmit={handleSubmit(handleLogin)}>
 			<section className={classes.loginForm}>
+				{loginError && <div className={classes.loginError}>{loginError}<IconButton onClick={hideError}><CloseIcon/></IconButton></div>}
 				<Grid container className={classes.inputGap} spacing={4} alignItems="flex-end">
 					<Grid item xs={1}>
 						<PersonIcon className={classes.personIcon}/>
