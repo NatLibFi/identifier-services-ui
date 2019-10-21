@@ -36,8 +36,8 @@ const useStyles = makeStyles({
 	},
 	modaltitle: {
 		borderBottom: '1px solid #c0c0c091',
-		background: '#00224f',
-		color: '#fff',
+		background: 'whitesmoke',
+		color: '#00224f',
 		padding: '10px 20px'
 	},
 	main: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles({
 			fontSize: '1rem',
 			borderRadius: '50%'
 		},
-		color: '#fff',
+		color: '#00224f',
 		position: 'absolute',
 		cursor: 'pointer',
 		right: 0,

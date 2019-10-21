@@ -41,13 +41,7 @@ export default function () {
 					<Typography variant="h4">ISSN</Typography>
 					<hr/>
 					<Typography paragraph>
-						<FormattedMessage id="app.home.ISSN1"/>
-					</Typography>
-					<Typography paragraph>
-						<FormattedMessage id="app.home.ISSN2"/>
-					</Typography>
-					<Typography paragraph>
-						<FormattedMessage id="app.home.ISSN3"/>
+						<FormattedMessage id="app.home.ISSN" values={{lineBreak: <br/>}}/>
 					</Typography>
 					<Button
 						color="primary"

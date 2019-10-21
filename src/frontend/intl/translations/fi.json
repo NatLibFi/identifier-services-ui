@@ -30,12 +30,8 @@
     "app.home.formButtons.publicationRegistration": "Julkaisun rekisteröinti",
     "app.home.formButtons.contactForm": "Yhteydenottolomake",
 
-    "app.home.ISBN-ISMN1": "ISBN identifioi julkiseen käyttöön tarkoitetut kirjat ja ISMN nuottijulkaisut. Suomen kansallinen ISBN-keskus vastaa ISBN- ja ISMN-tunnusten käytöstä Suomessa. Keskus ylläpitää kansallista kustantajarekisteriä ja välittää tietoja suomalaisista kustantajista kansalliseen ja kansainväliseen käyttöön.",
-    "app.home.ISBN-ISMN2": "--",
-    "app.home.ISBN-ISMN3": "Erillinen ISBN tai ISMN annetaan jokaiselle kirjalle tai nuottijulkaisulle, sen jokaiselle erilaiselle julkaisumuodolle (painettu, audiovisuaalinen, digitaalinen) ja muutoksia sisältävälle painokselle. Tunnukset edistävät julkaisujen tunnistamista julkaisualan jakeluketjussa ja takaavat, että asiakas saa käyttöönsä haluamansa julkaisun. Julkaisumuoto voi olla painettu kirja, audiovisuaalinen tai elektroninen tallenne.",
-    "app.home.ISSN1": "ISSN-tunnus identifioi jatkuvasti ilmestyvät julkaisut, kuten lehdet ja sarjat. Suomen kansallinen ISSN-keskus vastaa tunnusten jakamisesta Suomessa ja lähettää ISSN-tunnuksen saaneiden julkaisujen tiedot ISSN Portal -tietokantaan.",
-    "app.home.ISSN2": "ISSN-tunnus liittyy kiinteästi julkaisun nimeen, nimen muuttuessa myös tunnus on vaihdettava. Eri julkaisumuodoille annetaan erillinen ISSN-tunnus.",
-    "app.home.ISSN3": "--",
+    "app.home.ISBN-ISMN": "ISBN identifioi julkiseen käyttöön tarkoitetut kirjat ja ISMN nuottijulkaisut. Suomen kansallinen ISBN-keskus vastaa ISBN- ja ISMN-tunnusten käytöstä Suomessa. Keskus ylläpitää kansallista kustantajarekisteriä ja välittää tietoja suomalaisista kustantajista kansalliseen ja kansainväliseen käyttöön.{lineBreak}{lineBreak}Erillinen ISBN tai ISMN annetaan jokaiselle kirjalle tai nuottijulkaisulle, sen jokaiselle erilaiselle julkaisumuodolle (painettu, audiovisuaalinen, digitaalinen) ja muutoksia sisältävälle painokselle. Tunnukset edistävät julkaisujen tunnistamista julkaisualan jakeluketjussa ja takaavat, että asiakas saa käyttöönsä haluamansa julkaisun. Julkaisumuoto voi olla painettu kirja, audiovisuaalinen tai elektroninen tallenne.",
+    "app.home.ISSN": "ISSN-tunnus identifioi jatkuvasti ilmestyvät julkaisut, kuten lehdet ja sarjat. Suomen kansallinen ISSN-keskus vastaa tunnusten jakamisesta Suomessa ja lähettää ISSN-tunnuksen saaneiden julkaisujen tiedot ISSN Portal -tietokantaan.{lineBreak}{lineBreak}ISSN-tunnus liittyy kiinteästi julkaisun nimeen, nimen muuttuessa myös tunnus on vaihdettava. Eri julkaisumuodoille annetaan erillinen ISSN-tunnus.",
     "app.home.more-button": "tarkemmin",
     
     "login.loginForm.title": "Kirjaudu",

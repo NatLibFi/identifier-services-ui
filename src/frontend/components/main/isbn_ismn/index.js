@@ -41,13 +41,7 @@ export default function () {
 					<Typography variant="h4">ISBN and ISMN </Typography>
 					<hr/>
 					<Typography paragraph>
-						<FormattedMessage id="app.home.ISBN-ISMN1"/>
-					</Typography>
-					<Typography paragraph>
-						<FormattedMessage id="app.home.ISBN-ISMN2"/>
-					</Typography>
-					<Typography paragraph>
-						<FormattedMessage id="app.home.ISBN-ISMN3"/>
+						<FormattedMessage id="app.home.ISBN-ISMN" values={{lineBreak: <br/>}}/>
 					</Typography>
 					<Button
 						color="primary"
