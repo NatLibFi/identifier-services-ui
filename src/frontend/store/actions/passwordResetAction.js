@@ -32,7 +32,6 @@ import {ERROR} from './types';
 import {setMessage} from './commonAction';
 
 export const passwordReset = values => async dispatch => {
-	console.log(values);
 	try {
 		const response = await fetch('/passwordreset', {
 			method: 'POST',

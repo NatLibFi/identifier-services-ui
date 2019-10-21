@@ -63,7 +63,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 })(props => {
 	const {
 		handleSubmit,
-		email,
 		passwordReset,
 		pristine,
 		valid

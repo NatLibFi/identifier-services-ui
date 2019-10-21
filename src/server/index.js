@@ -33,7 +33,7 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, PASSPORT_LOCAL, NOTIFICATION_URL} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL} from './config';
 import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
@@ -191,7 +191,6 @@ app.get('/logOut', (req, res) => {
 
 app.post('/passwordreset', async (req, res) => {
 	const systemToken = await systemAuth();
-	console.log(req.body);
 	const response = await fetch(`${API_URL}/users/${req.body.email}/password`, {
 		method: 'POST',
 		headers: {
