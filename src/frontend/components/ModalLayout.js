@@ -104,10 +104,11 @@ export default connect(mapStateToProps)(withRouter(props => {
 					<IconButton aria-label="Close" className={classes.closeButton} onClick={handleClose}>
 						<CloseIcon/>
 					</IconButton>
-					<Typography variant="h5" id={`modal-${name}`}>
+					{title &&
+					<Typography variant="h5" id={`modal-${name}`} className={classes.modaltitle}>
 						{title}
-						{title && <hr/>}
 					</Typography>
+					}
 					{React.cloneElement(children, {handleClose: handleClose})}
 				</div>
 			</Modal>

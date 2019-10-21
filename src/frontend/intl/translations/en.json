@@ -1,4 +1,63 @@
 {
+    "app.topNav.login": "Login",
+
+    "app.publicMenu.publishers": "Publishers",
+
+    "app.menu.publishers": "Publishers",
+    "app.menu.publications": "Publications",
+        "app.subMenu.ISBN": "ISBN",
+        "app.subMenu.ISMN": "ISBN",
+        "app.subMenu.ISSN": "ISBN",
+    "app.menu.requests": "Requests",
+        "app.subMenu.publishers": "Publishers",
+        "app.subMenu.publications": "Publications",
+            "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
+            "app.subSubMenu.ISSN": "ISSN",
+        "app.subMenu.users": "Users",
+    "app.menu.users": "Users",
+    "app.menu.identifierRanges": "Identifier Ranges",
+        "app.subMenu.IRISBN": "ISBN",
+        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISSN": "ISSN",
+    "app.menu.messageTemplates": "Message Templates",
+
     "app.home.title": "Identifier Services",
-    "app.home.description": "ISBN identifies books, ISMN notated music publications and ISSN serial publications. In Finland, these identifiers are applied for from the Finnish ISBN and ISSN Agencies operating at the National Library of Finland. The identifiers are free of charge."
+    "app.home.description": "ISBN identifies books, ISMN notated music publications and ISSN serial publications. In Finland, these identifiers are applied for from the Finnish ISBN and ISSN Agencies operating at the National Library of Finland. The identifiers are free of charge.",
+    "app.home.searchTitle": "Explore Finnish Publisher",
+    "app.home.inputPlaceholder": "Search...",
+    "app.home.formHeading": "Forms",
+    "app.home.formButtons.publisherRegistration": "Publisher Registration",
+    "app.home.formButtons.publicationRegistration": "Publication Registration",
+    "app.home.formButtons.contactForm": "Contact Form",
+
+    "app.home.ISBN-ISMN": "ISBN identifies books and ISMN notated music publications intended for public use. The Finnish national ISBN Agency is responsible for handing out ISBNs and ISMNs in Finland. The Agency maintains a national publisher register and provides information about Finnish publishers for national and international use.{lineBreak}{lineBreak}Identifiers as a part of metadata serve the publishing industry and library sector in their entirety and support identification, processing and availability of publications. The identifiers are used, for example, in publishing industry&apos;s ordering and distribution systems to speed up the recognition of publications as well as international and domestic joint catalogues, bibliographies, library lending systems and information retrieval.{lineBreak}{lineBreak}Each book or sheet music publication and publication form (printed, audio-visual, digital) and each edition containing changes are rewarded a separate ISBN or ISMN. This promotes the identification of publications in the publishing industry&apos;s distribution chain and ensures that customers get the desired publication at their disposal. Publication format may be a printed book or an audiovisual or electronic recording.",
+    "app.home.ISSN": "ISSN identifies continuously published publications, as journals and series. The Finnish national ISSN Agency is responsible for providing the identifiers in Finland and sends the information about publications that have received an ISSN to the ISSN Portal database.{lineBreak}{lineBreak}Identifiers as a part of metadata serve the publishing industry and library sector in their entirety and support identification, processing and availability of publications.{lineBreak}{lineBreak}The identifiers are used, for example, in publishing industry's ordering and distribution systems to speed up the identification of publications as well as international and domestic joint catalogues, bibliographies, library lending systems and information retrieval. ISSN is inseparable with the title of the publication; if the title of the publication changes, the identifier must also be changed. A separate ISSN is given to various forms of publication.",
+    "app.home.more-button": "More in detail",
+   
+    "login.loginForm.title": "Login",
+    "login.normal.login": "Normal Login",
+    "login.normal.username": "UserName",
+    "login.normal.password": "Password",
+    "login.normal.button": "Login",
+    "login.normal.info": "Read about management of personal information on the",
+    "login.normal.infoLink": "Data protection page.",
+    "login.normal.forgotPassword": "Forgot Password ?",
+    "login.haka.login": "Haka Login",
+    "login.haka.info": "When you log in using Haka, the service will store your user id, name and email address. Read more about management of personal information on the",
+    "login.haka.infoLink": "Data protection page.",
+
+    "publisher.search.title": "Search Publisher By Name or Aliases",
+    "publisher.search.filter": "Show only active publishers",
+
+    "request.publisher.search-title": "Search Publishers Request By Name",
+    "request.button.publisher-registration": "Publisher Registration",
+
+    "tab.filter.state": "Filter State By :",
+    "tab.filter.new": "New",
+    "tab.filter.inProgress": "InProgress",
+    "tab.filter.accepted": "Accepted",
+    "tab.filter.rejected": "Rejected",
+    "tab.filter.showall": "Show All",
+
+    "table.footer.page": " Page"
 }

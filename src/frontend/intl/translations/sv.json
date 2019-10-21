@@ -1,4 +1,63 @@
 {
+    "app.topNav.login": "Logga In",
+
+    "app.publicMenu.publishers": "--",
+    
+    "app.menu.publishers": "--",
+    "app.menu.publications": "--",
+        "app.subMenu.ISBN": "ISBN",
+        "app.subMenu.ISMN": "ISBN",
+        "app.subMenu.ISSN": "ISBN",
+    "app.menu.requests": "--",
+        "app.subMenu.publishers": "--",
+        "app.subMenu.publications": "--",
+            "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
+            "app.subSubMenu.ISSN": "ISSN",
+        "app.subMenu.users": "--",
+    "app.menu.users": "--",
+    "app.menu.identifierRanges": "--",
+        "app.subMenu.IRISBN": "ISBN",
+        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISSN": "ISSN",
+    "app.menu.messageTemplates": "--",
+
     "app.home.title": "Identifikatorservice",
-    "app.home.description": "ISBN identifierar böcker,  ISMN notpublikationer och ISSN seriella och fortlöpande publikationer. I Finland sker ansökan om dessa nummer via Finlands ISBN- och ISSN-centraler. Numren är avgiftsfria."
+    "app.home.description": "ISBN identifierar böcker,  ISMN notpublikationer och ISSN seriella och fortlöpande publikationer. I Finland sker ansökan om dessa nummer via Finlands ISBN- och ISSN-centraler. Numren är avgiftsfria.",
+    "app.home.searchTitle": "Utforska finska förlag",
+    "app.home.inputPlaceholder": "sök...",
+    "app.home.formHeading": "--",
+    "app.home.formButtons.publisherRegistration": "--",
+    "app.home.formButtons.publicationRegistration": "--",
+    "app.home.formButtons.contactForm": "--",
+
+    "app.home.ISBN-ISMN": "ISBN identifierar böcker och ISMN notpublikationer som är avsedda för offentligt bruk. Finlands nationella ISBN-central svarar för tilldelningen av ISBN- och ISMN i Finland. Centralen upprätthåller ett nationellt förlagsregister och förmedlar information om finländska förläggare för nationellt och internationellt bruk.{lineBreak}{lineBreak}Identifikatorer som en del av metadata betjänar hela förlagsbranschen och bibliotekssektorn och gör det enklare att identifiera, hantera och hitta publikationer. Numren används bl.a. i beställnings- och distributionssystem inom förlagsbranschen för att påskynda identifieringen av publikationer samt i internationella och nationella samkataloger och bibliografier samt i lånesystem vid bibliotek och vid informationssökning.{lineBreak}{lineBreak}Alla böcker och notpublikationer samt varje publikationsform (tryckt, audiovisuell, digital) och varje ändrad upplaga av dem tilldelas ett eget ISBN eller ISMN. Detta underlättar identifieringen av publikationer i förlagsbranschens distributionskedja och garanterar att kunden får önskad publikation. Publikationsformen kan vara tryckt bok, audiovisuell eller elektronisk publikation.",
+    "app.home.ISSN": "ISSN är en identifikator för seriella och fortlöpande publikationer, som tidningar och serier. Finlands nationella ISSN-central tillhandahåller ISSN i Finland och sänder informationen om publikationer som tilldelats ISSN till databasen ISSN Portal.{lineBreak}{lineBreak}Identifikationsnumren som en del av metadata betjänar hela förlagsbranschen och bibliotekssektorn och gör det enklare att identifiera, hantera och hitta publikationer.{lineBreak}{lineBreak}ISSN används bl.a. för snabbidentifiering av publikationer i branschens prenumerations- och distributionssystem, i nationella och internationella samkataloger, i bibliografier, i bibliotekens lånesystem, i informationssökning. ISSN är bundet till publikationens titel – om titeln ändras måste också numret ändras. För olika publikationsformer (olika fysiska medier) ges separata ISSN.",
+    "app.home.more-button": "mer i detalj",
+
+    "login.loginForm.title": "Logga In",
+    "login.normal.login": "--",
+    "login.normal.info": "--",
+    "login.normal.password": "--",
+    "login.normal.button": "Loga In",
+    "login.normal.username": "--",
+    "login.normal.infoLink": "--.",
+    "login.normal.forgotPassword": "-- ?",
+    "login.haka.login": "--",
+    "login.haka.info": "--",
+    "login.haka.infoLink": "--.",
+
+    "publisher.search.title": "Sök utgivare med namn eller alias",
+    "publisher.search.filter": "Visa endast aktiva utgivare",
+
+    "request.publisher.search-title": "Sök efter förläggare efter namn",
+    "request.button.publisher-registration": "--",
+
+    "tab.filter.state": "Filtrera tillstånd efter :",
+    "tab.filter.new": "Ny",
+    "tab.filter.inProgress": "Pågående",
+    "tab.filter.accepted": "Accepterad",
+    "tab.filter.rejected": "Avvisade",
+    "tab.filter.showall": "Visa allt",
+
+    "table.footer.page": " Sida"
 }

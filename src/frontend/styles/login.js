@@ -30,10 +30,9 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
 	main: {
-		maxWidth: 400,
-		justifyContent: 'center',
-		flexDirection: 'column',
-		display: 'flex'
+		maxWidth: 415,
+		padding: 15,
+		overflowX: 'hidden'
 	},
 	logoutContainer: {
 		display: 'flex',
@@ -50,8 +49,7 @@ const useStyles = makeStyles({
 
 	},
 	notes: {
-		margin: '10px -20px -20px',
-		padding: '10px 20px',
+		padding: '5px',
 		background: '#00224F20',
 		'& p': {
 			fontSize: '0.75rem',
@@ -61,10 +59,7 @@ const useStyles = makeStyles({
 		}
 	},
 	loginForm: {
-		display: 'grid',
-		maxWidth: 700,
-		maxHeight: 400,
-		margin: '40px 0px 0px'
+		padding: '30px 0 10px 0'
 	},
 	inputGap: {
 		marginBottom: 20
@@ -86,6 +81,17 @@ const useStyles = makeStyles({
 	},
 	resetBtn: {
 		width: '100%'
+	},
+	loginError: {
+		background: '#ffdce0',
+		padding: '0 10px',
+		color: '#a23737',
+		marginBottom: 15,
+		border: '1px solid #a04242',
+		borderRadius: 5,
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center'
 	}
 });
 

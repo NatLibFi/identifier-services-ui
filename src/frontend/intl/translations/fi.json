@@ -1,4 +1,63 @@
 {
+    "app.topNav.login": "Kirjaudu",
+
+    "app.publicMenu.publishers": "Julkaisijat",
+
+    "app.menu.publishers": "Julkaisijat",
+    "app.menu.publications": "Julkaisut",
+        "app.subMenu.ISBN": "ISBN",
+        "app.subMenu.ISMN": "ISBN",
+        "app.subMenu.ISSN": "ISBN",
+    "app.menu.requests": "Pyynnöt",
+        "app.subMenu.publishers": "Julkaisijat",
+        "app.subMenu.publications": "Julkaisut",
+            "app.subSubMenu.ISBN-ISMN": "ISBN-ISMN",
+            "app.subSubMenu.ISSN": "ISSN",
+        "app.subMenu.users": "käyttäjät",
+    "app.menu.users": "käyttäjät",
+    "app.menu.identifierRanges": "Tunnistealueet",
+        "app.subMenu.IRISBN": "ISBN",
+        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISSN": "ISSN",
+    "app.menu.messageTemplates": "Viestipohjat",
+
     "app.home.title": "Tunnistepalvelut",
-    "app.home.description": "Kansainväliset julkaisutunnukset (ISBN-, ISSN- ja ISMN) identifioivat julkaisut selkeästi ja antavat niille luotettavan statuksen jakeluketjussa. ISBN-tunnus identifioi kirjat, ISMN-tunnus nuottijulkaisut ja ISSN-tunnus jatkuvasti ilmestyvät julkaisut. Suomessa tunnuksia haetaan Kansalliskirjastossa toimivista Suomen ISBN- ja ISSN keskuksista. Tunnukset ovat hakijalle maksuttomia."
+    "app.home.description": "Kansainväliset julkaisutunnukset (ISBN-, ISSN- ja ISMN) identifioivat julkaisut selkeästi ja antavat niille luotettavan statuksen jakeluketjussa. ISBN-tunnus identifioi kirjat, ISMN-tunnus nuottijulkaisut ja ISSN-tunnus jatkuvasti ilmestyvät julkaisut. Suomessa tunnuksia haetaan Kansalliskirjastossa toimivista Suomen ISBN- ja ISSN keskuksista. Tunnukset ovat hakijalle maksuttomia.",
+    "app.home.searchTitle": "Tutustu suomalaiseen kustantajaan",
+    "app.home.inputPlaceholder": "Hae...",
+    "app.home.formHeading": "Lomakkeet",
+    "app.home.formButtons.publisherRegistration": "Kustantajan rekisteröinti",
+    "app.home.formButtons.publicationRegistration": "Julkaisun rekisteröinti",
+    "app.home.formButtons.contactForm": "Yhteydenottolomake",
+
+    "app.home.ISBN-ISMN": "ISBN identifioi julkiseen käyttöön tarkoitetut kirjat ja ISMN nuottijulkaisut. Suomen kansallinen ISBN-keskus vastaa ISBN- ja ISMN-tunnusten käytöstä Suomessa. Keskus ylläpitää kansallista kustantajarekisteriä ja välittää tietoja suomalaisista kustantajista kansalliseen ja kansainväliseen käyttöön.{lineBreak}{lineBreak}Erillinen ISBN tai ISMN annetaan jokaiselle kirjalle tai nuottijulkaisulle, sen jokaiselle erilaiselle julkaisumuodolle (painettu, audiovisuaalinen, digitaalinen) ja muutoksia sisältävälle painokselle. Tunnukset edistävät julkaisujen tunnistamista julkaisualan jakeluketjussa ja takaavat, että asiakas saa käyttöönsä haluamansa julkaisun. Julkaisumuoto voi olla painettu kirja, audiovisuaalinen tai elektroninen tallenne.",
+    "app.home.ISSN": "ISSN-tunnus identifioi jatkuvasti ilmestyvät julkaisut, kuten lehdet ja sarjat. Suomen kansallinen ISSN-keskus vastaa tunnusten jakamisesta Suomessa ja lähettää ISSN-tunnuksen saaneiden julkaisujen tiedot ISSN Portal -tietokantaan.{lineBreak}{lineBreak}ISSN-tunnus liittyy kiinteästi julkaisun nimeen, nimen muuttuessa myös tunnus on vaihdettava. Eri julkaisumuodoille annetaan erillinen ISSN-tunnus.",
+    "app.home.more-button": "tarkemmin",
+    
+    "login.loginForm.title": "Kirjaudu",
+    "login.normal.login": "Normaali kirjautuminen",
+    "login.normal.username": "Käyttäjätunnus",
+    "login.normal.password": "Salasana",
+    "login.normal.button": "Kirjaudu",
+    "login.normal.info": "Lue henkilökohtaisten tietojen hallinnasta",
+    "login.normal.infoLink": "Tietosuoja-sivu..",
+    "login.normal.forgotPassword": "Unohtuiko salasana ?",
+    "login.haka.login": "Haka Kirjaudu sisään",
+    "login.haka.info": "Kun kirjaudut sisään Hakaan, palvelu tallentaa käyttäjätunnuksesi, nimesi ja sähköpostiosoitteesi. Lue lisää henkilökohtaisten tietojen hallinnasta",
+    "login.haka.infoLink": "Tietosuoja-sivu.",
+
+    "publisher.search.title": "Hae julkaisijaa nimen tai nimien mukaan",
+    "publisher.search.filter": "Näytä vain aktiiviset kustantajat",
+
+    "request.publisher.search-title": "Etsi julkaisijoiden pyyntö nimeltä",
+    "request.button.publisher-registration": "Kustantajan rekisteröinti",
+
+    "tab.filter.state": "Suodata tila :",
+    "tab.filter.new": "Uusi",
+    "tab.filter.inProgress": "käynnissä",
+    "tab.filter.accepted": "Hyväksytyt",
+    "tab.filter.rejected": "Hylätty",
+    "tab.filter.showall": "Näytä kaikki",
+
+    "table.footer.page": " Sivu"
 }

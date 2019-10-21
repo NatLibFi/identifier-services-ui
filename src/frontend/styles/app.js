@@ -70,8 +70,8 @@ const theme = createMuiTheme({
 				paddingRight: 0
 			},
 			root: {
-				paddingTop: 0,
-				paddingBottom: 0
+				paddingTop: 5,
+				paddingBottom: 5
 			}
 		},
 		MuiMenu: {
@@ -128,7 +128,7 @@ export const commonStyles = makeStyles({
 	},
 
 	bodyContainer: {
-		minHeight: '80vh'
+		minHeight: 'calc(100vh - 300px)'
 	},
 	listSearch: {
 		maxWidth: '1200px',
@@ -141,7 +141,7 @@ export const commonStyles = makeStyles({
 	listItem: {
 		width: 900,
 		minWidth: '750px',
-		padding: '20px 0px'
+		padding: '20px'
 	},
 	btnContainer: {
 		display: 'flex',

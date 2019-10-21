@@ -27,6 +27,7 @@
  */
 import React from 'react';
 import {Typography, Tabs, Tab} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 import useStyles from '../styles/tabComponent';
 
 export default function (props) {
@@ -42,12 +43,12 @@ export default function (props) {
 				variant="outlined"
 				onChange={handleChange}
 			>
-				<Typography variant="overline">Filter State By :</Typography>
-				<Tab className={classes.tab} value="new" label="New"/>
-				<Tab className={classes.tab} value="inProgress" label="InProgress"/>
-				<Tab className={classes.tab} value="accepted" label="Accepted"/>
-				<Tab className={classes.tab} value="rejected" label="Rejected"/>
-				<Tab className={classes.tab} value="" label="ShowAll"/>
+				<Typography variant="overline"><FormattedMessage id="tab.filter.state"/></Typography>
+				<Tab className={classes.tab} value="new" label={<FormattedMessage id="tab.filter.new"/>}/>
+				<Tab className={classes.tab} value="inProgress" label={<FormattedMessage id="tab.filter.inProgress"/>}/>
+				<Tab className={classes.tab} value="accepted" label={<FormattedMessage id="tab.filter.accepted"/>}/>
+				<Tab className={classes.tab} value="rejected" label={<FormattedMessage id="tab.filter.rejected"/>}/>
+				<Tab className={classes.tab} value="" label={<FormattedMessage id="tab.filter.showall"/>}/>
 			</Tabs>
 		</>
 	);

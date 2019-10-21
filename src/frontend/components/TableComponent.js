@@ -33,6 +33,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {Table, TableBody, TableCell, TableHead, TableFooter, TableRow, TableSortLabel, Paper, IconButton} from '@material-ui/core';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import {FormattedMessage} from 'react-intl';
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -228,7 +229,7 @@ function TablePaginationActions(props) {
 			>
 				{theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
 			</IconButton>
-			<span>Page{page}</span>
+			<span><FormattedMessage id="table.footer.page"/>{page}</span>
 			<IconButton
 				/* global QUERY_LIMIT */
 				/* eslint no-undef: "error" */

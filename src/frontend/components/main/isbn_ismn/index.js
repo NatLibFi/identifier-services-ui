@@ -30,7 +30,7 @@ import React from 'react';
 import {Grid, Typography, Button} from '@material-ui/core';
 import RightIcon from '@material-ui/icons/ChevronRight';
 import useStyles from '../../../styles/isbnismn';
-import {para1, para2, para3} from './text';
+import {FormattedMessage} from 'react-intl';
 
 export default function () {
 	const classes = useStyles();
@@ -41,20 +41,14 @@ export default function () {
 					<Typography variant="h4">ISBN and ISMN </Typography>
 					<hr/>
 					<Typography paragraph>
-						{para1}
-					</Typography>
-					<Typography paragraph>
-						{para2}
-					</Typography>
-					<Typography paragraph>
-						{para3}
+						<FormattedMessage id="app.home.ISBN-ISMN" values={{lineBreak: <br/>}}/>
 					</Typography>
 					<Button
 						color="primary"
 						href="https://www.kansalliskirjasto.fi/en/services/expert-services-of-data-description/isbn"
 						target="_blank"
 					>
-                        More in details
+						<FormattedMessage id="app.home.more-button"/>
 						<RightIcon/>
 					</Button>
 				</Grid>

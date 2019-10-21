@@ -32,12 +32,13 @@ import {withRouter} from 'react-router-dom';
 import {TextField, InputAdornment, IconButton} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import {useCookies} from 'react-cookie';
+import {injectIntl} from 'react-intl';
 
 import useStyles from '../styles/searchComponent';
 import * as actions from '../store/actions';
 
-export default connect(null, actions)(withRouter(props => {
-	const {searchFunction, history, setSearchInputVal} = props;
+export default connect(null, actions)(withRouter(injectIntl(props => {
+	const {searchFunction, history, setSearchInputVal, intl} = props;
 	const classes = useStyles();
 	const [inputVal, setInputVal] = useState('');
 	const [cookie] = useCookies('login-cookie');
@@ -61,7 +62,7 @@ export default connect(null, actions)(withRouter(props => {
 		<form onSubmit={handleSubmit}>
 			<TextField
 				id="outlined-bare"
-				placeholder="Search..."
+				placeholder={intl.formatMessage({id: 'app.home.inputPlaceholder'})}
 				margin="normal"
 				variant="outlined"
 				InputProps={{
@@ -80,4 +81,4 @@ export default connect(null, actions)(withRouter(props => {
 	return {
 		...component
 	};
-}));
+})));
