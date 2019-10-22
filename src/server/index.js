@@ -33,14 +33,15 @@ import nodemailer from 'nodemailer';
 import bodyParser from 'body-parser';
 import validateContentType from '@natlibfi/express-validate-content-type';
 import parse from 'url-parse';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL} from './config';
-import * as frontendConfig from './frontEndConfig';
 import fetch from 'node-fetch';
 import base64 from 'base-64';
 import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
 import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL} from './config';
+import * as frontendConfig from './frontEndConfig';
+
 function bodyParse() {
 	validateContentType({
 		type: ['application/json']
@@ -191,7 +192,7 @@ app.get('/logOut', (req, res) => {
 
 app.post('/passwordreset', async (req, res) => {
 	const systemToken = await systemAuth();
-	const response = await fetch(`${API_URL}/users/${req.body.email}/password`, {
+	const response = await fetch(`${API_URL}/users/${req.body.id}/password`, {
 		method: 'POST',
 		headers: {
 			Authorization: 'Bearer ' + systemToken,
@@ -204,11 +205,8 @@ app.post('/passwordreset', async (req, res) => {
 });
 
 app.get('/users/passwordReset/:token', async (req, res) => {
-	const response = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
-	const encryptionKey = JSON.parse(response);
 	const token = req.params.token;
-
-	const decrypted = jwtEncrypt.readJWT(token, encryptionKey[0]);
+	const decrypted = decryptToken(token);
 	if (Date.now() <= decrypted.exp * 1000) {
 		// Const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
 		// const passportLocalList = JSON.parse(readResponse);
@@ -227,6 +225,12 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 	}
 });
 
+app.post('/decryptToken', async (req, res) => {
+	const token = req.body.token;
+	const result = decryptToken(token);
+	res.json(result);
+});
+
 app.get('/conf', (_req, res) => {
 	res.json(frontendConfig);
 });
@@ -237,3 +241,10 @@ app.get('*', (req, res) => {
 
 app.listen(HTTP_PORT, () => console.log('info', `Application Started on PORT ${HTTP_PORT}`));
 
+function decryptToken(token) {
+	const response = fs.readFileSync(`${PRIVATE_KEY_URL}`, 'utf-8');
+	const encryptionKey = JSON.parse(response);
+
+	const decrypted = jwtEncrypt.readJWT(token, encryptionKey[0]);
+	return decrypted;
+}

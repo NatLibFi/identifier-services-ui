@@ -51,3 +51,22 @@ export const passwordReset = values => async dispatch => {
 		});
 	}
 };
+
+export const decryptToken = values => async dispatch => {
+	try {
+		const response = await fetch('/decryptToken', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		return result.data.id;
+	} catch (err) {
+		dispatch({
+			type: ERROR,
+			payload: err
+		});
+	}
+};

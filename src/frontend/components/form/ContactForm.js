@@ -176,7 +176,6 @@ export default connect(mapToProps, actions)(reduxForm({
 
 function mapToProps(state) {
 	return ({
-		loading: state.contact.loading,
 		isAuthenticated: state.login.isAuthenticated,
 		captcha: state.common.captcha,
 		language: state.locale.lang
