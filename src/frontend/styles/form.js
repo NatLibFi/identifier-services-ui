@@ -155,6 +155,12 @@ const useStyles = makeStyles(theme => ({
 		justifyContent: 'space-between',
 		flexDirection: 'column',
 		height: 100
+	},
+
+	resetForm: {
+		border: '1px solid #d4cacad1',
+		padding: 20,
+		borderRadius: 5
 	}
 }));
 
