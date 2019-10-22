@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 	publicMenu: {
 		display: 'flex',
 		alignItems: 'center',
-		minWidth: 200,
+		minWidth: 200
 	},
 	adminMenu: {
 		display: 'flex',

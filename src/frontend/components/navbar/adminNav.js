@@ -28,7 +28,7 @@
 import React from 'react';
 import {NavLink as Link} from 'react-router-dom';
 import {FormattedMessage} from 'react-intl';
-import {AppBar, Button, Grid} from '@material-ui/core';
+import {AppBar, Grid} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
