@@ -26,7 +26,7 @@
  *
  */
 
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
 import {Button, Grid, IconButton} from '@material-ui/core';
@@ -37,14 +37,9 @@ import useStyles from '../../styles/form';
 import {commonStyles} from '../../styles/app';
 import renderTextField from './render/renderTextField';
 import * as actions from '../../store/actions';
+import Captcha from '../Captcha';
 
 const fieldArray = [
-	{
-		name: 'email',
-		type: 'email',
-		label: 'Email',
-		width: 'full'
-	},
 	{
 		name: 'newPassword',
 		type: 'password',
@@ -67,20 +62,50 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		handleSubmit,
 		passwordReset,
 		pristine,
+		isAuthenticated,
+		postCaptchaInput,
+		loadSvgCaptcha,
+		setMessage,
+		decryptToken,
+		captcha,
+		match,
 		valid
 	} = props;
+	const {params} = match;
 	const classes = useStyles();
 	const commonStyle = commonStyles();
 	const [error, setError] = useState(null);
+	const [captchaInput, setCaptchaInput] = useState('');
 
-	function handleOnSubmit(values) {
+	useEffect(() => {
+		if (!isAuthenticated) {
+			loadSvgCaptcha();
+		}
+	}, [isAuthenticated, loadSvgCaptcha]);
+
+	const handleCaptchaInput = e => {
+		setCaptchaInput(e.target.value);
+	};
+
+	async function handleOnSubmit(values) {
+		const id = await decryptToken(params);
 		const {newPassword, confirmPassword} = values;
-		if (confirmPassword === newPassword) {
-			setError(null);
-			passwordReset(values);
-			props.history.push('/');
-		} else {
-			setError('Password does not match');
+		if (captchaInput.length === 0) {
+			setMessage({color: 'error', msg: 'Captcha not provided!!!'});
+		} else if (captchaInput.length > 0) {
+			const result = await postCaptchaInput(captchaInput, captcha.id);
+			if (result === true) {
+				if (confirmPassword === newPassword) {
+					setError(null);
+					passwordReset({...values, id: id});
+					props.history.push('/');
+				} else {
+					setError('Password does not match');
+				}
+			} else {
+				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
+				loadSvgCaptcha();
+			}
 		}
 	}
 
@@ -103,6 +128,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						/>
 					</Grid>
 				))}
+				{error && <span>{error}</span>}
+				{isAuthenticated ? null :
+				<>
+					<Captcha
+						captchaInput={captchaInput}
+						handleCaptchaInput={handleCaptchaInput}/>
+					{/* eslint-disable-next-line react/no-danger */}
+					<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+				</>
+				}
 				<Grid item xs={12} className={classes.btnContainer}>
 					<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
 						Submit
@@ -120,6 +155,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 function mapStateToProps(state) {
 	return ({
 		email: state.login.userInfo.email,
+		isAuthenticated: state.login.isAuthenticated,
 		captcha: state.common.captcha
 	});
 }

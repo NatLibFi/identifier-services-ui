@@ -40,7 +40,7 @@ export default connect(null, actions)(props => {
 
 	const handleEmailSubmit = e => {
 		e.preventDefault();
-		passwordReset({email: email});
+		passwordReset({id: email});
 	};
 
 	const component = (

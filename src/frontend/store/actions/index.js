@@ -76,7 +76,8 @@ export {
 } from './userActions';
 
 export {
-	passwordReset
+	passwordReset,
+	decryptToken
 } from './passwordResetAction';
 
 export {
