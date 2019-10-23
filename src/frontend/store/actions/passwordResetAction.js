@@ -40,9 +40,33 @@ export const passwordReset = values => async dispatch => {
 			},
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		if (result.status === HttpStatus.OK) {
+		if (response.status === HttpStatus.OK) {
 			dispatch(setMessage({color: 'success', msg: 'Password Changed successfully'}));
+			return response.status;
+		}
+	} catch (err) {
+		dispatch({
+			type: ERROR,
+			payload: err
+		});
+	}
+};
+
+export const passwordResetForm = values => async dispatch => {
+	try {
+		const response = await fetch('/passwordreset', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(values)
+		});
+		if (response.status === HttpStatus.OK) {
+			dispatch(setMessage({color: 'success', msg: 'Password reset link has been sent to your email'}));
+		}
+
+		if (response.status === HttpStatus.NOT_FOUND) {
+			dispatch(setMessage({color: 'error', msg: 'ID not found'}));
 		}
 	} catch (err) {
 		dispatch({

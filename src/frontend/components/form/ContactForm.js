@@ -143,7 +143,8 @@ export default connect(mapToProps, actions)(reduxForm({
 						<>
 							<Captcha
 								captchaInput={captchaInput}
-								handleCaptchaInput={handleCaptchaInput}/>
+								handleCaptchaInput={handleCaptchaInput}
+								className={classes.captcha}/>
 							{/* eslint-disable-next-line react/no-danger */}
 							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 						</>

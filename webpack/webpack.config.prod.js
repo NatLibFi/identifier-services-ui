@@ -35,6 +35,14 @@ module.exports = {
 		filename: '[name]-bundle.js',
 		publicPath: '/'
 	},
+	node: {
+		dns: 'mock',
+		net: 'mock',
+		fs: 'empty',
+		tls: 'mock',
+		// eslint-disable-next-line camelcase
+		child_process: 'empty'
+	},
 	module: {
 		rules: [
 			{

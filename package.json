@@ -9,6 +9,9 @@
   "bugs": {
     "url": "https://github.com/natlibfi/identifier-services-ui/issues"
   },
+  "browser":{
+    "child_process": false
+    } ,
   "repository": {
     "type": "git",
     "url": "git@github.com:natlibfi/identifier-services-ui.git"
