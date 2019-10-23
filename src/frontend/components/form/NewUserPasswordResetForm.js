@@ -29,10 +29,12 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
-import {Button, Grid} from '@material-ui/core';
+import {Button, Grid, IconButton} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
+import CloseIcon from '@material-ui/icons/Close';
 
 import useStyles from '../../styles/form';
+import {commonStyles} from '../../styles/app';
 import renderTextField from './render/renderTextField';
 import * as actions from '../../store/actions';
 import Captcha from '../Captcha';
@@ -71,6 +73,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} = props;
 	const {params} = match;
 	const classes = useStyles();
+	const commonStyle = commonStyles();
 	const [error, setError] = useState(null);
 	const [captchaInput, setCaptchaInput] = useState('');
 
@@ -106,9 +109,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 	}
 
+	const hideError = () => {
+		setError(null);
+	};
+
 	const component = (
 		<form className={classes.passwordResetContainer} onSubmit={handleSubmit(handleOnSubmit)}>
-			<Grid container spacing={2}>
+			<Grid container spacing={2} className={classes.resetForm}>
+				{error && <div className={commonStyle.loginError}>{error}<IconButton onClick={hideError}><CloseIcon/></IconButton></div>}
 				{fieldArray.map(list => (
 					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 						<Field
@@ -120,16 +128,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						/>
 					</Grid>
 				))}
-				{error && <span>{error}</span>}
-				{isAuthenticated ? null :
-				<>
-					<Captcha
-						captchaInput={captchaInput}
-						handleCaptchaInput={handleCaptchaInput}/>
-					{/* eslint-disable-next-line react/no-danger */}
-					<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-				</>
-				}
+				<Grid item xs={12}>
+					{isAuthenticated ? null :
+					<>
+						<Captcha
+							captchaInput={captchaInput}
+							handleCaptchaInput={handleCaptchaInput}
+							className={classes.resetFormCaptcha}/>
+						{/* eslint-disable-next-line react/no-danger */}
+						<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+					</>
+					}
+				</Grid>
 				<Grid item xs={12} className={classes.btnContainer}>
 					<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
 						Submit

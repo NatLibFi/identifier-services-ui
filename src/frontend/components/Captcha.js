@@ -28,17 +28,15 @@
 
 import React from 'react';
 import {TextField} from '@material-ui/core';
-import useStyles from '../styles/form';
 
 export default function (props) {
-	const {captchaInput, handleCaptchaInput} = props;
-	const classes = useStyles();
+	const {captchaInput, handleCaptchaInput, className} = props;
 	const component = (
 		<TextField
 			variant="outlined"
 			label="Type the word shown in the picture"
 			value={captchaInput}
-			className={classes.captcha}
+			className={className}
 			onChange={handleCaptchaInput}/>
 	);
 

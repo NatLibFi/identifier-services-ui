@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 	},
 	subContainer: {
 		flexGrow: 1,
-		padding: '0 10px'
+		padding: '0 20px'
 	},
 	btnContainer: {
 		marginTop: 35,
@@ -110,6 +110,9 @@ const useStyles = makeStyles(theme => ({
 		marginTop: '10px',
 		width: '40%'
 	},
+	resetFormCaptcha: {
+		width: '100%'
+	},
 	authors: {
 		display: 'flex',
 		flexDirection: 'column',
@@ -154,7 +157,14 @@ const useStyles = makeStyles(theme => ({
 		display: 'flex',
 		justifyContent: 'space-between',
 		flexDirection: 'column',
-		height: 100
+		height: 100,
+		padding: '10px 20px'
+	},
+
+	resetForm: {
+		border: '1px solid #d4cacad1',
+		padding: 20,
+		borderRadius: 5
 	}
 }));
 

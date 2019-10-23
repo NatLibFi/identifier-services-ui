@@ -200,8 +200,7 @@ app.post('/passwordreset', async (req, res) => {
 		},
 		body: JSON.stringify(req.body)
 	});
-	const result = await response.json();
-	res.json({status: result});
+	res.status(response.status).json();
 });
 
 app.get('/users/passwordReset/:token', async (req, res) => {

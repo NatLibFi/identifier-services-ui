@@ -41,11 +41,13 @@ import renderTextField from '../form/render/renderTextField';
 import useStyles from '../../styles/login';
 import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
+import {commonStyles} from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'login', validate})(props => {
 	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
+	const commonStyle = commonStyles();
 	const formClasses = useFormStyles();
 	const [showPassword, setShowPassword] = useState(false);
 	const [loginError, setLoginError] = useState(null);
@@ -70,7 +72,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const component = (
 		<form onSubmit={handleSubmit(handleLogin)}>
 			<section className={classes.loginForm}>
-				{loginError && <div className={classes.loginError}>{loginError}<IconButton onClick={hideError}><CloseIcon/></IconButton></div>}
+				{loginError && <div className={commonStyle.loginError}>{loginError}<IconButton onClick={hideError}><CloseIcon/></IconButton></div>}
 				<Grid container className={classes.inputGap} spacing={4} alignItems="flex-end">
 					<Grid item xs={1}>
 						<PersonIcon className={classes.personIcon}/>

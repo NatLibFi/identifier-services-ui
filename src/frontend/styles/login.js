@@ -81,17 +81,6 @@ const useStyles = makeStyles({
 	},
 	resetBtn: {
 		width: '100%'
-	},
-	loginError: {
-		background: '#ffdce0',
-		padding: '0 10px',
-		color: '#a23737',
-		marginBottom: 15,
-		border: '1px solid #a04242',
-		borderRadius: 5,
-		display: 'flex',
-		justifyContent: 'space-between',
-		alignItems: 'center'
 	}
 });
 
