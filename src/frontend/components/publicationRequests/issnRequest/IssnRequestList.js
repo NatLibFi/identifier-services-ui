@@ -34,15 +34,18 @@ import {Grid, Typography} from '@material-ui/core';
 import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
-import useStyles from '../../../styles/publisherLists';
+import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import TabComponent from '../../TabComponent';
 import IssnRequest from './IssnRequest';
+import ModalLayout from '../../ModalLayout';
+import useModalStyles from '../../../styles/formList';
+import IssnRegForm from '../../form/PublicationRegIssnForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -50,14 +53,18 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [issnRequestId, setIssnRequestId] = useState(null);
 	const [modal, setModal] = useState(false);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const modalClasses = useModalStyles();
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
+	}, [cookie, fetchIssnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIssnRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -82,6 +89,7 @@ export default connect(mapStateToProps, actions)(props => {
 					.map(item => issnRequestRender(item.id, item.state, item.title, item.language))}
 				handleTableRowClick={handleTableRowClick}
 				headRows={headRows}
+				rowSelectedId={rowSelectedId}
 				offset={offset}
 				cursors={cursors}
 				page={page}
@@ -103,7 +111,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publication Requests for ISSN</Typography>
 				<SearchComponent searchFunction={fetchIssnRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
@@ -112,6 +120,9 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
+				<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+					<IssnRegForm setIsCreating={setIsCreating} {...props}/>
+				</ModalLayout>
 				{issnRequestData}
 				<IssnRequest modal={modal} setModal={setModal} id={issnRequestId} setIssnId={setIssnRequestId}/>
 			</Grid>

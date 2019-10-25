@@ -34,12 +34,14 @@ import contact from './messageReducer';
 import common from './commonReducer';
 import userReducer from './userReducer';
 import publicationReducer from './publicationReducer';
+import identifierRangesReducer from './identifierRangesReducer';
 
 export default combineReducers({
 	locale: localeReducer,
 	form: forms,
 	publisher: publisherReducer,
 	publication: publicationReducer,
+	identifierRanges: identifierRangesReducer,
 	login: authReducer,
 	contact: contact,
 	common: common,

@@ -39,7 +39,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../styles/publisher';
+import {commonStyles} from '../../styles/app';
 import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
@@ -63,13 +63,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		handleSubmit,
 		isAuthenticated,
 		userInfo} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
 
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchPublisher(id, cookie['login-cookie']);
 		}
@@ -83,8 +82,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const formatPublisherDetail = {...publisher, ...publisher.organizationDetails};
-	const {organizationDetails, _id, ...formattedPublisherDetail} = formatPublisherDetail;
+	const {organizationDetails, _id, ...formattedPublisherDetail} = {...publisher, ...publisher.organizationDetails, notes: publisher && publisher.notes && publisher.notes.map(item => {
+		return {note: Buffer.from(item).toString('base64')};
+	})};
 	let publisherDetail;
 	if ((Object.keys(publisher).length === 0) || loading) {
 		publisherDetail = <Spinner/>;
@@ -149,9 +149,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publisher Detail" {...props}>
 			{isEdit ?
-				<div className={classes.publisher}>
+				<div className={classes.listItem}>
 					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
 							{publisherDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
@@ -162,8 +162,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</div>
 					</form>
 				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
 						{publisherDetail}
 					</Grid>
 					{isAuthenticated && userInfo.role === 'publisher' &&

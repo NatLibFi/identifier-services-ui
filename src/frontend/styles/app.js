@@ -26,6 +26,7 @@
  *
  */
 import {createMuiTheme} from '@material-ui/core';
+import {makeStyles} from '@material-ui/core/styles';
 
 const theme = createMuiTheme({
 	palette: {
@@ -61,6 +62,16 @@ const theme = createMuiTheme({
 			padding: {
 				paddingTop: 0,
 				paddingBottom: 0
+			}
+		},
+		MuiListItem: {
+			gutters: {
+				paddingLeft: 0,
+				paddingRight: 0
+			},
+			root: {
+				paddingTop: 5,
+				paddingBottom: 5
 			}
 		},
 		MuiMenu: {
@@ -100,6 +111,69 @@ const theme = createMuiTheme({
 			}
 		}
 	}
+});
+
+export const commonStyles = makeStyles({
+
+	'@global': {
+		body: {
+			overflow: 'auto !important',
+			paddingRight: '0 !important',
+			background: '#ffffff'
+		},
+		a: {
+			textDecoration: 'none',
+			color: '#00224f'
+		}
+	},
+
+	bodyContainer: {
+		minHeight: 'calc(100vh - 300px)'
+	},
+	listSearch: {
+		maxWidth: '1200px',
+		margin: '0 auto',
+		paddingTop: '60px'
+	},
+	listItemSpinner: {
+		justifyContent: 'center'
+	},
+	listItem: {
+		width: 900,
+		minWidth: '750px',
+		padding: '20px'
+	},
+	btnContainer: {
+		display: 'flex',
+		justifyContent: 'flex-end'
+	},
+	editForm: {
+		width: '100%'
+	},
+	textArea: {
+		width: '50%',
+		background: '#ecefec75',
+		borderRadius: '5px'
+	},
+	deniedContainer: {
+		display: 'flex',
+		flexDirection: 'column',
+		alignItems: 'center',
+		marginTop: 40
+	},
+	loginError: {
+		background: '#ffdce0',
+		padding: '0 10px',
+		color: '#a23737',
+		marginBottom: 15,
+		border: '1px solid #a04242',
+		borderRadius: 5,
+		display: 'flex',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		width: '100%'
+	}
+
 });
 
 export default theme;

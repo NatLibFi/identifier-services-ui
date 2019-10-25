@@ -143,7 +143,8 @@ export default connect(mapToProps, actions)(reduxForm({
 						<>
 							<Captcha
 								captchaInput={captchaInput}
-								handleCaptchaInput={handleCaptchaInput}/>
+								handleCaptchaInput={handleCaptchaInput}
+								className={classes.captcha}/>
 							{/* eslint-disable-next-line react/no-danger */}
 							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 						</>
@@ -176,7 +177,6 @@ export default connect(mapToProps, actions)(reduxForm({
 
 function mapToProps(state) {
 	return ({
-		loading: state.contact.loading,
 		isAuthenticated: state.login.isAuthenticated,
 		captcha: state.common.captcha,
 		language: state.locale.lang

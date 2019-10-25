@@ -25,25 +25,26 @@
  * for the JavaScript code in this file.
  *
  */
-
 import React, {useState} from 'react';
 import {TextField, Button} from '@material-ui/core';
 import useStyles from '../../styles/login';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
-
 export default connect(null, actions)(props => {
-	const {passwordReset} = props;
+	const {passwordResetForm, handleClose} = props;
+	console.log(props);
 	const [email, setEmail] = useState('');
 	const classes = useStyles();
-
 	const handleEmailChange = e => {
 		setEmail(e.target.value);
 	};
 
-	const handleEmailSubmit = e => {
+	const handleEmailSubmit = async e => {
 		e.preventDefault();
-		passwordReset(email);
+		const result = await passwordResetForm({id: email});
+		if (result === 200) {
+			handleClose();
+		}
 	};
 
 	const component = (
@@ -69,7 +70,6 @@ export default connect(null, actions)(props => {
 			</form>
 		</>
 	);
-
 	return {
 		...component
 	};

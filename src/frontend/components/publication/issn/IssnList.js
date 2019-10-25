@@ -40,6 +40,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [issnId, setIssnId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchIssnList({token: cookie['login-cookie'], offset: lastCursor});
@@ -48,6 +49,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const handleTableRowClick = id => {
 		setIssnId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const headRows = [
@@ -63,6 +65,7 @@ export default connect(mapStateToProps, actions)(props => {
 			loading={loading}
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}
+			rowSelectedId={rowSelectedId}
 			cursors={setLastCursor}
 			publicationList={issnList}
 			setLastCursor={setLastCursor}

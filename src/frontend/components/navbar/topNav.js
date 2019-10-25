@@ -25,7 +25,7 @@
  * for the JavaScript code in this file.
  *
  */
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {AppBar, Typography, Grid, Menu, MenuItem} from '@material-ui/core';
 
 import LanguageIcon from '@material-ui/icons/Language';
@@ -33,6 +33,7 @@ import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import useStyles from '../../styles/topNav';
 import Logo from '../../assets/logo/logo.png';
@@ -41,11 +42,16 @@ import * as actions from '../../store/actions';
 import LoginLayout from '../login/LoginLayout';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {setLocale, userInfo, isAuthenticated} = props;
+	const {setLocale, userInfo, isAuthenticated, getNotification, notification} = props;
 	const classes = useStyles();
-	const [openNotification, setOpenNotification] = useState(true);
+	const [openNotification, setOpenNotification] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [forgotPwd, setPwd] = useState(false);
+
+	useEffect(() => {
+		getNotification();
+		setOpenNotification(notification !== null && notification.length > 0);
+	}, [getNotification, notification]);
 
 	function handleClick(event) {
 		setAnchorEl(event.currentTarget);
@@ -85,7 +91,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<>
-			{openNotification && <NotificationBar handleClose={handleCloseNotification}/>}
+			{openNotification && <NotificationBar notification={notification} handleClose={handleCloseNotification}/>}
 			<Grid container className={classes.topBarContainer}>
 				<Grid item xs={12} className={classes.topBar}>
 					<AppBar position="static">
@@ -99,7 +105,7 @@ export default connect(mapStateToProps, actions)(props => {
 							<div className={props.loggedIn ? classes.rightMenu : classes.rightMenuLogIn}>
 								{isAuthenticated ?
 									<LoginLayout name="login" label={`Welcome, ${userInfo.displayName.toUpperCase()}`} color="secondary" classed={classes.loginButton} {...props}/> :
-									<LoginLayout name="login" title={forgotPwd ? 'Forgot Password ?' : 'Login'} label="login" variant="outlined" color="secondary" classed={classes.loginButton} {...props} setPwd={setPwd} forgotPwd={forgotPwd}/>
+									<LoginLayout name="login" title={forgotPwd ? 'Forgot Password ?' : <FormattedMessage id="login.loginForm.title"/>} label={<FormattedMessage id="app.topNav.login"/>} variant="outlined" color="secondary" classed={classes.loginButton} {...props} setPwd={setPwd} forgotPwd={forgotPwd}/>
 								}
 
 								<LanguageIcon/>
@@ -121,9 +127,9 @@ export default connect(mapStateToProps, actions)(props => {
 									}}
 									onClose={handleClose}
 								>
-									<MenuItem onClick={changeLangEn}>English</MenuItem>
-									<MenuItem onClick={changeLangFi}>Suomi</MenuItem>
-									<MenuItem onClick={changeLangSv}>Svenska</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangEn}>English</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangFi}>Suomi</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangSv}>Svenska</MenuItem>
 								</Menu>
 							</div>
 						</div>
@@ -142,6 +148,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		lang: state.locale.lang
+		lang: state.locale.lang,
+		notification: state.common.notification
 	});
 }

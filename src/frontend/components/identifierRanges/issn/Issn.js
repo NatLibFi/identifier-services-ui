@@ -30,10 +30,13 @@ import React, {useState, useEffect} from 'react';
 import {
 	Button,
 	Grid,
+	List,
+	ListItem,
+	ListItemText,
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import {reduxForm} from 'redux-form';
+import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
 import {commonStyles} from '../../../styles/app';
@@ -41,25 +44,28 @@ import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../../ModalLayout';
-import PublicationRenderComponent from '../PublicationRenderComponent';
+import Spinner from '../../Spinner';
+import renderTextField from '../../form/render/renderTextField';
+import ListComponent from '../../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'isbnIsmnUpdateForm',
+	form: 'issnUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, isbnIsmn, userInfo, loading, fetchIsbnIsmn, handleSubmit} = props;
+	const {
+		fetchIDRIssn,
+		id,
+		issn,
+		loading} = props;
 	const classes = commonStyles();
-	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
-
 	useEffect(() => {
 		if (id !== null) {
-			fetchIsbnIsmn({id: id, token: cookie['login-cookie']});
+			fetchIDRIssn(id, cookie['login-cookie']);
 		}
-	}, [cookie, fetchIsbnIsmn, id]);
-
+	}, [cookie, fetchIDRIssn, id]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -68,45 +74,93 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const handlePublicationUpdate = values => {
-		const {_id, ...updateValues} = values;
-		const token = cookie['login-cookie'];
-		console.log(updateValues, token);
-		// UpdatePublication(id, updateValues, token);
-		setIsEdit(false);
-	};
+	const {_id, ...formattedIssn} = {...issn, notes: issn && issn.notes && issn.notes.map(item => {
+		return {note: Buffer.from(item).toString('base64')};
+	})};
+	let issnDetail;
+	if ((Object.keys(issn).length === 0) || loading) {
+		issnDetail = <Spinner/>;
+	} else {
+		issnDetail = (
+			<>
+				{isEdit ?
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								<ListItem>
+									<ListItemText>
+										<Grid container>
+											<Grid item xs={4}>Prefix:</Grid>
+											<Grid item xs={8}><Field name="prefix" className={classes.editForm} component={renderTextField}/></Grid>
+										</Grid>
+									</ListItemText>
+								</ListItem>
+							</List>
+						</Grid>
+					</> :
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedIssn).map(key => {
+										return typeof formattedIssn[key] === 'string' ?
+											(
+												<ListComponent label={key} value={formattedIssn[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedIssn).map(key => {
+										return typeof formattedIssn[key] === 'object' ?
+											(
+												<ListComponent label={key} value={formattedIssn[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+					</>
+				}
+			</>
+		);
+	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publication Detail" {...props}>
+		<ModalLayout isTableRow color="primary" title="Identifier Ranges ISSN" {...props}>
 			{isEdit ?
 				<div className={classes.listItem}>
 					<form>
 						<Grid container spacing={3} className={classes.listItemSpinner}>
-							<PublicationRenderComponent publication={isbnIsmn} loading={loading} isEdit={isEdit}/>
+							{issnDetail}
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
-							<Button variant="contained" color="primary" onClick={handleSubmit(handlePublicationUpdate)}>
-								UPDATE
+							<Button variant="contained" color="primary">
+                            UPDATE
 							</Button>
 						</div>
 					</form>
 				</div> :
 				<div className={classes.listItem}>
 					<Grid container spacing={3} className={classes.listItemSpinner}>
-						<PublicationRenderComponent publication={isbnIsmn} loading={loading} isEdit={isEdit}/>
+						{issnDetail}
 					</Grid>
-					{role !== undefined && role === 'admin' &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit isbnIsmn Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
+					<div className={classes.btnContainer}>
+						<Fab
+							color="primary"
+							size="small"
+							title="Edit Issn Detail"
+							onClick={handleEditClick}
+						>
+							<EditIcon/>
+						</Fab>
+					</div>
 				</div>
 			}
 		</ModalLayout>
@@ -118,9 +172,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		isbnIsmn: state.publication.isbnIsmn,
-		loading: state.publication.loading,
-		initialValues: state.publication.isbnIsmn,
-		userInfo: state.login.userInfo
+		issn: state.identifierRanges.issn,
+		loading: state.identifierRanges.loading,
+		initialValues: state.identifierRanges.issn
 	});
 }

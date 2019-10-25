@@ -36,16 +36,16 @@ import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
 import IsbnIsmnRequest from './IsbnIsmnRequest';
 import useModalStyles from '../../../styles/formList';
-import useStyles from '../../../styles/publisherLists';
+import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import ModalLayout from '../../ModalLayout';
-import PublicationRegistrationForm from '../../form/PublicationRegistrationForm';
+import IsbnIsmnRegForm from '../../form/IsbnIsmnRegForm';
 import TabComponent from '../../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
@@ -54,14 +54,18 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor]);
+		setIsCreating(false);
+	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -85,6 +89,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={publicationIsbnIsmnRequestList
 					.map(item => publicationIsbnIsmnRequestRender(item.id, item.state, item.title, item.language))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
@@ -107,7 +112,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">Search Publication Requests for ISBN-ISMN</Typography>
 				<SearchComponent searchFunction={fetchPublicationIsbnIsmnRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
@@ -116,8 +121,8 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<PublicationRegistrationForm {...props}/>
+				<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+					<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{publicationIsbnIsmnRequestData}
 				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>

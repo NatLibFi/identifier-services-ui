@@ -26,88 +26,90 @@
  *
  */
 
-import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
+import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
-import {Grid, Typography, Checkbox, FormControlLabel} from '@material-ui/core';
-import {FormattedMessage} from 'react-intl';
+import {connect} from 'react-redux';
+import {Grid, Typography, FormControlLabel, Checkbox} from '@material-ui/core';
 
-import SearchComponent from '../SearchComponent';
-import {commonStyles} from '../../styles/app';
-import TableComponent from '../TableComponent';
-import * as actions from '../../store/actions';
-import Spinner from '../Spinner';
-import Publisher from './Publisher';
+import * as actions from '../../../store/actions';
+import Spinner from '../../Spinner';
+import TableComponent from '../../TableComponent';
+import {commonStyles} from '../../../styles/app';
+import SearchComponent from '../../SearchComponent';
+import Ismn from './Ismn';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = commonStyles();
-	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
+	const {fetchIDRIsmnList, ismnList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const [inputVal, setSearchInputVal] = (location.state === undefined || location.state === null) ? useState('') : useState(location.state.searchText);
+	const classes = commonStyles();
+	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
-	const [activeCheck, setActiveCheck] = useState({
-		checked: false
-	});
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
-	const [publisherId, setPublisherId] = useState(null);
+	const [ismnId, setIsmnId] = useState(null);
+	const [activeCheck, setActiveCheck] = useState({
+		checked: false
+	});
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
-	}, [lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
+		fetchIDRIsmnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
+	}, [activeCheck, cookie, fetchIDRIsmnList, inputVal, lastCursor]);
+
+	const handleTableRowClick = id => {
+		setIsmnId(id);
+		setModal(true);
+		setRowSelectedId(id);
+	};
 
 	const handleChange = name => event => {
 		setActiveCheck({...activeCheck, [name]: event.target.checked});
 	};
 
-	const handleTableRowClick = id => {
-		setPublisherId(id);
-		setModal(true);
-		setRowSelectedId(id);
-	};
-
 	const headRows = [
-		{id: 'name', label: 'Name'},
-		{id: 'phone', label: 'Phone'}
+		{id: 'prefix', label: 'Prefix'},
+		{id: 'rangeStart', label: 'RangeStart'},
+		{id: 'rangeEnd', label: 'RangeEnd'}
 	];
-	let publishersData;
-	if (loading) {
-		publishersData = <Spinner/>;
-	} else if (searchedPublishers.length === 0) {
-		publishersData = <p>No Search Result</p>;
+
+	let ismnData;
+	if ((ismnList === undefined) || (loading)) {
+		ismnData = <Spinner/>;
+	} else if (ismnList.length === 0) {
+		ismnData = <p>No Data</p>;
 	} else {
-		publishersData = (
+		ismnData = (
 			<TableComponent
-				data={searchedPublishers.map(item => searchResultRender(item.id, item.name, item.phone))}
+				data={ismnList
+					.map(item => ismnListRender(item.id, item.prefix, item.rangeStart, item.rangeEnd))}
 				handleTableRowClick={handleTableRowClick}
-				headRows={headRows}
 				rowSelectedId={rowSelectedId}
+				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
 				page={page}
 				setPage={setPage}
 				setLastCursor={setLastCursor}
-				totalDoc={totalDoc}
 				queryDocCount={queryDocCount}
 			/>
 		);
 	}
 
-	function searchResultRender(id, name, phone) {
+	function ismnListRender(id, prefix, rangeStart, rangeEnd) {
 		return {
 			id: id,
-			name: name,
-			phone: phone
+			prefix: prefix,
+			rangeStart: rangeStart,
+			rangeEnd: rangeEnd
 		};
 	}
 
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5"><FormattedMessage id="publisher.search.title"/></Typography>
-				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
+				<Typography variant="h5">Search Identifier Ranges ISMN</Typography>
+				<SearchComponent searchFunction={fetchIDRIsmnList} setSearchInputVal={setSearchInputVal}/>
 				<FormControlLabel
 					control={
 						<Checkbox
@@ -117,10 +119,10 @@ export default connect(mapStateToProps, actions)(props => {
 							onChange={handleChange('checked')}
 						/>
 					}
-					label={<FormattedMessage id="publisher.search.filter"/>}
+					label="Show only active ISMN"
 				/>
-				{publishersData}
-				<Publisher id={publisherId} modal={modal} setModal={setModal}/>
+				{ismnData}
+				<Ismn id={ismnId} modal={modal} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);
@@ -131,11 +133,10 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.listLoading,
-		searchedPublishers: state.publisher.searchedPublisher,
-		publishersList: state.publisher.publishersList,
-		offset: state.publisher.offset,
-		totalDoc: state.publisher.totalDoc,
-		queryDocCount: state.publisher.queryDocCount
+		loading: state.identifierRanges.listLoading,
+		ismnList: state.identifierRanges.ismnList,
+		offset: state.identifierRanges.offset,
+		totalDoc: state.identifierRanges.totalDoc,
+		queryDocCount: state.identifierRanges.queryDocCount
 	});
 }

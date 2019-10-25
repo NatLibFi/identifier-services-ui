@@ -347,7 +347,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			publisherValues,
 			isAuthenticated,
 			handleClose,
-			setMessage
+			setMessage,
+			setIsCreating
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -397,6 +398,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const handlePublisherRegistration = async values => {
 			if (isAuthenticated) {
 				publisherCreationRequest(formatPublisher(values));
+				setIsCreating(true);
 			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
@@ -504,7 +506,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<>
 									<Captcha
 										captchaInput={captchaInput}
-										handleCaptchaInput={handleCaptchaInput}/>
+										handleCaptchaInput={handleCaptchaInput}
+										className={classes.captcha}/>
 									{/* eslint-disable-next-line react/no-danger */}
 									<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
 								</>

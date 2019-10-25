@@ -26,7 +26,7 @@
  *
  */
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Grid, Button, Link, Typography, IconButton} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import PersonIcon from '@material-ui/icons/Person';
@@ -34,31 +34,45 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
+import CloseIcon from '@material-ui/icons/Close';
 
 import renderTextField from '../form/render/renderTextField';
 import useStyles from '../../styles/login';
 import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
+import {commonStyles} from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'login', validate})(props => {
 	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
+	const commonStyle = commonStyles();
 	const formClasses = useFormStyles();
-	const [showPassword, setShowPassword] = React.useState(false);
+	const [showPassword, setShowPassword] = useState(false);
+	const [loginError, setLoginError] = useState(null);
 
 	const handleLogin = async values => {
 		/* global API_URL */
 		/* eslint no-undef: "error" */
 		const response = await normalLogin({...values, API_URL: API_URL});
-		// eslint-disable-next-line no-unused-expressions
-		response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
-		handleClose();
+		if (response === 'unauthorize') {
+			setLoginError('Incorrect username or Password');
+		} else {
+			// eslint-disable-next-line no-unused-expressions
+			response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
+			handleClose();
+		}
+	};
+
+	const hideError = () => {
+		setLoginError(null);
 	};
 
 	const component = (
-		<form className={classes.loginForm} onSubmit={handleSubmit(handleLogin)}>
-			<section>
+		<form onSubmit={handleSubmit(handleLogin)}>
+			<section className={classes.loginForm}>
+				{loginError && <div className={commonStyle.loginError}>{loginError}<IconButton onClick={hideError}><CloseIcon/></IconButton></div>}
 				<Grid container className={classes.inputGap} spacing={4} alignItems="flex-end">
 					<Grid item xs={1}>
 						<PersonIcon className={classes.personIcon}/>
@@ -68,7 +82,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Field
 							className={formClasses.textField}
 							name="username"
-							label="UserName"
+							label={<FormattedMessage id="login.normal.username"/>}
 							component={renderTextField}
 						/>
 					</Grid>
@@ -84,7 +98,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<Field
 							className={formClasses.textField}
 							name="password"
-							label="Password"
+							label={<FormattedMessage id="login.normal.password"/>}
 							type={showPassword ? 'text' : 'password'}
 							component={renderTextField}
 						/>
@@ -97,15 +111,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					size="large"
 					disabled={pristine || !valid}
 				>
-					Login
+					<FormattedMessage id="login.normal.button"/>
 				</Button>
 				<div className={classes.pwdresetLink}>
-					<span onClick={() => setPwd(true)}>Forgot Password ?</span>
+					<span onClick={() => setPwd(true)}><FormattedMessage id="login.normal.forgotPassword"/></span>
 				</div>
 			</section>
 			<div className={classes.notes}>
-				<Typography>Read about management of personal information on the
-					<Link> Data protection page.</Link>
+				<Typography><FormattedMessage id="login.normal.info"/>
+					<Link><FormattedMessage id="login.normal.infoLink"/></Link>
 				</Typography>
 			</div>
 		</form>

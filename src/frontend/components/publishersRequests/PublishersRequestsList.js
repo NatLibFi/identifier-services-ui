@@ -30,21 +30,22 @@ import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
 
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
 import PublisherRequest from './publisherRequest';
 import useModalStyles from '../../styles/formList';
-import useStyles from '../../styles/publisherLists';
 import SearchComponent from '../SearchComponent';
 import TabComponent from '../TabComponent';
 import ModalLayout from '../ModalLayout';
 import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
+import {commonStyles} from '../../styles/app';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
 	const [cookie] = useCookies('login-cookie');
-	const classes = useStyles();
+	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
@@ -53,14 +54,17 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [publisherRequestId, setPublisherRequestId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
-	}, [cookie, fetchPublishersRequestsList, inputVal, sortStateBy, lastCursor]);
+	}, [cookie, fetchPublishersRequestsList, isCreating, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setPublisherRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -84,6 +88,7 @@ export default connect(mapStateToProps, actions)(props => {
 				data={publishersRequestsList
 					.map(item => publishersRequestsRender(item.id, item.state, item.name, item.language))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
@@ -106,8 +111,8 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
-				<Typography variant="h5">Search Publishers Request</Typography>
+			<Grid item xs={12} className={classes.listSearch}>
+				<Typography variant="h5"><FormattedMessage id="request.publisher.search-title"/></Typography>
 				<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
 					tabClass={classes.tab}
@@ -115,8 +120,8 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="Publisher Registration" title="Publisher Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<PublisherRegistrationForm {...props}/>
+				<ModalLayout form label="Publisher Registration" title={<FormattedMessage id="request.button.publisher-registration"/>} name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+					<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{publishersRequestsData}
 				<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>

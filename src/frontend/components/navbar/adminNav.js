@@ -27,7 +27,8 @@
  */
 import React from 'react';
 import {NavLink as Link} from 'react-router-dom';
-import {AppBar, Button, Grid} from '@material-ui/core';
+import {FormattedMessage} from 'react-intl';
+import {AppBar, Grid} from '@material-ui/core';
 import HomeIcon from '@material-ui/icons/Home';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 
@@ -39,47 +40,47 @@ export default function ({userInfo, isAuthenticated}) {
 
 	const obj = [
 		{
-			label: 'Publishers',
+			label: <FormattedMessage id="app.menu.publishers"/>,
 			roleView: ['admin', 'publisher'],
 			path: 'publishers'
 		},
 		{
-			label: 'Publications',
-			roleView: ['admin', 'publisher', 'publisher-admin'],
+			label: <FormattedMessage id="app.menu.publications"/>,
+			roleView: ['admin', 'publisher-admin', 'publisher'],
 			listItem: [
-				{label: 'ISBN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
-				{label: 'ISMN', path: 'publications/isbn-ismn', roleView: ['admin', 'publisher', 'publisher-admin']},
-				{label: 'ISSN', path: 'publications/issn', roleView: ['admin', 'publisher', 'publisher-admin']}
+				{label: <FormattedMessage id="app.subMenu.ISBN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher-admin', 'publisher']},
+				{label: <FormattedMessage id="app.subMenu.ISMN"/>, path: 'publications/isbn-ismn', roleView: ['admin', 'publisher-admin', 'publisher']},
+				{label: <FormattedMessage id="app.subMenu.ISSN"/>, path: 'publications/issn', roleView: ['admin', 'publisher-admin', 'publisher']}
 			]
 		},
 		{
-			label: 'Requests',
-			roleView: ['admin', 'system', 'publisher', 'publisher-admin'],
+			label: <FormattedMessage id="app.menu.requests"/>,
+			roleView: ['admin', 'system', 'publisher-admin', 'publisher'],
 			listItem: [
-				{label: 'Publishers', path: 'requests/publishers', roleView: ['admin', 'system']},
-				{label: 'Publications', roleView: ['admin', 'system', 'publisher', 'publisher-admin'], listItem: [
-					{label: 'ISBN-SMN', path: 'requests/publications/isbn-ismn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']},
-					{label: 'ISSN', path: 'requests/publications/issn', roleView: ['admin', 'system', 'publisher', 'publisher-admin']}
+				{label: <FormattedMessage id="app.subMenu.publishers"/>, path: 'requests/publishers', roleView: ['admin', 'system']},
+				{label: <FormattedMessage id="app.subMenu.publications"/>, roleView: ['admin', 'system', 'publisher-admin', 'publisher'], listItem: [
+					{label: <FormattedMessage id="app.subSubMenu.ISBN-ISMN"/>, path: 'requests/publications/isbn-ismn', roleView: ['admin', 'system', 'publisher-admin', 'publisher']},
+					{label: <FormattedMessage id="app.subSubMenu.ISSN"/>, path: 'requests/publications/issn', roleView: ['admin', 'system', 'publisher-admin', 'publisher']}
 				]},
-				{label: 'Users', path: 'requests/users', roleView: ['admin', 'system', 'publisher-admin']}
+				{label: <FormattedMessage id="app.subMenu.users"/>, path: 'requests/users', roleView: ['admin', 'system', 'publisher-admin']}
 			]
 		},
 		{
-			label: 'Users',
+			label: <FormattedMessage id="app.menu.users"/>,
 			roleView: ['admin', 'publisher-admin'],
 			path: 'users'
 		},
 		{
-			label: 'Identifier Ranges',
+			label: <FormattedMessage id="app.menu.identifierRanges"/>,
 			roleView: ['admin'],
 			listItem: [
-				{label: 'ISBN', path: 'ranges/isbn', roleView: ['admin']},
-				{label: 'ISMN', path: 'ranges/ismn', roleView: ['admin']},
-				{label: 'ISSN', path: 'ranges/issn', roleView: ['admin']}
+				{label: <FormattedMessage id="app.subMenu.IRISBN"/>, path: 'ranges/isbn', roleView: ['admin']},
+				{label: <FormattedMessage id="app.subMenu.IRISMN"/>, path: 'ranges/ismn', roleView: ['admin']},
+				{label: <FormattedMessage id="app.subMenu.IRISSN"/>, path: 'ranges/issn', roleView: ['admin']}
 			]
 		},
 		{
-			label: 'Message Templates',
+			label: <FormattedMessage id="app.menu.messageTemplates"/>,
 			path: 'templates',
 			roleView: ['admin']
 		}
@@ -87,13 +88,13 @@ export default function ({userInfo, isAuthenticated}) {
 	const nav = (
 		<Grid container>
 			<Grid item xs={12}>
-				<AppBar position="static" color="secondary">
+				<AppBar position="static" color="secondary" className={classes.appBar}>
 					<div>
 						<div className={classes.adminMenu}>
 							{isAuthenticated ? renderMenuTabs() : (
 								<div className={classes.publicMenu}>
-									<Link exact to="/" activeClassName={classes.active}><Button><HomeIcon fontSize="default" color="primary"/></Button></Link>
-									<Link exact to="/publishers" activeClassName={classes.active}><Button>Publishers</Button></Link>
+									<Link exact to="/" activeClassName={classes.active}><div className={classes.menuIcon}><HomeIcon fontSize="default" color="primary"/></div></Link>
+									<Link exact to="/publishers" activeClassName={classes.active}><div className={classes.menuItem}><FormattedMessage id="app.publicMenu.publishers"/></div></Link>
 								</div>
 							)
 							}
@@ -109,10 +110,10 @@ export default function ({userInfo, isAuthenticated}) {
 			(
 				<>
 					<Link exact to={`/publishers/${userInfo.publisher}`} activeClassName={classes.active}>
-						<Button><AccountBoxIcon fontSize="default" color="primary"/></Button>
+						<div className={classes.menuIcon}><AccountBoxIcon fontSize="default" color="primary"/></div>
 					</Link>
 					{obj.map(list => list.roleView.includes(userInfo.role) && (
-						<MenuTabs key={list.label} role={userInfo.role} list={list}/>
+						<MenuTabs role={userInfo.role} list={list}/>
 					))}
 				</>
 			) : obj.map(list => list.roleView.includes(userInfo.role) && (

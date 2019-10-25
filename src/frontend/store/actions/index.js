@@ -61,7 +61,8 @@ export {
 	loadSvgCaptcha,
 	postCaptchaInput,
 	setFormName,
-	setMessage
+	setMessage,
+	getNotification
 } from './commonAction';
 
 export {
@@ -75,7 +76,9 @@ export {
 } from './userActions';
 
 export {
-	passwordReset
+	passwordResetForm,
+	passwordReset,
+	decryptToken
 } from './passwordResetAction';
 
 export {
@@ -92,3 +95,12 @@ export {
 	fetchIssnRequest,
 	updateIssnRequest
 } from './publicationAction';
+
+export {
+	fetchIDRIsbnList,
+	fetchIDRIsbn,
+	fetchIDRIsmnList,
+	fetchIDRIsmn,
+	fetchIDRIssnList,
+	fetchIDRIssn
+} from './identifierRangesActions';

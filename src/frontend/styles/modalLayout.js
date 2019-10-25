@@ -29,44 +29,23 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-	'@global': {
-		'*::-webkit-scrollbar': {
-			width: '10px'
-		},
-		'*::-webkit-scrollbar *': {
-			background: 'transparent'
-		},
-		/* Track */
-		// '*::-webkit-scrollbar-track': {
-		// 	background: 'transparent'
-		// },
-
-		/* Handle */
-		'*::-webkit-scrollbar-thumb': {
-			background: '#00224F'
-		},
-		body: {
-			overflow: 'auto !important',
-			paddingRight: '0 !important'
-		},
-		a: {
-			textDecoration: 'none',
-			color: '#00224f'
-		}
-	},
 
 	container: {
 		display: 'grid',
 		alignItems: 'center'
 	},
+	modaltitle: {
+		borderBottom: '1px solid #c0c0c091',
+		background: 'whitesmoke',
+		color: '#00224f',
+		padding: '10px 20px'
+	},
 	main: {
 		minHeight: 90,
-		minWidth: 350,
 		maxHeight: 900,
 		overflowY: 'auto',
 		position: 'relative',
 		margin: '0px auto',
-		padding: 20,
 		borderRadius: 5,
 		backgroundColor: '#fff',
 		outline: 'none'
@@ -78,6 +57,7 @@ const useStyles = makeStyles({
 			fontSize: '1rem',
 			borderRadius: '50%'
 		},
+		color: '#00224f',
 		position: 'absolute',
 		cursor: 'pointer',
 		right: 0,

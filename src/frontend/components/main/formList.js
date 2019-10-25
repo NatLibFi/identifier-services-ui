@@ -29,6 +29,7 @@
 import React from 'react';
 import {Typography, Grid} from '@material-ui/core';
 import {withRouter} from 'react-router-dom';
+import {FormattedMessage} from 'react-intl';
 
 import useStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
@@ -37,21 +38,22 @@ import SwitchPublicationForm from '../form/SwitchPublicationForm';
 import ContactForm from '../form/ContactForm';
 
 export default withRouter(props => {
+	const [dynamicTitle, setDynamicTitle] = React.useState('');
 	const formListsArray = [
-		{label: 'Publisher Registration', name: 'publisherRegistration', component: <PublisherRegistrationForm {...props}/>},
-		{label: 'Publication Registration', name: 'publicationRegistration', component: <SwitchPublicationForm {...props}/>},
-		{label: 'Contact Form', name: 'contactForm', component: <ContactForm {...props}/>}
+		{label: <FormattedMessage id="app.home.formButtons.publisherRegistration"/>, title: 'Publisher Registration', name: 'publisherRegistration', component: <PublisherRegistrationForm {...props}/>},
+		{label: <FormattedMessage id="app.home.formButtons.publicationRegistration"/>, title: `Publication Registration ${dynamicTitle}`, name: 'publicationRegistration', component: <SwitchPublicationForm title={dynamicTitle} setTitle={setDynamicTitle} {...props}/>},
+		{label: <FormattedMessage id="app.home.formButtons.contactForm"/>, title: 'Contact Form', name: 'contactForm', component: <ContactForm {...props}/>}
 	];
 	const classes = useStyles();
 	return (
 		<div className={classes.formListContainer}>
 			<Grid container spacing={2} className={classes.formContainer}>
 				<Grid item xs={12}>
-					<Typography variant="h4" align="center">Forms</Typography>
+					<Typography variant="h4" align="center"><FormattedMessage id="app.home.formHeading"/></Typography>
 				</Grid>
 
 				{formListsArray.map(item => (
-					<ModalLayout key={item.label} form label={item.label} title={item.label} name={item.name} variant="outlined" classed={classes.button} color="primary">
+					<ModalLayout key={item.label} form label={item.label} title={item.title} dynamicTitle={dynamicTitle} setDynamicTitle={setDynamicTitle} name={item.name} variant="outlined" classed={classes.button} color="primary">
 						{item.component}
 					</ModalLayout>
 				))}

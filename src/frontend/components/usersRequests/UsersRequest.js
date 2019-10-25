@@ -29,26 +29,24 @@
 
 import React, {useState, useEffect} from 'react';
 import {
+	ButtonGroup,
 	Typography,
 	Button,
 	Grid,
 	List,
-	ListItem,
-	ListItemText,
-	Fab
+	TextareaAutosize
 } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@material-ui/icons/Done';
+
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
-
-import useStyles from '../../styles/publisher';
+import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
-import UserCreationForm from '../form/UserCreationForm';
+import ListComponent from '../ListComponent';
+import CustomColor from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
@@ -56,35 +54,83 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {id, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {role} = userInfo;
-	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
-	const token = cookie['login-cookie'];
-	const [newValues, setNewValues] = useState({});
+	const [buttonState, setButtonState] = useState('');
+	const [reject, setReject] = useState(false);
+	const [rejectReason, setRejectReason] = useState('');
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchUserRequest(id, token);
+			fetchUserRequest(id, cookie['login-cookie']);
 		}
-	}, [cookie, fetchUserRequest, id, token]);
+	}, [cookie, fetchUserRequest, id, buttonState]);
 
-	function handleDoneClick() {
+	async function handleAccept() {
 		const requestToUpdate = {
-			...newValues,
-			state: 'inProgress',
-			backgroundProcessingState: 'inProgress'
+			...usersRequest,
+			givenName: usersRequest.givenName.toLowerCase(),
+			familyName: usersRequest.familyName.toLowerCase(),
+			role: usersRequest.role,
+			state: 'accepted'
 		};
-		updateUserRequest(id, requestToUpdate, token);
+
+		await updateUserRequest(id, requestToUpdate, cookie['login-cookie']);
+		setButtonState(usersRequest.state);
 	}
 
-	const handleEditClick = () => {
-		setIsEdit(true);
-	};
+	function handleRejectClick() {
+		setReject(!reject);
+	}
 
-	const handleCancel = () => {
-		setIsEdit(false);
-	};
+	function handleRejectReason(e) {
+		setRejectReason(e.target.value);
+	}
+
+	function handleRejectSubmit() {
+		const requestToUpdate = {
+			...usersRequest,
+			state: 'rejected',
+			rejectionReason: rejectReason
+		};
+		updateUserRequest(id, requestToUpdate, cookie['login-cookie']);
+		setReject(!reject);
+		setButtonState(usersRequest.state);
+	}
+
+	function renderButton(state) {
+		switch (state) {
+			case 'new':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button disabled={usersRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			case 'accepted':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="contained" color="primary" size="small" style={{cursor: 'not-allowed'}}>Accepted</Button>
+					</ButtonGroup>
+				);
+			case 'rejected':
+				return (
+					<ButtonGroup color="error" aria-label="outlined primary button group">
+						<Button variant="contained" style={CustomColor.palette.red} size="small">Rejected</Button>
+					</ButtonGroup>
+				);
+			case 'inProgress':
+				return (
+					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
+					</ButtonGroup>
+				);
+			default:
+				return null;
+		}
+	}
 
 	let userRequestDetail;
 	if (usersRequest.length < 1 || loading) {
@@ -92,34 +138,31 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} else {
 		userRequestDetail = (
 			<>
-				<Grid item xs={12}>
-					{isEdit ?
-						<UserCreationForm setNewValues={setNewValues}/> :
-						<List>
-							<Grid container xs={12}>
-								{Object.keys(usersRequest).map(key => (
-									<ListItem key={key}>
-										<ListItemText>
-											{(typeof usersRequest[key] === 'object') ?
-												Object.keys(usersRequest[key]).map(subKey => (
-													<Grid key={subKey} container>
-														<Grid item xs={4}>{subKey}: </Grid>
-														<Grid item xs={8}>{usersRequest[key][subKey]}</Grid>
-													</Grid>
-												)) :
-												(
-													<Grid container>
-														<Grid item xs={4}>{key}: </Grid>
-														<Grid item xs={8}>{usersRequest[key]}</Grid>
-													</Grid>
-												)
-											}
-										</ListItemText>
-									</ListItem>
-								))}
-							</Grid>
-						</List>
-					}
+				<Grid item xs={12} md={6}>
+					<List>
+						{
+							Object.keys(usersRequest).map(key => {
+								return typeof usersRequest[key] === 'string' ?
+									(
+										<ListComponent label={key} value={usersRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
+				</Grid>
+				<Grid item xs={12} md={6}>
+					<List>
+						{
+							Object.keys(usersRequest).map(key => {
+								return typeof usersRequest[key] === 'object' ?
+									(
+										<ListComponent label={key} value={usersRequest[key]}/>
+									) :
+									null;
+							})
+						}
+					</List>
 				</Grid>
 			</>
 		);
@@ -131,40 +174,37 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<Typography variant="h6">
 					Users Request Details
 				</Typography>
-				{isEdit ?
-					<div className={classes.publisher}>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{userRequestDetail}
-						</Grid>
-						<div className={classes.btnContainer}>
-							<Button onClick={handleCancel}>Cancel</Button>
-							<Fab
-								color="primary"
-								size="small"
-								title="Done"
-								onClick={handleDoneClick}
-							>
-								<DoneIcon/>
-							</Fab>
-						</div>
-					</div> :
-					<div className={classes.publisher}>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
-							{userRequestDetail}
-						</Grid>
-						{role !== undefined && role === 'admin' &&
-							<div className={classes.btnContainer}>
-								<Fab
-									color="primary"
-									size="small"
-									title="Edit User Detail"
-									onClick={handleEditClick}
-								>
-									<EditIcon/>
-								</Fab>
-							</div>}
-					</div>
-				}
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
+						{userRequestDetail}
+					</Grid>
+					{role !== undefined && role === 'admin' &&
+						reject ?
+							<>
+								<Grid item xs={12}>
+									<TextareaAutosize
+										aria-label="Minimum height"
+										rows={8}
+										placeholder="Rejection reason here..."
+										className={classes.textArea}
+										value={rejectReason}
+										onChange={handleRejectReason}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+								</Grid>
+							</> : (
+
+								<Grid item xs={12}>
+									{
+										renderButton(usersRequest.state)
+									}
+								</Grid>
+							)
+					}
+				</div>
 			</>
 		</ModalLayout>
 	);

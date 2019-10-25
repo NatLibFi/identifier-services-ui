@@ -9,6 +9,9 @@
   "bugs": {
     "url": "https://github.com/natlibfi/identifier-services-ui/issues"
   },
+  "browser":{
+    "child_process": false
+    } ,
   "repository": {
     "type": "git",
     "url": "git@github.com:natlibfi/identifier-services-ui.git"
@@ -49,7 +52,9 @@
     "eslint-plugin-react": "^7.14.2",
     "eslint-plugin-react-hooks": "^1.6.1",
     "express": "^4.17.1",
+    "fs": "0.0.1-security",
     "i": "^0.3.6",
+    "jwt-token-encrypt": "^1.0.4",
     "node-fetch": "^2.6.0",
     "nodemailer": "^6.2.1",
     "npm": "^6.11.2",

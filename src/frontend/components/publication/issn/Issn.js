@@ -36,7 +36,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
-import useStyles from '../../../styles/publisher';
+import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -49,7 +49,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {id, issn, userInfo, loading, fetchIssn, handleSubmit} = props;
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
 	const [cookie] = useCookies('login-cookie');
@@ -79,9 +79,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const component = (
 		<ModalLayout isTableRow color="primary" {...props}>
 			{isEdit ?
-				<div className={classes.publisher}>
+				<div className={classes.listItem}>
 					<form>
-						<Grid container spacing={3} className={classes.publisherSpinner}>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
 							<PublicationRenderComponent publication={issn} loading={loading} isEdit={isEdit}/>
 						</Grid>
 						<div className={classes.btnContainer}>
@@ -92,8 +92,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</div>
 					</form>
 				</div> :
-				<div className={classes.publisher}>
-					<Grid container spacing={3} className={classes.publisherSpinner}>
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
 						<PublicationRenderComponent publication={issn} loading={loading} isEdit={isEdit}/>
 					</Grid>
 					{role !== undefined && role === 'admin' &&

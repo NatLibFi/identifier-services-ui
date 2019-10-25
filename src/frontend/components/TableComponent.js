@@ -33,6 +33,7 @@ import {makeStyles, useTheme} from '@material-ui/core/styles';
 import {Table, TableBody, TableCell, TableHead, TableFooter, TableRow, TableSortLabel, Paper, IconButton} from '@material-ui/core';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import {FormattedMessage} from 'react-intl';
 
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
@@ -129,7 +130,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function (props) {
-	const {data, headRows, handleTableRowClick} = props;
+	const {data, headRows, handleTableRowClick, rowSelectedId} = props;
 	const classes = useStyles();
 	const [order, setOrder] = React.useState('asc');
 	const [orderBy, setOrderBy] = React.useState(headRows[0].id);
@@ -157,7 +158,7 @@ export default function (props) {
 					{stableSort(data, getSorting(order, orderBy))
 						.map(row => {
 							return (
-								<TableRow key={row.id} className={classes.tableRow} onClick={() => handleTableRowClick(row.id)}>
+								<TableRow key={row.id} selected={row.id === rowSelectedId} className={classes.tableRow} onClick={() => handleTableRowClick(row.id)}>
 									{Object.keys(row).map(key => (key !== 'id') && (
 										<TableCell key={row[key]} component="th" scope="row">
 											{row[key]}
@@ -191,7 +192,6 @@ export default function (props) {
 
 function TablePaginationActions(props) {
 	const theme = useTheme();
-	const count = 10;
 	const {
 		offset,
 		cursors,
@@ -229,9 +229,11 @@ function TablePaginationActions(props) {
 			>
 				{theme.direction === 'rtl' ? <KeyboardArrowRight/> : <KeyboardArrowLeft/>}
 			</IconButton>
-			<span>Page{page}</span>
+			<span><FormattedMessage id="table.footer.page"/>{page}</span>
 			<IconButton
-				disabled={(count * page) >= queryDocCount}
+				/* global QUERY_LIMIT */
+				/* eslint no-undef: "error" */
+				disabled={queryDocCount <= QUERY_LIMIT}
 				aria-label="Next Page"
 				onClick={handleNextButtonClick}
 			>

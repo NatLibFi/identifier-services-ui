@@ -29,14 +29,14 @@
 import React, {useState} from 'react';
 import {Grid, Typography} from '@material-ui/core';
 
-import useStyles from '../../styles/publisherLists';
+import {commonStyles} from '../../styles/app';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
 import IsbnIsmn from './isbnIsmn/IsbnIsmn';
 import Issn from './issn/Issn';
 
 export default function (props) {
-	const classes = useStyles();
+	const classes = commonStyles();
 	const {
 		loading,
 		publicationList,
@@ -48,7 +48,8 @@ export default function (props) {
 		setLastCursor,
 		isbnIsmn,
 		issn,
-		handleTableRowClick
+		handleTableRowClick,
+		rowSelectedId
 	} = props;
 
 	const [page, setPage] = useState(1);
@@ -63,6 +64,7 @@ export default function (props) {
 			<TableComponent
 				data={publicationList.map(item => usersDataRender(item))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				page={page}
@@ -89,7 +91,7 @@ export default function (props) {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
 				{usersData}
 				{issn ?	<Issn {...props}/> : (

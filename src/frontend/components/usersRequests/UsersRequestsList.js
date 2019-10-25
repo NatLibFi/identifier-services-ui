@@ -33,7 +33,7 @@ import {useCookies} from 'react-cookie';
 
 import SearchComponent from '../SearchComponent';
 import UserRequest from './UsersRequest';
-import useStyles from '../../styles/publisherLists';
+import {commonStyles} from '../../styles/app';
 import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
@@ -43,7 +43,7 @@ import UserRequestForm from '../form/UserRequestForm';
 import TabComponent from '../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const classes = useStyles();
+	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset} = props;
 	const [cookie] = useCookies('login-cookie');
@@ -53,15 +53,19 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
+	const [isCreating, setIsCreating] = useState(false);
 	const [userRequestId, setUserRequestId] = useState(null);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
-	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setUserRequestId(id);
 		setModal(true);
+		setRowSelectedId(id);
 	};
 
 	const handleChange = (event, newValue) => {
@@ -84,6 +88,7 @@ export default connect(mapStateToProps, actions)(props => {
 			<TableComponent
 				data={usersRequestsList.map(item => usersDataRender(item.id, item.state, item.publisher, item.email))}
 				handleTableRowClick={handleTableRowClick}
+				rowSelectedId={rowSelectedId}
 				headRows={headRows}
 				offset={offset}
 				cursors={cursors}
@@ -107,7 +112,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const component = (
 		<Grid>
-			<Grid item xs={12} className={classes.publisherListSearch}>
+			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Users Creation Requests</Typography>
 				<SearchComponent offset={offset} searchFunction={fetchUsersRequestsList} setSearchInputVal={setSearchInputVal}/>
 				<TabComponent
@@ -115,7 +120,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
-					<UserRequestForm {...props}/>
+					<UserRequestForm setIsCreating={setIsCreating} {...props}/>
 				</ModalLayout>
 				{usersData}
 				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>

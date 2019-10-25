@@ -38,7 +38,7 @@ import useStyles from '../styles/modalLayout';
 import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
-	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, setPwd, modal, setModal} = props;
+	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, dynamicTitle, setDynamicTitle, setPwd, modal, setModal} = props;
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
@@ -64,6 +64,10 @@ export default connect(mapStateToProps)(withRouter(props => {
 		setAgree(null);
 		if (title === 'Forgot Password ?') {
 			setPwd(false);
+		}
+
+		if (dynamicTitle) {
+			setDynamicTitle('');
 		}
 
 		if (isTableRow) {
@@ -100,9 +104,11 @@ export default connect(mapStateToProps)(withRouter(props => {
 					<IconButton aria-label="Close" className={classes.closeButton} onClick={handleClose}>
 						<CloseIcon/>
 					</IconButton>
-					<Typography variant="h5" id={`modal-${name}`}>
+					{title &&
+					<Typography variant="h5" id={`modal-${name}`} className={classes.modaltitle}>
 						{title}
 					</Typography>
+					}
 					{React.cloneElement(children, {handleClose: handleClose})}
 				</div>
 			</Modal>

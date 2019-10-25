@@ -40,11 +40,48 @@ const useStyles = makeStyles({
 		margin: '0 auto'
 	},
 	active: {
-		borderBottom: '2px solid #00224F',
-		borderRadius: 0
+		'& span': {
+			fontWeight: 'bold'
+		}
 	},
-	menuExpansion: {
-		padding: '0 !important'
+	menuExpansionItem: {
+		padding: '0 !important',
+		margin: '0 !important'
+	},
+	expansionPanel: {
+		margin: '0 !important'
+	},
+	expansionPanelSummary: {
+		padding: '0px 10px !important',
+		background: '#fff'
+	},
+	appBar: {
+		height: 50,
+		justifyContent: 'center',
+		boxShadow: 'none',
+		borderBottom: '1px solid rgba(0, 34, 79, 0.33)',
+		background: 'whitesmoke'
+	},
+	menuItem: {
+		fontSize: '1rem',
+		height: 50,
+		display: 'flex',
+		alignItems: 'center',
+		'& :hover': {
+			fontWeight: 'bold'
+		}
+	},
+	menuIcon: {
+		height: 50,
+		display: 'flex',
+		alignItems: 'center',
+		paddingRight: 20
+	},
+	menuContainer: {
+		padding: '10px !important',
+		'& :hover': {
+			fontWeight: 'bold'
+		}
 	}
 });
 

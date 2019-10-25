@@ -26,22 +26,33 @@
  *
  */
 
-import {USERS_LIST, LOADER, LIST_LOADER, ERROR, USERS_REQUESTS_LIST, FETCH_USER, FETCH_USERS_REQUEST} from '../actions/types';
+import {
+	LOADER,
+	LIST_LOADER,
+	ERROR,
+	IDR_ISBN_LIST,
+	IDR_ISBN,
+	IDR_ISMN_LIST,
+	IDR_ISMN,
+	IDR_ISSN_LIST,
+	IDR_ISSN
+} from '../actions/types';
 
 const initialState = {
-	usersList: [],
-	totalUsers: null,
+	isbnList: [],
+	isbn: {},
+
+	ismnList: [],
+	ismn: {},
+
+	issnList: [],
+	issn: {},
+
 	offset: null,
-
-	requestOffset: null,
-	usersRequest: {},
-	usersRequestsList: [],
-	totalUsersRequests: null,
-
+	totalDoc: null,
 	queryDocCount: null,
-	user: {},
-	loading: false,
 	listLoading: false,
+	loading: false,
 	error: {}
 };
 
@@ -57,34 +68,49 @@ export default function (state = initialState, action) {
 				...state,
 				listLoading: true
 			};
-		case FETCH_USER:
+		case IDR_ISBN_LIST:
 			return {
 				...state,
-				user: action.payload,
+				isbnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
+				queryDocCount: action.payload.queryDocCount,
+				listLoading: false
+			};
+		case IDR_ISBN:
+			return {
+				...state,
+				isbn: action.payload,
 				loading: false
 			};
-		case USERS_LIST:
+		case IDR_ISMN_LIST:
 			return {
 				...state,
-				usersList: action.payload.results,
+				ismnList: action.payload.results,
 				offset: action.payload.offset,
-				totalUsers: action.payload.totalDoc,
+				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
 				listLoading: false
 			};
-		case USERS_REQUESTS_LIST:
+		case IDR_ISMN:
 			return {
 				...state,
-				usersRequestsList: action.payload.results,
-				requestOffset: action.payload.offset,
-				totalUsersRequests: action.payload.totalDoc,
+				ismn: action.payload,
+				loading: false
+			};
+		case IDR_ISSN_LIST:
+			return {
+				...state,
+				issnList: action.payload.results,
+				offset: action.payload.offset,
+				totalDoc: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
 				listLoading: false
 			};
-		case FETCH_USERS_REQUEST:
+		case IDR_ISSN:
 			return {
 				...state,
-				usersRequest: action.payload,
+				issn: action.payload,
 				loading: false
 			};
 		case ERROR:

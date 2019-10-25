@@ -42,6 +42,15 @@ export const PUBLICATION_ISBN_ISMN_REQUEST = 'PUBLICATION_ISBN_ISMN_REQUEST';
 export const ISSN_REQUESTS_LIST = 'ISSN_REQUESTS_LIST';
 export const ISSN_REQUEST = 'ISSN_REQUEST';
 
+export const IDR_ISBN_LIST = 'IDR_ISBN_LIST';
+export const IDR_ISBN = 'IDR_ISBN';
+
+export const IDR_ISSN_LIST = 'IDR_ISSN_LIST';
+export const IDR_ISSN = 'IDR_ISSN';
+
+export const IDR_ISMN_LIST = 'IDR_ISMN_LIST';
+export const IDR_ISMN = 'IDR_ISMN';
+
 export const SEARCH_PUBLISHER = 'SEARCH_PUBLISHER';
 export const ERROR = 'ERROR';
 export const LOCALE_SET = 'LOCALE_SET';
@@ -67,3 +76,5 @@ export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
 export const FETCH_ISSN = 'FETCH_ISSN';
 
 export const SET_FORM_NAME = 'SET_FORM_NAME';
+
+export const GET_NOTIFICATION = 'GET_NOTIFICATION';

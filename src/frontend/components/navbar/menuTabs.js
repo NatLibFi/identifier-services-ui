@@ -27,8 +27,8 @@
  */
 import React from 'react';
 import {connect} from 'react-redux';
-import {NavLink as Link} from 'react-router-dom';
-import {Button, Menu, MenuItem, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography} from '@material-ui/core';
+import {NavLink} from 'react-router-dom';
+import {Menu, MenuItem, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, Typography, Link} from '@material-ui/core';
 import ArrowDropDown from '@material-ui/icons/ArrowDropDown';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import useStyles from '../../styles/adminNav';
@@ -50,7 +50,11 @@ export default connect(null, actions)(props => {
 	const component = (
 		<>
 			<div className={classes.publicMenu} onClick={handleClick}>
-				<Link exact to={list.path && `/${list.path}`} activeClassName={classes.active}><Button>{list.label}</Button></Link>
+				{
+					list.path ?
+						<NavLink exact to={`/${list.path}`} activeClassName={classes.active}><div className={classes.menuItem}>{list.label}</div></NavLink> :
+						<Link component="button"><div className={classes.menuItem}>{list.label}</div></Link>
+				}
 				{list.listItem && <ArrowDropDown/>}
 			</div>
 
@@ -74,31 +78,31 @@ export default connect(null, actions)(props => {
 			>
 				{list.listItem.map(item => item.roleView && item.roleView.includes(role) ?
 					<>
-						<Link exact to={item.path && `/${item.path}`} activeClassName={classes.active}>
-							{item.listItem ?
-								<ExpansionPanel>
-									<ExpansionPanelSummary
-										expandIcon={<ExpandMoreIcon/>}
-										aria-controls="panel1a-content"
-										id="panel1a-header"
-										className={classes.menuExpansion}
-									>
-										<MenuItem>{item.label}</MenuItem>
+						{item.listItem ?
+							<ExpansionPanel className={classes.expansionPanel}>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+									className={classes.expansionPanelSummary}
+								>
+									<MenuItem className={classes.menuExpansionItem}>{item.label}</MenuItem>
 
-									</ExpansionPanelSummary>
-									<ExpansionPanelDetails>
-										<Typography>
-											{item.listItem.map(subItem => (
-												<Link key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
-													<MenuItem>{subItem.label}</MenuItem>
-												</Link>
-											))}
-										</Typography>
-									</ExpansionPanelDetails>
-								</ExpansionPanel> :
-								<MenuItem key={item.label}>{item.label}</MenuItem>
-							}
-						</Link>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<Typography>
+										{item.listItem.map(subItem => (
+											<NavLink key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
+												<MenuItem>{subItem.label}</MenuItem>
+											</NavLink>
+										))}
+									</Typography>
+								</ExpansionPanelDetails>
+							</ExpansionPanel> :
+							<NavLink exact to={`/${item.path}`} activeClassName={classes.active}>
+								<MenuItem key={item.label} className={classes.menuContainer}>{item.label}</MenuItem>
+							</NavLink>
+						}
 					</> :
 					null
 				)}
