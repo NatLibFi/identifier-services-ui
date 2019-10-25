@@ -9,9 +9,9 @@
   "bugs": {
     "url": "https://github.com/natlibfi/identifier-services-ui/issues"
   },
-  "browser":{
+  "browser": {
     "child_process": false
-    } ,
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:natlibfi/identifier-services-ui.git"
@@ -63,7 +63,7 @@
     "react-autosuggest": "^9.4.3",
     "react-cookie": "^4.0.1",
     "react-dom": "^16.8.6",
-    "react-intl": "^2.9.0",
+    "react-intl": "^3.4.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.0.1",
     "react-select": "^3.0.4",
