@@ -48,6 +48,11 @@ export default connect(mapStateToProps, actions)(props => {
 	const [openNotification, setOpenNotification] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [forgotPwd, setPwd] = useState(false);
+	const menuItem = [
+		{onClick: changeLangEn, label: 'English', lang: 'en'},
+		{onClick: changeLangFi, label: 'Suomi', lang: 'fi'},
+		{onClick: changeLangSv, label: 'Svenska', lang: 'sv'}
+	];
 
 	useEffect(() => {
 		getNotification();
@@ -66,20 +71,20 @@ export default connect(mapStateToProps, actions)(props => {
 		setOpenNotification(false);
 	};
 
-	const changeLangEn = () => {
+	function changeLangEn() {
 		setLocale('en');
 		setAnchorEl(null);
-	};
+	}
 
-	const changeLangFi = () => {
+	function changeLangFi() {
 		setLocale('fi');
 		setAnchorEl(null);
-	};
+	}
 
-	const changeLangSv = () => {
+	function changeLangSv() {
 		setLocale('sv');
 		setAnchorEl(null);
-	};
+	}
 
 	let langShort;
 	if (lang === 'en') {
@@ -128,9 +133,9 @@ export default connect(mapStateToProps, actions)(props => {
 									}}
 									onClose={handleClose}
 								>
-									<MenuItem className={classes.langMenu} onClick={changeLangEn}>English {lang === 'en' ? <CheckIcon/> : null}</MenuItem>
-									<MenuItem className={classes.langMenu} onClick={changeLangFi}>Suomi {lang === 'fi' ? <CheckIcon/> : null}</MenuItem>
-									<MenuItem className={classes.langMenu} onClick={changeLangSv}>Svenska {lang === 'sv' ? <CheckIcon/> : null}</MenuItem>
+									{menuItem.map(item =>
+										<MenuItem key={item.label} className={classes.langMenu} onClick={item.onClick}>{item.label} {lang === item.lang ? <CheckIcon/> : null}</MenuItem>
+									)}
 								</Menu>
 							</div>
 						</div>
