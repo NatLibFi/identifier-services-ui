@@ -30,7 +30,6 @@
 import React, {useState, useEffect} from 'react';
 import {
 	ButtonGroup,
-	Typography,
 	Button,
 	Grid,
 	List,
@@ -169,43 +168,38 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" {...props}>
-			<>
-				<Typography variant="h6">
-					Users Request Details
-				</Typography>
-				<div className={classes.listItem}>
-					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{userRequestDetail}
-					</Grid>
-					{role !== undefined && role === 'admin' &&
-						reject ?
-							<>
-								<Grid item xs={12}>
-									<TextareaAutosize
-										aria-label="Minimum height"
-										rows={8}
-										placeholder="Rejection reason here..."
-										className={classes.textArea}
-										value={rejectReason}
-										onChange={handleRejectReason}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
-									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
-								</Grid>
-							</> : (
+		<ModalLayout isTableRow color="primary" title="User Request Detail" {...props}>
+			<div className={classes.listItem}>
+				<Grid container spacing={3} className={classes.listItemSpinner}>
+					{userRequestDetail}
+				</Grid>
+				{role !== undefined && role === 'admin' &&
+					reject ?
+						<>
+							<Grid item xs={12}>
+								<TextareaAutosize
+									aria-label="Minimum height"
+									rows={8}
+									placeholder="Rejection reason here..."
+									className={classes.textArea}
+									value={rejectReason}
+									onChange={handleRejectReason}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+							</Grid>
+						</> : (
 
-								<Grid item xs={12}>
-									{
-										renderButton(usersRequest.state)
-									}
-								</Grid>
-							)
-					}
-				</div>
-			</>
+							<Grid item xs={12}>
+								{
+									renderButton(usersRequest.state)
+								}
+							</Grid>
+						)
+				}
+			</div>
 		</ModalLayout>
 	);
 	return {
