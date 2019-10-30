@@ -34,6 +34,7 @@ import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
+import CheckIcon from '@material-ui/icons/Check';
 
 import useStyles from '../../styles/topNav';
 import Logo from '../../assets/logo/logo.png';
@@ -42,7 +43,7 @@ import * as actions from '../../store/actions';
 import LoginLayout from '../login/LoginLayout';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {setLocale, userInfo, isAuthenticated, getNotification, notification} = props;
+	const {setLocale, userInfo, isAuthenticated, getNotification, notification, lang} = props;
 	const classes = useStyles();
 	const [openNotification, setOpenNotification] = useState(false);
 	const [anchorEl, setAnchorEl] = useState(null);
@@ -80,13 +81,13 @@ export default connect(mapStateToProps, actions)(props => {
 		setAnchorEl(null);
 	};
 
-	let lang;
-	if (props.lang === 'en') {
-		lang = 'EN';
-	} else if (props.lang === 'fi') {
-		lang = 'FI';
+	let langShort;
+	if (lang === 'en') {
+		langShort = 'EN';
+	} else if (lang === 'fi') {
+		langShort = 'FI';
 	} else {
-		lang = 'SV';
+		langShort = 'SV';
 	}
 
 	const component = (
@@ -110,7 +111,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 								<LanguageIcon/>
 								<div className={classes.languageSelect} onClick={handleClick}>
-									<span>{lang}</span>
+									<span>{langShort}</span>
 									<ArrowDropDown/>
 								</div>
 								<Menu
@@ -127,9 +128,9 @@ export default connect(mapStateToProps, actions)(props => {
 									}}
 									onClose={handleClose}
 								>
-									<MenuItem className={classes.langMenu} onClick={changeLangEn}>English</MenuItem>
-									<MenuItem className={classes.langMenu} onClick={changeLangFi}>Suomi</MenuItem>
-									<MenuItem className={classes.langMenu} onClick={changeLangSv}>Svenska</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangEn}>English {lang === 'en' ? <CheckIcon/> : null}</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangFi}>Suomi {lang === 'fi' ? <CheckIcon/> : null}</MenuItem>
+									<MenuItem className={classes.langMenu} onClick={changeLangSv}>Svenska {lang === 'sv' ? <CheckIcon/> : null}</MenuItem>
 								</Menu>
 							</div>
 						</div>
