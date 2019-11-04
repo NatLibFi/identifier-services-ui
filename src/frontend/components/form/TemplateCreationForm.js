@@ -97,7 +97,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			valid
 		} = props;
 		const classes = useStyles();
-		const [cookie] = useCookies('login-cookie');
+		/* global COOKIE_NAME */
+		const [cookie] = useCookies(COOKIE_NAME);
 
 		const handleCreateTemplate = async values => {
 			const newValues = {...values,
@@ -106,7 +107,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				notes: values.notes.map(note => Buffer.from(note).toString('base64'))
 			};
 			delete newValues.templateName;
-			createMessageTemplate(newValues, cookie['login-cookie']);
+			createMessageTemplate(newValues, cookie[COOKIE_NAME]);
 			handleClose();
 		};
 

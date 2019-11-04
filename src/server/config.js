@@ -60,3 +60,4 @@ export const PRIVATE_KEY_URL = readEnvironmentVariable('PRIVATE_KEY_URL');
 export const PASSPORT_LOCAL = readEnvironmentVariable('PASSPORT_LOCAL');
 export const SYSTEM_USERNAME = readEnvironmentVariable('SYSTEM_USERNAME');
 export const SYSTEM_PASSWORD = readEnvironmentVariable('SYSTEM_PASSWORD');
+export const COOKIE_NAME = readEnvironmentVariable('COOKIE_NAME');

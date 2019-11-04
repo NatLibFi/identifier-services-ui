@@ -65,7 +65,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		updatePublicationIsbnIsmnRequest
 	} = props;
 	const classes = commonStyles();
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
@@ -73,7 +74,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		if (id !== null) {
-			fetchPublicationIsbnIsmnRequest(id, cookie['login-cookie']);
+			fetchPublicationIsbnIsmnRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchPublicationIsbnIsmnRequest, id, buttonState]);
 
@@ -92,7 +93,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			rejectionReason: rejectReason
 		};
 		delete newPublicationIsbnIsmnRequest._id;
-		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie['login-cookie']);
+		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
 		setReject(!reject);
 		setButtonState(publicationIsbnIsmnRequest.state);
 	}
@@ -103,7 +104,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'accepted'
 		};
 		delete newPublicationIsbnIsmnRequest._id;
-		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie['login-cookie']);
+		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
 		setButtonState(publicationIsbnIsmnRequest.state);
 	}
 

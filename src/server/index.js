@@ -39,7 +39,7 @@ import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
 import fs from 'fs';
 import * as jwtEncrypt from 'jwt-token-encrypt';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL} from './config';
+import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
 import * as frontendConfig from './frontEndConfig';
 
 function bodyParse() {
@@ -127,7 +127,7 @@ app.post('/auth', async (req, res) => {
 		}
 	});
 	const token = result.headers.get('Token');
-	res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
+	res.cookie(COOKIE_NAME, token, {maxAge: 300000, secure: false});
 	res.status(200).json(token);
 });
 
@@ -186,7 +186,7 @@ app.get('/notification', (req, res) => {
 });
 
 app.get('/logOut', (req, res) => {
-	res.clearCookie('login-cookie');
+	res.clearCookie(COOKIE_NAME);
 	res.send('cookie cleared');
 });
 
@@ -217,7 +217,7 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 		// 	}
 		// });
 		// const token = result.headers.get('Token');
-		// res.cookie('login-cookie', token, {maxAge: 300000, secure: false});
+		// res.cookie(COOKIE_NAME, token, {maxAge: 300000, secure: false});
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	} else {
 		res.send('Link Expired !!!');

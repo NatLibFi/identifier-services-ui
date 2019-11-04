@@ -44,7 +44,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const {loading, fetchMessagesList, messagesList, totalMessages, queryDocCount, offset} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
@@ -53,7 +54,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchMessagesList(cookie['login-cookie'], lastCursor);
+		fetchMessagesList(cookie[COOKIE_NAME], lastCursor);
 	}, [lastCursor, cursors, fetchMessagesList, cookie]);
 
 	const handleTableRowClick = id => {

@@ -54,7 +54,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 })(props => {
 	const {id, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
 	const classes = commonStyles();
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
@@ -62,7 +63,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	useEffect(() => {
 		// eslint-disable-next-line no-undef
 		if (id !== null) {
-			fetchPublisherRequest(id, cookie['login-cookie']);
+			fetchPublisherRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchPublisherRequest, id, buttonState]);
 
@@ -81,7 +82,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			rejectionReason: rejectReason
 		};
 		delete newPublisherRequest._id;
-		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
 		setReject(!reject);
 		setButtonState(publisherRequest.state);
 	}
@@ -92,7 +93,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'accepted'
 		};
 		delete newPublisherRequest._id;
-		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie['login-cookie']);
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
 		setButtonState(publisherRequest.state);
 	}
 

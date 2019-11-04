@@ -88,7 +88,8 @@ async function run() {
 		});
 	}
 
-	const cookie = readCookie('login-cookie');
+	/* global COOKIE_NAME */
+	const cookie = readCookie(COOKIE_NAME);
 	if (cookie) {
 		store.dispatch(getUserInfo(cookie));
 	}

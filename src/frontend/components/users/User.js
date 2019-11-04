@@ -59,10 +59,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 
 	useEffect(() => {
-		const token = cookie['login-cookie'];
+		const token = cookie[COOKIE_NAME];
 		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchUser(id, token);

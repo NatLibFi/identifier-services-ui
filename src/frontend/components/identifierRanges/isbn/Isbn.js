@@ -60,11 +60,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		loading} = props;
 	const classes = commonStyles();
 	const [isEdit, setIsEdit] = useState(false);
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchIDRIsbn(id, cookie['login-cookie']);
+			fetchIDRIsbn(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchIDRIsbn, id]);
 

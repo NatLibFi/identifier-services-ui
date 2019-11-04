@@ -35,7 +35,8 @@ import PublicationListRenderComponent from '../PublicationListRenderComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIsbnIsmnList, isbnIsmnList, loading} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
@@ -43,7 +44,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchIsbnIsmnList({token: cookie['login-cookie'], offset: lastCursor});
+		fetchIsbnIsmnList({token: cookie[COOKIE_NAME], offset: lastCursor});
 	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
 
 	const handleTableRowClick = id => {

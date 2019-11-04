@@ -46,7 +46,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset, userInfo} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [inputVal, setSearchInputVal] = useState('');
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [page, setPage] = useState(1);
@@ -57,7 +58,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [userRequestId, setUserRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	useEffect(() => {
-		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
+		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie[COOKIE_NAME], offset: lastCursor});
 		setIsCreating(false);
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 

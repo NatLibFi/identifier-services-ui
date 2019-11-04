@@ -65,8 +65,9 @@ export default connect(null, actions)(reduxForm({
 	props => {
 		const {handleSubmit, valid, createUserRequest, pristine, handleClose, setIsCreating} = props;
 		const classes = useStyles();
-		const [cookie] = useCookies('login-cookie');
-		const token = cookie['login-cookie'];
+		/* global COOKIE_NAME */
+		const [cookie] = useCookies(COOKIE_NAME);
+		const token = cookie[COOKIE_NAME];
 
 		function getStepContent() {
 			return element(fieldArray, classes);
