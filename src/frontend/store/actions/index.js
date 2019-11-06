@@ -72,7 +72,8 @@ export {
 	fetchUserRequest,
 	fetchUsersList,
 	fetchUsersRequestsList,
-	updateUserRequest
+	updateUserRequest,
+	deleteUser
 } from './userActions';
 
 export {
