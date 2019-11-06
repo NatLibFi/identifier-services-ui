@@ -86,13 +86,17 @@ export default connect(mapStateToProps, actions)(props => {
 		setAnchorEl(null);
 	}
 
-	let langShort;
-	if (lang === 'en') {
-		langShort = 'EN';
-	} else if (lang === 'fi') {
-		langShort = 'FI';
-	} else {
-		langShort = 'SV';
+	function langShort(lang) {
+		let langShort;
+		if (lang === 'en') {
+			langShort = 'EN';
+		} else if (lang === 'fi') {
+			langShort = 'FI';
+		} else {
+			langShort = 'SV';
+		}
+
+		return langShort;
 	}
 
 	const component = (
@@ -116,7 +120,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 								<LanguageIcon/>
 								<div className={classes.languageSelect} onClick={handleClick}>
-									<span>{langShort}</span>
+									<span>{langShort(lang)}</span>
 									<ArrowDropDown/>
 								</div>
 								<Menu
