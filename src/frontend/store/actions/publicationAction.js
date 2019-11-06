@@ -136,7 +136,7 @@ export const publicationCreationRequest = values => async dispatch => {
 	return response.status;
 };
 
-export const fetchPublicationIsbnIsmnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+export const fetchPublicationIsbnIsmnRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {
 	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/query`, {
@@ -211,7 +211,7 @@ export const issnCreationRequest = values => async dispatch => {
 	return response.status;
 };
 
-export const fetchIssnRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+export const fetchIssnRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {
 	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publications/issn/query`, {

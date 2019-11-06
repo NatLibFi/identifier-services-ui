@@ -59,7 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie[COOKIE_NAME], sortStateBy, lastCursor);
+		fetchPublicationIsbnIsmnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 		setIsCreating(false);
 	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
