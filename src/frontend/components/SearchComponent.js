@@ -54,8 +54,8 @@ export default connect(null, actions)(withRouter(injectIntl(props => {
 			history.push('/publishers/', {searchText: inputVal});
 			searchFunction({searchText: inputVal, token: cookie[COOKIE_NAME]});
 		} else {
-			searchFunction({searchText: inputVal, token: cookie[COOKIE_NAME]});
 			setSearchInputVal(inputVal);
+			searchFunction({searchText: inputVal, token: cookie[COOKIE_NAME]});
 		}
 	};
 

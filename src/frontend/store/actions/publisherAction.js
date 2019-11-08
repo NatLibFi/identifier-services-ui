@@ -115,7 +115,7 @@ export const publisherCreationRequest = values => async dispatch => {
 	}
 };
 
-export const fetchPublishersRequestsList = (searchText, token, sortStateBy, offset) => async dispatch => {
+export const fetchPublishersRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {
 	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {

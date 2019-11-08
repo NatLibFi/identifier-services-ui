@@ -58,7 +58,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [userRequestId, setUserRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	useEffect(() => {
-		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie[COOKIE_NAME], offset: lastCursor});
+		fetchUsersRequestsList({searchText: inputVal, sortStateBy: sortStateBy, token: cookie[COOKIE_NAME], offset: lastCursor});
 		setIsCreating(false);
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 

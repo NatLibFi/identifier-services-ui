@@ -117,7 +117,7 @@ export const fetchUserRequest = (id, token) => async dispatch => {
 	}
 };
 
-export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) => async dispatch => {
+export const fetchUsersRequestsList = ({searchText, sortStateBy, token, offset}) => async dispatch => {
 	dispatch(setListLoader());
 	try {
 		const properties = {
@@ -129,7 +129,7 @@ export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) =
 				{'Content-Type': 'application/json'},
 			body: JSON.stringify({
 				queries: [{
-					query: {state: sortStateBy, $or: [{publisher: inputVal}, {givenName: inputVal}]}
+					query: {state: sortStateBy, $or: [{publisher: searchText}, {givenName: searchText}]}
 				}],
 				offset: offset
 			})
