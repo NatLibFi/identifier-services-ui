@@ -56,7 +56,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, user, userInfo, loading, fetchUser, deleteUser} = props;
+	const {id, user, userInfo, loading, fetchUser, deleteUser, setModal} = props;
 	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
@@ -66,7 +66,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		const token = cookie[COOKIE_NAME];
-		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchUser(id, token);
 		}
@@ -78,6 +77,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const handleDeleteUser = () => {
 		deleteUser(id, cookie[COOKIE_NAME]);
+		setModal(false);
 	};
 
 	const handleCancel = () => {
