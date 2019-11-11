@@ -112,4 +112,4 @@ export const decodeToken = values => async dispatch => {
 			payload: err
 		});
 	}
-}
+};
