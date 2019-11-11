@@ -79,7 +79,8 @@ export {
 export {
 	passwordResetForm,
 	passwordReset,
-	decryptToken
+	decryptToken,
+	decodeToken
 } from './passwordResetAction';
 
 export {

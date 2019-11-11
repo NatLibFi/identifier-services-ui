@@ -67,6 +67,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		loadSvgCaptcha,
 		setMessage,
 		decryptToken,
+		decodeToken,
 		captcha,
 		match,
 		valid
@@ -88,7 +89,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	};
 
 	async function handleOnSubmit(values) {
-		const id = await decryptToken(params);
+		const decrypted = await decryptToken(params);
+		const decode = await decodeToken({token: decrypted});
 		const {newPassword, confirmPassword} = values;
 		if (captchaInput.length === 0) {
 			setMessage({color: 'error', msg: 'Captcha not provided!!!'});
@@ -97,8 +99,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (result === true) {
 				if (confirmPassword === newPassword) {
 					setError(null);
-					passwordReset({...values, id: id});
-					props.history.push('/');
+					passwordReset({...values, id: decode.id});
+					// props.history.push('/');
 				} else {
 					setError('Password does not match');
 				}
