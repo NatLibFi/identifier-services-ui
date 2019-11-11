@@ -32,7 +32,7 @@ import {setLoader, setListLoader, success, fail} from './commonAction';
 
 // ***************ISBN****************************
 
-export const fetchIDRIsbnList = (searchText, token, offset, activeCheck) => async dispatch => {
+export const fetchIDRIsbnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
 	dispatch(setListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};
@@ -77,7 +77,7 @@ export const fetchIDRIsbn = (id, token) => async dispatch => {
 
 // ***************ISMN****************************
 
-export const fetchIDRIsmnList = (searchText, token, offset, activeCheck) => async dispatch => {
+export const fetchIDRIsmnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
 	dispatch(setListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};
@@ -122,7 +122,7 @@ export const fetchIDRIsmn = (id, token) => async dispatch => {
 
 // ***************ISSN****************************
 
-export const fetchIDRIssnList = (searchText, token, offset, activeCheck) => async dispatch => {
+export const fetchIDRIssnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
 	dispatch(setListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};

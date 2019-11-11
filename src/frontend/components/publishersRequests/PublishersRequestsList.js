@@ -59,7 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
-		fetchPublishersRequestsList(inputVal, cookie[COOKIE_NAME], sortStateBy, lastCursor);
+		fetchPublishersRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 	}, [cookie, fetchPublishersRequestsList, isCreating, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {

@@ -55,7 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchIDRIssnList(inputVal, cookie[COOKIE_NAME], lastCursor, activeCheck);
+		fetchIDRIssnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
 	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor]);
 
 	const handleTableRowClick = id => {
