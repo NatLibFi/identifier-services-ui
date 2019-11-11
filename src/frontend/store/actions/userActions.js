@@ -165,3 +165,20 @@ export const updateUserRequest = (id, values, token) => async dispatch => {
 		dispatch(fail(ERROR, err));
 	}
 };
+
+export const deleteUser = (id, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		console.log(id, token)
+		const response = await fetch(`${API_URL}/users/${id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: 'Bearer ' + token
+			}
+		});
+
+		console.log('deleteResponse', response);
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};

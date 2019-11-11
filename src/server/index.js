@@ -231,6 +231,12 @@ app.post('/decryptToken', async (req, res) => {
 	res.json(result);
 });
 
+app.post('/decodeToken', async (req, res) => {
+	const token = req.body.token;
+	const result = jose.JWT.decode(token);
+	res.json(result);
+});
+
 app.get('/conf', (_req, res) => {
 	res.json(frontendConfig);
 });

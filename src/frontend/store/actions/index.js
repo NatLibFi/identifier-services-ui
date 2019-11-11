@@ -72,13 +72,15 @@ export {
 	fetchUserRequest,
 	fetchUsersList,
 	fetchUsersRequestsList,
-	updateUserRequest
+	updateUserRequest,
+	deleteUser
 } from './userActions';
 
 export {
 	passwordResetForm,
 	passwordReset,
-	decryptToken
+	decryptToken,
+	decodeToken
 } from './passwordResetAction';
 
 export {

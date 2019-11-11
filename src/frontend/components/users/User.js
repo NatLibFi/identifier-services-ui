@@ -37,6 +37,7 @@ import {
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
 
@@ -47,6 +48,7 @@ import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
+import CustomColor from '../../styles/app';
 import renderTextField from '../form/render/renderTextField';
 
 export default connect(mapStateToProps, actions)(reduxForm({
@@ -54,7 +56,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, user, userInfo, loading, fetchUser} = props;
+	const {id, user, userInfo, loading, fetchUser, deleteUser, setModal} = props;
 	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
@@ -64,7 +66,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	useEffect(() => {
 		const token = cookie[COOKIE_NAME];
-		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchUser(id, token);
 		}
@@ -72,6 +73,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const handleEditClick = () => {
 		setIsEdit(true);
+	};
+
+	const handleDeleteUser = () => {
+		deleteUser(id, cookie[COOKIE_NAME]);
+		setModal(false);
 	};
 
 	const handleCancel = () => {
@@ -105,16 +111,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 													<Grid item xs={8}>{user[key]}</Grid>
 												}
 											</Grid> :
-											Object.keys(user[key]).map(subKey =>
+											Object.keys(user[key]).map(subKey => subKey !== 'emails' &&
 												(
 													<Grid key={subKey} container>
-														<Grid item xs={4}>{subKey}: </Grid>
+														{/* <Grid item xs={4}>{subKey}: </Grid>
 														{isEdit ?
 															<Grid item xs={8}>
 																<Field name={`${key}[${subKey}]`} className={formClasses.editForm} component={renderTextField}/>
 															</Grid> :
 															<Grid item xs={8}>{user[key][subKey]}</Grid>
-														}
+														} */}
 													</Grid>
 												)
 											)
@@ -151,7 +157,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						{userDetail}
 					</Grid>
 					{role !== undefined && role === 'admin' &&
-						<div className={classes.btnContainer}>
+						<div className={classes.usersBtnContainer}>
+							<Button
+								variant="contained"
+								style={CustomColor.palette.red}
+								startIcon={<DeleteForeverIcon/>}
+								onClick={handleDeleteUser}
+							>
+								Delete
+							</Button>
 							<Fab
 								color="primary"
 								size="small"
