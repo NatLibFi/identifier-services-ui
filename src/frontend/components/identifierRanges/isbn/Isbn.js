@@ -128,8 +128,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								}
 							</List>
 						</Grid>
-					</>
-				}
+					</>}
 			</>
 		);
 	}
@@ -164,8 +163,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<EditIcon/>
 						</Fab>
 					</div>
-				</div>
-			}
+				</div>}
 		</ModalLayout>
 	);
 	return {

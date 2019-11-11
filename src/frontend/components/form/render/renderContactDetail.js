@@ -161,27 +161,26 @@ export default connect(state => ({
 					})}
 
 				</>) || (fieldName === 'affiliates' &&
-				<div className={classes.affiliatesAddBtn}>
-					<Fab
-						aria-label="Add"
-						size="small"
-						color="primary"
-						title="Add more Contact Detail"
-						onClick={handleAffiliatesClick}
-					>
-						<AddIcon/>
-					</Fab>
-					{values && values.affiliates && values.affiliates.map((item, index) => {
-						return (
-							<Chip
-								key={item.affiliatesName}
-								label={`${item.affiliatesName}${item.affiliatesAddress}`}
-								onDelete={() => fields.remove(index)}
-							/>
-						);
-					})}
-				</div>) || null
-			}
+					<div className={classes.affiliatesAddBtn}>
+						<Fab
+							aria-label="Add"
+							size="small"
+							color="primary"
+							title="Add more Contact Detail"
+							onClick={handleAffiliatesClick}
+						>
+							<AddIcon/>
+						</Fab>
+						{values && values.affiliates && values.affiliates.map((item, index) => {
+							return (
+								<Chip
+									key={item.affiliatesName}
+									label={`${item.affiliatesName}${item.affiliatesAddress}`}
+									onDelete={() => fields.remove(index)}
+								/>
+							);
+						})}
+					</div>) || null}
 		</>
 	);
 

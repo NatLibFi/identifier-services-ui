@@ -1,4 +1,3 @@
-
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -72,7 +71,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [rejectReason, setRejectReason] = useState('');
 
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		if (id !== null) {
 			fetchPublicationIsbnIsmnRequest(id, cookie[COOKIE_NAME]);
 		}
@@ -213,9 +211,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</ExpansionPanel>
 
 						</Grid>
-					</>
-
-				}
+					</>}
 			</>
 		);
 	}
@@ -243,11 +239,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						</> :
 						<Grid item xs={12}>
-							{
-								renderButton(publicationIsbnIsmnRequest.state)
-							}
-						</Grid>
-					}
+							{renderButton(publicationIsbnIsmnRequest.state)}
+						</Grid>}
 				</Grid>
 			</div>
 		</ModalLayout>

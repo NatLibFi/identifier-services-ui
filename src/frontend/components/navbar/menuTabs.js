@@ -59,55 +59,53 @@ export default connect(null, actions)(props => {
 			</div>
 
 			{list.listItem &&
-			<Menu
-				keepMounted
-				elevation={0}
-				getContentAnchorEl={null}
-				anchorOrigin={{
-					vertical: 'bottom',
-					horizontal: 'center'
-				}}
-				transformOrigin={{
-					vertical: 'top',
-					horizontal: 'center'
-				}}
-				id="customized-menu"
-				anchorEl={anchorEl}
-				open={Boolean(anchorEl)}
-				onClose={handleClose}
-			>
-				{list.listItem.map(item => item.roleView && item.roleView.includes(role) ?
-					<>
-						{item.listItem ?
-							<ExpansionPanel className={classes.expansionPanel}>
-								<ExpansionPanelSummary
-									expandIcon={<ExpandMoreIcon/>}
-									aria-controls="panel1a-content"
-									id="panel1a-header"
-									className={classes.expansionPanelSummary}
-								>
-									<MenuItem className={classes.menuExpansionItem}>{item.label}</MenuItem>
+				<Menu
+					keepMounted
+					elevation={0}
+					getContentAnchorEl={null}
+					anchorOrigin={{
+						vertical: 'bottom',
+						horizontal: 'center'
+					}}
+					transformOrigin={{
+						vertical: 'top',
+						horizontal: 'center'
+					}}
+					id="customized-menu"
+					anchorEl={anchorEl}
+					open={Boolean(anchorEl)}
+					onClose={handleClose}
+				>
+					{list.listItem.map(item => item.roleView && item.roleView.includes(role) ?
+						<>
+							{item.listItem ?
+								<ExpansionPanel className={classes.expansionPanel}>
+									<ExpansionPanelSummary
+										expandIcon={<ExpandMoreIcon/>}
+										aria-controls="panel1a-content"
+										id="panel1a-header"
+										className={classes.expansionPanelSummary}
+									>
+										<MenuItem className={classes.menuExpansionItem}>{item.label}</MenuItem>
 
-								</ExpansionPanelSummary>
-								<ExpansionPanelDetails>
-									<Typography>
-										{item.listItem.map(subItem => (
-											<NavLink key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
-												<MenuItem>{subItem.label}</MenuItem>
-											</NavLink>
-										))}
-									</Typography>
-								</ExpansionPanelDetails>
-							</ExpansionPanel> :
-							<NavLink exact to={`/${item.path}`} activeClassName={classes.active}>
-								<MenuItem key={item.label} className={classes.menuContainer}>{item.label}</MenuItem>
-							</NavLink>
-						}
-					</> :
-					null
-				)}
-			</Menu>
-			}
+									</ExpansionPanelSummary>
+									<ExpansionPanelDetails>
+										<Typography>
+											{item.listItem.map(subItem => (
+												<NavLink key={subItem.path} exact to={`/${subItem.path}`} activeClassName={classes.active}>
+													<MenuItem>{subItem.label}</MenuItem>
+												</NavLink>
+											))}
+										</Typography>
+									</ExpansionPanelDetails>
+								</ExpansionPanel> :
+								<NavLink exact to={`/${item.path}`} activeClassName={classes.active}>
+									<MenuItem key={item.label} className={classes.menuContainer}>{item.label}</MenuItem>
+								</NavLink>}
+						</> :
+						null
+					)}
+				</Menu>}
 		</>
 	);
 	return {

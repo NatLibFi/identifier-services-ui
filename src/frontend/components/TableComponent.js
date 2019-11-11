@@ -1,4 +1,3 @@
-/* eslint-disable no-mixed-operators */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -166,8 +165,7 @@ export default function (props) {
 									))}
 								</TableRow>
 							);
-						})
-					}
+						})}
 				</TableBody>
 				<TableFooter>
 					<TableRow>

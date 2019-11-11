@@ -210,9 +210,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</ExpansionPanel>
 
 						</Grid>
-					</>
-
-				}
+					</>}
 			</>
 		);
 	}
@@ -240,11 +238,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						</> :
 						<Grid item xs={12}>
-							{
-								renderButton(issnRequest.state)
-							}
-						</Grid>
-					}
+							{renderButton(issnRequest.state)}
+						</Grid>}
 				</Grid>
 			</div>
 		</ModalLayout>

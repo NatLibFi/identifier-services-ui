@@ -121,9 +121,9 @@ export default connect(mapStateToProps, actions)(props => {
 				/>
 				{
 					userInfo.role === 'publisher-admin' &&
-					<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
-						<UserRequestForm setIsCreating={setIsCreating} {...props}/>
-					</ModalLayout>
+						<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
+							<UserRequestForm setIsCreating={setIsCreating} {...props}/>
+						</ModalLayout>
 				}
 				{usersData}
 				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>

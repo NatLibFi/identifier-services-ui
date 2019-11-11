@@ -109,14 +109,12 @@ export default connect(mapStateToProps, actions)(props => {
 							<Typography variant="h6" color="inherit">
 								{isAuthenticated ?
 									<img src={Logo} alt="" className={classes.mainLogo}/> :
-									<Link to="/"><img src={Logo} alt="" className={classes.mainLogo}/></Link>
-								}
+									<Link to="/"><img src={Logo} alt="" className={classes.mainLogo}/></Link>}
 							</Typography>
 							<div className={props.loggedIn ? classes.rightMenu : classes.rightMenuLogIn}>
 								{isAuthenticated ?
 									<LoginLayout name="login" label={`Welcome, ${userInfo.displayName.toUpperCase()}`} color="secondary" classed={classes.loginButton} {...props}/> :
-									<LoginLayout name="login" title={forgotPwd ? 'Forgot Password ?' : <FormattedMessage id="login.loginForm.title"/>} label={<FormattedMessage id="app.topNav.login"/>} variant="outlined" color="secondary" classed={classes.loginButton} {...props} setPwd={setPwd} forgotPwd={forgotPwd}/>
-								}
+									<LoginLayout name="login" title={forgotPwd ? 'Forgot Password ?' : <FormattedMessage id="login.loginForm.title"/>} label={<FormattedMessage id="app.topNav.login"/>} variant="outlined" color="secondary" classed={classes.loginButton} {...props} setPwd={setPwd} forgotPwd={forgotPwd}/>}
 
 								<LanguageIcon/>
 								<div className={classes.languageSelect} onClick={handleClick}>

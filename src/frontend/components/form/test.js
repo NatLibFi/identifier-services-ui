@@ -40,7 +40,6 @@ const ContactForm = ({handleSubmit}) => {
 
 	const handleClick = values => {
 		setState({...state, values});
-		// eslint-disable-next-line no-unused-expressions
 	};
 
 	const genderOption = [
