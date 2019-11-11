@@ -65,8 +65,7 @@ export default function (props) {
 														data[key].map(obj =>
 															renderObject(obj)
 														) :
-														renderObject(data[key])
-													}
+														renderObject(data[key])}
 												</ListItemText>
 											</ListItem>
 										</Grid>

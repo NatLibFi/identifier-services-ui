@@ -144,7 +144,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<section className={classes.bodyContainer}>
 					{
 						isAuthenticatedState ? (userInfo.role === 'publisher') &&
-						<Tooltips label="contact form" title="contactForm"/> :
+							<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}
 					<Switch>

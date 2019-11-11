@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable no-negated-condition */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.

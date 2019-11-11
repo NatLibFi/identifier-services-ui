@@ -114,6 +114,9 @@
     "rules": {
       "prefer-arrow-callback": [
         "error"
+      ],
+      "default-param-last": [
+        "off"
       ]
     }
   },

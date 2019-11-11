@@ -91,8 +91,7 @@ export default function (props) {
 								}
 							</List>
 						</Grid>
-					</>
-				}
+					</>}
 			</>
 		);
 	}

@@ -131,16 +131,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 				))}
 				<Grid item xs={12}>
-					{isAuthenticated ? null :
-					<>
-						<Captcha
-							captchaInput={captchaInput}
-							handleCaptchaInput={handleCaptchaInput}
-							className={classes.resetFormCaptcha}/>
-						{/* eslint-disable-next-line react/no-danger */}
-						<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-					</>
-					}
+					{isAuthenticated ? null : (
+						<>
+							<Captcha
+								captchaInput={captchaInput}
+								handleCaptchaInput={handleCaptchaInput}
+								className={classes.resetFormCaptcha}/>
+							{/* eslint-disable-next-line react/no-danger */}
+							<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+						</>
+					)}
 				</Grid>
 				<Grid item xs={12} className={classes.btnContainer}>
 					<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
