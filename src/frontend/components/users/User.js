@@ -108,8 +108,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 													<Grid item xs={8}>
 														<Field name={key} className={formClasses.editForm} component={renderTextField}/>
 													</Grid> :
-													<Grid item xs={8}>{user[key]}</Grid>
-												}
+													<Grid item xs={8}>{user[key]}</Grid>}
 											</Grid> :
 											Object.keys(user[key]).map(subKey => subKey !== 'emails' &&
 												(
@@ -123,8 +122,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 														} */}
 													</Grid>
 												)
-											)
-										}
+											)}
 									</ListItemText>
 								</ListItem>
 							);
@@ -175,8 +173,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<EditIcon/>
 							</Fab>
 						</div>}
-				</div>
-			}
+				</div>}
 		</ModalLayout>
 	);
 	return {

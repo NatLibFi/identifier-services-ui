@@ -83,10 +83,8 @@ export default connect(mapStateToProps, actions)(props => {
 							</Tabs>
 							{value === 0 && <TabContainer><LoginForm setPwd={setPwd} {...props}/></TabContainer>}
 							{value === 1 && <TabContainer><HakaLogin/></TabContainer>}
-						</div>
-					}
-				</>
-			}
+						</div>}
+				</>}
 		</div>
 	);
 

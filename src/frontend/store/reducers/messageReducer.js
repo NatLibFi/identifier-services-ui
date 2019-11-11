@@ -38,7 +38,7 @@ const initialState = {
 	loading: false
 };
 
-export default function (state = initialState, action) {
+export default function (action, state = initialState) {
 	switch (action.type) {
 		case LOADER:
 			return {

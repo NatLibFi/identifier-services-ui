@@ -175,7 +175,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					{userRequestDetail}
 				</Grid>
 				{role !== undefined && role === 'admin' &&
-					reject ?
+					reject ? (
 						<>
 							<Grid item xs={12}>
 								<TextareaAutosize
@@ -191,15 +191,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
 								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
 							</Grid>
-						</> : (
-
-							<Grid item xs={12}>
-								{
-									renderButton(usersRequest.state)
-								}
-							</Grid>
-						)
-				}
+						</>
+					) : (
+						<Grid item xs={12}>
+							{renderButton(usersRequest.state)}
+						</Grid>
+					)}
 			</div>
 		</ModalLayout>
 	);

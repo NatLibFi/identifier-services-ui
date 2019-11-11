@@ -70,7 +70,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	useEffect(() => {
-		// eslint-disable-next-line no-undef
 		fetchPublisher(match.params.id, cookie[COOKIE_NAME]);
 	}, [cookie, fetchPublisher, match.params.id]);
 	const handleEditClick = () => {
@@ -129,8 +128,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								}
 							</List>
 						</Grid>
-					</>
-				}
+					</>}
 			</>
 		);
 	}
@@ -149,7 +147,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<form>
 						<Grid container spacing={3} className={commonStyle.listItemSpinner}>
 							{publisherDetail}
-							<Grid item className={commonStyle.btnContainer}xs={12} md={3}>
+							<Grid item className={commonStyle.btnContainer} xs={12} md={3}>
 								<Button onClick={handleCancel}>Cancel</Button>
 								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
 								UPDATE
@@ -165,14 +163,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Grid>
 						{publisherDetail}
 						{isAuthenticated && userInfo.role === 'publisher-admin' &&
-						<Grid item xs={12} md={3}>
-							<Button color="primary" variant="outlined" size="large" onClick={handleEditClick}>
-								<EditIcon/> Edit
-							</Button>
-						</Grid>}
+							<Grid item xs={12} md={3}>
+								<Button color="primary" variant="outlined" size="large" onClick={handleEditClick}>
+									<EditIcon/> Edit
+								</Button>
+							</Grid>}
 					</Grid>
-				</div>
-			}
+				</div>}
 		</section>
 	);
 	return {

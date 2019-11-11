@@ -67,8 +67,7 @@ export default function (props) {
 							/>
 						}
 					/>
-				))
-				}
+				))}
 			</FormGroup>
 		</>
 	);

@@ -82,8 +82,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 				<Button variant={variant} color={color} className={classed} size="medium" onClick={handleOpen}>
 					{icon === true && <PersonIcon className={classes.personIcon} onClick={handleOpen}/>}
 					{label}
-				</Button>
-			}
+				</Button>}
 			<Modal
 				disableRestoreFocus
 				eslint-disable-next-line
@@ -105,10 +104,9 @@ export default connect(mapStateToProps)(withRouter(props => {
 						<CloseIcon/>
 					</IconButton>
 					{title &&
-					<Typography variant="h5" id={`modal-${name}`} className={classes.modaltitle}>
-						{title}
-					</Typography>
-					}
+						<Typography variant="h5" id={`modal-${name}`} className={classes.modaltitle}>
+							{title}
+						</Typography>}
 					{React.cloneElement(children, {handleClose: handleClose})}
 				</div>
 			</Modal>
