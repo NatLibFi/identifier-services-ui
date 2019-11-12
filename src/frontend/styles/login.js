@@ -48,6 +48,9 @@ const useStyles = makeStyles({
 		}
 
 	},
+	imgLink: {
+		display: 'flex'
+	},
 	notes: {
 		padding: '5px',
 		background: '#00224F20',
