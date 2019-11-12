@@ -96,8 +96,7 @@ export default function ({userInfo, isAuthenticated}) {
 									<Link exact to="/" activeClassName={classes.active}><div className={classes.menuIcon}><HomeIcon fontSize="default" color="primary"/></div></Link>
 									<Link exact to="/publishers" activeClassName={classes.active}><div className={classes.menuItem}><FormattedMessage id="app.publicMenu.publishers"/></div></Link>
 								</div>
-							)
-							}
+							)}
 						</div>
 					</div>
 				</AppBar>

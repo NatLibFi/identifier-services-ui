@@ -40,7 +40,8 @@ import Issn from './Issn';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
@@ -54,7 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchIDRIssnList(inputVal, cookie['login-cookie'], lastCursor, activeCheck);
+		fetchIDRIssnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
 	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor]);
 
 	const handleTableRowClick = id => {

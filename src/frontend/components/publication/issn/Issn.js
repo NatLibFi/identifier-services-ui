@@ -52,11 +52,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const classes = commonStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchIssn({id: id, token: cookie['login-cookie']});
+			fetchIssn({id: id, token: cookie[COOKIE_NAME]});
 		}
 	}, [cookie, fetchIssn, id]);
 
@@ -70,7 +71,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const handlePublicationUpdate = values => {
 		const {_id, ...updateValues} = values;
-		const token = cookie['login-cookie'];
+		const token = cookie[COOKIE_NAME];
 		console.log(updateValues, token);
 		// UpdatePublication(match.params.id, updateValues, token);
 		setIsEdit(false);
@@ -107,8 +108,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<EditIcon/>
 							</Fab>
 						</div>}
-				</div>
-			}
+				</div>}
 		</ModalLayout>
 	);
 	return {

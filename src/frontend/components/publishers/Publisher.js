@@ -66,11 +66,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const [isEdit, setIsEdit] = useState(false);
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchPublisher(id, cookie['login-cookie']);
+			fetchPublisher(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchPublisher, id]);
 
@@ -133,15 +134,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								}
 							</List>
 						</Grid>
-					</>
-				}
+					</>}
 			</>
 		);
 	}
 
 	const handlePublisherUpdate = values => {
 		const {_id, ...updateValues} = values;
-		const token = cookie['login-cookie'];
+		const token = cookie[COOKIE_NAME];
 		updatePublisher(id, updateValues, token);
 		setIsEdit(false);
 	};
@@ -177,8 +177,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<EditIcon/>
 							</Fab>
 						</div>}
-				</div>
-			}
+				</div>}
 		</ModalLayout>
 	);
 	return {

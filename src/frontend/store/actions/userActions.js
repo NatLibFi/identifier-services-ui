@@ -117,7 +117,7 @@ export const fetchUserRequest = (id, token) => async dispatch => {
 	}
 };
 
-export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) => async dispatch => {
+export const fetchUsersRequestsList = ({searchText, sortStateBy, token, offset}) => async dispatch => {
 	dispatch(setListLoader());
 	try {
 		const properties = {
@@ -129,7 +129,7 @@ export const fetchUsersRequestsList = ({inputVal, sortStateBy, token, offset}) =
 				{'Content-Type': 'application/json'},
 			body: JSON.stringify({
 				queries: [{
-					query: {state: sortStateBy, $or: [{publisher: inputVal}, {givenName: inputVal}]}
+					query: {state: sortStateBy, $or: [{publisher: searchText}, {givenName: searchText}]}
 				}],
 				offset: offset
 			})
@@ -161,6 +161,23 @@ export const updateUserRequest = (id, values, token) => async dispatch => {
 			dispatch(setMessage({color: 'success', msg: 'Record Successfully Updated!!!'}));
 			return response.status;
 		}
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const deleteUser = (id, token) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		console.log(id, token);
+		const response = await fetch(`${API_URL}/users/${id}`, {
+			method: 'DELETE',
+			headers: {
+				Authorization: 'Bearer ' + token
+			}
+		});
+
+		console.log('deleteResponse', response);
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

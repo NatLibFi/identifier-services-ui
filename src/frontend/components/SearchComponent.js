@@ -41,7 +41,8 @@ export default connect(null, actions)(withRouter(injectIntl(props => {
 	const {searchFunction, history, setSearchInputVal, intl} = props;
 	const classes = useStyles();
 	const [inputVal, setInputVal] = useState('');
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 
 	const handleInputChange = e => {
 		setInputVal(e.target.value);
@@ -51,10 +52,10 @@ export default connect(null, actions)(withRouter(injectIntl(props => {
 		e.preventDefault();
 		if (props.homePage) {
 			history.push('/publishers/', {searchText: inputVal});
-			searchFunction({searchText: inputVal, token: cookie['login-cookie']});
+			searchFunction({searchText: inputVal, token: cookie[COOKIE_NAME]});
 		} else {
-			searchFunction({searchText: inputVal, token: cookie['login-cookie']});
 			setSearchInputVal(inputVal);
+			searchFunction({searchText: inputVal, token: cookie[COOKIE_NAME]});
 		}
 	};
 

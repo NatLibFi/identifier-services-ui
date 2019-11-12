@@ -30,7 +30,6 @@
 import React, {useState, useEffect} from 'react';
 import {
 	ButtonGroup,
-	Typography,
 	Button,
 	Grid,
 	List,
@@ -56,14 +55,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const {id, usersRequest, userInfo, loading, fetchUserRequest, updateUserRequest} = props;
 	const classes = commonStyles();
 	const {role} = userInfo;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 
 	useEffect(() => {
 		if (id !== null) {
-			fetchUserRequest(id, cookie['login-cookie']);
+			fetchUserRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchUserRequest, id, buttonState]);
 
@@ -76,7 +76,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'accepted'
 		};
 
-		await updateUserRequest(id, requestToUpdate, cookie['login-cookie']);
+		await updateUserRequest(id, requestToUpdate, cookie[COOKIE_NAME]);
 		setButtonState(usersRequest.state);
 	}
 
@@ -94,7 +94,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'rejected',
 			rejectionReason: rejectReason
 		};
-		updateUserRequest(id, requestToUpdate, cookie['login-cookie']);
+		updateUserRequest(id, requestToUpdate, cookie[COOKIE_NAME]);
 		setReject(!reject);
 		setButtonState(usersRequest.state);
 	}
@@ -169,43 +169,35 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" {...props}>
-			<>
-				<Typography variant="h6">
-					Users Request Details
-				</Typography>
-				<div className={classes.listItem}>
-					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{userRequestDetail}
-					</Grid>
-					{role !== undefined && role === 'admin' &&
-						reject ?
-							<>
-								<Grid item xs={12}>
-									<TextareaAutosize
-										aria-label="Minimum height"
-										rows={8}
-										placeholder="Rejection reason here..."
-										className={classes.textArea}
-										value={rejectReason}
-										onChange={handleRejectReason}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
-									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
-								</Grid>
-							</> : (
-
-								<Grid item xs={12}>
-									{
-										renderButton(usersRequest.state)
-									}
-								</Grid>
-							)
-					}
-				</div>
-			</>
+		<ModalLayout isTableRow color="primary" title="User Request Detail" {...props}>
+			<div className={classes.listItem}>
+				<Grid container spacing={3} className={classes.listItemSpinner}>
+					{userRequestDetail}
+				</Grid>
+				{role !== undefined && role === 'admin' &&
+					reject ? (
+						<>
+							<Grid item xs={12}>
+								<TextareaAutosize
+									aria-label="Minimum height"
+									rows={8}
+									placeholder="Rejection reason here..."
+									className={classes.textArea}
+									value={rejectReason}
+									onChange={handleRejectReason}
+								/>
+							</Grid>
+							<Grid item xs={12}>
+								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+							</Grid>
+						</>
+					) : (
+						<Grid item xs={12}>
+							{renderButton(usersRequest.state)}
+						</Grid>
+					)}
+			</div>
 		</ModalLayout>
 	);
 	return {

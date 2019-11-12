@@ -44,7 +44,8 @@ import TabComponent from '../../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
@@ -58,7 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		fetchPublicationIsbnIsmnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
+		fetchPublicationIsbnIsmnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 		setIsCreating(false);
 	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 

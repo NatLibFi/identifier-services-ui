@@ -44,7 +44,8 @@ import IssnRegForm from '../../form/PublicationRegIssnForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
@@ -58,7 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
-		fetchIssnRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
+		fetchIssnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 	}, [cookie, fetchIssnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {

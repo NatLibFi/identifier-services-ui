@@ -271,18 +271,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 						{
 							activeStep === steps.length - 1 &&
-							<Grid item xs={12}>
-								{isAuthenticated ? null :
-								<>
-									<Captcha
-										captchaInput={captchaInput}
-										handleCaptchaInput={handleCaptchaInput}
-										className={classes.captcha}/>
-									{/* eslint-disable-next-line react/no-danger */}
-									<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-								</>
-								}
-							</Grid>
+								<Grid item xs={12}>
+									{isAuthenticated ? null : (
+										<>
+											<Captcha
+												captchaInput={captchaInput}
+												handleCaptchaInput={handleCaptchaInput}
+												className={classes.captcha}/>
+											{/* eslint-disable-next-line react/no-danger */}
+											<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+										</>
+									)}
+								</Grid>
 						}
 					</Grid>
 					{
@@ -296,13 +296,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										null :
 										<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
 										Next
-										</Button>
-									}
+										</Button>}
 									{
 										activeStep === steps.length - 1 &&
-										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+											<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
 											Submit
-										</Button>
+											</Button>
 									}
 								</div>
 							) :
@@ -462,9 +461,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 											label={publicationValues && publicationValues.select}
 											name={publicationValues && `seriesDetails[${publicationValues.select}]`}
 											type="text"
-										/> : null
-
-									}
+										/> : null}
 								</>
 
 							</Grid>

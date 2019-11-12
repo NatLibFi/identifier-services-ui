@@ -35,19 +35,13 @@ import App from './App';
 import allReducers from './store/reducers';
 import {createStore, applyMiddleware, compose} from 'redux';
 import {BrowserRouter as Router} from 'react-router-dom';
-import {addLocaleData} from 'react-intl';
 import {setLocale} from './store/actions/localeAction';
-import en from 'react-intl/locale-data/en';
-import fi from 'react-intl/locale-data/fi';
-import sv from 'react-intl/locale-data/sv';
 import {CookiesProvider} from 'react-cookie';
 import {getUserInfo} from './store/actions/auth';
 
 run();
 async function run() {
 	await getConf();
-
-	addLocaleData([...en, ...fi, ...sv]);
 
 	const composeEnhancers =
 	/* global __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ */
@@ -94,7 +88,8 @@ async function run() {
 		});
 	}
 
-	const cookie = readCookie('login-cookie');
+	/* global COOKIE_NAME */
+	const cookie = readCookie(COOKIE_NAME);
 	if (cookie) {
 		store.dispatch(getUserInfo(cookie));
 	}

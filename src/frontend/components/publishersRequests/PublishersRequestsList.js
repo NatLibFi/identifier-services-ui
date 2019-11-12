@@ -44,7 +44,8 @@ import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
 import {commonStyles} from '../../styles/app';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
@@ -58,7 +59,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
-		fetchPublishersRequestsList(inputVal, cookie['login-cookie'], sortStateBy, lastCursor);
+		fetchPublishersRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 	}, [cookie, fetchPublishersRequestsList, isCreating, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {

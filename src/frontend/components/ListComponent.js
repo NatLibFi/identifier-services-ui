@@ -107,8 +107,7 @@ export default function (props) {
 										</li>
 									)
 								)
-							)
-							}
+							)}
 						</ExpansionPanelDetails>
 					</ExpansionPanel>
 				</Grid>

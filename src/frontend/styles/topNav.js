@@ -83,7 +83,8 @@ const useStyles = makeStyles({
 		cursor: 'pointer'
 	},
 	langMenu: {
-		paddingLeft: '10px !important'
+		paddingLeft: '10px !important',
+		justifyContent: 'space-between'
 	}
 });
 

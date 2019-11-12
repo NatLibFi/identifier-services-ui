@@ -45,8 +45,9 @@ import TabComponent from '../TabComponent';
 export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
-	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset} = props;
-	const [cookie] = useCookies('login-cookie');
+	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset, userInfo} = props;
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [inputVal, setSearchInputVal] = useState('');
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [page, setPage] = useState(1);
@@ -56,9 +57,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [isCreating, setIsCreating] = useState(false);
 	const [userRequestId, setUserRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
-
 	useEffect(() => {
-		fetchUsersRequestsList({inputVal: inputVal, sortStateBy: sortStateBy, token: cookie['login-cookie'], offset: lastCursor});
+		fetchUsersRequestsList({searchText: inputVal, sortStateBy: sortStateBy, token: cookie[COOKIE_NAME], offset: lastCursor});
 		setIsCreating(false);
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 
@@ -119,9 +119,12 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
-					<UserRequestForm setIsCreating={setIsCreating} {...props}/>
-				</ModalLayout>
+				{
+					userInfo.role === 'publisher-admin' &&
+						<ModalLayout form label="New UserRequest" title="New UserRequest" name="userRequest" variant="outlined" classed={modalClasses.button} color="primary">
+							<UserRequestForm setIsCreating={setIsCreating} {...props}/>
+						</ModalLayout>
+				}
 				{usersData}
 				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -138,6 +141,7 @@ function mapStateToProps(state) {
 		usersRequestsList: state.users.usersRequestsList,
 		offset: state.users.requestOffset,
 		totalDoc: state.users.totalUsersRequests,
-		queryDocCount: state.users.queryDocCount
+		queryDocCount: state.users.queryDocCount,
+		userInfo: state.login.userInfo
 	});
 }

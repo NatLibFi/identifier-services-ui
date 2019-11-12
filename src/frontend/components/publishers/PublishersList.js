@@ -42,7 +42,8 @@ import Publisher from './Publisher';
 export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [inputVal, setSearchInputVal] = (location.state === undefined || location.state === null) ? useState('') : useState(location.state.searchText);
 	const [page, setPage] = React.useState(1);
 	const [activeCheck, setActiveCheck] = useState({
@@ -55,7 +56,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
-		searchPublisher({searchText: inputVal, token: cookie['login-cookie'], offset: lastCursor, activeCheck: activeCheck});
+		searchPublisher({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
 	}, [lastCursor, cursors, activeCheck, inputVal, searchPublisher, cookie]);
 
 	const handleChange = name => event => {

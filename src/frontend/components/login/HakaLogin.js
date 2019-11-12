@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable no-negated-condition */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -39,7 +37,10 @@ export default function () {
 	const classes = useStyles();
 	const container = (
 		<div className={classes.hakaLogo}>
-			<img src={Logo}/>
+			{/* global SSO_URL */}
+			<Link href={SSO_URL} className={classes.imgLink} target="_blank">
+				<img src={Logo}/>
+			</Link>
 			<div className={classes.notes}>
 				<Typography><FormattedMessage id="login.haka.info"/>
 					<Link><FormattedMessage id="login.haka.infoLink"/></Link>

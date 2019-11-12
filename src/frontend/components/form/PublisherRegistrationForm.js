@@ -501,19 +501,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 						{(!publicationRegistration &&
 							activeStep === steps.length - 1) &&
-							<Grid item xs={12}>
-								{isAuthenticated ? null :
-								<>
-									<Captcha
-										captchaInput={captchaInput}
-										handleCaptchaInput={handleCaptchaInput}
-										className={classes.captcha}/>
-									{/* eslint-disable-next-line react/no-danger */}
-									<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-								</>
-								}
-							</Grid>
-						}
+								<Grid item xs={12}>
+									{isAuthenticated ? null : (
+										<>
+											<Captcha
+												captchaInput={captchaInput}
+												handleCaptchaInput={handleCaptchaInput}
+												className={classes.captcha}/>
+											{/* eslint-disable-next-line react/no-danger */}
+											<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+										</>
+									)}
+								</Grid>}
 					</Grid>
 					<div className={classes.btnContainer}>
 						<Button disabled={activeStep === 0} onClick={handleBack}>
@@ -523,8 +522,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							null :
 							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
 								Next
-							</Button>
-						}
+							</Button>}
 						{
 							activeStep === steps.length - 1 &&
 								(publicationRegistration ?

@@ -57,8 +57,7 @@ export default function (props) {
 						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
 					</div>
 				</> :
-				value === 'isbn-ismn' ? <IsbnIsmnRegForm {...props}/> : <PublicationRegIssnForm {...props}/>
-			}
+				value === 'isbn-ismn' ? <IsbnIsmnRegForm {...props}/> : <PublicationRegIssnForm {...props}/>}
 		</>
 	);
 

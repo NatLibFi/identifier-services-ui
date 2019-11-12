@@ -65,8 +65,9 @@ import * as actions from './store/actions';
 export default connect(mapStateToProps, actions)(withRouter(props => {
 	const {lang, userInfo, isAuthenticated, history, responseMessage} = props;
 	const [isAuthenticatedState, setIsAuthenticatedState] = useState(false);
-	const [cookie] = useCookies('login-cookie');
-	const token = cookie['login-cookie'];
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
+	const token = cookie[COOKIE_NAME];
 	const classes = commonStyles();
 	useEffect(() => {
 		setIsAuthenticatedState(isAuthenticated);
@@ -143,7 +144,7 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 				<section className={classes.bodyContainer}>
 					{
 						isAuthenticatedState ? (userInfo.role === 'publisher') &&
-						<Tooltips label="contact form" title="contactForm"/> :
+							<Tooltips label="contact form" title="contactForm"/> :
 							null
 					}
 					<Switch>

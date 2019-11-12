@@ -26,6 +26,10 @@
  *
  */
 
+import {Utils} from '@natlibfi/identifier-services-commons';
+
+const {readEnvironmentVariable} = Utils;
+
 export const HTTP_PORT = readEnvironmentVariable('HTTP_PORT', {
 	defaultValue: 8080,
 	format: v => Number(v)
@@ -36,27 +40,15 @@ export const SMTP_URL = readEnvironmentVariable('SMTP_URL');
 export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8081'
 });
-function readEnvironmentVariable(name, {defaultValue = undefined, hideDefault = false, format = v => v} = {}) {
-	if (process.env[name] === undefined) {
-		if (defaultValue === undefined) {
-			throw new Error(`Mandatory environment variable missing: ${name}`);
-		}
-
-		const defaultValuePrintable = typeof defaultValue === 'object' ? JSON.stringify(defaultValue) : defaultValue;
-
-		console.error(`No environment variable set for ${name}, using default value: ${hideDefault ? '[hidden]' : defaultValuePrintable}`);
-		return defaultValue;
-	}
-
-	return format(process.env[name]);
-}
 
 export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
 	defaultValue: 5
 });
 
+export const SSO_URL = readEnvironmentVariable('SSO_URL');
 export const NOTIFICATION_URL = readEnvironmentVariable('NOTIFICATION_URL');
 export const PRIVATE_KEY_URL = readEnvironmentVariable('PRIVATE_KEY_URL');
 export const PASSPORT_LOCAL = readEnvironmentVariable('PASSPORT_LOCAL');
 export const SYSTEM_USERNAME = readEnvironmentVariable('SYSTEM_USERNAME');
 export const SYSTEM_PASSWORD = readEnvironmentVariable('SYSTEM_PASSWORD');
+export const COOKIE_NAME = readEnvironmentVariable('COOKIE_NAME');

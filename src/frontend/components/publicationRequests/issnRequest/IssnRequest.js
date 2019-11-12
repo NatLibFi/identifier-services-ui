@@ -65,13 +65,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		id
 	} = props;
 	const classes = commonStyles();
-	const [cookie] = useCookies('login-cookie');
+	/* global COOKIE_NAME */
+	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 	useEffect(() => {
 		if (id !== null) {
-			fetchIssnRequest(id, cookie['login-cookie']);
+			fetchIssnRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchIssnRequest, buttonState, id]);
 	function handleRejectClick() {
@@ -89,7 +90,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			rejectionReason: rejectReason
 		};
 		delete newIssnRequest._id;
-		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie[COOKIE_NAME]);
 		setReject(!reject);
 		setButtonState(issnRequest.state);
 	}
@@ -100,7 +101,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			state: 'accepted'
 		};
 		delete newIssnRequest._id;
-		updateIssnRequest(issnRequest._id, newIssnRequest, cookie['login-cookie']);
+		updateIssnRequest(issnRequest._id, newIssnRequest, cookie[COOKIE_NAME]);
 		setButtonState(issnRequest.state);
 	}
 
@@ -209,9 +210,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</ExpansionPanel>
 
 						</Grid>
-					</>
-
-				}
+					</>}
 			</>
 		);
 	}
@@ -239,11 +238,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 						</> :
 						<Grid item xs={12}>
-							{
-								renderButton(issnRequest.state)
-							}
-						</Grid>
-					}
+							{renderButton(issnRequest.state)}
+						</Grid>}
 				</Grid>
 			</div>
 		</ModalLayout>

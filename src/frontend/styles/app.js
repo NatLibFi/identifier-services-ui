@@ -147,6 +147,10 @@ export const commonStyles = makeStyles({
 		display: 'flex',
 		justifyContent: 'flex-end'
 	},
+	usersBtnContainer: {
+		display: 'flex',
+		justifyContent: 'space-between'
+	},
 	editForm: {
 		width: '100%'
 	},
