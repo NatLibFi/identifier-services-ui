@@ -34,6 +34,7 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
 
 import renderTextField from './render/renderTextField';
+import renderRadioButton from './render/renderRadioButton';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
 
@@ -55,6 +56,22 @@ const fieldArray = [
 		type: 'text',
 		label: 'Family Name',
 		width: 'half'
+	},
+	{
+		name: 'role',
+		type: 'radio',
+		label: 'Select Role',
+		width: 'half',
+		options: [
+			{label:'Publisher', value:'publisher'},
+			{label:'Publisher Admin', value:'publisher-admin'}
+		]
+	},
+	{
+		name: 'userId',
+		type: 'text',
+		label: 'SSO-Id',
+		width: 'half'
 	}
 ];
 
@@ -69,16 +86,13 @@ export default connect(null, actions)(reduxForm({
 		const [cookie] = useCookies(COOKIE_NAME);
 		const token = cookie[COOKIE_NAME];
 
-		function getStepContent() {
-			return element(fieldArray, classes);
-		}
-
 		async function handleCreateUser(values) {
 			const newUser = {
 				...values,
 				givenName: values.givenName.toLowerCase(),
 				familyName: values.familyName.toLowerCase()
 			};
+
 			await createUserRequest(newUser, token);
 
 			handleClose();
@@ -89,7 +103,9 @@ export default connect(null, actions)(reduxForm({
 			<form className={classes.container} onSubmit={handleSubmit(handleCreateUser)}>
 				<div className={classes.subContainer}>
 					<Grid container spacing={3} direction="row">
-						{(getStepContent())}
+						{fieldArray.map(list => {
+							return element(list, classes);
+						})}
 					</Grid>
 					<div className={classes.btnContainer}>
 						<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
@@ -114,16 +130,32 @@ export default connect(null, actions)(reduxForm({
 		};
 	}));
 
-function element(array, classes) {
-	return array.map(list => (
-		<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-			<Field
-				className={`${classes.textField} ${list.width}`}
-				component={renderTextField}
-				label={list.label}
-				name={list.name}
-				type={list.type}
-			/>
-		</Grid>
-	));
+function element(list, classes) { 
+	switch (list.type) {
+		case 'radio' :
+			return (
+				<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+					<Field
+						className={`${classes.textField} ${list.width}`}
+						component={renderRadioButton}
+						label={list.label}
+						name={list.name}
+						type={list.type}
+						options={list.options}
+					/>
+				</Grid>
+			);
+		default:
+			return (
+				<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+					<Field
+						className={`${classes.textField} ${list.width}`}
+						component={renderTextField}
+						label={list.label}
+						name={list.name}
+						type={list.type}
+					/>
+				</Grid>
+			)
+	}		
 }
