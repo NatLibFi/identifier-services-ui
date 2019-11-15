@@ -73,7 +73,7 @@ export default connect(mapStateToProps, actions)(props => {
 							<Tabs
 								value={value}
 								variant="scrollable"
-								scrollButtons="on"
+								scrollButtons="off"
 								indicatorColor="primary"
 								textColor="primary"
 								onChange={handleChange}

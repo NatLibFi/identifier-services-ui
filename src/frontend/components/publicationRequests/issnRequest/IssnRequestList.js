@@ -43,7 +43,7 @@ import useModalStyles from '../../../styles/formList';
 import IssnRegForm from '../../form/PublicationRegIssnForm';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
+	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount, role} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -121,9 +121,11 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<IssnRegForm setIsCreating={setIsCreating} {...props}/>
-				</ModalLayout>
+				{role === 'publisher' && (
+					<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+						<IssnRegForm setIsCreating={setIsCreating} {...props}/>
+					</ModalLayout>
+				)}
 				{issnRequestData}
 				<IssnRequest modal={modal} setModal={setModal} id={issnRequestId} setIssnId={setIssnRequestId}/>
 			</Grid>
@@ -140,6 +142,7 @@ function mapStateToProps(state) {
 		issnRequestList: state.publication.issnRequestsList,
 		offset: state.publication.offset,
 		totalDoc: state.publication.totalDoc,
-		queryDocCount: state.publication.queryDocCount
+		queryDocCount: state.publication.queryDocCount,
+		role: state.login.userInfo.role
 	});
 }
