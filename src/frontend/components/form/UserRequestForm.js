@@ -58,16 +58,6 @@ const fieldArray = [
 		width: 'half'
 	},
 	{
-		name: 'role',
-		type: 'radio',
-		label: 'Select Role',
-		width: 'half',
-		options: [
-			{label:'Publisher', value:'publisher'},
-			{label:'Publisher Admin', value:'publisher-admin'}
-		]
-	},
-	{
 		name: 'userId',
 		type: 'text',
 		label: 'SSO-Id',
@@ -80,7 +70,7 @@ export default connect(null, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createUserRequest, pristine, handleClose, setIsCreating} = props;
+		const {handleSubmit, valid, createUserRequest, pristine, handleClose, setIsCreating, userInfo} = props;
 		const classes = useStyles();
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
@@ -89,8 +79,10 @@ export default connect(null, actions)(reduxForm({
 		async function handleCreateUser(values) {
 			const newUser = {
 				...values,
+				publisher: userInfo.publisher,
 				givenName: values.givenName.toLowerCase(),
-				familyName: values.familyName.toLowerCase()
+				familyName: values.familyName.toLowerCase(),
+				userId: values.userId ? values.userId : values.email
 			};
 
 			await createUserRequest(newUser, token);
