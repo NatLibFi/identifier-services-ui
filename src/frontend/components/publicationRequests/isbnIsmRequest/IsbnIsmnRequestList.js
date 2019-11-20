@@ -43,7 +43,7 @@ import IsbnIsmnRegForm from '../../form/IsbnIsmnRegForm';
 import TabComponent from '../../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount} = props;
+	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount, role} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -122,9 +122,11 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
-				</ModalLayout>
+				{role === 'publisher' && (
+					<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+						<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
+					</ModalLayout>
+				)}
 				{publicationIsbnIsmnRequestData}
 				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -141,6 +143,7 @@ function mapStateToProps(state) {
 		publicationIsbnIsmnRequestList: state.publication.publicationIsbnIsmnRequestList,
 		offset: state.publication.offset,
 		totalDoc: state.publication.totalDoc,
-		queryDocCount: state.publication.queryDocCount
+		queryDocCount: state.publication.queryDocCount,
+		role: state.login.userInfo.role
 	});
 }

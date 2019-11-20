@@ -72,8 +72,8 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 
 export const searchPublisher = ({searchText, token, offset, activeCheck}) => async dispatch => {
 	dispatch(setListLoader());
-	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {$or: [{name: searchText}, {aliases: searchText}], activity: {active: true}} :
-		{$or: [{name: searchText}, {aliases: searchText}]};
+	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {$or: [{name: searchText}, {aliases: searchText}, {publisherEmail: searchText}], activity: {active: true}} :
+		{$or: [{name: searchText}, {aliases: searchText}, {publisherEmail: searchText}]};
 
 	try {
 		const properties = {

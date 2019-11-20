@@ -31,15 +31,20 @@ import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 
 import {commonStyles} from '../../styles/app';
+import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
 import User from './User';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import {useCookies} from 'react-cookie';
+import ModalLayout from '../ModalLayout';
+import UserCreationForm from '../form/UserCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
-	const {loading, fetchUsersList, usersList, totalUsers, queryDocCount, offset} = props;
+	const modalClasses = useModalStyles();
+
+	const {loading, fetchUsersList, usersList, totalUsers, queryDocCount, offset, userInfo} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const [page, setPage] = useState(1);
@@ -48,10 +53,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [userId, setUserId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchUsersList(cookie[COOKIE_NAME], lastCursor);
-	}, [lastCursor, cursors, fetchUsersList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, fetchUsersList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setUserId(id);
@@ -99,6 +106,12 @@ export default connect(mapStateToProps, actions)(props => {
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable users</Typography>
+				{
+					userInfo.role === 'admin' &&
+						<ModalLayout form label="New User" title="New User" name="userCreation" variant="outlined" classed={modalClasses.button} color="primary">
+							<UserCreationForm setIsCreating={setIsCreating} {...props}/>
+						</ModalLayout>
+				}
 				{usersData}
 				<User id={userId} modal={modal} setModal={setModal}/>
 			</Grid>

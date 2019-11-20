@@ -33,7 +33,7 @@ export default function (props) {
 	const {input, options, name, publicationValues, clearFields, label, className} = props;
 	const {meta: {touched, error}} = props;
 
-	function handleChange(value) {
+	function handleChangeWithPublicationValues(value) {
 		input.onChange(value);
 		const Keys = Object.keys(publicationValues);
 		Keys.map(key => {
@@ -50,6 +50,10 @@ export default function (props) {
 		});
 	}
 
+	function handleChange(value) {
+		return input.onChange(value);
+	}
+
 	const component = (
 		<>
 			<FormLabel component="legend">{label}</FormLabel>
@@ -61,7 +65,11 @@ export default function (props) {
 				error={touched && Boolean(error)}
 				value={input.value}
 				onChange={value => {
-					handleChange(value);
+					if (publicationValues) {
+						return handleChangeWithPublicationValues(value);
+					}
+
+					return handleChange(value);
 				}}
 			>
 				{
