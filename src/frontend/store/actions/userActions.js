@@ -169,7 +169,6 @@ export const updateUserRequest = (id, values, token) => async dispatch => {
 export const deleteUser = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {
-		console.log(id, token);
 		const response = await fetch(`${API_URL}/users/${id}`, {
 			method: 'DELETE',
 			headers: {

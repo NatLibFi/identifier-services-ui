@@ -29,7 +29,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
 import {Button, Grid} from '@material-ui/core';
-import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
 
@@ -58,6 +57,16 @@ const fieldArray = [
 		width: 'half'
 	},
 	{
+		name: 'role',
+		type: 'radio',
+		label: 'Select Role',
+		width: 'half',
+		options: [
+			{label: 'Publisher', value: 'publisher'},
+			{label: 'Publisher Admin', value: 'publisher-admin'}
+		]
+	},
+	{
 		name: 'SSOId',
 		type: 'text',
 		label: 'SSO-Id',
@@ -65,25 +74,32 @@ const fieldArray = [
 	}
 ];
 
-export default connect(null, actions)(reduxForm({
+export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createUserRequest, pristine, handleClose, setIsCreating} = props;
+		const {handleSubmit, valid, createUser, pristine, handleClose, setIsCreating, searchPublisher, publisher} = props;
 		const classes = useStyles();
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 		const token = cookie[COOKIE_NAME];
 
 		async function handleCreateUser(values) {
+			searchPublisher({searchText: values.email, token: token});
+			const publisherId = publisher && publisher.id;
 			const newUser = {
 				...values,
+				publisher: publisherId,
 				givenName: values.givenName.toLowerCase(),
-				familyName: values.familyName.toLowerCase()
+				familyName: values.familyName.toLowerCase(),
+				preferences: {
+					defaultLanguage: 'fin'
+				},
+				userId: values.userId ? values.userId : values.email
 			};
 
-			await createUserRequest(newUser, token);
+			await createUser(newUser, token);
 
 			handleClose();
 			setIsCreating(true);
@@ -110,15 +126,15 @@ export default connect(null, actions)(reduxForm({
 			...component,
 			defaultProps: {
 				formSyncErrors: null
-			},
-			propTypes: {
-				handleSubmit: PropTypes.func.isRequired,
-				pristine: PropTypes.bool.isRequired,
-				formSyncErrors: PropTypes.shape({}),
-				valid: PropTypes.bool.isRequired
 			}
 		};
 	}));
+
+function mapStateToProps(state) {
+	return {
+		publisher: state.publisher.searchedPublisher[0]
+	};
+}
 
 function element(list, classes) {
 	switch (list.type) {

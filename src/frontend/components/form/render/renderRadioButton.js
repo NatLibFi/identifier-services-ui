@@ -65,7 +65,11 @@ export default function (props) {
 				error={touched && Boolean(error)}
 				value={input.value}
 				onChange={value => {
-					publicationValues ? handleChangeWithPublicationValues(value) : handleChange(value);
+					if (publicationValues) {
+						return handleChangeWithPublicationValues(value);
+					}
+
+					return handleChange(value);
 				}}
 			>
 				{

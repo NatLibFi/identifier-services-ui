@@ -32,7 +32,6 @@ import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 export default connect(null, actions)(props => {
 	const {passwordResetForm, handleClose} = props;
-	console.log(props);
 	const [email, setEmail] = useState('');
 	const classes = useStyles();
 	const handleEmailChange = e => {
