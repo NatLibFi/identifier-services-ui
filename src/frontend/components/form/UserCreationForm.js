@@ -74,20 +74,20 @@ const fieldArray = [
 	}
 ];
 
-export default connect(mapStateToProps, actions)(reduxForm({
+export default connect(null, actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createUser, pristine, handleClose, setIsCreating, searchPublisher, publisher} = props;
+		const {handleSubmit, valid, createUser, pristine, handleClose, setIsCreating, findPublisherIdByEmail} = props;
 		const classes = useStyles();
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 		const token = cookie[COOKIE_NAME];
 
 		async function handleCreateUser(values) {
-			searchPublisher({searchText: values.email, token: token});
-			const publisherId = publisher && publisher.id;
+			const publisher = await findPublisherIdByEmail({email: values.email, token: token});
+			const publisherId = publisher.id;
 			const newUser = {
 				...values,
 				publisher: publisherId,
@@ -129,12 +129,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		};
 	}));
-
-function mapStateToProps(state) {
-	return {
-		publisher: state.publisher.searchedPublisher[0]
-	};
-}
 
 function element(list, classes) {
 	switch (list.type) {
