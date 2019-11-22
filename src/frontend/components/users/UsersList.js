@@ -67,7 +67,7 @@ export default connect(mapStateToProps, actions)(props => {
 	};
 
 	const headRows = [
-		{id: 'id', label: 'ID'},
+		{id: 'publisher', label: 'Publisher'},
 		{id: 'defaultLanguage', label: 'Language'}
 	];
 	let usersData;
