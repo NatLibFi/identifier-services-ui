@@ -108,7 +108,7 @@ export default connect(mapStateToProps, actions)(props => {
 				<Typography variant="h5">List of Avaiable users</Typography>
 				{
 					userInfo.role === 'admin' &&
-						<ModalLayout form label="New User" title="New User" name="userCreation" variant="outlined" classed={modalClasses.button} color="primary">
+						<ModalLayout form label="New Publisher Admin" title="New Publisher Admin" name="userCreation" variant="outlined" classed={modalClasses.button} color="primary">
 							<UserCreationForm setIsCreating={setIsCreating} {...props}/>
 						</ModalLayout>
 				}

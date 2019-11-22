@@ -51,13 +51,13 @@ export const findPublisherIdByEmail = ({email, token, offset}) => async dispatch
 		};
 
 		const response = await fetch(`${API_URL}/publishers/query`, properties);
-
 		const result = await response.json();
 		if (result.results.length > 0) {
 			return result.results[0].id;
 		}
 
 		dispatch(setMessage({color: 'error', msg: 'Publisher Admin with this email doesnot exist'}));
+		return HttpStatus.NOT_FOUND;
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

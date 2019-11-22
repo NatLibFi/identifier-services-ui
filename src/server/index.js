@@ -131,6 +131,20 @@ app.post('/auth', async (req, res) => {
 	res.status(200).json(token);
 });
 
+app.get('/users/:id', async (req, res) => {
+	const API_URL = req.body.API_URL;
+	const systemToken = await systemAuth();
+	const id = req.params.id;
+	const result = await fetch(`${API_URL}/users/${id}`, {
+		method: 'GET',
+		headers: {
+			Authorization: 'Bearer ' + systemToken
+		}
+	});
+
+	res.json(result.json());
+});
+
 app.post('/requests/publishers', async (req, res) => {
 	const systemToken = await systemAuth();
 	const response = await fetch(`${API_URL}/requests/publishers`, {
