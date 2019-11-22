@@ -157,7 +157,7 @@ export default function (props) {
 					{stableSort(data, getSorting(order, orderBy))
 						.map(row => {
 							return (
-								<TableRow key={row.id} selected={row.id === rowSelectedId} className={classes.tableRow} onClick={() => handleTableRowClick(row.id)}>
+								<TableRow key={row.mongoId} selected={row.mongoId === rowSelectedId} className={classes.tableRow} onClick={() => handleTableRowClick(row.mongoId)}>
 									{Object.keys(row).map(key => (key !== 'id') && (
 										<TableCell key={row[key]} component="th" scope="row">
 											{row[key]}
