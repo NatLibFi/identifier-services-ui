@@ -120,14 +120,14 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = values => async dispatch => {
+export const publicationCreationRequest = (values, token) => async dispatch => {
 	const response = await fetch('/requests/publications/isbn-ismn', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
-		body: JSON.stringify(values)
+		body: JSON.stringify({values, token})
 	});
 	if (response.status === 200) {
 		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
@@ -196,13 +196,13 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 	}
 };
 
-export const issnCreationRequest = values => async dispatch => {
+export const issnCreationRequest = (values, token) => async dispatch => {
 	const response = await fetch('/requests/publications/issn', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(values)
+		body: JSON.stringify({values, token})
 	});
 	if (response.status === 200) {
 		dispatch(setMessage({color: 'success', msg: 'ISSN creation request sent successfully'}));
