@@ -31,6 +31,7 @@ import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
+import {useCookies} from 'react-cookie';
 
 import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
@@ -74,6 +75,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
 		const [publisherRegForm, setPublisherRegForm] = useState(true);
+		/* global COOKIE_NAME */
+		const [cookie] = useCookies(COOKIE_NAME);
 		const steps = getSteps(fieldArray);
 		useEffect(() => {
 			if (!isAuthenticated) {
@@ -150,7 +153,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				const result = await issnCreationRequest(formatPublicationValues(values));
+				const result = await issnCreationRequest(formatPublicationValues(values), cookie[COOKIE_NAME]);
 				if (result === 200) {
 					handleClose();
 					setIsCreating(true);
@@ -166,7 +169,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function formatPublicationValues(values) {
 			const formattedPublicationValues = {
 				...values,
-				publisher: isAuthenticated ? user.id : publisher,
+				publisher: isAuthenticated ? user.publisher : publisher,
 				firstNumber: Number(values.firstNumber),
 				firstYear: Number(values.firstYear),
 				frequency: values.frequency.value,

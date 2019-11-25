@@ -159,27 +159,37 @@ app.post('/requests/publishers', async (req, res) => {
 });
 
 app.post('/requests/publications/isbn-ismn', async (req, res) => {
+	const {values, token} = req.body;
 	const systemToken = await systemAuth();
 	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
 		method: 'POST',
-		headers: {
-			Authorization: 'Bearer ' + systemToken,
+		headers: token ? {
+			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(req.body)
+		} :
+			{
+				Authorization: 'Bearer ' + systemToken,
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(values)
 	});
 	res.status(response.status).json();
 });
 
 app.post('/requests/publications/issn', async (req, res) => {
+	const {values, token} = req.body;
 	const systemToken = await systemAuth();
 	const response = await fetch(`${API_URL}/requests/publications/issn`, {
 		method: 'POST',
-		headers: {
-			Authorization: 'Bearer ' + systemToken,
+		headers: token ? {
+			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(req.body)
+		} :
+			{
+				Authorization: 'Bearer ' + systemToken,
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(values)
 	});
 	res.status(response.status).json();
 });

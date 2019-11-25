@@ -122,7 +122,7 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				{role === 'publisher' && (
+				{(role === 'publisher' || role === 'publisher-admin') && (
 					<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
 						<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
 					</ModalLayout>
