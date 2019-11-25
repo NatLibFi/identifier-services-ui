@@ -28,7 +28,7 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Button, Grid} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
 
@@ -156,7 +156,7 @@ export default connect(null, actions)(reduxForm({
 											<Field
 												className={`${classes.textField} half`}
 												component={renderTextField}
-												label="SSO-Id"
+												label="SSO-ID"
 												name="userId"
 												type="text"
 											/>
@@ -174,11 +174,10 @@ export default connect(null, actions)(reduxForm({
 							</div>
 						</div>
 					) : (
-						<>
-							<Typography>Do you have SSO-ID</Typography>
-							<Button onClick={handleClickYes}>YES</Button>
-							<Button onClick={handleClickNo}>NO</Button>
-						</>
+						<div className={classes.usercreationSelect}>
+							<Button variant="outlined" color="primary" onClick={handleClickYes}>With SSO-ID</Button> &nbsp;
+							<Button variant="outlined" color="primary" onClick={handleClickNo}>Without SSO-ID</Button>
+						</div>
 					)}
 				</form>
 			</>
