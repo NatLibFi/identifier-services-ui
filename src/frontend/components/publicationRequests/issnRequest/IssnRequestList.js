@@ -121,7 +121,7 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				{role === 'publisher' && (
+				{(role === 'publisher' || role === 'publisher-admin') && (
 					<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
 						<IssnRegForm setIsCreating={setIsCreating} {...props}/>
 					</ModalLayout>
