@@ -28,7 +28,6 @@
 
 import React, {useState, useEffect} from 'react';
 import {
-	Typography,
 	Button,
 	Grid,
 	List,
@@ -83,7 +82,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		setModal(false);
-	};
+	}
 
 	const handleCancel = () => {
 		setIsEdit(false);

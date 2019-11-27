@@ -197,7 +197,6 @@ export const deleteUser = (id, token) => async dispatch => {
 			}
 		});
 
-		console.log('deleteResponse', response);
 		if (response.status === HttpStatus.OK) {
 			dispatch(setMessage({color: 'success', msg: 'User Successfully Deleted!!!'}));
 			return response.status;
