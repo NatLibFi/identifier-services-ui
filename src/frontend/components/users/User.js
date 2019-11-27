@@ -28,7 +28,6 @@
 
 import React, {useState, useEffect} from 'react';
 import {
-	Typography,
 	Button,
 	Grid,
 	List,
@@ -50,13 +49,14 @@ import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import CustomColor from '../../styles/app';
 import renderTextField from '../form/render/renderTextField';
+import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, user, userInfo, loading, fetchUser, deleteUser, setModal} = props;
+	const {id, user, userInfo, isAuthenticated, loading, fetchUser, deleteUser, setModal, setIsCreating} = props;
 	const classes = commonStyles();
 	const formClasses = useFormStyles();
 	const {role} = userInfo;
@@ -75,62 +75,69 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(true);
 	};
 
-	const handleDeleteUser = () => {
-		deleteUser(id, cookie[COOKIE_NAME]);
+	async function handleDeleteUser() {
+		const response = await deleteUser(id, cookie[COOKIE_NAME]);
+		if (response === 200) {
+			setIsCreating(true);
+		}
+
 		setModal(false);
-	};
+	}
 
 	const handleCancel = () => {
 		setIsEdit(false);
 	};
 
 	let userDetail;
-	let keys = isEdit ? Object.keys(user).filter(key => key !== 'lastUpdated') : Object.keys(user).map(key => key);
-	if (user === undefined || loading) {
+	if ((Object.keys(user).length === 0) || loading) {
 		userDetail = <Spinner/>;
 	} else {
 		userDetail = (
-			<Grid item xs={12}>
-				<Typography variant="h6">
-						User Details
-				</Typography>
-				<List>
-					<Grid container xs={12}>
-						{keys.map(key => {
-							return (
-								<ListItem key={key}>
+			<>
+				{isEdit ?
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								<ListItem>
 									<ListItemText>
-										{/* eslint-disable-next-line no-negated-condition */}
-										{(typeof user[key] !== 'object') ?
-											<Grid container>
-												<Grid item xs={4}>{key}: </Grid>
-												{isEdit ?
-													<Grid item xs={8}>
-														<Field name={key} className={formClasses.editForm} component={renderTextField}/>
-													</Grid> :
-													<Grid item xs={8}>{user[key]}</Grid>}
-											</Grid> :
-											Object.keys(user[key]).map(subKey => subKey !== 'emails' &&
-												(
-													<Grid key={subKey} container>
-														{/* <Grid item xs={4}>{subKey}: </Grid>
-														{isEdit ?
-															<Grid item xs={8}>
-																<Field name={`${key}[${subKey}]`} className={formClasses.editForm} component={renderTextField}/>
-															</Grid> :
-															<Grid item xs={8}>{user[key][subKey]}</Grid>
-														} */}
-													</Grid>
-												)
-											)}
+										<Grid container>
+											<Grid item xs={4}>Name:</Grid>
+											<Grid item xs={8}><Field name="name" className={formClasses.editForm} component={renderTextField}/></Grid>
+										</Grid>
 									</ListItemText>
 								</ListItem>
-							);
-						}
-						)}
-					</Grid>
-				</List>
-			</Grid>
+							</List>
+						</Grid>
+					</> :
+					<>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(user).map(key => {
+										return typeof user[key] === 'string' ?
+											(
+												<ListComponent label={key} value={user[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(user).map(key => {
+										return typeof user[key] === 'object' ?
+											(
+												<ListComponent label={key} value={user[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+					</>}
+			</>
 		);
 	}
 
@@ -154,7 +161,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid container spacing={3} className={classes.listItemSpinner}>
 						{userDetail}
 					</Grid>
-					{role !== undefined && role === 'admin' &&
+					{isAuthenticated && role === 'admin' &&
 						<div className={classes.usersBtnContainer}>
 							<Button
 								variant="contained"
@@ -186,6 +193,7 @@ function mapStateToProps(state) {
 		user: state.users.user,
 		loading: state.users.loading,
 		initialValues: state.users.user,
-		userInfo: state.login.userInfo
+		userInfo: state.login.userInfo,
+		isAuthenticated: state.login.isAuthenticated
 	});
 }

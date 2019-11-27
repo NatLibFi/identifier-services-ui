@@ -33,6 +33,36 @@ import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_
 import {setLoader, setListLoader, setMessage, success, fail} from './commonAction';
 import HttpStatus from 'http-status';
 
+export const findPublisherIdByEmail = ({email, token, offset}) => async dispatch => {
+	dispatch(setLoader());
+	try {
+		const properties = {
+			method: 'POST',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: {publisherEmail: email}
+				}],
+				offset: offset
+			})
+		};
+
+		const response = await fetch(`${API_URL}/publishers/query`, properties);
+		const result = await response.json();
+		if (result.results.length > 0) {
+			return result.results[0].id;
+		}
+
+		dispatch(setMessage({color: 'error', msg: 'Publisher Admin with this email doesnot exist'}));
+		return HttpStatus.NOT_FOUND;
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
 export const fetchPublisher = (id, token) => async dispatch => {
 	dispatch(setLoader());
 	try {

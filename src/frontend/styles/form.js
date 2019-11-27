@@ -165,6 +165,10 @@ const useStyles = makeStyles(theme => ({
 		border: '1px solid #d4cacad1',
 		padding: 20,
 		borderRadius: 5
+	},
+	usercreationSelect: {
+		display: 'flex',
+		justifyContent: 'center'
 	}
 }));
 

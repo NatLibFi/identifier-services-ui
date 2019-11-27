@@ -27,6 +27,7 @@
  */
 
 export {
+	findPublisherIdByEmail,
 	fetchPublisher,
 	updatePublisher,
 	searchPublisher,

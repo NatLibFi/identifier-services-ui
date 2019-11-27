@@ -67,7 +67,7 @@ export default connect(mapStateToProps, actions)(props => {
 	};
 
 	const headRows = [
-		{id: 'publisher', label: 'Publisher'},
+		{id: 'userId', label: 'User ID'},
 		{id: 'defaultLanguage', label: 'Language'}
 	];
 	let usersData;
@@ -94,10 +94,10 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	function usersDataRender(item) {
-		const {id, publisher, preferences} = item;
+		const {id, preferences, mongoId} = item;
 		return {
-			id: id,
-			publisher: publisher,
+			userId: id,
+			mongoId: mongoId,
 			defaultLanguage: preferences.defaultLanguage
 		};
 	}
@@ -108,12 +108,12 @@ export default connect(mapStateToProps, actions)(props => {
 				<Typography variant="h5">List of Avaiable users</Typography>
 				{
 					userInfo.role === 'admin' &&
-						<ModalLayout form label="New User" title="New User" name="userCreation" variant="outlined" classed={modalClasses.button} color="primary">
+						<ModalLayout form label="Create User" title="Create User" name="userCreation" variant="outlined" classed={modalClasses.button} color="primary">
 							<UserCreationForm setIsCreating={setIsCreating} {...props}/>
 						</ModalLayout>
 				}
 				{usersData}
-				<User id={userId} modal={modal} setModal={setModal}/>
+				<User id={userId} modal={modal} setModal={setModal} setIsCreating={setIsCreating}/>
 			</Grid>
 		</Grid>
 	);

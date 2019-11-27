@@ -25,22 +25,22 @@
  * for the JavaScript code in this file.
  *
  */
-import React from 'react';
+import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
-import {Button, Grid} from '@material-ui/core';
+import {Button, Grid, Radio} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
 
 import renderTextField from './render/renderTextField';
-import renderRadioButton from './render/renderRadioButton';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
+import renderSimpleRadio from './render/renderSimpleRadio';
 
-const fieldArray = [
+const withoutSso = [
 	{
 		name: 'email',
-		type: 'email',
+		type: 'text',
 		label: 'Email',
 		width: 'full'
 	},
@@ -60,66 +60,172 @@ const fieldArray = [
 		name: 'role',
 		type: 'radio',
 		label: 'Select Role',
-		width: 'half',
-		options: [
-			{label: 'Publisher', value: 'publisher'},
-			{label: 'Publisher Admin', value: 'publisher-admin'}
-		]
-	},
-	{
-		name: 'SSOId',
-		type: 'text',
-		label: 'SSO-Id',
 		width: 'half'
 	}
 ];
 
-export default connect(mapStateToProps, actions)(reduxForm({
+const withSsoFields = [
+	{
+		name: 'userId',
+		type: 'text',
+		label: 'SSO-ID',
+		width: 'full'
+	},
+	{
+		name: 'role',
+		type: 'radio',
+		label: 'Select Role',
+		width: 'half'
+	}
+];
+
+export default connect(null, actions)(reduxForm({
 	form: 'userCreation',
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createUser, pristine, handleClose, setIsCreating, searchPublisher, publisher} = props;
+		const {handleSubmit, valid, createUser, createUserRequest, pristine, handleClose, userInfo, setIsCreating, findPublisherIdByEmail} = props;
 		const classes = useStyles();
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 		const token = cookie[COOKIE_NAME];
+		const [showForm, setShowForm] = useState(false);
+		const [haveSSOId, setHaveSSOId] = useState(true);
 
-		async function handleCreateUser(values) {
-			searchPublisher({searchText: values.email, token: token});
-			const publisherId = publisher && publisher.id;
-			const newUser = {
-				...values,
-				publisher: publisherId,
-				givenName: values.givenName.toLowerCase(),
-				familyName: values.familyName.toLowerCase(),
-				preferences: {
-					defaultLanguage: 'fin'
-				},
-				userId: values.userId ? values.userId : values.email
-			};
+		function handleCreateUser(values) {
+			if (userInfo.role === 'admin') {
+				createUserByAdmin();
+			} else {
+				createPublisherUserRequest();
+			}
 
-			await createUser(newUser, token);
+			async function createUserByAdmin() {
+				let newUser = {
+					...values,
+					role: values.role,
+					preferences: {
+						defaultLanguage: 'fin'
+					}
+				};
+				let publisher;
+				if (values.role !== 'admin') {
+					if (values.userId) {
+						publisher = await findPublisherIdByEmail({email: values.userId, token: token});
+						newUser = {
+							...newUser,
+							publisher: publisher
+						};
+					} else {
+						publisher = await findPublisherIdByEmail({email: values.email, token: token});
+						newUser = {
+							...newUser,
+							publisher: publisher,
+							givenName: values.givenName.toLowerCase(),
+							familyName: values.familyName.toLowerCase()
+						};
+					}
+				}
 
-			handleClose();
-			setIsCreating(true);
+				if (publisher !== 404) {
+					const result = await createUser(newUser, token);
+					if (result !== 404 && result !== 409) {
+						handleClose();
+						setIsCreating(true);
+					}
+				}
+			}
+
+			async function createPublisherUserRequest() {
+				let newUser;
+				if (values.userId) {
+					newUser = {...values};
+				} else {
+					newUser = {
+						...values,
+						givenName: values.givenName.toLowerCase(),
+						familyName: values.familyName.toLowerCase()
+					};
+				}
+
+				const result = await createUserRequest(newUser, token);
+				if (result !== 404 && result !== 409) {
+					handleClose();
+					setIsCreating(true);
+				}
+			}
+		}
+
+		function handleClickYes() {
+			setHaveSSOId(true);
+			setShowForm(true);
+		}
+
+		function handleClickNo() {
+			setHaveSSOId(false);
+			setShowForm(true);
+		}
+
+		function element(array) {
+			return array.map(list => {
+				return render(list);
+			});
+		}
+
+		function render(list) {
+			switch (list.type) {
+				case 'text':
+					return (
+						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Field
+								className={`${classes.textField} ${list.width}`}
+								component={renderTextField}
+								label={list.label}
+								name={list.name}
+							/>
+						</Grid>
+					);
+
+				case 'radio':
+					if (userInfo.role !== 'publisher-admin') {
+						return (
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+								<Field name={list.name} component={renderSimpleRadio} label={list.label}>
+									<Radio value="admin" label="Admin"/>
+									<Radio value="publisher-admin" label="Publisher-Admin"/>
+								</Field>
+							</Grid>
+						);
+					}
+
+					break;
+
+				default:
+					return null;
+			}
 		}
 
 		const component = (
-			<form className={classes.container} onSubmit={handleSubmit(handleCreateUser)}>
-				<div className={classes.subContainer}>
-					<Grid container spacing={3} direction="row">
-						{fieldArray.map(list => {
-							return element(list, classes);
-						})}
-					</Grid>
-					<div className={classes.btnContainer}>
-						<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-							Submit
-						</Button>
-					</div>
-				</div>
-			</form>
+			<>
+				<form className={classes.container} onSubmit={handleSubmit(handleCreateUser)}>
+					{showForm ? (
+						<div className={classes.subContainer}>
+							<Grid container spacing={3} direction="row">
+								{haveSSOId ? element(withSsoFields) : element(withoutSso)}
+							</Grid>
+							<div className={classes.btnContainer}>
+								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+									Submit
+								</Button>
+							</div>
+						</div>
+					) : (
+						<div className={classes.usercreationSelect}>
+							<Button variant="outlined" color="primary" onClick={handleClickYes}>With SSO-ID</Button> &nbsp;
+							<Button variant="outlined" color="primary" onClick={handleClickNo}>Without SSO-ID</Button>
+						</div>
+					)}
+				</form>
+			</>
 		);
 
 		return {
@@ -129,39 +235,3 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		};
 	}));
-
-function mapStateToProps(state) {
-	return {
-		publisher: state.publisher.searchedPublisher[0]
-	};
-}
-
-function element(list, classes) {
-	switch (list.type) {
-		case 'radio':
-			return (
-				<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-					<Field
-						className={`${classes.textField} ${list.width}`}
-						component={renderRadioButton}
-						label={list.label}
-						name={list.name}
-						type={list.type}
-						options={list.options}
-					/>
-				</Grid>
-			);
-		default:
-			return (
-				<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-					<Field
-						className={`${classes.textField} ${list.width}`}
-						component={renderTextField}
-						label={list.label}
-						name={list.name}
-						type={list.type}
-					/>
-				</Grid>
-			);
-	}
-}

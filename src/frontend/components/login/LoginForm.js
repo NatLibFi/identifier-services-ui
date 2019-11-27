@@ -36,14 +36,13 @@ import {Field, reduxForm} from 'redux-form';
 import {connect} from 'react-redux';
 import {FormattedMessage} from 'react-intl';
 import CloseIcon from '@material-ui/icons/Close';
-
 import renderTextField from '../form/render/renderTextField';
 import useStyles from '../../styles/login';
 import useFormStyles from '../../styles/form';
 import * as actions from '../../store/actions';
 import {commonStyles} from '../../styles/app';
 
-export default connect(mapStateToProps, actions)(reduxForm({
+export default connect(null, actions)(reduxForm({
 	form: 'login', validate})(props => {
 	const {pristine, valid, normalLogin, handleSubmit, handleClose, history, setPwd} = props;
 	const classes = useStyles();
@@ -52,18 +51,28 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [showPassword, setShowPassword] = useState(false);
 	const [loginError, setLoginError] = useState(null);
 
-	const handleLogin = async values => {
+	async function handleLogin(values) {
 		/* global API_URL */
 		/* eslint no-undef: "error" */
 		const response = await normalLogin({...values, API_URL: API_URL});
 		if (response === 'unauthorize') {
 			setLoginError('Incorrect username or Password');
-		} else {
-			// eslint-disable-next-line no-unused-expressions
-			response && response.role === 'publisher-admin' ? history.push(`/publishers/${response.publisher}`) : history.push('/publishers');
-			handleClose();
+		} else if (response) {
+			switch (response.role) {
+				case 'publisher-admin':
+					history.push(`/publishers/${response.publisher}`);
+					handleClose();
+					break;
+				case 'publisher':
+					history.push(`/publishers/${response.publisher}`);
+					handleClose();
+					break;
+				default:
+					history.push('/publishers');
+					handleClose();
+			}
 		}
-	};
+	}
 
 	const hideError = () => {
 		setLoginError(null);
@@ -129,9 +138,3 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	};
 }
 ));
-
-function mapStateToProps(state) {
-	return ({
-		userInfo: state.login.userInfo
-	});
-}

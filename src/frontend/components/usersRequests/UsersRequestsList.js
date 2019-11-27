@@ -39,7 +39,7 @@ import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import ModalLayout from '../ModalLayout';
-import UserRequestForm from '../form/UserRequestForm';
+import UserRequestForm from '../form/UserCreationForm';
 import TabComponent from '../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {

@@ -157,8 +157,13 @@ export default function (props) {
 					{stableSort(data, getSorting(order, orderBy))
 						.map(row => {
 							return (
-								<TableRow key={row.id} selected={row.id === rowSelectedId} className={classes.tableRow} onClick={() => handleTableRowClick(row.id)}>
-									{Object.keys(row).map(key => (key !== 'id') && (
+								<TableRow
+									key={row.id}
+									selected={row.mongoId ? row.mongoId === rowSelectedId : row.id === rowSelectedId}
+									className={classes.tableRow}
+									onClick={() => handleTableRowClick(row.mongoId ? row.mongoId : row.id)}
+								>
+									{Object.keys(row).map(key => (key !== 'id' && key !== 'mongoId') && (
 										<TableCell key={row[key]} component="th" scope="row">
 											{row[key]}
 										</TableCell>
