@@ -29,67 +29,90 @@ import React from 'react';
 import {
 	Grid,
 	List,
-	ListItem,
-	ListItemText
+	Typography,
+	ExpansionPanel,
+	ExpansionPanelDetails,
+	ExpansionPanelSummary
 } from '@material-ui/core';
-import {Field} from 'redux-form';
 
-import useFormStyles from '../../styles/form';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListComponent from '../ListComponent';
-import renderTextField from '../form/render/renderTextField';
 import Spinner from '../Spinner';
 
 export default function (props) {
-	const {publication, loading, isEdit} = props;
-	const formClasses = useFormStyles();
+	const {publication, loading} = props;
+
+	const {_id, seriesDetails, ...formattedPublication} = {...publication, ...publication.seriesDetails};
+	const {publisher, ...withoutPublisher} = {...formattedPublication};
+	const onlyPublisher = formattedPublication && typeof formattedPublication.publisher === 'object' && formattedPublication.publisher;
+	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
 	let publicationDetail;
-	if (publication === undefined || loading) {
+	if (formattedPublication === undefined || loading) {
 		publicationDetail = <Spinner/>;
 	} else {
 		publicationDetail = (
 			<>
-				{isEdit ?
+				{typeof formattedPublication.publisher === 'string' ?
 					<>
 						<Grid item xs={12} md={6}>
 							<List>
-								<ListItem>
-									<ListItemText>
-										<Grid container>
-											<Grid item xs={4}>Name:</Grid>
-											<Grid item xs={8}><Field name="name" className={formClasses.editForm} component={renderTextField}/></Grid>
-										</Grid>
-									</ListItemText>
-								</ListItem>
+								{
+									Object.keys(formattedPublication).map(key => {
+										return typeof formattedPublication[key] === 'string' ?
+											(
+												<ListComponent label={key} value={formattedPublication[key]}/>
+											) :
+											null;
+									})
+								}
+							</List>
+						</Grid>
+						<Grid item xs={12} md={6}>
+							<List>
+								{
+									Object.keys(formattedPublication).map(key => {
+										return typeof formattedPublication[key] === 'object' ?
+											(
+												<ListComponent label={key} value={formattedPublication[key]}/>
+											) :
+											null;
+									})
+								}
 							</List>
 						</Grid>
 					</> :
 					<>
 						<Grid item xs={12} md={6}>
 							<List>
+
 								{
-									Object.keys(publication).map(key => {
-										return (typeof publication[key] === 'string' || typeof publication[key] === 'boolean') ?
-											(
-												<ListComponent label={key} value={publication[key]}/>
-											) :
-											null;
+									Object.keys(withoutPublisher).map(key => {
+										return <ListComponent key={key} label={key} value={withoutPublisher[key]}/>;
 									})
 								}
 							</List>
 						</Grid>
 						<Grid item xs={12} md={6}>
-							<List>
-								{
-									Object.keys(publication).map(key => {
-										return typeof publication[key] === 'object' ?
-											(
-												<ListComponent label={key} value={publication[key]}/>
-											) :
-											null;
-									})
-								}
-							</List>
+							<ExpansionPanel>
+								<ExpansionPanelSummary
+									expandIcon={<ExpandMoreIcon/>}
+									aria-controls="panel1a-content"
+									id="panel1a-header"
+								>
+									<Typography variant="h6">Publisher Details</Typography>
+								</ExpansionPanelSummary>
+								<ExpansionPanelDetails>
+									<List>
+										{
+											Object.keys(formatOnlyPublisher).map(key => {
+												return <ListComponent key={key} label={key} value={formatOnlyPublisher[key]}/>;
+											})
+										}
+									</List>
+								</ExpansionPanelDetails>
+							</ExpansionPanel>
+
 						</Grid>
 					</>}
 			</>

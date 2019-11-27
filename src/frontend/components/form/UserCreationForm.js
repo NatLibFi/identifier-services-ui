@@ -167,37 +167,41 @@ export default connect(null, actions)(reduxForm({
 
 		function element(array) {
 			return array.map(list => {
-				switch (list.type) {
-					case 'text':
+				return render(list);
+			});
+		}
+
+		function render(list) {
+			switch (list.type) {
+				case 'text':
+					return (
+						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Field
+								className={`${classes.textField} ${list.width}`}
+								component={renderTextField}
+								label={list.label}
+								name={list.name}
+							/>
+						</Grid>
+					);
+
+				case 'radio':
+					if (userInfo.role !== 'publisher-admin') {
 						return (
 							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-								<Field
-									className={`${classes.textField} ${list.width}`}
-									component={renderTextField}
-									label={list.label}
-									name={list.name}
-								/>
+								<Field name={list.name} component={renderSimpleRadio} label={list.label}>
+									<Radio value="admin" label="Admin"/>
+									<Radio value="publisher-admin" label="Publisher-Admin"/>
+								</Field>
 							</Grid>
 						);
+					}
 
-					case 'radio':
-						if (userInfo.role !== 'publisher-admin') {
-							return (
-								<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-									<Field name={list.name} component={renderSimpleRadio} label={list.label}>
-										<Radio value="admin" label="Admin"/>
-										<Radio value="publisher-admin" label="Publisher-Admin"/>
-									</Field>
-								</Grid>
-							);
-						}
+					break;
 
-						break;
-
-					default:
-						return null;
-				}
-			});
+				default:
+					return null;
+			}
 		}
 
 		const component = (

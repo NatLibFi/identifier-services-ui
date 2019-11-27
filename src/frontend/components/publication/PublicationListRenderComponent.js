@@ -57,7 +57,7 @@ export default function (props) {
 	let usersData;
 	if (loading) {
 		usersData = <Spinner/>;
-	} else if (publicationList === undefined || publicationList === null) {
+	} else if (publicationList === undefined || publicationList === null || publicationList.length === 0) {
 		usersData = <p>No Publication Available</p>;
 	} else {
 		usersData = (
