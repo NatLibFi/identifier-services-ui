@@ -113,7 +113,7 @@ export default connect(mapStateToProps, actions)(props => {
 						</ModalLayout>
 				}
 				{usersData}
-				<User id={userId} modal={modal} setModal={setModal}/>
+				<User id={userId} modal={modal} setModal={setModal} setIsCreating={setIsCreating}/>
 			</Grid>
 		</Grid>
 	);
