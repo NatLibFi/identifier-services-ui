@@ -157,7 +157,7 @@ export default function (props) {
 					{stableSort(data, getSorting(order, orderBy))
 						.map(row => {
 							return (
-								<TableRow 
+								<TableRow
 									key={row.id}
 									selected={row.mongoId ? row.mongoId === rowSelectedId : row.id === rowSelectedId}
 									className={classes.tableRow}

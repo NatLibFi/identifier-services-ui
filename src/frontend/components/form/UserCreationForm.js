@@ -28,18 +28,19 @@
 import React, {useState} from 'react';
 import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
-import {Button, Grid, Typography} from '@material-ui/core';
+import {Button, Grid, Radio} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
 
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
+import renderSimpleRadio from './render/renderSimpleRadio';
 
-const fieldArray = [
+const withoutSso = [
 	{
 		name: 'email',
-		type: 'email',
+		type: 'text',
 		label: 'Email',
 		width: 'full'
 	},
@@ -53,6 +54,27 @@ const fieldArray = [
 		name: 'familyName',
 		type: 'text',
 		label: 'Family Name',
+		width: 'half'
+	},
+	{
+		name: 'role',
+		type: 'radio',
+		label: 'Select Role',
+		width: 'half'
+	}
+];
+
+const withSsoFields = [
+	{
+		name: 'userId',
+		type: 'text',
+		label: 'SSO-ID',
+		width: 'full'
+	},
+	{
+		name: 'role',
+		type: 'radio',
+		label: 'Select Role',
 		width: 'half'
 	}
 ];
@@ -72,42 +94,41 @@ export default connect(null, actions)(reduxForm({
 
 		function handleCreateUser(values) {
 			if (userInfo.role === 'admin') {
-				createPublisherAdmin();
+				createUserByAdmin();
 			} else {
 				createPublisherUserRequest();
 			}
 
-			async function createPublisherAdmin() {
-				let newUser;
+			async function createUserByAdmin() {
+				let newUser = {
+					...values,
+					role: values.role,
+					preferences: {
+						defaultLanguage: 'fin'
+					}
+				};
 				let publisher;
-				if (values.userId) {
-					publisher = await findPublisherIdByEmail({email: values.userId, token: token});
-					console.log(publisher);
-					newUser = {
-						...values,
-						publisher: publisher,
-						role: 'publisher-admin',
-						preferences: {
-							defaultLanguage: 'fin'
-						}
-					};
-				} else {
-					publisher = await findPublisherIdByEmail({email: values.email, token: token});
-					newUser = {
-						...values,
-						publisher: publisher,
-						role: 'publisher-admin',
-						givenName: values.givenName.toLowerCase(),
-						familyName: values.familyName.toLowerCase(),
-						preferences: {
-							defaultLanguage: 'fin'
-						}
-					};
+				if (values.role !== 'admin') {
+					if (values.userId) {
+						publisher = await findPublisherIdByEmail({email: values.userId, token: token});
+						newUser = {
+							...newUser,
+							publisher: publisher
+						};
+					} else {
+						publisher = await findPublisherIdByEmail({email: values.email, token: token});
+						newUser = {
+							...newUser,
+							publisher: publisher,
+							givenName: values.givenName.toLowerCase(),
+							familyName: values.familyName.toLowerCase()
+						};
+					}
 				}
 
 				if (publisher !== 404) {
 					const result = await createUser(newUser, token);
-					if (result !== 409) {
+					if (result !== 404 && result !== 409) {
 						handleClose();
 						setIsCreating(true);
 					}
@@ -144,28 +165,52 @@ export default connect(null, actions)(reduxForm({
 			setShowForm(true);
 		}
 
+		function element(array) {
+			return array.map(list => {
+				return render(list);
+			});
+		}
+
+		function render(list) {
+			switch (list.type) {
+				case 'text':
+					return (
+						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Field
+								className={`${classes.textField} ${list.width}`}
+								component={renderTextField}
+								label={list.label}
+								name={list.name}
+							/>
+						</Grid>
+					);
+
+				case 'radio':
+					if (userInfo.role !== 'publisher-admin') {
+						return (
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+								<Field name={list.name} component={renderSimpleRadio} label={list.label}>
+									<Radio value="admin" label="Admin"/>
+									<Radio value="publisher-admin" label="Publisher-Admin"/>
+								</Field>
+							</Grid>
+						);
+					}
+
+					break;
+
+				default:
+					return null;
+			}
+		}
+
 		const component = (
 			<>
 				<form className={classes.container} onSubmit={handleSubmit(handleCreateUser)}>
 					{showForm ? (
 						<div className={classes.subContainer}>
 							<Grid container spacing={3} direction="row">
-								{haveSSOId ?
-									(
-										<Grid item xs={6}>
-											<Field
-												className={`${classes.textField} half`}
-												component={renderTextField}
-												label="SSO-Id"
-												name="userId"
-												type="text"
-											/>
-										</Grid>
-									) : (
-										fieldArray.map(list => {
-											return element(list, classes);
-										})
-									)}
+								{haveSSOId ? element(withSsoFields) : element(withoutSso)}
 							</Grid>
 							<div className={classes.btnContainer}>
 								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
@@ -174,11 +219,10 @@ export default connect(null, actions)(reduxForm({
 							</div>
 						</div>
 					) : (
-						<>
-							<Typography>Do you have SSO-ID</Typography>
-							<Button onClick={handleClickYes}>YES</Button>
-							<Button onClick={handleClickNo}>NO</Button>
-						</>
+						<div className={classes.usercreationSelect}>
+							<Button variant="outlined" color="primary" onClick={handleClickYes}>With SSO-ID</Button> &nbsp;
+							<Button variant="outlined" color="primary" onClick={handleClickNo}>Without SSO-ID</Button>
+						</div>
 					)}
 				</form>
 			</>
@@ -191,17 +235,3 @@ export default connect(null, actions)(reduxForm({
 			}
 		};
 	}));
-
-function element(list, classes) {
-	return (
-		<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-			<Field
-				className={`${classes.textField} ${list.width}`}
-				component={renderTextField}
-				label={list.label}
-				name={list.name}
-				type={list.type}
-			/>
-		</Grid>
-	);
-}

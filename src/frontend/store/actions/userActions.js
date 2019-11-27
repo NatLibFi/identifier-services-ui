@@ -65,13 +65,19 @@ export const createUser = (values, token) => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-
-	if (response.status === HttpStatus.CONFLICT) {
-		dispatch(setMessage({color: 'error', msg: 'Publisher Admin with this email already exists'}));
-		return response.status;
+	switch (response.status) {
+		case HttpStatus.OK:
+			dispatch(setMessage({color: 'success', msg: 'User created successfully'}));
+			return response.status;
+		case HttpStatus.NOT_FOUND:
+			dispatch(setMessage({color: 'error', msg: 'SSO-ID doesnot exists in crowd'}));
+			return response.status;
+		case HttpStatus.CONFLICT:
+			dispatch(setMessage({color: 'error', msg: 'User with this SSO-ID or email already exists'}));
+			return response.status;
+		default:
+			return null;
 	}
-
-	await response.json();
 };
 
 export const createUserRequest = (values, token) => async dispatch => {

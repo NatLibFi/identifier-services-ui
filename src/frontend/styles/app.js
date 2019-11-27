@@ -45,6 +45,14 @@ const theme = createMuiTheme({
 		fontFamily: 'Open Sans, Helvetica, Arial'
 	},
 	overrides: {
+		MuiButton: {
+			outlinedPrimary: {
+				'&:hover': {
+					backgroundColor: '#00224f',
+					color: '#fff'
+				}
+			}
+		},
 		MuiChip: {
 			root: {
 				margin: '3px',
