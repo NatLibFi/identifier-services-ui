@@ -159,9 +159,9 @@ export default function (props) {
 							return (
 								<TableRow
 									key={row.id}
-									selected={row.mongoId ? row.mongoId === rowSelectedId : row.id === rowSelectedId}
+									selected={row.userId ? row.userId === rowSelectedId : row.id === rowSelectedId}
 									className={classes.tableRow}
-									onClick={() => handleTableRowClick(row.mongoId ? row.mongoId : row.id)}
+									onClick={() => handleTableRowClick(row.userId ? row.userId : row.id)}
 								>
 									{Object.keys(row).map(key => (key !== 'id' && key !== 'mongoId') && (
 										<TableCell key={row[key]} component="th" scope="row">
