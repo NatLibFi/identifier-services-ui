@@ -28,7 +28,8 @@
 /* global API_URL */
 import fetch from 'node-fetch';
 import {ERROR, IDR_ISBN_LIST, IDR_ISBN, IDR_ISMN_LIST, IDR_ISMN, IDR_ISSN_LIST, IDR_ISSN} from './types';
-import {setLoader, setListLoader, success, fail} from './commonAction';
+import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
+import HttpStatus from 'http-status';
 
 // ***************ISBN****************************
 
@@ -163,4 +164,23 @@ export const fetchIDRIssn = (id, token) => async dispatch => {
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
+};
+
+export const createIssn = (values, token) => async dispatch => {
+	const response = await fetch(`${API_URL}/ranges/issn`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(values)
+	});
+	if (response.status === HttpStatus.CREATED) {
+		dispatch(setMessage({color: 'success', msg: 'ISSN created successfully'}));
+		return response.status;
+	}
+
+	dispatch(setMessage({color: 'error', msg: 'There is a problem creating ISSN'}));
+	return response.status;
 };

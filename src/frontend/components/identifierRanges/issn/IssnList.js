@@ -38,7 +38,7 @@ import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Issn from './Issn';
 import ModalLayout from '../../ModalLayout';
-import UserCreationForm from '../../form/UserCreationForm';
+import IssnCreationForm from '../../form/IssnCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount, userInfo} = props;
@@ -51,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [issnId, setIssnId] = useState(null);
+	const [updateComponent, setUpdateComponent] = useState(false);
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
@@ -58,8 +59,8 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchIDRIssnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
-	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor]);
-
+		setUpdateComponent(false);
+	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor, updateComponent]);
 	const handleTableRowClick = id => {
 		setIssnId(id);
 		setModal(true);
@@ -127,7 +128,7 @@ export default connect(mapStateToProps, actions)(props => {
 				{
 					userInfo.role === 'admin' &&
 						<ModalLayout form label="Create ISSN" title="Create ISSN" name="issnCreation" variant="outlined" color="primary">
-							<UserCreationForm/>
+							<IssnCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
 						</ModalLayout>
 				}
 				{issnData}
