@@ -37,9 +37,11 @@ import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Issn from './Issn';
+import ModalLayout from '../../ModalLayout';
+import UserCreationForm from '../../form/UserCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount} = props;
+	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount, userInfo} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -122,6 +124,12 @@ export default connect(mapStateToProps, actions)(props => {
 					}
 					label="Show only active ISSN"
 				/>
+				{
+					userInfo.role === 'admin' &&
+						<ModalLayout form label="Create ISSN" title="Create ISSN" name="issnCreation" variant="outlined" color="primary">
+							<UserCreationForm/>
+						</ModalLayout>
+				}
 				{issnData}
 				<Issn id={issnId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -134,6 +142,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
+		userInfo: state.login.userInfo,
 		loading: state.identifierRanges.listLoading,
 		issnList: state.identifierRanges.issnList,
 		offset: state.identifierRanges.offset,
