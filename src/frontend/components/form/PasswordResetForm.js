@@ -31,7 +31,7 @@ import useStyles from '../../styles/login';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 export default connect(null, actions)(props => {
-	const {passwordResetForm, handleClose} = props;
+	const {passwordResetForm, setPwd, handleClose} = props;
 	const [email, setEmail] = useState('');
 	const classes = useStyles();
 	const handleEmailChange = e => {
@@ -42,6 +42,7 @@ export default connect(null, actions)(props => {
 		e.preventDefault();
 		const result = await passwordResetForm({id: email});
 		if (result === 200) {
+			setPwd(false);
 			handleClose();
 		}
 	};

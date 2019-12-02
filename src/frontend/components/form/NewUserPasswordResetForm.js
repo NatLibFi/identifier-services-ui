@@ -99,8 +99,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (result === true) {
 				if (confirmPassword === newPassword) {
 					setError(null);
-					passwordReset({...values, id: decode.userId});
-					// Props.history.push('/');
+					const response = await passwordReset({...values, id: decode.userId});
+gi					if(response === 200) {
+						props.history.push('/');
+					}
+
 				} else {
 					setError('Password does not match');
 				}
