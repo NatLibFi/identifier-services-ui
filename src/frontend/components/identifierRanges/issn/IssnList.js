@@ -127,7 +127,7 @@ export default connect(mapStateToProps, actions)(props => {
 				/>
 				{
 					userInfo.role === 'admin' &&
-						<ModalLayout form label="Create ISSN" title="Create ISSN" name="issnCreation" variant="outlined" color="primary">
+						<ModalLayout form label="Create ISSN Range" title="Create ISSN Range" name="issnCreationRange" variant="outlined" color="primary">
 							<IssnCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
 						</ModalLayout>
 				}

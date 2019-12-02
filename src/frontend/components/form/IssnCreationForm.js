@@ -35,7 +35,6 @@ import {useCookies} from 'react-cookie';
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions/userActions';
-import renderCheckbox from './render/renderCheckbox';
 
 const issnFields = [
 	{
@@ -54,12 +53,6 @@ const issnFields = [
 		name: 'rangeEnd',
 		type: 'text',
 		label: 'Range End*',
-		width: 'half'
-	},
-	{
-		name: 'active',
-		type: 'checkbox',
-		label: 'Active',
 		width: 'half'
 	}
 ];
@@ -92,33 +85,16 @@ export default connect(null, actions)(reduxForm({
 		}
 
 		function render(list) {
-			switch (list.type) {
-				case 'text':
-					return (
-						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-							<Field
-								className={`${classes.textField} ${list.width}`}
-								component={renderTextField}
-								label={list.label}
-								name={list.name}
-							/>
-						</Grid>
-					);
-
-				case 'checkbox':
-					return (
-						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-							<Field
-								component={renderCheckbox}
-								label={list.label}
-								name={list.name}
-							/>
-						</Grid>
-					);
-
-				default:
-					return null;
-			}
+			return (
+				<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+					<Field
+						className={`${classes.textField} ${list.width}`}
+						component={renderTextField}
+						label={list.label}
+						name={list.name}
+					/>
+				</Grid>
+			);
 		}
 
 		const component = (
