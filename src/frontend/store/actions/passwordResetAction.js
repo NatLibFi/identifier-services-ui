@@ -63,6 +63,7 @@ export const passwordResetForm = values => async dispatch => {
 		});
 		if (response.status === HttpStatus.OK) {
 			dispatch(setMessage({color: 'success', msg: 'Password reset link has been sent to your email'}));
+			return response.status;
 		}
 
 		if (response.status === HttpStatus.NOT_FOUND) {
