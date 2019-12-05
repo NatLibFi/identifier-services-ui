@@ -131,19 +131,20 @@ app.post('/auth', async (req, res) => {
 	res.status(200).json(token);
 });
 
-app.get('/users/:id', async (req, res) => {
-	const API_URL = req.body.API_URL;
-	const systemToken = await systemAuth();
-	const id = req.params.id;
-	const result = await fetch(`${API_URL}/users/${id}`, {
-		method: 'GET',
-		headers: {
-			Authorization: 'Bearer ' + systemToken
-		}
-	});
+// =====> TO BE DELETED LATER <======
+// app.get('/users/:id', async (req, res) => {
+// 	const API_URL = req.body.API_URL;
+// 	const systemToken = await systemAuth();
+// 	const id = req.params.id;
+// 	const result = await fetch(`${API_URL}/users/${id}`, {
+// 		method: 'GET',
+// 		headers: {
+// 			Authorization: 'Bearer ' + systemToken
+// 		}
+// 	});
 
-	res.json(result.json());
-});
+// 	res.json(result.json());
+// });
 
 app.post('/requests/publishers', async (req, res) => {
 	const systemToken = await systemAuth();
@@ -232,17 +233,6 @@ app.get('/users/passwordReset/:token', async (req, res) => {
 	const decrypted = decryptToken(token);
 	const decoded = jose.JWT.decode(decrypted);
 	if (Date.now() <= decoded.exp * 1000) {
-		// Const readResponse = fs.readFileSync(`${PASSPORT_LOCAL}`, 'utf-8');
-		// const passportLocalList = JSON.parse(readResponse);
-		// const passportLocal = passportLocalList.filter(passport => passport.id === decrypted.data.email);
-		// const result = await fetch(`${API_URL}/auth`, {
-		// 	method: 'POST',
-		// 	headers: {
-		// 		Authorization: 'Basic ' + base64.encode(passportLocal[0].id + ':' + passportLocal[0].password)
-		// 	}
-		// });
-		// const token = result.headers.get('Token');
-		// res.cookie(COOKIE_NAME, token, {maxAge: 300000, secure: false});
 		res.sendFile(path.join(__dirname, 'public/index.html'));
 	} else {
 		res.send('Link Expired !!!');
