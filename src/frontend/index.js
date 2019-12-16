@@ -33,7 +33,7 @@ import fetch from 'node-fetch';
 import thunk from 'redux-thunk';
 import App from './App';
 import allReducers from './store/reducers';
-import {createStore, applyMiddleware, compose} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import {BrowserRouter as Router} from 'react-router-dom';
 import {setLocale} from './store/actions/localeAction';
 import {CookiesProvider} from 'react-cookie';
