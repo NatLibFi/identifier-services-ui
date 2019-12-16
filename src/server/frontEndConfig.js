@@ -26,4 +26,4 @@
  *
  */
 
-export {API_URL, QUERY_LIMIT, COOKIE_NAME, SSO_URL} from './config';
+export {API_URL, QUERY_LIMIT, COOKIE_NAME, SSO_URL, REDUX_EXTENSION} from './config';

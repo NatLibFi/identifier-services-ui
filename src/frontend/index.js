@@ -38,19 +38,14 @@ import {BrowserRouter as Router} from 'react-router-dom';
 import {setLocale} from './store/actions/localeAction';
 import {CookiesProvider} from 'react-cookie';
 import {getUserInfo} from './store/actions/auth';
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 run();
 async function run() {
 	await getConf();
-
-	const composeEnhancers =
-	/* global __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ */
+	/* global REDUX_EXTENSION */
 	/* eslint no-undef: "error" */
-		process.env.NODE_ENV === 'production' && __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ?
-			__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ :
-			compose;
-
-	const store = createStore(allReducers, composeEnhancers(applyMiddleware(thunk)));
+	const store = createStore(allReducers, REDUX_EXTENSION === 'development' ? composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk));
 	/* global localStorage */
 	/* eslint no-undef: "error" */
 	if (localStorage.allLang) {

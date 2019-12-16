@@ -45,6 +45,10 @@ export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
 	defaultValue: 5
 });
 
+export const REDUX_EXTENSION = readEnvironmentVariable('REDUX_EXTENSION', {
+	defaultValue: 'development'
+});
+
 export const SSO_URL = readEnvironmentVariable('SSO_URL');
 export const NOTIFICATION_URL = readEnvironmentVariable('NOTIFICATION_URL');
 export const PRIVATE_KEY_URL = readEnvironmentVariable('PRIVATE_KEY_URL');
