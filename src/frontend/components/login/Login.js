@@ -68,7 +68,7 @@ export default connect(mapStateToProps, actions)(props => {
 				</div> :
 				<>
 					{forgotPwd ?
-						<PasswordResetForm/> :
+						<PasswordResetForm {...props}/> :
 						<div>
 							<Tabs
 								value={value}

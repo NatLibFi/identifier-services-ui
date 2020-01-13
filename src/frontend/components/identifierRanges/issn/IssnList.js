@@ -37,9 +37,11 @@ import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Issn from './Issn';
+import ModalLayout from '../../ModalLayout';
+import IssnCreationForm from '../../form/IssnCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount} = props;
+	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount, userInfo} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -49,6 +51,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [issnId, setIssnId] = useState(null);
+	const [updateComponent, setUpdateComponent] = useState(false);
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
@@ -56,8 +59,8 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchIDRIssnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
-	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor]);
-
+		setUpdateComponent(false);
+	}, [activeCheck, cookie, fetchIDRIssnList, inputVal, lastCursor, updateComponent]);
 	const handleTableRowClick = id => {
 		setIssnId(id);
 		setModal(true);
@@ -122,6 +125,12 @@ export default connect(mapStateToProps, actions)(props => {
 					}
 					label="Show only active ISSN"
 				/>
+				{
+					userInfo.role === 'admin' &&
+						<ModalLayout form label="Create ISSN Range" title="Create ISSN Range" name="issnCreationRange" variant="outlined" color="primary">
+							<IssnCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
+						</ModalLayout>
+				}
 				{issnData}
 				<Issn id={issnId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -134,6 +143,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
+		userInfo: state.login.userInfo,
 		loading: state.identifierRanges.listLoading,
 		issnList: state.identifierRanges.issnList,
 		offset: state.identifierRanges.offset,
