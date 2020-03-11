@@ -42,10 +42,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnId, setIsbnIsmnId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchIsbnIsmnList({token: cookie[COOKIE_NAME], offset: lastCursor});
-	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnId(id);
@@ -73,6 +75,7 @@ export default connect(mapStateToProps, actions)(props => {
 			modal={modal}
 			id={isbnIsmnId}
 			setModal={setModal}
+			setIsCreating={setIsCreating}
 			{...props}
 		/>
 	);
@@ -84,6 +87,7 @@ function mapStateToProps(state) {
 		isbnIsmnList: state.publication.isbnIsmnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,
-		queryDocCount: state.publication.queryDocCount
+		queryDocCount: state.publication.queryDocCount,
+		role: state.login.userInfo.role
 	});
 }

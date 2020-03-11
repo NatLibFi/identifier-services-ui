@@ -119,9 +119,25 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 	}
 };
 
+export const publicationCreation = ({values, token, subType}) => async dispatch => {
+	const response = await fetch(`/publications/${subType}`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({values, token})
+	});
+	if (response.status === 201) {
+		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+	}
+
+	return response.status;
+};
+
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/isbn-ismn', {
+export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
+	const response = await fetch(`/requests/publications/${subType}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -129,8 +145,8 @@ export const publicationCreationRequest = (values, token) => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify({values, token})
 	});
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+	if (response.status === 201) {
+		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
 	}
 
 	return response.status;
@@ -194,21 +210,6 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
-};
-
-export const issnCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/issn', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({values, token})
-	});
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISSN creation request sent successfully'}));
-	}
-
-	return response.status;
 };
 
 export const fetchIssnRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {

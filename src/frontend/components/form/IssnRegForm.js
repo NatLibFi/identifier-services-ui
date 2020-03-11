@@ -47,7 +47,7 @@ import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publicationRegIssnForm',
+	form: 'issnRegForm',
 	initialValues: {
 		language: 'eng'
 	},
@@ -65,7 +65,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			user,
 			setMessage,
 			isAuthenticated,
-			issnCreationRequest,
+			publicationCreationRequest,
 			handleClose,
 			setIsCreating,
 			handleSubmit} = props;
@@ -153,7 +153,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				const result = await issnCreationRequest(formatPublicationValues(values), cookie[COOKIE_NAME]);
+				const result = await publicationCreationRequest({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'issn'});
 				if (result === 200) {
 					handleClose();
 					setIsCreating(true);
@@ -185,7 +185,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function submitPublication(values, result) {
 			if (result === true) {
-				const result = await issnCreationRequest(values);
+				const result = await publicationCreationRequest({values: values, subType: 'issn'});
 				if (result === 200) {
 					handleClose();
 				}
@@ -431,7 +431,7 @@ function mapStateToProps(state) {
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
 		publisherValues: getFormValues('publisherRegistrationForm')(state),
-		publicationValues: getFormValues('publicationRegIssnForm')(state)
+		publicationValues: getFormValues('issnRegForm')(state)
 	});
 }
 

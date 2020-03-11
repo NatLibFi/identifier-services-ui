@@ -127,7 +127,7 @@ app.post('/auth', async (req, res) => {
 		}
 	});
 	const token = result.headers.get('Token');
-	res.cookie(COOKIE_NAME, token, {maxAge: 300000, secure: false});
+	res.cookie(COOKIE_NAME, token, {maxAge: 6000000, secure: false});
 	res.status(200).json(token);
 });
 
@@ -155,6 +155,42 @@ app.post('/requests/publishers', async (req, res) => {
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(req.body)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/publications/isbn-ismn', async (req, res) => {
+	const {values, token} = req.body;
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/publications/isbn-ismn`, {
+		method: 'POST',
+		headers: token ? {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		} :
+			{
+				Authorization: 'Bearer ' + systemToken,
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(values)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/publications/issn', async (req, res) => {
+	const {values, token} = req.body;
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/publications/issn`, {
+		method: 'POST',
+		headers: token ? {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		} :
+			{
+				Authorization: 'Bearer ' + systemToken,
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(values)
 	});
 	res.status(response.status).json();
 });

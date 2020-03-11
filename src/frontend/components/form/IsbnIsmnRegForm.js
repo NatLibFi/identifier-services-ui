@@ -66,6 +66,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			clearFields,
 			user,
 			isAuthenticated,
+			publicationCreation,
 			publicationCreationRequest,
 			setMessage,
 			handleClose,
@@ -168,8 +169,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				const result = await publicationCreationRequest(formatPublicationValues(values), cookie[COOKIE_NAME]);
-				if (result === 200) {
+				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'isbn-ismn'});
+				if (result === 201) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -206,8 +207,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function submitPublication(values, result) {
 			if (result === true) {
-				const result = await publicationCreationRequest(values);
-				if (result === 200) {
+				const result = await publicationCreationRequest({values: values, subType: 'isbn-ismn'});
+				if (result === 201) {
 					handleClose();
 				}
 			} else {

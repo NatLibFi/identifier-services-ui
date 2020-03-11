@@ -58,7 +58,7 @@ const issnFields = [
 ];
 
 export default connect(null, actions)(reduxForm({
-	form: 'issnCreation',
+	form: 'IssnRangeCreationForm',
 	initialValues: {
 		active: true
 	},

@@ -84,6 +84,7 @@ function mapStateToProps(state) {
 		issnList: state.publication.issnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,
-		queryDocCount: state.publication.queryDocCount
+		queryDocCount: state.publication.queryDocCount,
+		role: state.login.userInfo.role
 	});
 }
