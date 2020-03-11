@@ -65,6 +65,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			user,
 			setMessage,
 			isAuthenticated,
+			publicationCreation,
 			publicationCreationRequest,
 			handleClose,
 			setIsCreating,
@@ -153,8 +154,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				const result = await publicationCreationRequest({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'issn'});
-				if (result === 200) {
+				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'issn'});
+				if (result === 201) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -186,7 +187,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function submitPublication(values, result) {
 			if (result === true) {
 				const result = await publicationCreationRequest({values: values, subType: 'issn'});
-				if (result === 200) {
+				if (result === 201) {
 					handleClose();
 				}
 			} else {

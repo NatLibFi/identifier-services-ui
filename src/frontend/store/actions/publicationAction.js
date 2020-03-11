@@ -129,7 +129,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 		body: JSON.stringify({values, token})
 	});
 	if (response.status === 201) {
-		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
 	}
 
 	return response.status;

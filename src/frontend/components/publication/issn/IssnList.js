@@ -42,10 +42,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [issnId, setIssnId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchIssnList({token: cookie[COOKIE_NAME], offset: lastCursor});
-	}, [lastCursor, cursors, fetchIssnList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, fetchIssnList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setIssnId(id);
@@ -73,6 +75,7 @@ export default connect(mapStateToProps, actions)(props => {
 			id={issnId}
 			modal={modal}
 			setModal={setModal}
+			setIsCreating={setIsCreating}
 			{...props}
 		/>
 	);
