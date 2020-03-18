@@ -57,7 +57,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const headRows = [
 		{id: 'title', label: 'Title'},
-		{id: 'publisher', label: 'Publisher'},
 		{id: 'publicationTime', label: 'Publication Time'},
 		{id: 'state', label: 'State'}
 	];
