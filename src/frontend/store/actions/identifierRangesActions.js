@@ -76,6 +76,25 @@ export const fetchIDRIsbn = (id, token) => async dispatch => {
 	}
 };
 
+export const updateIsbnRange = (id, values, token) => async dispatch => {
+	dispatch(setListLoader());
+
+	try {
+		const response = await fetch(`${API_URL}/ranges/isbn/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(IDR_ISBN, result.value));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
 // ***************ISMN****************************
 
 export const fetchIDRIsmnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
@@ -116,6 +135,25 @@ export const fetchIDRIsmn = (id, token) => async dispatch => {
 		});
 		const result = await response.json();
 		dispatch(success(IDR_ISMN, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const updateIsmnRange = (id, values, token) => async dispatch => {
+	dispatch(setListLoader());
+
+	try {
+		const response = await fetch(`${API_URL}/ranges/ismn/${id}`, {
+			method: 'PUT',
+			headers: {
+				Authorization: 'Bearer ' + token,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(values)
+		});
+		const result = await response.json();
+		dispatch(success(IDR_ISMN, result.value));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

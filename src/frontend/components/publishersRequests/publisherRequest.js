@@ -32,6 +32,7 @@ import {
 	ButtonGroup,
 	Button,
 	TextareaAutosize,
+	Typography,
 	List
 } from '@material-ui/core';
 import {reduxForm} from 'redux-form';
@@ -45,26 +46,42 @@ import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
 import CustomColor from '../../styles/app';
+import TableComponent from './TableComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, loading, fetchPublisherRequest, publisherRequest, updatePublisherRequest} = props;
+	const {
+		id,
+		loading,
+		fetchPublisherRequest,
+		publisherRequest,
+		updatePublisherRequest,
+		fetchIDRIsbnList,
+		rangleListLoading,
+		isbnRangeList,
+		fetchIDRIsmnList,
+		ismnRangeList} = props;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
-
+	const [assignRange, setAssignRange] = useState(false);
+	const [rangeTpye, setRangeType] = useState('');
+	const [isbnValue, setIsbnValue] = React.useState('');
+	const [ismnValue, setIsmnValue] = React.useState('');
+	const activeCheck = {
+		checked: true
+	};
 	useEffect(() => {
 		if (id !== null) {
 			fetchPublisherRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchPublisherRequest, id, buttonState]);
-
 	function handleRejectClick() {
 		setReject(!reject);
 	}
@@ -88,11 +105,71 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newPublisherRequest = {
 			...publisherRequest,
-			state: 'accepted'
+			state: 'accepted',
+			isbnRange: isbnValue,
+			ismnRange: ismnValue
+
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
 		setButtonState(publisherRequest.state);
+	}
+
+	function handleRange() {
+		setAssignRange(!assignRange);
+	}
+
+	function displayISBNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function displayISMNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function handleChange(e, val) {
+		if (val === 'isbn') {
+			setIsbnValue(e.target.value);
+		}
+
+		if (val === 'ismn') {
+			setIsmnValue(e.target.value);
+		}
+	}
+
+	function displayRanges(val) {
+		let data;
+		if (val === 'isbn') {
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={isbnRangeList} value={isbnValue} handleChange={e => handleChange(e, 'isbn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		if (rangeTpye === 'ismn') {
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={ismnRangeList} value={ismnValue} handleChange={e => handleChange(e, 'ismn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		return <Typography variant="h5">Choose range to assign</Typography>;
 	}
 
 	function renderButton(state) {
@@ -100,6 +177,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
+						<Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button>
+
 						<Button disabled={publisherRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
 					</ButtonGroup>
@@ -169,31 +248,38 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publisher Request Detail" {...props}>
-			<div className={classes.listItem}>
-				<Grid container spacing={3} className={classes.listItemSpinner}>
-					{publisherRequestDetail}
-					{reject ?
-						<>
+			{assignRange ?
+				<div className={classes.listItem}>
+					<Button onClick={handleRange}>Go Back</Button>
+					<Button onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>
+					<Button onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+					{displayRanges(rangeTpye)}
+				</div> :
+				<div className={classes.listItem}>
+					<Grid container spacing={3} className={classes.listItemSpinner}>
+						{publisherRequestDetail}
+						{reject ?
+							<>
+								<Grid item xs={12}>
+									<TextareaAutosize
+										aria-label="Minimum height"
+										rows={8}
+										placeholder="Rejection reason here..."
+										className={classes.textArea}
+										value={rejectReason}
+										onChange={handleRejectReason}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+								</Grid>
+							</> :
 							<Grid item xs={12}>
-								<TextareaAutosize
-									aria-label="Minimum height"
-									rows={8}
-									placeholder="Rejection reason here..."
-									className={classes.textArea}
-									value={rejectReason}
-									onChange={handleRejectReason}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
-								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
-							</Grid>
-						</> :
-						<Grid item xs={12}>
-							{renderButton(publisherRequest.state)}
-						</Grid>}
-				</Grid>
-			</div>
+								{renderButton(publisherRequest.state)}
+							</Grid>}
+					</Grid>
+				</div>}
 		</ModalLayout>
 	);
 	return {
@@ -206,6 +292,9 @@ function mapStateToProps(state) {
 		publisherRequest: state.publisher.publisherRequest,
 		loading: state.publisher.loading,
 		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo
+		userInfo: state.login.userInfo,
+		rangleListLoading: state.identifierRanges.listLoading,
+		isbnRangeList: state.identifierRanges.isbnList,
+		ismnRangeList: state.identifierRanges.ismnList
 	});
 }
