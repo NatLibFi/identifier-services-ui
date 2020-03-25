@@ -119,6 +119,22 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 	}
 };
 
+export const publicationCreation = ({values, token, subType}) => async dispatch => {
+	const response = await fetch(`${API_URL}/publications/${subType}`, {
+		method: 'POST',
+		headers: {
+			Authorization: 'Bearer ' + token,
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(values)
+	});
+	if (response.status === 201) {
+		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
+	}
+
+	return response.status;
+};
+
 // ****************REQUESTS**********************************
 export const publicationCreationRequest = (values, token) => async dispatch => {
 	const response = await fetch('/requests/publications/isbn-ismn', {

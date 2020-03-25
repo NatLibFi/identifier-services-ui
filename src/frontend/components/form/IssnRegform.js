@@ -47,7 +47,7 @@ import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'publicationRegIssnForm',
+	form: 'IssnRegForm',
 	initialValues: {
 		language: 'eng'
 	},
@@ -431,7 +431,7 @@ function mapStateToProps(state) {
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
 		publisherValues: getFormValues('publisherRegistrationForm')(state),
-		publicationValues: getFormValues('publicationRegIssnForm')(state)
+		publicationValues: getFormValues('IssnRegForm')(state)
 	});
 }
 

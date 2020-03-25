@@ -30,13 +30,19 @@ import React, {useState} from 'react';
 import {Grid, Typography} from '@material-ui/core';
 
 import {commonStyles} from '../../styles/app';
+import useModalStyles from '../../styles/formList';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
 import IsbnIsmn from './isbnIsmn/IsbnIsmn';
 import Issn from './issn/Issn';
+import ModalLayout from '../ModalLayout';
+import IsbnIsmnRegForm from '../form/IsbnIsmnRegForm';
+import IssnRegForm from '../form/IssnRegform';
 
 export default function (props) {
 	const classes = commonStyles();
+	const modalClasses = useModalStyles();
+
 	const {
 		loading,
 		publicationList,
@@ -49,7 +55,9 @@ export default function (props) {
 		isbnIsmn,
 		issn,
 		handleTableRowClick,
-		rowSelectedId
+		rowSelectedId,
+		setIsCreating,
+		role
 	} = props;
 
 	const [page, setPage] = useState(1);
@@ -93,6 +101,22 @@ export default function (props) {
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
+				{console.log(role)}
+				{(role === 'publisher' || role === 'publisher-admin') && (
+					isbnIsmn ?
+						(
+							<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newIsbnIsmn" variant="outlined" classed={modalClasses.button} color="primary">
+								<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
+							</ModalLayout>
+						) : (
+							issn ?
+								(
+									<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newIssn" variant="outlined" classed={modalClasses.button} color="primary">
+										<IssnRegForm setIsCreating={setIsCreating} {...props}/>
+									</ModalLayout>
+								) : null
+						)
+				)}
 				{usersData}
 				{issn ?	<Issn {...props}/> : (
 					isbnIsmn ?	<IsbnIsmn {...props}/> : null
