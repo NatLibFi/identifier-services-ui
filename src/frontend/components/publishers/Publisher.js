@@ -33,6 +33,7 @@ import {
 	List,
 	ListItem,
 	ListItemText,
+	Typography,
 	Fab
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
@@ -48,6 +49,7 @@ import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import renderTextField from '../form/render/renderTextField';
 import ListComponent from '../ListComponent';
+import TableComponent from '../publishersRequests/TableComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherUpdateForm',
@@ -61,6 +63,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		publisher,
 		loading,
 		handleSubmit,
+		fetchIDRIsbnList,
+		fetchIDRIsmnList,
+		rangleListLoading,
+		isbnRangeList,
+		ismnRangeList,
+		updateIsbnRange,
+		updateIsmnRange,
 		isAuthenticated,
 		userInfo} = props;
 	const classes = commonStyles();
@@ -68,13 +77,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [isEdit, setIsEdit] = useState(false);
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
+	const [assignRange, setAssignRange] = useState(false);
+	const [rangeType, setRangeType] = useState('');
+	const [isbnValue, setIsbnValue] = React.useState('');
+	const [ismnValue, setIsmnValue] = React.useState('');
+
+	const activeCheck = {
+		checked: true
+	};
 
 	useEffect(() => {
 		if (id !== null) {
 			fetchPublisher(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchPublisher, id]);
-
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -140,11 +156,97 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const handlePublisherUpdate = values => {
-		const {_id, ...updateValues} = values;
 		const token = cookie[COOKIE_NAME];
+		const {_id, ...updateValues} = values;
 		updatePublisher(id, updateValues, token);
 		setIsEdit(false);
 	};
+
+	const handleRangeUpdate = val => {
+		const token = cookie[COOKIE_NAME];
+		const {_id, ...publisherWithRange} = {
+			...publisher,
+			isbnRange: isbnValue,
+			ismnRange: ismnValue
+		};
+		updatePublisher(_id, publisherWithRange, token);
+
+		if (val === 'isbn') {
+			const isbnRange = isbnRangeList.filter(item => item.id === isbnValue);
+			const {id, ...newIsbnRange} = {
+				...isbnRange[0],
+				associatePublisher: isbnRange[0].associatePublisher ? [...isbnRange[0].associatePublisher, publisher.publisherEmail] : [publisher.publisherEmail]};
+			updateIsbnRange(isbnValue, newIsbnRange, token);
+		}
+
+		if (val === 'ismn') {
+			const ismnRange = ismnRangeList.filter(item => item.id === ismnValue);
+			const {id, ...newIsmnRange} = {
+				...ismnRange[0],
+				associatePublisher: ismnRange[0].associatePublisher ? [...ismnRange[0].associatePublisher, publisher.publisherEmail] : [publisher.publisherEmail]};
+			updateIsmnRange(ismnValue, newIsmnRange, token);
+		}
+	};
+
+	function handleRange() {
+		setIsbnValue(publisher.isbnRange);
+		setIsmnValue(publisher.ismnRange);
+		setAssignRange(!assignRange);
+	}
+
+	function displayISBNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function displayISMNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function handleChange(e, val) {
+		if (val === 'isbn') {
+			setIsbnValue(e.target.value);
+		}
+
+		if (val === 'ismn') {
+			setIsmnValue(e.target.value);
+		}
+	}
+
+	function displayRanges(val) {
+		if (val === 'isbn') {
+			let data;
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={isbnRangeList} value={isbnValue} handleChange={e => handleChange(e, 'isbn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		if (rangeType === 'ismn') {
+			let data;
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={ismnRangeList} value={ismnValue} handleChange={e => handleChange(e, 'ismn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		return <Typography variant="h5">Choose range to assign</Typography>;
+	}
 
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publisher Detail" {...props}>
@@ -163,20 +265,31 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</form>
 				</div> :
 				<div className={classes.listItem}>
-					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{publisherDetail}
-					</Grid>
-					{isAuthenticated && userInfo.role === 'publisher' &&
-						<div className={classes.btnContainer}>
-							<Fab
-								color="primary"
-								size="small"
-								title="Edit Publisher Detail"
-								onClick={handleEditClick}
-							>
-								<EditIcon/>
-							</Fab>
-						</div>}
+					{assignRange ?
+						<div className={classes.listItem}>
+							<Button onClick={handleRange}>Go Back</Button>
+							<Button onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>
+							<Button onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+							{displayRanges(rangeType)}
+							{rangeType ? <Button variant="outlined" color="primary" onClick={() => handleRangeUpdate(rangeType)}>Update {rangeType}</Button> : null}
+						</div> :
+						<>
+							<Grid container spacing={3} className={classes.listItemSpinner}>
+								{publisherDetail}
+							</Grid>
+							{isAuthenticated && userInfo.role === 'admin' && <Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button>}
+							{isAuthenticated && userInfo.role === 'publisher' &&
+								<div className={classes.btnContainer}>
+									<Fab
+										color="primary"
+										size="small"
+										title="Edit Publisher Detail"
+										onClick={handleEditClick}
+									>
+										<EditIcon/>
+									</Fab>
+								</div>}
+						</>}
 				</div>}
 		</ModalLayout>
 	);
@@ -191,6 +304,9 @@ function mapStateToProps(state) {
 		loading: state.publisher.loading,
 		initialValues: state.publisher.publisher,
 		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo
+		userInfo: state.login.userInfo,
+		rangleListLoading: state.identifierRanges.listLoading,
+		isbnRangeList: state.identifierRanges.isbnList,
+		ismnRangeList: state.identifierRanges.ismnList
 	});
 }

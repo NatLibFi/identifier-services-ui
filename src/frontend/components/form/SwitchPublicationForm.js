@@ -30,7 +30,7 @@ import {Button, Typography} from '@material-ui/core';
 import useStyles from '../../styles/form';
 
 import IsbnIsmnRegForm from './IsbnIsmnRegForm';
-import PublicationRegIssnForm from './PublicationRegIssnForm';
+import IssnRegForm from './IssnRegform';
 
 export default function (props) {
 	const {setTitle} = props;
@@ -57,7 +57,7 @@ export default function (props) {
 						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
 					</div>
 				</> :
-				value === 'isbn-ismn' ? <IsbnIsmnRegForm {...props}/> : <PublicationRegIssnForm {...props}/>}
+				value === 'isbn-ismn' ? <IsbnIsmnRegForm {...props}/> : <IssnRegForm {...props}/>}
 		</>
 	);
 

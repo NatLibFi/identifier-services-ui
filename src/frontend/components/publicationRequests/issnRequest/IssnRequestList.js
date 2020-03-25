@@ -40,7 +40,7 @@ import TabComponent from '../../TabComponent';
 import IssnRequest from './IssnRequest';
 import ModalLayout from '../../ModalLayout';
 import useModalStyles from '../../../styles/formList';
-import IssnRegForm from '../../form/PublicationRegIssnForm';
+import IssnRegForm from '../../form/IssnRegform';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount, role} = props;

@@ -89,6 +89,7 @@ export {
 	fetchIsbnIsmnList,
 	fetchIssn,
 	fetchIssnList,
+	publicationCreation,
 	publicationCreationRequest,
 	fetchPublicationIsbnIsmnRequestsList,
 	fetchPublicationIsbnIsmnRequest,
@@ -106,5 +107,7 @@ export {
 	fetchIDRIsmn,
 	fetchIDRIssnList,
 	fetchIDRIssn,
-	createIssn
+	createIssn,
+	updateIsbnRange,
+	updateIsmnRange
 } from './identifierRangesActions';
