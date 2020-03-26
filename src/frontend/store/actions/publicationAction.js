@@ -126,7 +126,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 			Authorization: 'Bearer ' + token,
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({values, token})
+		body: JSON.stringify(values)
 	});
 	if (response.status === 201) {
 		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
