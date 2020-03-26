@@ -65,13 +65,25 @@ export default connect(null, actions)(reduxForm({
 	validate
 })(
 	props => {
-		const {handleSubmit, valid, createIssn, pristine, handleClose, setUpdateComponent} = props;
+		const {location, handleSubmit, valid, createIssnRange, createIsmnRange, createIsbnRange, pristine, handleClose, setUpdateComponent} = props;
 		const classes = useStyles();
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 
-		async function handleCreateIssn(values) {
-			const response = await createIssn(values, cookie[COOKIE_NAME]);
+		async function handlecreateIssnRange(values) {
+			let response;
+			if (location.pathname === '/ranges/isbn') {
+				response = await createIsbnRange(values, cookie[COOKIE_NAME]);
+			}
+
+			if (location.pathname === '/ranges/issn') {
+				response = await createIssnRange(values, cookie[COOKIE_NAME]);
+			}
+
+			if (location.pathname === '/ranges/ismn') {
+				response = await createIsmnRange(values, cookie[COOKIE_NAME]);
+			}
+
 			if (response === 201) {
 				setUpdateComponent(true);
 				handleClose();
@@ -99,7 +111,7 @@ export default connect(null, actions)(reduxForm({
 
 		const component = (
 			<>
-				<form className={classes.container} onSubmit={handleSubmit(handleCreateIssn)}>
+				<form className={classes.container} onSubmit={handleSubmit(handlecreateIssnRange)}>
 					<div className={classes.subContainer}>
 						<Grid container spacing={3}>
 							{element(issnFields)}
