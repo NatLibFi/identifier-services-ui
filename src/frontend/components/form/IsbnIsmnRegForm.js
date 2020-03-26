@@ -170,7 +170,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
 				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'isbn-ismn'});
-				if (result === 201) {
+				if (result === 200) {
 					handleClose();
 					setIsCreating(true);
 				}

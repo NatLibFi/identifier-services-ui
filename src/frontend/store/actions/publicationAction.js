@@ -120,7 +120,7 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 };
 
 export const publicationCreation = ({values, token, subType}) => async dispatch => {
-	const response = await fetch(`/publications/${subType}`, {
+	const response = await fetch(`${API_URL}/publications/${subType}`, {
 		method: 'POST',
 		headers: {
 			Authorization: 'Bearer ' + token,
@@ -137,7 +137,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 
 // ****************REQUESTS**********************************
 export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
-	const response = await fetch(`/requests/publications/${subType}`, {
+	const response = await fetch(`${API_URL}/requests/publications/${subType}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'

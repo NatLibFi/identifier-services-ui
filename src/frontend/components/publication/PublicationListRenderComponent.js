@@ -101,7 +101,6 @@ export default function (props) {
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
-				{console.log(role)}
 				{(role === 'publisher' || role === 'publisher-admin') && (
 					isbnIsmn ?
 						(

@@ -94,7 +94,7 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 			body: JSON.stringify(values)
 		});
 		const result = await response.json();
-		dispatch(success(PUBLISHER, result.data));
+		dispatch(success(PUBLISHER, result.value));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
