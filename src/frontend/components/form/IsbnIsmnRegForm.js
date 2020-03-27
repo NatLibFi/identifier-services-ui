@@ -32,7 +32,7 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
-
+import HttpStatus from 'http-status';
 import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
 import renderTextField from './render/renderTextField';
@@ -170,7 +170,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
 				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'isbn-ismn'});
-				if (result === 200) {
+				if (result === HttpStatus.OK) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -208,7 +208,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function submitPublication(values, result) {
 			if (result === true) {
 				const result = await publicationCreationRequest({values: values, subType: 'isbn-ismn'});
-				if (result === 201) {
+				if (result === HttpStatus.CREATED) {
 					handleClose();
 				}
 			} else {

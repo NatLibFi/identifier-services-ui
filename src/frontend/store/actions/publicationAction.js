@@ -39,6 +39,7 @@ import {
 	ISSN_REQUESTS_LIST,
 	ISSN_REQUEST
 } from './types';
+import HttpStatus from 'http-status';
 import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
@@ -128,7 +129,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 		},
 		body: JSON.stringify(values)
 	});
-	if (response.status === 201) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
 	}
 
@@ -145,7 +146,7 @@ export const publicationCreationRequest = ({values, token, subType}) => async di
 		credentials: 'same-origin',
 		body: JSON.stringify({values, token})
 	});
-	if (response.status === 201) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
 	}
 

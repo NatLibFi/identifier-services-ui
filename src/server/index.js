@@ -38,6 +38,7 @@ import base64 from 'base-64';
 import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
 import fs from 'fs';
+import HttpStatus from 'http-status';
 import jose from 'jose';
 import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
 import * as frontendConfig from './frontEndConfig';
@@ -128,7 +129,7 @@ app.post('/auth', async (req, res) => {
 	});
 	const token = result.headers.get('Token');
 	res.cookie(COOKIE_NAME, token, {maxAge: 6000000, secure: false});
-	res.status(200).json(token);
+	res.status(HttpStatus.OK).json(token);
 });
 
 // =====> TO BE DELETED LATER <======
