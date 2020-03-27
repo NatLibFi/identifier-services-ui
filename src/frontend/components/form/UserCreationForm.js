@@ -31,6 +31,7 @@ import {Field, reduxForm} from 'redux-form';
 import {Button, Grid, Radio} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {useCookies} from 'react-cookie';
+import HttpStatus from 'http-status';
 
 import renderTextField from './render/renderTextField';
 import useStyles from '../../styles/form';
@@ -126,9 +127,9 @@ export default connect(null, actions)(reduxForm({
 					}
 				}
 
-				if (publisher !== 404) {
+				if (publisher !== HttpStatus.NOT_FOUND) {
 					const result = await createUser(newUser, token);
-					if (result !== 404 && result !== 409) {
+					if (result !== HttpStatus.NOT_FOUND && result !== HttpStatus.CONFLICT) {
 						handleClose();
 						setIsCreating(true);
 					}
@@ -148,7 +149,7 @@ export default connect(null, actions)(reduxForm({
 				}
 
 				const result = await createUserRequest(newUser, token);
-				if (result !== 404 && result !== 409) {
+				if (result !== HttpStatus.NOT_FOUND && result !== HttpStatus.CONFLICT) {
 					handleClose();
 					setIsCreating(true);
 				}

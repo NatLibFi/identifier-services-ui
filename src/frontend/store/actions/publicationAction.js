@@ -39,6 +39,7 @@ import {
 	ISSN_REQUESTS_LIST,
 	ISSN_REQUEST
 } from './types';
+import HttpStatus from 'http-status';
 import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
@@ -128,7 +129,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 		},
 		body: JSON.stringify(values)
 	});
-	if (response.status === 201) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
 	}
 
@@ -136,8 +137,8 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/isbn-ismn', {
+export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
+	const response = await fetch(`${API_URL}/requests/publications/${subType}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -145,8 +146,8 @@ export const publicationCreationRequest = (values, token) => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify({values, token})
 	});
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+	if (response.status === HttpStatus.CREATED) {
+		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
 	}
 
 	return response.status;
@@ -210,21 +211,6 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
-};
-
-export const issnCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/issn', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({values, token})
-	});
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISSN creation request sent successfully'}));
-	}
-
-	return response.status;
 };
 
 export const fetchIssnRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {

@@ -30,6 +30,7 @@ import {connect} from 'react-redux';
 import {Field, reduxForm} from 'redux-form';
 import {Button, Grid} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
 import {useCookies} from 'react-cookie';
 
 import renderTextField from './render/renderTextField';
@@ -58,7 +59,7 @@ const issnFields = [
 ];
 
 export default connect(null, actions)(reduxForm({
-	form: 'issnCreation',
+	form: 'IssnRangeCreationForm',
 	initialValues: {
 		active: true
 	},
@@ -72,7 +73,7 @@ export default connect(null, actions)(reduxForm({
 
 		async function handleCreateIssn(values) {
 			const response = await createIssn(values, cookie[COOKIE_NAME]);
-			if (response === 201) {
+			if (response === HttpStatus.CREATED) {
 				setUpdateComponent(true);
 				handleClose();
 			}

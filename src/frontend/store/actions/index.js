@@ -94,7 +94,6 @@ export {
 	fetchPublicationIsbnIsmnRequestsList,
 	fetchPublicationIsbnIsmnRequest,
 	updatePublicationIsbnIsmnRequest,
-	issnCreationRequest,
 	fetchIssnRequestsList,
 	fetchIssnRequest,
 	updateIssnRequest

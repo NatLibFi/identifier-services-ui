@@ -32,6 +32,7 @@ import {Field, reduxForm} from 'redux-form';
 import {Button, Grid, IconButton} from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import CloseIcon from '@material-ui/icons/Close';
+import HttpStatus from 'http-status';
 
 import useStyles from '../../styles/form';
 import {commonStyles} from '../../styles/app';
@@ -100,7 +101,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (confirmPassword === newPassword) {
 					setError(null);
 					const response = await passwordReset({...values, id: decode.userId});
-					if (response === 200) {
+					if (response === HttpStatus.OK) {
 						props.history.push('/');
 					}
 				} else {
