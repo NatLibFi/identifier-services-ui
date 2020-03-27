@@ -673,7 +673,7 @@ function getFieldArray(user) {
 		}
 	];
 	const fieldsWithoutUser = [{publisher: publisherFieldArray}];
-	return user.id === undefined ? fieldsWithoutUser.concat(fieldsWithUser) : fieldsWithUser;
+	return user.id === undefined ? [...fieldsWithoutUser, ...fieldsWithUser] : fieldsWithUser;
 }
 
 function getSubFormatDetailsFieldArray() {
