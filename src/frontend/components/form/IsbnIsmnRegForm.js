@@ -207,7 +207,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function submitPublication(values, result) {
 			if (result === true) {
-				const result = await publicationCreationRequest(values);
+				const result = await publicationCreationRequest({values: values, type: 'isbn-ismn'});
 				if (result === 200) {
 					handleClose();
 				}

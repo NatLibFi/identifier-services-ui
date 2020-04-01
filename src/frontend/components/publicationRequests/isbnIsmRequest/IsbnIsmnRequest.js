@@ -50,6 +50,7 @@ import ModalLayout from '../../ModalLayout';
 import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
 import CustomColor from '../../../styles/app';
+import TableComponent from '../../publishersRequests/TableComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRequestIsbnIsmn',
@@ -61,7 +62,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		loading,
 		fetchPublicationIsbnIsmnRequest,
 		publicationIsbnIsmnRequest,
-		updatePublicationIsbnIsmnRequest
+		updatePublicationIsbnIsmnRequest,
+		isbnRangeList,
+		ismnRangeList,
+		fetchIDRIsbnList,
+		fetchIDRIsmnList,
+		rangleListLoading
 	} = props;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
@@ -69,6 +75,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
+	const [assignRange, setAssignRange] = useState(false);
+	const [rangeType, setRangeType] = useState('');
+	const [isbnValue, setIsbnValue] = React.useState(null);
+	const [ismnValue, setIsmnValue] = React.useState(null);
+
+	const activeCheck = {
+		checked: true
+	};
 
 	useEffect(() => {
 		if (id !== null) {
@@ -99,6 +113,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newPublicationIsbnIsmnRequest = {
 			...publicationIsbnIsmnRequest,
+			publisher: {...publicationIsbnIsmnRequest.publisher, isbnRange: isbnValue, ismnRange: ismnValue},
 			state: 'accepted'
 		};
 		delete newPublicationIsbnIsmnRequest._id;
@@ -106,12 +121,74 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setButtonState(publicationIsbnIsmnRequest.state);
 	}
 
+	function handleRange() {
+		setAssignRange(!assignRange);
+	}
+
+	function displayISBNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function displayISMNRanges(type) {
+		setRangeType(type);
+		fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+	}
+
+	function handleChange(e, val) {
+		if (val === 'isbn') {
+			setIsbnValue(e.target.value);
+		}
+
+		if (val === 'ismn') {
+			setIsmnValue(e.target.value);
+		}
+	}
+
+	function displayRanges(val) {
+		if (val === 'isbn') {
+			let data;
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={isbnRangeList} value={isbnValue} handleChange={e => handleChange(e, 'isbn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		if (rangeType === 'ismn') {
+			let data;
+			if (rangleListLoading) {
+				data = <Spinner/>;
+			} else if (isbnRangeList.length === 0) {
+				data = 'No ranges found';
+			} else {
+				data = (
+					<TableComponent data={ismnRangeList} value={ismnValue} handleChange={e => handleChange(e, 'ismn')}/>
+				);
+			}
+
+			return data;
+		}
+
+		return <Typography variant="h5">Choose range to assign</Typography>;
+	}
+
 	function renderButton(state) {
 		switch (state) {
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
-						<Button variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						{
+							(isbnValue === null || ismnValue === null) || (isbnValue === undefined || ismnValue === undefined) ?
+								<Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button> :
+								<Button disabled={publicationIsbnIsmnRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
+						}
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>
 					</ButtonGroup>
 				);
@@ -219,29 +296,36 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const component = (
 		<ModalLayout isTableRow color="primary" title="Publication Request Detail" {...props}>
 			<div className={classes.listItem}>
-				<Grid container spacing={3} className={classes.listItemSpinner}>
-					{publicationIsbnIsmnRequestDetail}
-					{reject ?
-						<>
+				{assignRange ?
+					<div className={classes.listItem}>
+						<Button onClick={handleRange}>Go Back</Button>
+						<Button onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>
+						<Button onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+						{displayRanges(rangeType)}
+					</div> :
+					<Grid container spacing={3} className={classes.listItemSpinner}>
+						{publicationIsbnIsmnRequestDetail}
+						{reject ?
+							<>
+								<Grid item xs={12}>
+									<TextareaAutosize
+										aria-label="Minimum height"
+										rows={8}
+										placeholder="Rejection reason here..."
+										className={classes.textArea}
+										value={rejectReason}
+										onChange={handleRejectReason}
+									/>
+								</Grid>
+								<Grid item xs={12}>
+									<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
+									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
+								</Grid>
+							</> :
 							<Grid item xs={12}>
-								<TextareaAutosize
-									aria-label="Minimum height"
-									rows={8}
-									placeholder="Rejection reason here..."
-									className={classes.textArea}
-									value={rejectReason}
-									onChange={handleRejectReason}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<Button variant="contained" onClick={handleRejectClick}>Cancel</Button>
-								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>Submit</Button>
-							</Grid>
-						</> :
-						<Grid item xs={12}>
-							{renderButton(publicationIsbnIsmnRequest.state)}
-						</Grid>}
-				</Grid>
+								{renderButton(publicationIsbnIsmnRequest.state)}
+							</Grid>}
+					</Grid>}
 			</div>
 		</ModalLayout>
 	);
@@ -255,6 +339,9 @@ function mapStateToProps(state) {
 		publicationIsbnIsmnRequest: state.publication.publicationIsbnIsmnRequest,
 		loading: state.publication.loading,
 		isAuthenticated: state.login.isAuthenticated,
-		userInfo: state.login.userInfo
+		userInfo: state.login.userInfo,
+		isbnRangeList: state.identifierRanges.isbnList,
+		ismnRangeList: state.identifierRanges.ismnList,
+		rangleListLoading: state.identifierRanges.listLoading
 	});
 }

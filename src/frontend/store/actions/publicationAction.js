@@ -136,17 +136,17 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/isbn-ismn', {
+export const publicationCreationRequest = ({values, type}) => async dispatch => {
+	const response = await fetch(`/requests/publications/${type}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
-		body: JSON.stringify({values, token})
+		body: JSON.stringify(values)
 	});
 	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISBN-ISMN creation request sent successfully'}));
+		dispatch(setMessage({color: 'success', msg: `${type} creation request sent successfully`}));
 	}
 
 	return response.status;
@@ -210,21 +210,6 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
-};
-
-export const issnCreationRequest = (values, token) => async dispatch => {
-	const response = await fetch('/requests/publications/issn', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({values, token})
-	});
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: 'ISSN creation request sent successfully'}));
-	}
-
-	return response.status;
 };
 
 export const fetchIssnRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {
