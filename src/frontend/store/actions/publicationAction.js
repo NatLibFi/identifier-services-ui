@@ -137,13 +137,8 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 };
 
 // ****************REQUESTS**********************************
-<<<<<<< HEAD
-export const publicationCreationRequest = ({values, type}) => async dispatch => {
-	const response = await fetch(`/requests/publications/${type}`, {
-=======
-export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
+export const publicationCreationRequest = ({values, subType}) => async dispatch => {
 	const response = await fetch(`/requests/publications/${subType}`, {
->>>>>>> dev
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -151,13 +146,8 @@ export const publicationCreationRequest = ({values, token, subType}) => async di
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-<<<<<<< HEAD
-	if (response.status === 200) {
-		dispatch(setMessage({color: 'success', msg: `${type} creation request sent successfully`}));
-=======
 	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
->>>>>>> dev
 	}
 
 	return response.status;
