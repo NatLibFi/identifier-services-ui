@@ -31,6 +31,7 @@ import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
+import HttpStatus from 'http-status';
 import {useCookies} from 'react-cookie';
 
 import * as actions from '../../store/actions';
@@ -47,7 +48,7 @@ import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'IssnRegForm',
+	form: 'issnRegForm',
 	initialValues: {
 		language: 'eng'
 	},
@@ -65,7 +66,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			user,
 			setMessage,
 			isAuthenticated,
-			issnCreationRequest,
+			publicationCreation,
+			publicationCreationRequest,
 			handleClose,
 			setIsCreating,
 			handleSubmit} = props;
@@ -153,8 +155,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
-				const result = await issnCreationRequest(formatPublicationValues(values), cookie[COOKIE_NAME]);
-				if (result === 200) {
+				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'issn'});
+				if (result === HttpStatus.CREATED) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -185,8 +187,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		async function submitPublication(values, result) {
 			if (result === true) {
-				const result = await issnCreationRequest(values);
-				if (result === 200) {
+				const result = await publicationCreationRequest({values: values, subType: 'issn'});
+				if (result === HttpStatus.CREATED) {
 					handleClose();
 				}
 			} else {
@@ -431,7 +433,7 @@ function mapStateToProps(state) {
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
 		publisherValues: getFormValues('publisherRegistrationForm')(state),
-		publicationValues: getFormValues('IssnRegForm')(state)
+		publicationValues: getFormValues('issnRegForm')(state)
 	});
 }
 
@@ -647,7 +649,7 @@ function getFieldArray(user) {
 		}
 	];
 	const fieldsWithoutUser = [{publisher: publisherFieldArray}];
-	return user.id === undefined ? fieldsWithoutUser.concat(fieldsWithUser) : fieldsWithUser;
+	return user.id === undefined ? [...fieldsWithoutUser, ...fieldsWithUser] : fieldsWithUser;
 }
 
 function getUrl() {

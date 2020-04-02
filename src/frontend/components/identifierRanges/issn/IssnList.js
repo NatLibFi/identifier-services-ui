@@ -38,7 +38,7 @@ import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Issn from './Issn';
 import ModalLayout from '../../ModalLayout';
-import IssnCreationForm from '../../form/IssnCreationForm';
+import IssnRangeCreationFormForm from '../../form/IssnRangeCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchIDRIssnList, issnList, loading, offset, queryDocCount, userInfo} = props;
@@ -127,8 +127,8 @@ export default connect(mapStateToProps, actions)(props => {
 				/>
 				{
 					userInfo.role === 'admin' &&
-						<ModalLayout form label="Create ISSN Range" title="Create ISSN Range" name="issnCreationRange" variant="outlined" color="primary">
-							<IssnCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
+						<ModalLayout form label="Create ISSN Range" title="Create ISSN Range" name="IssnRangeCreationFormRange" variant="outlined" color="primary">
+							<IssnRangeCreationFormForm setUpdateComponent={setUpdateComponent} {...props}/>
 						</ModalLayout>
 				}
 				{issnData}

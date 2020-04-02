@@ -39,6 +39,7 @@ import {
 	ISSN_REQUESTS_LIST,
 	ISSN_REQUEST
 } from './types';
+import HttpStatus from 'http-status';
 import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
 export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
@@ -128,7 +129,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 		},
 		body: JSON.stringify(values)
 	});
-	if (response.status === 201) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} has created successfully`}));
 	}
 
@@ -136,8 +137,13 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 };
 
 // ****************REQUESTS**********************************
+<<<<<<< HEAD
 export const publicationCreationRequest = ({values, type}) => async dispatch => {
 	const response = await fetch(`/requests/publications/${type}`, {
+=======
+export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
+	const response = await fetch(`/requests/publications/${subType}`, {
+>>>>>>> dev
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
@@ -145,8 +151,13 @@ export const publicationCreationRequest = ({values, type}) => async dispatch => 
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
+<<<<<<< HEAD
 	if (response.status === 200) {
 		dispatch(setMessage({color: 'success', msg: `${type} creation request sent successfully`}));
+=======
+	if (response.status === HttpStatus.CREATED) {
+		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
+>>>>>>> dev
 	}
 
 	return response.status;
