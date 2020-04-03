@@ -52,7 +52,7 @@ export const createMessageTemplate = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/templates`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(values)
@@ -68,7 +68,7 @@ export const fetchMessagesList = (token, offset) => async dispatch => {
 		const response = await fetch(`${API_URL}/templates/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({queries: [{
@@ -89,7 +89,7 @@ export const fetchMessage = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/templates/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 		const result = await response.json();
@@ -105,7 +105,7 @@ export const updateMessageTemplate = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/templates/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',

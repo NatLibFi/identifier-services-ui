@@ -39,7 +39,7 @@ export const findPublisherIdByEmail = ({email, token, offset}) => async dispatch
 		const properties = {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -69,7 +69,7 @@ export const fetchPublisher = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'GET',
 			headers: token ? {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			} :
 				{'Content-Type': 'application/json'}
@@ -87,7 +87,7 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',
@@ -109,7 +109,7 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 		const properties = {
 			method: 'POST',
 			headers: token ? {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			} :
 				{'Content-Type': 'application/json'},
@@ -151,7 +151,7 @@ export const fetchPublishersRequestsList = ({searchText, token, sortStateBy, off
 		const response = await fetch(`${API_URL}/requests/publishers/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -174,7 +174,7 @@ export const fetchPublisherRequest = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -192,7 +192,7 @@ export const updatePublisherRequest = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/publishers/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',
