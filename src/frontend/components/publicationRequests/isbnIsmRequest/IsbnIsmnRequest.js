@@ -51,6 +51,7 @@ import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
 import CustomColor from '../../../styles/app';
 import TableComponent from '../../publishersRequests/TableComponent';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRequestIsbnIsmn',
@@ -67,7 +68,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		ismnRangeList,
 		fetchIDRIsbnList,
 		fetchIDRIsmnList,
-		rangleListLoading
+		rangeListLoading
 	} = props;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
@@ -77,8 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [rejectReason, setRejectReason] = useState('');
 	const [assignRange, setAssignRange] = useState(false);
 	const [rangeType, setRangeType] = useState('');
-	const [isbnValue, setIsbnValue] = React.useState(null);
-	const [ismnValue, setIsmnValue] = React.useState(null);
+	const [rangeValue, setRangeValue] = React.useState(null);
 
 	const activeCheck = {
 		checked: true
@@ -113,7 +113,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newPublicationIsbnIsmnRequest = {
 			...publicationIsbnIsmnRequest,
-			publisher: {...publicationIsbnIsmnRequest.publisher, isbnRange: isbnValue, ismnRange: ismnValue},
+			publisher: {...publicationIsbnIsmnRequest.publisher, range: rangeValue},
 			state: 'accepted'
 		};
 		delete newPublicationIsbnIsmnRequest._id;
@@ -123,60 +123,57 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	function handleRange() {
 		setAssignRange(!assignRange);
-	}
-
-	function displayISBNRanges(type) {
-		setRangeType(type);
-		fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
-	}
-
-	function displayISMNRanges(type) {
-		setRangeType(type);
-		fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+		if (publicationIsbnIsmnRequest.type === 'music') {
+			fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+			setRangeType('ismn');
+		} else {
+			fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
+			setRangeType('isbn');
+		}
 	}
 
 	function handleChange(e, val) {
 		if (val === 'isbn') {
-			setIsbnValue(e.target.value);
+			setRangeValue(e.target.value);
 		}
 
 		if (val === 'ismn') {
-			setIsmnValue(e.target.value);
+			setRangeValue(e.target.value);
 		}
 	}
 
 	function displayRanges(val) {
 		if (val === 'isbn') {
 			let data;
-			if (rangleListLoading) {
+			if (rangeListLoading) {
 				data = <Spinner/>;
 			} else if (isbnRangeList.length === 0) {
 				data = 'No ranges found';
 			} else {
 				data = (
-					<TableComponent data={isbnRangeList} value={isbnValue} handleChange={e => handleChange(e, 'isbn')}/>
+					<TableComponent data={isbnRangeList} value={rangeValue} handleChange={e => handleChange(e, 'isbn')}/>
 				);
 			}
 
 			return data;
 		}
 
-		if (rangeType === 'ismn') {
+		if (val === 'ismn') {
 			let data;
-			if (rangleListLoading) {
+			if (rangeListLoading) {
 				data = <Spinner/>;
-			} else if (isbnRangeList.length === 0) {
+			} else if (ismnRangeList.length === 0) {
 				data = 'No ranges found';
 			} else {
 				data = (
-					<TableComponent data={ismnRangeList} value={ismnValue} handleChange={e => handleChange(e, 'ismn')}/>
+					<TableComponent data={ismnRangeList} value={rangeValue} handleChange={e => handleChange(e, 'ismn')}/>
 				);
 			}
 
 			return data;
 		}
 
-		return <Typography variant="h5">Choose range to assign</Typography>;
+		return <Typography variant="h6">Choose range to assign</Typography>;
 	}
 
 	function renderButton(state) {
@@ -185,7 +182,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
 						{
-							(isbnValue === null || ismnValue === null) || (isbnValue === undefined || ismnValue === undefined) ?
+							(rangeValue === null || rangeValue === undefined) ?
 								<Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button> :
 								<Button disabled={publicationIsbnIsmnRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						}
@@ -298,9 +295,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			<div className={classes.listItem}>
 				{assignRange ?
 					<div className={classes.listItem}>
-						<Button onClick={handleRange}>Go Back</Button>
-						<Button onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>
-						<Button onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+						<Button
+							variant="outlined"
+							startIcon={<ArrowBackIosIcon/>}
+							onClick={handleRange}
+						>
+								Back
+						</Button>
 						{displayRanges(rangeType)}
 					</div> :
 					<Grid container spacing={3} className={classes.listItemSpinner}>
@@ -342,6 +343,6 @@ function mapStateToProps(state) {
 		userInfo: state.login.userInfo,
 		isbnRangeList: state.identifierRanges.isbnList,
 		ismnRangeList: state.identifierRanges.ismnList,
-		rangleListLoading: state.identifierRanges.listLoading
+		rangeListLoading: state.identifierRanges.listLoading
 	});
 }
