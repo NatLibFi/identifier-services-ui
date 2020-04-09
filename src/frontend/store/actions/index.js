@@ -106,7 +106,9 @@ export {
 	fetchIDRIsmn,
 	fetchIDRIssnList,
 	fetchIDRIssn,
-	createIssn,
+	createIssnRange,
+	createIsbnRange,
+	createIsmnRange,
 	updateIsbnRange,
 	updateIsmnRange
 } from './identifierRangesActions';

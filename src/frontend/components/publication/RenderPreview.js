@@ -125,6 +125,6 @@ export default function (props) {
 
 function formatFieldName(string) {
 	const res = string.replace(/([A-Z])/g, ' $1').trim();
-	const newString = res.charAt(0).toUpperCase() + res.slice(1);
+	const newString = `${res.charAt(0).toUpperCase()}${res.slice(1)}`;
 	return newString;
 }

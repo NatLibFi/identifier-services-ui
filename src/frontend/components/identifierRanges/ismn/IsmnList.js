@@ -37,9 +37,11 @@ import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Ismn from './Ismn';
+import RangeCreationForm from '../../form/RangeCreationForm';
+import ModalLayout from '../../ModalLayout';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRIsmnList, ismnList, loading, offset, queryDocCount} = props;
+	const {fetchIDRIsmnList, ismnList, loading, offset, queryDocCount, userInfo} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -49,6 +51,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [ismnId, setIsmnId] = useState(null);
+	const [updateComponent, setUpdateComponent] = useState(false);
+
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
@@ -56,7 +60,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchIDRIsmnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
-	}, [activeCheck, cookie, fetchIDRIsmnList, inputVal, lastCursor]);
+	}, [activeCheck, cookie, fetchIDRIsmnList, inputVal, lastCursor, updateComponent]);
 
 	const handleTableRowClick = id => {
 		setIsmnId(id);
@@ -122,6 +126,12 @@ export default connect(mapStateToProps, actions)(props => {
 					}
 					label="Show only active ISMN"
 				/>
+				{
+					userInfo.role === 'admin' &&
+						<ModalLayout form label="Create ISMN Range" title="Create ISMN Range" name="issnCreationRange" variant="outlined" color="primary">
+							<RangeCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
+						</ModalLayout>
+				}
 				{ismnData}
 				<Ismn id={ismnId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -134,6 +144,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
+		userInfo: state.login.userInfo,
 		loading: state.identifierRanges.listLoading,
 		ismnList: state.identifierRanges.ismnList,
 		offset: state.identifierRanges.offset,

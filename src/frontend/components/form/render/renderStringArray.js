@@ -91,7 +91,7 @@ export default connect(state => ({
 			{values && values[name] && values[name].map((item, index) => (
 				<Paper key={item} className={classes.paperRoot}>
 					<Typography variant="body2">
-						{item.substr(0, 30) + '...'}
+						{`${item.substr(0, 30)}...`}
 					</Typography>
 					<IconButton aria-label="delete" className={classes.deleteIcon} size="small" onClick={() => fields.remove(index)}>
 						<DeleteIcon fontSize="inherit"/>

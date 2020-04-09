@@ -37,9 +37,11 @@ import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import Isbn from './Isbn';
+import ModalLayout from '../../ModalLayout';
+import RangeCreationForm from '../../form/RangeCreationForm';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount} = props;
+	const {fetchIDRIsbnList, isbnList, loading, offset, queryDocCount, userInfo} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -49,6 +51,8 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [isbnId, setIsbnId] = useState(null);
+	const [updateComponent, setUpdateComponent] = useState(false);
+
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
@@ -56,7 +60,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	useEffect(() => {
 		fetchIDRIsbnList({searchText: inputVal, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck});
-	}, [activeCheck, cookie, fetchIDRIsbnList, inputVal, lastCursor]);
+	}, [updateComponent, activeCheck, cookie, fetchIDRIsbnList, inputVal, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIsbnId(id);
@@ -122,6 +126,12 @@ export default connect(mapStateToProps, actions)(props => {
 					}
 					label="Show only active ISBN"
 				/>
+				{
+					userInfo.role === 'admin' &&
+						<ModalLayout form label="Create ISBN Range" title="Create ISBN Range" name="issnCreationRange" variant="outlined" color="primary">
+							<RangeCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
+						</ModalLayout>
+				}
 				{isbnData}
 				<Isbn id={isbnId} modal={modal} setModal={setModal}/>
 			</Grid>
@@ -134,6 +144,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
+		userInfo: state.login.userInfo,
 		loading: state.identifierRanges.listLoading,
 		isbnList: state.identifierRanges.isbnList,
 		offset: state.identifierRanges.offset,

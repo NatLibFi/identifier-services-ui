@@ -124,7 +124,7 @@ app.post('/auth', async (req, res) => {
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Basic ${base64.encode(req.body.username + ':' + req.body.password)}`
+			Authorization: `Basic ${base64.encode(`${req.body.username}:${req.body.password}`)}`
 		}
 	});
 	const token = result.headers.get('Token');
@@ -232,7 +232,7 @@ async function systemAuth() {
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Basic ${base64.encode(SYSTEM_USERNAME + ':' + SYSTEM_PASSWORD)}`
+			Authorization: `Basic ${base64.encode(`${SYSTEM_USERNAME}:${SYSTEM_PASSWORD}`)}`
 		}
 	});
 	return result.headers.get('Token');
