@@ -17,7 +17,7 @@ export default function (props) {
 
 	function formatLabel(label) {
 		const res = label.replace(/([A-Z])/g, ' $1').trim();
-		const result = res.charAt(0).toUpperCase() + res.slice(1);
+		const result = `${res.charAt(0).toUpperCase()}${res.slice(1)}`;
 		return result;
 	}
 

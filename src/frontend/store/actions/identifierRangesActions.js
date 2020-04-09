@@ -99,7 +99,7 @@ export const createIsbnRange = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/ranges/isbn`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
@@ -187,7 +187,7 @@ export const createIsmnRange = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/ranges/ismn`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',

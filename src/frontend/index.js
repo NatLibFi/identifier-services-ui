@@ -53,12 +53,12 @@ async function run() {
 	}
 
 	function readCookie(name) {
-		var nameEQ = name + '=';
+		const nameEQ = `${name}=`;
 		/* global document */
 		/* eslint no-undef: "error" */
-		var ca = document.cookie.split(';');
-		for (var i = 0; i < ca.length; i++) {
-			var c = ca[i];
+		const ca = document.cookie.split(';');
+		for (let i = 0; i < ca.length; i++) {
+			let c = ca[i];
 			while (c.charAt(0) === ' ') {
 				c = c.substring(1, c.length);
 			}
