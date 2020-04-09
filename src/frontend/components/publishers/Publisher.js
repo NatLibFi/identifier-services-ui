@@ -50,6 +50,7 @@ import Spinner from '../Spinner';
 import renderTextField from '../form/render/renderTextField';
 import ListComponent from '../ListComponent';
 import TableComponent from '../publishersRequests/TableComponent';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherUpdateForm',
@@ -68,8 +69,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		rangleListLoading,
 		isbnRangeList,
 		ismnRangeList,
-		updateIsbnRange,
-		updateIsmnRange,
 		isAuthenticated,
 		userInfo} = props;
 	const classes = commonStyles();
@@ -162,7 +161,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setIsEdit(false);
 	};
 
-	const handleRangeUpdate = val => {
+	const handleRangeUpdate = () => {
 		const token = cookie[COOKIE_NAME];
 		const {_id, ...publisherWithRange} = {
 			...publisher,
@@ -170,22 +169,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			ismnRange: ismnValue
 		};
 		updatePublisher(_id, publisherWithRange, token);
-
-		if (val === 'isbn') {
-			const isbnRange = isbnRangeList.filter(item => item.id === isbnValue);
-			const {id, ...newIsbnRange} = {
-				...isbnRange[0],
-				associatePublisher: isbnRange[0].associatePublisher ? [...isbnRange[0].associatePublisher, publisher.publisherEmail] : [publisher.publisherEmail]};
-			updateIsbnRange(isbnValue, newIsbnRange, token);
-		}
-
-		if (val === 'ismn') {
-			const ismnRange = ismnRangeList.filter(item => item.id === ismnValue);
-			const {id, ...newIsmnRange} = {
-				...ismnRange[0],
-				associatePublisher: ismnRange[0].associatePublisher ? [...ismnRange[0].associatePublisher, publisher.publisherEmail] : [publisher.publisherEmail]};
-			updateIsmnRange(ismnValue, newIsmnRange, token);
-		}
 	};
 
 	function handleRange() {
@@ -230,11 +213,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return data;
 		}
 
-		if (rangeType === 'ismn') {
+		if (val === 'ismn') {
 			let data;
 			if (rangleListLoading) {
 				data = <Spinner/>;
-			} else if (isbnRangeList.length === 0) {
+			} else if (ismnRangeList.length === 0) {
 				data = 'No ranges found';
 			} else {
 				data = (
@@ -245,7 +228,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return data;
 		}
 
-		return <Typography variant="h5">Choose range to assign</Typography>;
+		return <Typography variant="h6">Choose range to assign</Typography>;
 	}
 
 	const component = (
@@ -267,11 +250,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<div className={classes.listItem}>
 					{assignRange ?
 						<div className={classes.listItem}>
-							<Button onClick={handleRange}>Go Back</Button>
-							<Button onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>
-							<Button onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+							<Button
+								variant="outlined"
+								startIcon={<ArrowBackIosIcon/>}
+								onClick={handleRange}
+							>
+								Back
+							</Button>&nbsp;
+							<Button variant="outlined" color="primary" onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>&nbsp;
+							<Button variant="outlined" color="primary" onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
 							{displayRanges(rangeType)}
-							{rangeType ? <Button variant="outlined" color="primary" onClick={() => handleRangeUpdate(rangeType)}>Update {rangeType}</Button> : null}
+							{rangeType ? <Button variant="outlined" color="primary" onClick={handleRangeUpdate}>Update {rangeType}</Button> : null}
 						</div> :
 						<>
 							<Grid container spacing={3} className={classes.listItemSpinner}>

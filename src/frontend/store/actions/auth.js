@@ -50,7 +50,7 @@ export const getUserInfo = token => async dispatch => {
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'GET',
 		headers: {
-			Authorization: 'Bearer ' + token
+			Authorization: `Bearer ${token}`
 		}
 	});
 	const user = await result.json();

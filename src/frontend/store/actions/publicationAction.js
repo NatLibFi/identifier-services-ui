@@ -48,7 +48,7 @@ export const fetchIsbnIsmnList = ({token, offset}) => async dispatch => {
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -71,7 +71,7 @@ export const fetchIssnList = ({token, offset}) => async dispatch => {
 		const response = await fetch(`${API_URL}/publications/issn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -94,7 +94,7 @@ export const fetchIsbnIsmn = ({id, token}) => async dispatch => {
 		const response = await fetch(`${API_URL}/publications/isbn-ismn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 		const result = await response.json();
@@ -110,7 +110,7 @@ export const fetchIssn = ({id, token}) => async dispatch => {
 		const response = await fetch(`${API_URL}/publications/issn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 		const result = await response.json();
@@ -124,7 +124,7 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 	const response = await fetch(`${API_URL}/publications/${subType}`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(values)
@@ -137,14 +137,14 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 };
 
 // ****************REQUESTS**********************************
-export const publicationCreationRequest = ({values, token, subType}) => async dispatch => {
+export const publicationCreationRequest = ({values, subType}) => async dispatch => {
 	const response = await fetch(`/requests/publications/${subType}`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
-		body: JSON.stringify({values, token})
+		body: JSON.stringify(values)
 	});
 	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: `${subType} creation request sent successfully`}));
@@ -159,7 +159,7 @@ export const fetchPublicationIsbnIsmnRequestsList = ({searchText, token, sortSta
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -182,7 +182,7 @@ export const fetchPublicationIsbnIsmnRequest = (id, token) => async dispatch => 
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -200,7 +200,7 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 		const response = await fetch(`${API_URL}/requests/publications/isbn-ismn/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',
@@ -219,7 +219,7 @@ export const fetchIssnRequestsList = ({searchText, token, sortStateBy, offset}) 
 		const response = await fetch(`${API_URL}/requests/publications/issn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -242,7 +242,7 @@ export const fetchIssnRequest = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -260,7 +260,7 @@ export const updateIssnRequest = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',

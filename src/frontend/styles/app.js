@@ -184,6 +184,10 @@ export const commonStyles = makeStyles({
 		justifyContent: 'space-between',
 		alignItems: 'center',
 		width: '100%'
+	},
+	radioLabel: {
+		display: 'flex',
+		justifyContent: 'flex-end'
 	}
 
 });
