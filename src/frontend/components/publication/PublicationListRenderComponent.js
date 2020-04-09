@@ -37,7 +37,7 @@ import IsbnIsmn from './isbnIsmn/IsbnIsmn';
 import Issn from './issn/Issn';
 import ModalLayout from '../ModalLayout';
 import IsbnIsmnRegForm from '../form/IsbnIsmnRegForm';
-import IssnRegForm from '../form/IssnRegform';
+import IssnRegForm from '../form/IssnRegForm';
 
 export default function (props) {
 	const classes = commonStyles();
@@ -101,7 +101,6 @@ export default function (props) {
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
 				<Typography variant="h5">List of Avaiable Publication</Typography>
-				{console.log(role)}
 				{(role === 'publisher' || role === 'publisher-admin') && (
 					isbnIsmn ?
 						(

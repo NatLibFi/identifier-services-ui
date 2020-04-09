@@ -39,6 +39,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import {reduxForm, Field} from 'redux-form';
 import {useCookies} from 'react-cookie';
+import HttpStatus from 'http-status';
 
 import {commonStyles} from '../../styles/app';
 import useFormStyles from '../../styles/form';
@@ -77,7 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	async function handleDeleteUser() {
 		const response = await deleteUser(id, cookie[COOKIE_NAME]);
-		if (response === 200) {
+		if (response === HttpStatus.OK) {
 			setIsCreating(true);
 		}
 

@@ -30,7 +30,7 @@ import {Button, Typography} from '@material-ui/core';
 import useStyles from '../../styles/form';
 
 import IsbnIsmnRegForm from './IsbnIsmnRegForm';
-import IssnRegForm from './IssnRegform';
+import IssnRegForm from './IssnRegForm';
 
 export default function (props) {
 	const {setTitle} = props;

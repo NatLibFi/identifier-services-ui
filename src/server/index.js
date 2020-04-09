@@ -38,8 +38,9 @@ import base64 from 'base-64';
 import svgCaptcha from 'svg-captcha';
 import uuidv4 from 'uuid/v4';
 import fs from 'fs';
+import HttpStatus from 'http-status';
 import jose from 'jose';
-import {HTTP_PORT, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
+import {HTTP_PORT, TOKEN_MAX_AGE, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
 import * as frontendConfig from './frontEndConfig';
 
 function bodyParse() {
@@ -123,12 +124,12 @@ app.post('/auth', async (req, res) => {
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Basic ' + base64.encode(req.body.username + ':' + req.body.password)
+			Authorization: `Basic ${base64.encode(req.body.username + ':' + req.body.password)}`
 		}
 	});
 	const token = result.headers.get('Token');
-	res.cookie(COOKIE_NAME, token, {maxAge: 300000, secure: false});
-	res.status(200).json(token);
+	res.cookie(COOKIE_NAME, token, {maxAge: TOKEN_MAX_AGE, secure: false});
+	res.status(HttpStatus.OK).json(token);
 });
 
 // =====> TO BE DELETED LATER <======
@@ -139,7 +140,7 @@ app.post('/auth', async (req, res) => {
 // 	const result = await fetch(`${API_URL}/users/${id}`, {
 // 		method: 'GET',
 // 		headers: {
-// 			Authorization: 'Bearer ' + systemToken
+// 			Authorization: `Bearer ${systemToken}`
 // 		}
 // 	});
 
@@ -151,7 +152,7 @@ app.post('/requests/publishers', async (req, res) => {
 	const response = await fetch(`${API_URL}/requests/publishers`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + systemToken,
+			Authorization: `Bearer ${systemToken}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(req.body)
@@ -159,19 +160,51 @@ app.post('/requests/publishers', async (req, res) => {
 	res.status(response.status).json();
 });
 
-app.post('/requests/publications/isbn-ismn', async (req, res) => {
+app.post('/publications/isbn-ismn', async (req, res) => {
 	const {values, token} = req.body;
 	const systemToken = await systemAuth();
-	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
+	const response = await fetch(`${API_URL}/publications/isbn-ismn`, {
 		method: 'POST',
 		headers: token ? {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		} :
 			{
-				Authorization: 'Bearer ' + systemToken,
+				Authorization: `Bearer ${systemToken}`,
 				'Content-Type': 'application/json'
 			},
+		body: JSON.stringify(values)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/publications/issn', async (req, res) => {
+	const {values, token} = req.body;
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/publications/issn`, {
+		method: 'POST',
+		headers: token ? {
+			Authorization: `Bearer ${token}`,
+			'Content-Type': 'application/json'
+		} :
+			{
+				Authorization: `Bearer ${systemToken}`,
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(values)
+	});
+	res.status(response.status).json();
+});
+
+app.post('/requests/publications/isbn-ismn', async (req, res) => {
+	const values = req.body;
+	const systemToken = await systemAuth();
+	const response = await fetch(`${API_URL}/requests/publications/isbn-ismn`, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${systemToken}`,
+			'Content-Type': 'application/json'
+		},
 		body: JSON.stringify(values)
 	});
 	res.status(response.status).json();
@@ -183,11 +216,11 @@ app.post('/requests/publications/issn', async (req, res) => {
 	const response = await fetch(`${API_URL}/requests/publications/issn`, {
 		method: 'POST',
 		headers: token ? {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		} :
 			{
-				Authorization: 'Bearer ' + systemToken,
+				Authorization: `Bearer ${systemToken}`,
 				'Content-Type': 'application/json'
 			},
 		body: JSON.stringify(values)
@@ -199,7 +232,7 @@ async function systemAuth() {
 	const result = await fetch(`${API_URL}/auth`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Basic ' + base64.encode(SYSTEM_USERNAME + ':' + SYSTEM_PASSWORD)
+			Authorization: `Basic ${base64.encode(SYSTEM_USERNAME + ':' + SYSTEM_PASSWORD)}`
 		}
 	});
 	return result.headers.get('Token');
@@ -220,7 +253,7 @@ app.post('/passwordreset', async (req, res) => {
 	const response = await fetch(`${API_URL}/users/${req.body.id}/password`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + systemToken,
+			Authorization: `Bearer ${systemToken}`,
 			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(req.body)

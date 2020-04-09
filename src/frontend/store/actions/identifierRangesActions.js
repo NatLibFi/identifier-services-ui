@@ -42,7 +42,7 @@ export const fetchIDRIsbnList = ({searchText, token, offset, activeCheck}) => as
 		const response = await fetch(`${API_URL}/ranges/isbn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -65,7 +65,7 @@ export const fetchIDRIsbn = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/ranges/isbn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -83,7 +83,7 @@ export const updateIsbnRange = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/ranges/isbn/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(values)
@@ -130,7 +130,7 @@ export const fetchIDRIsmnList = ({searchText, token, offset, activeCheck}) => as
 		const response = await fetch(`${API_URL}/ranges/ismn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -153,7 +153,7 @@ export const fetchIDRIsmn = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/ranges/ismn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -171,7 +171,7 @@ export const updateIsmnRange = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/ranges/ismn/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify(values)
@@ -217,7 +217,7 @@ export const fetchIDRIssnList = ({searchText, token, offset, activeCheck}) => as
 		const response = await fetch(`${API_URL}/ranges/issn/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -240,7 +240,7 @@ export const fetchIDRIssn = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/ranges/issn/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			}
 		});
@@ -255,7 +255,7 @@ export const createIssnRange = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/ranges/issn`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',

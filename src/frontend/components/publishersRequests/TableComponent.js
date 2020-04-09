@@ -7,14 +7,17 @@ import {
 	TableRow,
 	RadioGroup,
 	Radio,
+	Box,
 	FormControlLabel
 } from '@material-ui/core';
+import {commonStyles} from '../../styles/app';
 
 export default function TableComponent(props) {
 	const {data, value, handleChange} = props;
+	const classes = commonStyles();
 
 	const comp = (
-		<div>
+		<Box mb={2}>
 			<Table aria-label="simple table">
 				<TableHead>
 					<TableRow>
@@ -32,14 +35,14 @@ export default function TableComponent(props) {
 							<TableCell align="right">{row.rangeEnd}</TableCell>
 							<TableCell align="right">
 								<RadioGroup aria-label="ranges" name="range" value={value} onChange={handleChange}>
-									<FormControlLabel value={row.id} control={<Radio color="primary"/>}/>
+									<FormControlLabel className={classes.radioLabel} value={row.id} control={<Radio color="primary"/>}/>
 								</RadioGroup>
 							</TableCell>
 						</TableRow>
 					))}
 				</TableBody>
 			</Table>
-		</div>
+		</Box>
 	);
 
 	return {

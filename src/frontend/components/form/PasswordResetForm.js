@@ -29,6 +29,7 @@ import React, {useState} from 'react';
 import {TextField, Button} from '@material-ui/core';
 import useStyles from '../../styles/login';
 import * as actions from '../../store/actions';
+import HttpStatus from 'http-status';
 import {connect} from 'react-redux';
 export default connect(null, actions)(props => {
 	const {passwordResetForm, setPwd, handleClose} = props;
@@ -41,7 +42,7 @@ export default connect(null, actions)(props => {
 	const handleEmailSubmit = async e => {
 		e.preventDefault();
 		const result = await passwordResetForm({id: email});
-		if (result === 200) {
+		if (result === HttpStatus.OK) {
 			setPwd(false);
 			handleClose();
 		}

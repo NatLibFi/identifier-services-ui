@@ -38,7 +38,7 @@ export const fetchUsersList = (token, offset) => async dispatch => {
 		const response = await fetch(`${API_URL}/users/query`, {
 			method: 'POST',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			body: JSON.stringify({
@@ -59,7 +59,7 @@ export const createUser = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/users`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
@@ -84,7 +84,7 @@ export const createUserRequest = (values, token) => async dispatch => {
 	const response = await fetch(`${API_URL}/requests/users`, {
 		method: 'POST',
 		headers: {
-			Authorization: 'Bearer ' + token,
+			Authorization: `Bearer ${token}`,
 			'Content-Type': 'application/json'
 		},
 		credentials: 'same-origin',
@@ -112,7 +112,7 @@ export const fetchUser = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/users/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 		const result = await response.json();
@@ -128,7 +128,7 @@ export const fetchUserRequest = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/users/${id}`, {
 			method: 'GET',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 		const result = await response.json();
@@ -144,7 +144,7 @@ export const fetchUsersRequestsList = ({searchText, sortStateBy, token, offset})
 		const properties = {
 			method: 'POST',
 			headers: token ? {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			} :
 				{'Content-Type': 'application/json'},
@@ -170,7 +170,7 @@ export const updateUserRequest = (id, values, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/requests/users/${id}`, {
 			method: 'PUT',
 			headers: {
-				Authorization: 'Bearer ' + token,
+				Authorization: `Bearer ${token}`,
 				'Content-Type': 'application/json'
 			},
 			credentials: 'same-origin',
@@ -193,7 +193,7 @@ export const deleteUser = (id, token) => async dispatch => {
 		const response = await fetch(`${API_URL}/users/${id}`, {
 			method: 'DELETE',
 			headers: {
-				Authorization: 'Bearer ' + token
+				Authorization: `Bearer ${token}`
 			}
 		});
 

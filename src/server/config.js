@@ -44,6 +44,9 @@ export const API_URL = readEnvironmentVariable('API_URL', {
 export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
 	defaultValue: 5
 });
+export const TOKEN_MAX_AGE = readEnvironmentVariable('TOKEN_MAX_AGE', {
+	defaultValue: 300000
+});
 
 export const REDUX_EXTENSION = readEnvironmentVariable('REDUX_EXTENSION', {
 	defaultValue: 'development'

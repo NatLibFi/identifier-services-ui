@@ -35,19 +35,15 @@ import * as actions from '../../../store/actions';
 import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
 import IsbnIsmnRequest from './IsbnIsmnRequest';
-import useModalStyles from '../../../styles/formList';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
-import ModalLayout from '../../ModalLayout';
-import IsbnIsmnRegForm from '../../form/IsbnIsmnRegForm';
 import TabComponent from '../../TabComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount, role} = props;
+	const {fetchPublicationIsbnIsmnRequestsList, publicationIsbnIsmnRequestList, loading, offset, queryDocCount} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
-	const modalClasses = useModalStyles();
 	const [inputVal, setSearchInputVal] = useState('');
 	const [page, setPage] = React.useState(1);
 	const [cursors] = useState([]);
@@ -55,13 +51,11 @@ export default connect(mapStateToProps, actions)(props => {
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
-	const [isCreating, setIsCreating] = useState(false);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
-		setIsCreating(false);
-	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, isCreating, sortStateBy, lastCursor]);
+	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnRequestId(id);
@@ -122,11 +116,6 @@ export default connect(mapStateToProps, actions)(props => {
 					sortStateBy={sortStateBy}
 					handleChange={handleChange}
 				/>
-				{(role === 'publisher' || role === 'publisher-admin') && (
-					<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-						<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
-					</ModalLayout>
-				)}
 				{publicationIsbnIsmnRequestData}
 				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>
 			</Grid>

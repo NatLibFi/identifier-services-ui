@@ -42,10 +42,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnId, setIsbnIsmnId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isCreating, setIsCreating] = useState(false);
 
 	useEffect(() => {
 		fetchIsbnIsmnList({token: cookie[COOKIE_NAME], offset: lastCursor});
-	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie]);
+		setIsCreating(false);
+	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnId(id);
@@ -55,7 +57,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const headRows = [
 		{id: 'title', label: 'Title'},
-		{id: 'publisher', label: 'Publisher'},
 		{id: 'publicationTime', label: 'Publication Time'},
 		{id: 'state', label: 'State'}
 	];
@@ -73,6 +74,7 @@ export default connect(mapStateToProps, actions)(props => {
 			modal={modal}
 			id={isbnIsmnId}
 			setModal={setModal}
+			setIsCreating={setIsCreating}
 			{...props}
 		/>
 	);
