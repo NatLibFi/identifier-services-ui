@@ -70,7 +70,7 @@ export default connect(null, actions)(reduxForm({
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 
-		async function handlecreateIssnRange(values) {
+		async function handlecreateRange(values) {
 			let response;
 			if (location.pathname === '/ranges/isbn') {
 				response = await createIsbnRange(values, cookie[COOKIE_NAME]);
@@ -111,7 +111,7 @@ export default connect(null, actions)(reduxForm({
 
 		const component = (
 			<>
-				<form className={classes.container} onSubmit={handleSubmit(handlecreateIssnRange)}>
+				<form className={classes.container} onSubmit={handleSubmit(handlecreateRange)}>
 					<div className={classes.subContainer}>
 						<Grid container spacing={3}>
 							{element(issnFields)}
