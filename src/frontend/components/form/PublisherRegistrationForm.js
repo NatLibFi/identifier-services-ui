@@ -353,6 +353,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
+		const [affiliateOf, setAffiliateOf] = useState(false);
+		const [affiliates, setAffiliates] = useState(false);
+		const [distributor, setDistributor] = useState(false);
+		const [distributorOf, setDistributorOf] = useState(false);
 
 		useEffect(() => {
 			if (!isAuthenticated) {
@@ -373,9 +377,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 1:
 					return fieldArrayElement(fieldArray[1].primaryContact, 'primaryContact', clearFields);
 				case 2:
-					return withFormTitle(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
+					return orgDetail1(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 3:
-					return withFormTitle(fieldArray[3].organizationalDetails2, classes);
+					return orgDetail2(fieldArray[3].organizationalDetails2, classes);
 				case 4:
 					return renderPreview(publisherValues);
 				default:
@@ -399,14 +403,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (isAuthenticated) {
 				publisherCreationRequest(formatPublisher(values));
 				setIsCreating(true);
+				handleClose();
 			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				makeNewPublisherObj(values, result);
 			}
-
-			handleClose();
 		};
 
 		function handleFormatPublisher() {
@@ -427,17 +430,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function formatPublisher(values) {
 			const newClassification = values.classification.map(item => item.value.toString());
 			const organizationDetails = {
-				affiliateOf: {...formatAddress(values.affiliateOf)},
-				affiliates: values.affiliates.map(item => formatAddress(item)),
-				distributorOf: {...formatAddress(values.distributorOf)},
-				distributor: {...formatAddress(values.distributor)}
+				affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
+				affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
+				distributorOf: values.distributorOf && formatAddress(values.distributorOf),
+				distributor: values.distributor && formatAddress(values.distributor)
 			};
 			const publicationDetails = values.publicationDetails;
 			const {affiliateOf, affiliates, distributorOf, distributor, ...rest} = {...values};
 
 			const newPublisher = {
 				...rest,
-				organizationDetails: organizationDetails,
+				organizationDetails: organizationDetails && organizationDetails,
 				classification: newClassification,
 				publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
 			};
@@ -542,6 +545,176 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			</form>
 		);
 
+		function getSteps() {
+			return fieldArray.map(item => Object.keys(item));
+		}
+
+		function element(array, classes, clearFields) {
+			return array.map(list => {
+				switch (list.type) {
+					case 'arrayString':
+						return (
+							<Grid key={list.name} item xs={12}>
+								<FieldArray
+									className={`${classes.arrayString} ${list.width}`}
+									component={renderAliases}
+									name={list.name}
+									type={list.type}
+									label={list.label}
+									props={{clearFields, name: list.name, subName: list.subName}}
+								/>
+							</Grid>
+						);
+					case 'select':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.selectField} ${list.width}`}
+									component={renderSelect}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									options={list.options}
+								/>
+							</Grid>
+						);
+					case 'multiSelect':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.selectField} ${list.width}`}
+									component={renderMultiSelect}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									options={list.options}
+									props={{isMulti: true}}
+								/>
+							</Grid>
+						);
+					case 'checkbox':
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									component={renderCheckbox}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+								/>
+							</Grid>
+						);
+					case 'text':
+						if (list.width === 'full') {
+							return (
+								<Grid key={list.name} item xs={12}>
+									<Field
+										className={`${classes.textField} ${list.width}`}
+										component={renderTextField}
+										label={list.label}
+										name={list.name}
+										type={list.type}
+									/>
+								</Grid>
+							);
+						}
+
+						return (
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.textField} ${list.width}`}
+									component={renderTextField}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+								/>
+							</Grid>
+
+						);
+
+					default:
+						return null;
+				}
+			}
+			);
+		}
+
+		function organizationalForm(fieldItem, classes, fieldName, clearFields) {
+			return (
+				<>
+					<div className={classes.formHead}>
+						<Typography variant="h6">
+							{fieldItem.title}
+						</Typography>
+					</div>
+					{fieldItem.title === 'Affiliates' ? fieldArrayElement(fieldItem.fields, fieldName, clearFields) : element(fieldItem.fields, classes, clearFields)}
+
+				</>
+			);
+		}
+
+		function orgDetail1(arr, classes, fieldName, clearFields) {
+			return (
+				<>
+					<Button variant={affiliateOf ? 'contained' : 'outlined'} color="primary" onClick={() => setAffiliateOf(!affiliateOf)}>Add {arr[0].title}</Button>&nbsp;
+					<Button variant={affiliates ? 'contained' : 'outlined'} color="primary" onClick={() => setAffiliates(!affiliates)}>Add {arr[1].title}</Button>
+					{affiliateOf ? organizationalForm(arr[0], classes, fieldName, clearFields) : null}
+					{affiliates ? organizationalForm(arr[1], classes, fieldName, clearFields) : null}
+				</>
+			);
+		}
+
+		function orgDetail2(arr, classes, fieldName, clearFields) {
+			return (
+				<>
+					<Button variant={distributorOf ? 'contained' : 'outlined'} color="primary" onClick={() => setDistributorOf(!distributorOf)}>Add {arr[0].title}</Button>&nbsp;
+					<Button variant={distributor ? 'contained' : 'outlined'} color="primary" onClick={() => setDistributor(!distributor)}>Add {arr[1].title}</Button>
+					{distributorOf ? organizationalForm(arr[0], classes, fieldName, clearFields) : null}
+					{distributor ? organizationalForm(arr[1], classes, fieldName, clearFields) : null}
+				</>
+			);
+		}
+
+		function fieldArrayElement(data, fieldName, clearFields) {
+			return (
+				<FieldArray
+					component={renderContactDetail}
+					name={fieldName}
+					props={{clearFields, data, fieldName}}
+				/>
+			);
+		}
+
+		function renderPreview(publisherValues) {
+			return (
+				<>
+					<Grid item xs={12} md={6}>
+						<List>
+							{
+								Object.keys(publisherValues).map(key => {
+									return typeof publisherValues[key] === 'string' ?
+										(
+											<ListComponent label={key} value={publisherValues[key]}/>
+										) :
+										null;
+								})
+							}
+						</List>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<List>
+							{
+								Object.keys(publisherValues).map(key => {
+									return typeof publisherValues[key] === 'object' ?
+										<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
+										null;
+								})
+							}
+						</List>
+					</Grid>
+				</>
+			);
+		}
+
 		return {
 			...component,
 			defaultProps: {
@@ -556,158 +729,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		};
 	}));
 
-function getSteps() {
-	return fieldArray.map(item => Object.keys(item));
-}
-
-function element(array, classes, clearFields) {
-	return array.map(list => {
-		switch (list.type) {
-			case 'arrayString':
-				return (
-					<Grid key={list.name} item xs={12}>
-						<FieldArray
-							className={`${classes.arrayString} ${list.width}`}
-							component={renderAliases}
-							name={list.name}
-							type={list.type}
-							label={list.label}
-							props={{clearFields, name: list.name, subName: list.subName}}
-						/>
-					</Grid>
-				);
-			case 'select':
-				return (
-					<Grid key={list.name} item xs={6}>
-						<Field
-							className={`${classes.selectField} ${list.width}`}
-							component={renderSelect}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							options={list.options}
-						/>
-					</Grid>
-				);
-			case 'multiSelect':
-				return (
-					<Grid key={list.name} item xs={6}>
-						<Field
-							className={`${classes.selectField} ${list.width}`}
-							component={renderMultiSelect}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							options={list.options}
-							props={{isMulti: true}}
-						/>
-					</Grid>
-				);
-			case 'checkbox':
-				return (
-					<Grid key={list.name} item xs={6}>
-						<Field
-							component={renderCheckbox}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-						/>
-					</Grid>
-				);
-			case 'text':
-				if (list.width === 'full') {
-					return (
-						<Grid key={list.name} item xs={12}>
-							<Field
-								className={`${classes.textField} ${list.width}`}
-								component={renderTextField}
-								label={list.label}
-								name={list.name}
-								type={list.type}
-							/>
-						</Grid>
-					);
-				}
-
-				return (
-					<Grid key={list.name} item xs={6}>
-						<Field
-							className={`${classes.textField} ${list.width}`}
-							component={renderTextField}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-						/>
-					</Grid>
-
-				);
-
-			default:
-				return null;
-		}
-	}
-	);
-}
-
-function withFormTitle(arr, classes, fieldName, clearFields) {
-	return (
-		<>
-			{arr.map(item => (
-				<Grid key={item.title} container spacing={2} direction="row">
-					<div className={classes.formHead}>
-						<Typography variant="h6">
-							{item.title}
-						</Typography>
-					</div>
-					{item.title === 'Affiliates' ? fieldArrayElement(item.fields, fieldName, clearFields) : element(item.fields, classes, clearFields)}
-				</Grid>
-
-			))}
-		</>
-	);
-}
-
-function fieldArrayElement(data, fieldName, clearFields) {
-	return (
-		<FieldArray
-			component={renderContactDetail}
-			name={fieldName}
-			props={{clearFields, data, fieldName}}
-		/>
-	);
-}
-
-function renderPreview(publisherValues) {
-	return (
-		<>
-			<Grid item xs={12} md={6}>
-				<List>
-					{
-						Object.keys(publisherValues).map(key => {
-							return typeof publisherValues[key] === 'string' ?
-								(
-									<ListComponent label={key} value={publisherValues[key]}/>
-								) :
-								null;
-						})
-					}
-				</List>
-			</Grid>
-			<Grid item xs={12} md={6}>
-				<List>
-					{
-						Object.keys(publisherValues).map(key => {
-							return typeof publisherValues[key] === 'object' ?
-								<ListComponent label={key} value={key === 'classification' ? publisherValues[key].map(item => (item.value).toString()) : publisherValues[key]}/> :
-								null;
-						})
-					}
-				</List>
-			</Grid>
-		</>
-	);
-}
-
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
@@ -715,3 +736,4 @@ function mapStateToProps(state) {
 		publisherValues: getFormValues('publisherRegistrationForm')(state)
 	});
 }
+

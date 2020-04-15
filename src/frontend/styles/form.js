@@ -169,6 +169,9 @@ const useStyles = makeStyles(theme => ({
 	usercreationSelect: {
 		display: 'flex',
 		justifyContent: 'center'
+	},
+	addBtn: {
+		padding: 8
 	}
 }));
 

@@ -27,7 +27,7 @@
  */
 
 import React from 'react';
-import {Grid, Fab, Chip} from '@material-ui/core';
+import {Grid, Chip, Button} from '@material-ui/core';
 import {Field, getFormValues} from 'redux-form';
 import {PropTypes} from 'prop-types';
 import {connect} from 'react-redux';
@@ -42,6 +42,8 @@ export default connect(state => ({
 }))(props => {
 	const [errors, setErrors] = React.useState();
 	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
+	const classes = useStyles();
+
 	const contactDetail = values && {
 		email: values.email,
 		givenName: values.givenName,
@@ -101,8 +103,6 @@ export default connect(state => ({
 		}
 	};
 
-	const classes = useStyles();
-
 	const component = (
 		<>
 			{data.map(list => {
@@ -140,16 +140,17 @@ export default connect(state => ({
 			)}
 			{touched && error && <span>{error}</span>}
 			{(fieldName === 'primaryContact' &&
-				<>
-					<Fab
+				<div className={classes.addBtn}>
+					<Button
 						aria-label="Add"
+						variant="outlined"
 						color="primary"
-						size="small"
-						title="Add more Contact Detail"
+						title="click to add"
+						startIcon={<AddIcon/>}
 						onClick={handleContactClick}
 					>
-						<AddIcon/>
-					</Fab>
+						Add
+					</Button>
 					{values && values.primaryContact && values.primaryContact.map((item, index) => {
 						return (
 							<Chip
@@ -160,17 +161,18 @@ export default connect(state => ({
 						);
 					})}
 
-				</>) || (fieldName === 'affiliates' &&
+				</div>) || (fieldName === 'affiliates' &&
 					<div className={classes.affiliatesAddBtn}>
-						<Fab
+						<Button
 							aria-label="Add"
-							size="small"
+							variant="outlined"
 							color="primary"
-							title="Add more Contact Detail"
+							title="click to add"
+							startIcon={<AddIcon/>}
 							onClick={handleAffiliatesClick}
 						>
-							<AddIcon/>
-						</Fab>
+							Add
+						</Button>
 						{values && values.affiliates && values.affiliates.map((item, index) => {
 							return (
 								<Chip

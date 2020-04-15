@@ -140,7 +140,7 @@ export const publisherCreationRequest = values => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	if (response.status === HttpStatus.OK) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
 	}
 };
