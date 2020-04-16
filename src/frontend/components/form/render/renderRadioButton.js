@@ -40,7 +40,7 @@ export default function (props) {
 			switch (key) {
 				case 'select':
 					return publicationValues && publicationValues.select !== value &&
-					clearFields(undefined, false, false, publicationValues.select);
+					Object.keys(publicationValues && publicationValues.seriesDetails).map(item => clearFields(undefined, false, false, `seriesDetails[${item}]`));
 				case 'selectFormat':
 					return publicationValues && publicationValues.selectFormat !== value &&
 					Object.keys(publicationValues && publicationValues.formatDetails).map(item => clearFields(undefined, false, false, `formatDetails[${item}]`));

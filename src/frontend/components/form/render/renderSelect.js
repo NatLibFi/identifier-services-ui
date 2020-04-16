@@ -28,7 +28,7 @@
 
 import React from 'react';
 import {PropTypes} from 'prop-types';
-import {Input, InputLabel, NativeSelect, FormControl} from '@material-ui/core';
+import {Input, InputLabel, NativeSelect, FormControl, Box, Typography} from '@material-ui/core';
 
 export default function ({
 	label,
@@ -37,31 +37,36 @@ export default function ({
 	options,
 	className,
 	defaultValue,
+	disabled,
 	meta: {touched, error},
 	publicationValues,
 	clearFields}) {
+		console.log('dis', disabled)
 	const component = (
-		<FormControl className={className} error={touched && error}>
-			<InputLabel htmlFor="language-helper">{label}</InputLabel>
-			<NativeSelect
-				{...input}
-				error={touched && Boolean(error)}
-				input={<Input name={name} id="language-helper"/>}
-				value={input.value}
-				onChange={value => {
-					input.onChange(value);
-					if (publicationValues && publicationValues.type !== value) {
-						clearFields(undefined, false, false, 'mapDetails[scale]');
+		<>
+			<FormControl className={className} error={touched && error} disabled={disabled}>
+				<InputLabel htmlFor="language-helper">{label}</InputLabel>
+				<NativeSelect
+					{...input}
+					error={touched && error}
+					input={<Input name={name} id="language-helper"/>}
+					value={input.value}
+					onChange={value => {
+						input.onChange(value);
+						if (publicationValues && publicationValues.type !== value) {
+							clearFields(undefined, false, false, 'mapDetails[scale]');
+						}
+					}}
+				>
+					{
+						options.map(item =>
+							<option key={item.value} defaultValue={defaultValue} value={item.value}>{item.label}</option>
+						)
 					}
-				}}
-			>
-				{
-					options.map(item =>
-						<option key={item.value} defaultValue={defaultValue} value={item.value}>{item.label}</option>
-					)
-				}
-			</NativeSelect>
-		</FormControl>
+				</NativeSelect>
+			</FormControl>
+			{touched && error && <Box mt={2}><Typography color="error">{error}</Typography></Box>}
+		</>
 	);
 
 	return {
