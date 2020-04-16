@@ -51,9 +51,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnRegForm',
 	initialValues: {
 		language: 'eng',
-		isPublic: false,
-		select: 'seriesTitle',
-		selectFormat: 'electronic'
+		isPublic: false
 	},
 	validate
 })(
@@ -88,6 +86,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				loadSvgCaptcha();
 			}
 		}, [isAuthenticated, loadSvgCaptcha, publisher]);
+
 		function getStepContent(step) {
 			if (user.id === undefined) {
 				switch (step) {
@@ -189,8 +188,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}, {}));
 			const {seriesTitle, ...formatTitle} = {
 				...values.seriesDetails,
-				volume: values.seriesDetails && values.seriesDetails.volume && Number(values.seriesDetails.volume),
-				title: values.seriesDetails && values.seriesDetails.seriesTitle
+				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
+				title: values.seriesDetails.seriesTitle
 			};
 			const {select, selectFormat, ...formattedPublicationValue} = {
 				...values,
