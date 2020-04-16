@@ -55,48 +55,6 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'publisherEmail',
-				type: 'text',
-				label: 'Publisher Email*',
-				width: 'half'
-			},
-			{
-				name: 'publicationDetails[frequency]',
-				type: 'text',
-				label: 'Publication Estimate*',
-				width: 'half'
-			},
-			{
-				name: 'website',
-				type: 'text',
-				label: 'Website',
-				width: 'half'
-			},
-			{
-				name: 'phone',
-				type: 'text',
-				label: 'Phone*',
-				width: 'half'
-			},
-			{
-				name: 'language',
-				type: 'select',
-				label: 'Select Language',
-				width: 'half',
-				defaultValue: 'eng',
-				options: [
-					{label: 'English (Default Language)', value: 'eng'},
-					{label: 'Suomi', value: 'fin'},
-					{label: 'Svenska', value: 'swe'}
-				]
-			},
-			{
-				name: 'code',
-				type: 'text',
-				label: 'Code',
-				width: 'half'
-			},
-			{
 				name: 'postalAddress[address]',
 				type: 'text',
 				label: 'Address*',
@@ -121,6 +79,52 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
+				name: 'publisherEmail',
+				type: 'text',
+				label: 'Publisher Email*',
+				width: 'half'
+			},
+			{
+				name: 'phone',
+				type: 'text',
+				label: 'Phone*',
+				width: 'half'
+			},
+			{
+				name: 'website',
+				type: 'text',
+				label: 'Website',
+				width: 'half'
+			},
+			{
+				name: 'language',
+				type: 'select',
+				label: 'Select Language',
+				width: 'half',
+				defaultValue: 'eng',
+				options: [
+					{label: 'English (Default Language)', value: 'eng'},
+					{label: 'Suomi', value: 'fin'},
+					{label: 'Svenska', value: 'swe'}
+				]
+			},
+			{
+				name: 'postalAddress[public]',
+				type: 'checkbox',
+				label: 'Public',
+				width: 'half'
+			}
+		]
+	},
+	{
+		publishingActivities: [
+			{
+				name: 'code',
+				type: 'text',
+				label: 'Code',
+				width: 'half'
+			},
+			{
 				name: 'classification',
 				type: 'multiSelect',
 				label: 'Classification*',
@@ -128,9 +132,9 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'postalAddress[public]',
-				type: 'checkbox',
-				label: 'Public',
+				name: 'publicationDetails[frequency]',
+				type: 'text',
+				label: 'Publication Estimate*',
 				width: 'half'
 			},
 			{
@@ -375,12 +379,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 0:
 					return element(fieldArray[0].basicInformation, classes, clearFields);
 				case 1:
-					return fieldArrayElement(fieldArray[1].primaryContact, 'primaryContact', clearFields);
+					return element(fieldArray[1].publishingActivities, classes, clearFields);
 				case 2:
-					return orgDetail1(fieldArray[2].organizationalDetails1, classes, 'affiliates', clearFields);
+					return fieldArrayElement(fieldArray[2].primaryContact, 'primaryContact', clearFields);
 				case 3:
-					return orgDetail2(fieldArray[3].organizationalDetails2, classes);
+					return orgDetail1(fieldArray[3].organizationalDetails1, classes, 'affiliates', clearFields);
 				case 4:
+					return orgDetail2(fieldArray[4].organizationalDetails2, classes);
+				case 5:
 					return renderPreview(publisherValues);
 				default:
 					return 'Unknown step';

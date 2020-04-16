@@ -41,7 +41,7 @@ export default function ({
 	publicationValues,
 	clearFields}) {
 	const component = (
-		<FormControl className={className}>
+		<FormControl className={className} error={touched && error}>
 			<InputLabel htmlFor="language-helper">{label}</InputLabel>
 			<NativeSelect
 				{...input}

@@ -5,8 +5,7 @@
     
     "app.menu.publishers": "--",
     "app.menu.publications": "--",
-        "app.subMenu.ISBN": "ISBN",
-        "app.subMenu.ISMN": "ISMN",
+        "app.subMenu.ISBN-ISMN": "ISBN-ISMN",
         "app.subMenu.ISSN": "ISSN",
     "app.menu.requests": "--",
         "app.subMenu.publishers": "--",
