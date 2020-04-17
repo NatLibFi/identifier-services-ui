@@ -33,13 +33,14 @@ import AddIcon from '@material-ui/icons/Add';
 import {connect} from 'react-redux';
 
 import renderTextField from './renderTextField';
+import PopoverComponent from '../../PopoverComponent';
 
 export default connect(state => ({
 	values: getFormValues('userCreation')(state) || getFormValues('publisherRegistrationForm')(state)
-
 }))(props => {
 	const [errors, setErrors] = useState();
 	const {fields, values, className, clearFields, name, subName, label} = props;
+
 	const handleAliasesClick = () => {
 		setErrors();
 		if (values) {
@@ -81,7 +82,7 @@ export default connect(state => ({
 						size="small"
 						onClick={handleAliasesClick}
 					>
-						<AddIcon/>
+						<PopoverComponent icon={<AddIcon/>} infoText="Press this button to add the aliases value typed "/>
 					</Fab>
 				</Grid>
 			</Grid>
