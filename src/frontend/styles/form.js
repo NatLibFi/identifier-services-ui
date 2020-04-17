@@ -172,6 +172,10 @@ const useStyles = makeStyles(theme => ({
 	},
 	addBtn: {
 		padding: 8
+	},
+	popOver: {
+		display: 'flex',
+		alignItems: 'center'
 	}
 }));
 

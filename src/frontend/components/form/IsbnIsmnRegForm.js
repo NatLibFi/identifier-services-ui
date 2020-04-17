@@ -46,6 +46,7 @@ import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
 import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
+import PopoverComponent from '../PopoverComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnRegForm',
@@ -421,13 +422,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 					case 'checkbox':
 						return (
-							<Grid key={list.name} item xs={6}>
+							<Grid key={list.name} item xs={6} className={classes.popOver}>
 								<Field
 									component={renderCheckbox}
 									label={list.label}
 									name={list.name}
 									type={list.type}
 								/>
+								<PopoverComponent infoText={list.info}/>
 							</Grid>
 						);
 					case 'dateTime':
@@ -611,7 +613,9 @@ function getFieldArray(user) {
 					name: 'isPublic',
 					type: 'checkbox',
 					label: 'Is Public',
-					width: 'full'
+					width: 'full',
+					info: `Check the box if your publication intended for public use (e.g., for library use or sale in bookshops) or available to the public.
+							If it is for private use only, publication will not be assigned an ISBN `
 				}
 			]
 		},
