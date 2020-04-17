@@ -41,7 +41,6 @@ export default function ({
 	meta: {touched, error},
 	publicationValues,
 	clearFields}) {
-		console.log('dis', disabled)
 	const component = (
 		<>
 			<FormControl className={className} error={touched && error} disabled={disabled}>

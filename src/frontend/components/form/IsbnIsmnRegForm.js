@@ -203,6 +203,38 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						edition: values.formatDetails.edition && Number(values.formatDetails.edition)}
 			};
 			return formattedPublicationValue;
+
+			// function formatDetail() {
+			// 	if (values.selectFormat === 'electronic') {
+			// 		const formatDetails = {
+			// 			...values.formatDetails,
+			// 			format: 'electronic',
+			// 			fileFormat: values.fileFormat.value
+			// 		};
+			// 		return formatDetails;
+			// 	}
+
+			// 	if (values.selectFormat === 'printed') {
+			// 		const formatDetails = {
+			// 			...values.formatDetails,
+			// 			format: 'printed',
+			// 			run: values.formatDetails.run && Number(values.formatDetails.run),
+			// 			edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+			// 		};
+			// 		return formatDetails;
+			// 	}
+
+			// 	if (values.selectFormat === 'both') {
+			// 		const formatDetails = {
+			// 			...values.formatDetails,
+			// 			format: 'printed-and-electronic',
+			// 			fileFormat: values.fileFormat.value,
+			// 			run: values.formatDetails.run && Number(values.formatDetails.run),
+			// 			edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+			// 		};
+			// 		return formatDetails;
+			// 	}
+			// }
 		}
 
 		async function submitPublication(values, result) {
@@ -458,14 +490,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										options={list.options}
 										props={{className: classes.radioDirectionRow, publicationValues: publicationValues, clearFields: clearFields}}
 									/>
-									{ publicationValues && publicationValues.select ?
-										<Field
-											className={`${classes.textField} ${list.width}`}
-											component={renderTextField}
-											label={publicationValues && publicationValues.select}
-											name={publicationValues && `seriesDetails[${publicationValues.select}]`}
-											type="text"
-										/> : null}
 								</>
 
 							</Grid>
@@ -635,20 +659,22 @@ function getFieldArray(user) {
 					title: 'Series Details',
 					fields: [
 						{
+							name: 'seriesDetails[title]',
+							type: 'text',
+							label: 'Series title',
+							width: 'half'
+						},
+						{
+							name: 'seriesDetails[identifier]',
+							type: 'text',
+							label: 'Identifier',
+							width: 'half'
+						},
+						{
 							name: 'seriesDetails[volume]',
 							type: 'number',
 							label: 'Volume',
-							width: 'full'
-						},
-						{
-							name: 'select',
-							type: 'radio',
-							label: 'Select*',
-							width: 'full',
-							options: [
-								{label: 'Title', value: 'seriesTitle'},
-								{label: 'Identifier', value: 'identifier'}
-							]
+							width: 'half'
 						}
 					]
 				}
@@ -663,7 +689,7 @@ function getFieldArray(user) {
 					options: [
 						{label: 'Electronic', value: 'electronic'},
 						{label: 'Printed', value: 'printed'},
-						{label: 'Both', value: 'both'}
+						{label: 'Both (Printed and Electronic)', value: 'both'}
 					]
 				}
 			]
