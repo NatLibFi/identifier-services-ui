@@ -170,7 +170,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
 				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'isbn-ismn'});
-				if (result === HttpStatus.OK) {
+				if (result === HttpStatus.CREATED) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -196,45 +196,41 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				authors: formatAuthors,
 				publisher: isAuthenticated ? user.publisher : publisher,
 				seriesDetails: formatTitle,
-				formatDetails: values.formatDetails.fileFormat ?
-					{...values.formatDetails, fileFormat: values.formatDetails.fileFormat.value} :
-					{...values.formatDetails,
-						run: values.formatDetails.run && Number(values.formatDetails.run),
-						edition: values.formatDetails.edition && Number(values.formatDetails.edition)}
+				formatDetails: formatDetail()
 			};
 			return formattedPublicationValue;
 
-			// function formatDetail() {
-			// 	if (values.selectFormat === 'electronic') {
-			// 		const formatDetails = {
-			// 			...values.formatDetails,
-			// 			format: 'electronic',
-			// 			fileFormat: values.fileFormat.value
-			// 		};
-			// 		return formatDetails;
-			// 	}
+			function formatDetail() {
+				if (values.selectFormat === 'electronic') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'electronic',
+						fileFormat: values.formatDetails.fileFormat.value
+					};
+					return formatDetails;
+				}
 
-			// 	if (values.selectFormat === 'printed') {
-			// 		const formatDetails = {
-			// 			...values.formatDetails,
-			// 			format: 'printed',
-			// 			run: values.formatDetails.run && Number(values.formatDetails.run),
-			// 			edition: values.formatDetails.edition && Number(values.formatDetails.edition)
-			// 		};
-			// 		return formatDetails;
-			// 	}
+				if (values.selectFormat === 'printed') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'printed',
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
 
-			// 	if (values.selectFormat === 'both') {
-			// 		const formatDetails = {
-			// 			...values.formatDetails,
-			// 			format: 'printed-and-electronic',
-			// 			fileFormat: values.fileFormat.value,
-			// 			run: values.formatDetails.run && Number(values.formatDetails.run),
-			// 			edition: values.formatDetails.edition && Number(values.formatDetails.edition)
-			// 		};
-			// 		return formatDetails;
-			// 	}
-			// }
+				if (values.selectFormat === 'both') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'printed-and-electronic',
+						fileFormat: values.formatDetails.fileFormat.value,
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
+			}
 		}
 
 		async function submitPublication(values, result) {
@@ -659,7 +655,7 @@ function getFieldArray(user) {
 					title: 'Series Details',
 					fields: [
 						{
-							name: 'seriesDetails[title]',
+							name: 'seriesDetails[seriesTitle]',
 							type: 'text',
 							label: 'Series title',
 							width: 'half'
@@ -717,16 +713,6 @@ function getSubFormatDetailsFieldArray() {
 						{label: 'Epub', value: 'epbu'},
 						{label: 'CD', value: 'cd'}
 					]
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Electronic', value: 'electronic'}
-					]
 				}
 			]
 		},
@@ -767,16 +753,6 @@ function getSubFormatDetailsFieldArray() {
 					name: 'formatDetails[edition]',
 					type: 'number',
 					width: 'half'
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Printed', value: 'printed'}
-					]
 				}
 			]
 		},
@@ -829,16 +805,6 @@ function getSubFormatDetailsFieldArray() {
 					name: 'formatDetails[edition]',
 					type: 'number',
 					width: 'half'
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Printed And Electronic', value: 'printed-and-electronic'}
-					]
 				}
 			]
 		}
