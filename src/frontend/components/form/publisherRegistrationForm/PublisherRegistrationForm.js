@@ -28,11 +28,10 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Popover, ListItem, ListItemText} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
 import renderTextField from '../render/renderTextField';
@@ -661,7 +660,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Typography>Please click to the field from the attached classification table 1-4 the classes which best describe the subject fields of your publications and enter them in the box below. If your publications cover several subject fields, use 000 General.</Typography>
 					<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
 				</>
-			)
+			);
 		}
 
 		function organizationalForm(fieldItem, classes, fieldName, clearFields) {
