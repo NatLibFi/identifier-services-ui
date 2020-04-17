@@ -32,6 +32,7 @@ import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Popover, ListI
 import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
+import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
 import renderTextField from '../render/renderTextField';
@@ -641,23 +642,23 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										<Typography>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
 										<List dense>
 											<ListItem>
-												<ListItemAvatar>
-													<Avatar>
-														<FolderIcon />
-													</Avatar>
-												</ListItemAvatar>
+												<ArrowRightAltIcon/>
 												<ListItemText primary="The ISBN must appear on all the publications published." secondary={null}/>
 											</ListItem>
 											<ListItem>
+												<ArrowRightAltIcon/>
 												<ListItemText primary="The ISBN should be printed as advised on the ISBN Agency's website." secondary={null}/>
 											</ListItem>
 											<ListItem>
+												<ArrowRightAltIcon/>
 												<ListItemText primary="The publisher should keep a list of its publications sorted according to the ISBN number." secondary={null}/>
 											</ListItem>
 											<ListItem>
+												<ArrowRightAltIcon/>
 												<ListItemText primary="The publisher should send one copy of each publication immediately after its issue to the Finnish ISBN Agency." secondary={null}/>
 											</ListItem>
 											<ListItem>
+												<ArrowRightAltIcon/>
 												<ListItemText primary="The information for each publisher is published in the international database Global Register of Publishers and/or Music Publishers' International ISMN Database. The information is also used by the Finnish ISBN Agency and published on its website." secondary={null}/>
 											</ListItem>
 										</List>
@@ -706,7 +707,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 												}}
 												onClose={handlePopoverClose}
 											>
-												<Typography>I use Popover.</Typography>
+												<Typography>Check to make your postal address available to public.</Typography>
 											</Popover>
 										</Grid>
 								}
