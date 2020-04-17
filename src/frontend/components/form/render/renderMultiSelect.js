@@ -28,14 +28,12 @@
 
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
-import {Typography} from '@material-ui/core';
 
 export default function (props) {
 	const {input, label, options, className, isMulti} = props;
 	const {meta: {touched, error}} = props;
 	const component = (
 		<>
-			<Typography variant="caption">Select from dropdown or type your own</Typography>
 			<CreatableSelect
 				isMulti={isMulti}
 				{...input}
