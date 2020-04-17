@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
 		marginTop: '15px'
 	},
 	dateTimePicker: {
-		width: '50%',
+		width: '100%',
 		marginTop: '0 !important'
 	},
 	paperRoot: {
@@ -173,18 +173,9 @@ const useStyles = makeStyles(theme => ({
 	addBtn: {
 		padding: 8
 	},
-	publicInstructionPopover: {
+	popOver: {
 		display: 'flex',
-		alignItems: 'center',
-		'& p': {
-			display: 'flex'
-		}
-	},
-	popover: {
-		pointerEvents: 'none'
-	},
-	paper: {
-		padding: theme.spacing(1)
+		alignItems: 'center'
 	}
 }));
 

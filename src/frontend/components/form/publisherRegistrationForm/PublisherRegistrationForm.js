@@ -45,6 +45,7 @@ import ListComponent from '../../ListComponent';
 import Captcha from '../../Captcha';
 import classificationCodes from './classificationCodes';
 import * as actions from '../../../store/actions';
+import PopoverComponent from '../../PopoverComponent';
 
 export const fieldArray = [
 	{
@@ -113,7 +114,8 @@ export const fieldArray = [
 				name: 'postalAddress[public]',
 				type: 'checkbox',
 				label: 'Public',
-				width: 'half'
+				width: 'half',
+				info: 'Check to make your postal address available to public.'
 			}
 		]
 	},
@@ -362,7 +364,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [affiliates, setAffiliates] = useState(false);
 		const [distributor, setDistributor] = useState(false);
 		const [distributorOf, setDistributorOf] = useState(false);
-		const [instruction, setInstruction] = useState(null);
 
 		useEffect(() => {
 			if (!isAuthenticated) {
@@ -379,7 +380,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function getStepContent(step) {
 			switch (step) {
 				case 0:
-					return element(fieldArray[0].basicInformation, classes, clearFields, {instruction, setInstruction});
+					return element(fieldArray[0].basicInformation, classes, clearFields);
 				case 1:
 					return element(fieldArray[1].publishingActivities, classes, clearFields);
 				case 2:
@@ -405,14 +406,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function handleBack() {
 			setActiveStep(activeStep - 1);
-		}
-
-		function handlePopoverOpen(event) {
-			setInstruction(event.currentTarget);
-		}
-
-		function handlePopoverClose() {
-			setInstruction(null);
 		}
 
 		const handlePublisherRegistration = async values => {
@@ -566,7 +559,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function element(array, classes, clearFields) {
-			const popoverOpen = Boolean(instruction);
 			return array.map(list => {
 				switch (list.type) {
 					case 'arrayString':
@@ -610,59 +602,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									/>
 								</Grid>
 								<Grid item>
-									<Typography
-										aria-owns={popoverOpen ? 'mouse-over-popover' : undefined}
-										aria-haspopup="true"
-										onMouseEnter={handlePopoverOpen}
-										onMouseLeave={handlePopoverClose}
-									>
-										<HelpIcon/>
-									</Typography>
-									<Popover
-										disableRestoreFocus
-										id="mouse-over-popover"
-										className={classes.popover}
-										classes={{
-											paper: classes.paper
-										}}
-										open={popoverOpen}
-										anchorEl={instruction}
-										anchorOrigin={{
-											vertical: 'bottom',
-											horizontal: 'left'
-										}}
-										transformOrigin={{
-											vertical: 'top',
-											horizontal: 'left'
-										}}
-										onClose={handlePopoverClose}
-									>
-										<Typography>Please click to the field from the attached classification table 1-4 the classes which best describe the subject fields of your publications and enter them in the box below. If your publications cover several subject fields, use 000 General.</Typography>
-										<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
-										<Typography>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
-										<List dense>
-											<ListItem>
-												<ArrowRightAltIcon/>
-												<ListItemText primary="The ISBN must appear on all the publications published." secondary={null}/>
-											</ListItem>
-											<ListItem>
-												<ArrowRightAltIcon/>
-												<ListItemText primary="The ISBN should be printed as advised on the ISBN Agency's website." secondary={null}/>
-											</ListItem>
-											<ListItem>
-												<ArrowRightAltIcon/>
-												<ListItemText primary="The publisher should keep a list of its publications sorted according to the ISBN number." secondary={null}/>
-											</ListItem>
-											<ListItem>
-												<ArrowRightAltIcon/>
-												<ListItemText primary="The publisher should send one copy of each publication immediately after its issue to the Finnish ISBN Agency." secondary={null}/>
-											</ListItem>
-											<ListItem>
-												<ArrowRightAltIcon/>
-												<ListItemText primary="The information for each publisher is published in the international database Global Register of Publishers and/or Music Publishers' International ISMN Database. The information is also used by the Finnish ISBN Agency and published on its website." secondary={null}/>
-											</ListItem>
-										</List>
-									</Popover>
+									<PopoverComponent icon={<HelpIcon/>} infoText={getClassificationInstruction()}/>
 								</Grid>
 							</Grid>
 						);
@@ -677,41 +617,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										type={list.type}
 									/>
 								</Grid>
-								{
-									list.name === 'postalAddress[public]' &&
-										<Grid item className={classes.publicInstructionPopover}>
-											<Typography
-												aria-owns={popoverOpen ? 'mouse-over-popover' : undefined}
-												aria-haspopup="true"
-												onMouseEnter={handlePopoverOpen}
-												onMouseLeave={handlePopoverClose}
-											>
-												<HelpIcon/>
-											</Typography>
-											<Popover
-												disableRestoreFocus
-												id="mouse-over-popover"
-												className={classes.popover}
-												classes={{
-													paper: classes.paper
-												}}
-												open={popoverOpen}
-												anchorEl={instruction}
-												anchorOrigin={{
-													vertical: 'bottom',
-													horizontal: 'left'
-												}}
-												transformOrigin={{
-													vertical: 'top',
-													horizontal: 'left'
-												}}
-												onClose={handlePopoverClose}
-											>
-												<Typography>Check to make your postal address available to public.</Typography>
-											</Popover>
-										</Grid>
-								}
-
+								<PopoverComponent icon={<HelpIcon/>} infoText={list.info}/>
 							</Grid>
 						);
 					case 'text':
@@ -747,6 +653,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				}
 			}
 			);
+		}
+
+		function getClassificationInstruction() {
+			return (
+				<>
+					<Typography>Please click to the field from the attached classification table 1-4 the classes which best describe the subject fields of your publications and enter them in the box below. If your publications cover several subject fields, use 000 General.</Typography>
+					<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
+				</>
+			)
 		}
 
 		function organizationalForm(fieldItem, classes, fieldName, clearFields) {
