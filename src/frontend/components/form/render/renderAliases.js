@@ -27,7 +27,7 @@
  */
 import React, {useState} from 'react';
 import {Field, getFormValues} from 'redux-form';
-import {Fab, Grid, Chip} from '@material-ui/core';
+import {Fab, Grid, Chip, Typography, Popover} from '@material-ui/core';
 import {PropTypes} from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import {connect} from 'react-redux';
@@ -36,10 +36,20 @@ import renderTextField from './renderTextField';
 
 export default connect(state => ({
 	values: getFormValues('userCreation')(state) || getFormValues('publisherRegistrationForm')(state)
-
 }))(props => {
 	const [errors, setErrors] = useState();
-	const {fields, values, className, clearFields, name, subName, label} = props;
+	const [anchorEl, setAnchorEl] = useState(null);
+	const {fields, values, className, clearFields, name, subName, label, classes} = props;
+	const openPopup = Boolean(anchorEl);
+
+	function handlePopoverOpen(event) {
+		setAnchorEl(event.currentTarget);
+	}
+
+	function handlePopoverClose() {
+		setAnchorEl(null);
+	}
+
 	const handleAliasesClick = () => {
 		setErrors();
 		if (values) {
@@ -81,7 +91,35 @@ export default connect(state => ({
 						size="small"
 						onClick={handleAliasesClick}
 					>
-						<AddIcon/>
+						<Typography
+							aria-owns={openPopup ? 'mouse-over-popover' : undefined}
+							aria-haspopup="true"
+							onMouseEnter={handlePopoverOpen}
+							onMouseLeave={handlePopoverClose}
+						>
+							<AddIcon/>
+						</Typography>
+						<Popover
+							disableRestoreFocus
+							id="mouse-over-popover"
+							className={classes.popover}
+							classes={{
+								paper: classes.paper
+							}}
+							open={openPopup}
+							anchorEl={anchorEl}
+							anchorOrigin={{
+								vertical: 'bottom',
+								horizontal: 'left'
+							}}
+							transformOrigin={{
+								vertical: 'top',
+								horizontal: 'left'
+							}}
+							onClose={handlePopoverClose}
+						>
+							<Typography>I use Popover.</Typography>
+						</Popover>
 					</Fab>
 				</Grid>
 			</Grid>

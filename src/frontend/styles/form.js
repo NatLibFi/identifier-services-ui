@@ -172,6 +172,19 @@ const useStyles = makeStyles(theme => ({
 	},
 	addBtn: {
 		padding: 8
+	},
+	publicInstructionPopover: {
+		display: 'flex',
+		alignItems: 'center',
+		'& p': {
+			display: 'flex'
+		}
+	},
+	popover: {
+		pointerEvents: 'none'
+	},
+	paper: {
+		padding: theme.spacing(1)
 	}
 }));
 

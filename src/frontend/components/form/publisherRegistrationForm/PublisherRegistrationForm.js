@@ -28,22 +28,22 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Popover, ListItem, ListItemText} from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 
-import useStyles from '../../styles/form';
-import renderTextField from './render/renderTextField';
-import renderAliases from './render/renderAliases';
-import renderContactDetail from './render/renderContactDetail';
-import renderSelect from './render/renderSelect';
-import renderCheckbox from './render/renderCheckbox';
-import renderMultiSelect from './render/renderMultiSelect';
-import ListComponent from '../ListComponent';
-import Captcha from '../Captcha';
-import * as actions from '../../store/actions';
-
-const classificationCodes = [0, 13, 24, 29, 32, 37, 40, 45, 100, 120, 130, 200, 210, 211, 270, 300, 310, 315, 316, 320, 330, 340, 350, 370, 375, 380, 390, 400, 410, 420, 440, 450, 460, 470, 480, 490, 500, 510, 520, 530, 540, 550, 560, 570, 580, 590, 600, 610, 620, 621, 622, 630, 640, 650, 660, 670, 672, 680, 690, 700, 710, 720, 730, 740, 750, 760, 765, 770, 780, 790, 800, 810, 820, 830, 840, 850, 860, 870, 880, 890, 900, 910, 920, 930, 940, 950].map(item => ({label: item, value: item}));
+import useStyles from '../../../styles/form';
+import renderTextField from '../render/renderTextField';
+import renderAliases from '../render/renderAliases';
+import renderContactDetail from '../render/renderContactDetail';
+import renderSelect from '../render/renderSelect';
+import renderCheckbox from '../render/renderCheckbox';
+import renderMultiSelect from '../render/renderMultiSelect';
+import ListComponent from '../../ListComponent';
+import Captcha from '../../Captcha';
+import classificationCodes from './classificationCodes';
+import * as actions from '../../../store/actions';
 
 export const fieldArray = [
 	{
@@ -125,13 +125,6 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'classification',
-				type: 'multiSelect',
-				label: 'Classification*',
-				options: classificationCodes,
-				width: 'half'
-			},
-			{
 				name: 'publicationDetails[frequency]',
 				type: 'text',
 				label: 'Publication Estimate*',
@@ -143,6 +136,13 @@ export const fieldArray = [
 				label: 'Aliases',
 				width: 'half',
 				subName: 'alias'
+			},
+			{
+				name: 'classification',
+				type: 'multiSelect',
+				label: 'Classification*',
+				options: classificationCodes,
+				width: 'half'
 			}
 		]
 	},
@@ -361,6 +361,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [affiliates, setAffiliates] = useState(false);
 		const [distributor, setDistributor] = useState(false);
 		const [distributorOf, setDistributorOf] = useState(false);
+		const [instruction, setInstruction] = useState(null);
 
 		useEffect(() => {
 			if (!isAuthenticated) {
@@ -377,7 +378,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function getStepContent(step) {
 			switch (step) {
 				case 0:
-					return element(fieldArray[0].basicInformation, classes, clearFields);
+					return element(fieldArray[0].basicInformation, classes, clearFields, {instruction, setInstruction});
 				case 1:
 					return element(fieldArray[1].publishingActivities, classes, clearFields);
 				case 2:
@@ -403,6 +404,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function handleBack() {
 			setActiveStep(activeStep - 1);
+		}
+
+		function handlePopoverOpen(event) {
+			setInstruction(event.currentTarget);
+		}
+
+		function handlePopoverClose() {
+			setInstruction(null);
 		}
 
 		const handlePublisherRegistration = async values => {
@@ -556,6 +565,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function element(array, classes, clearFields) {
+			const popoverOpen = Boolean(instruction);
 			return array.map(list => {
 				switch (list.type) {
 					case 'arrayString':
@@ -567,7 +577,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									name={list.name}
 									type={list.type}
 									label={list.label}
-									props={{clearFields, name: list.name, subName: list.subName}}
+									props={{clearFields, name: list.name, subName: list.subName, classes}}
 								/>
 							</Grid>
 						);
@@ -586,27 +596,121 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 					case 'multiSelect':
 						return (
-							<Grid key={list.name} item xs={6}>
-								<Field
-									className={`${classes.selectField} ${list.width}`}
-									component={renderMultiSelect}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-									options={list.options}
-									props={{isMulti: true}}
-								/>
+							<Grid key={list.name} container item xs={6}>
+								<Grid item xs={10}>
+									<Field
+										className={`${classes.selectField} ${list.width}`}
+										component={renderMultiSelect}
+										label={list.label}
+										name={list.name}
+										type={list.type}
+										options={list.options}
+										props={{isMulti: true}}
+									/>
+								</Grid>
+								<Grid item>
+									<Typography
+										aria-owns={popoverOpen ? 'mouse-over-popover' : undefined}
+										aria-haspopup="true"
+										onMouseEnter={handlePopoverOpen}
+										onMouseLeave={handlePopoverClose}
+									>
+										<HelpIcon/>
+									</Typography>
+									<Popover
+										disableRestoreFocus
+										id="mouse-over-popover"
+										className={classes.popover}
+										classes={{
+											paper: classes.paper
+										}}
+										open={popoverOpen}
+										anchorEl={instruction}
+										anchorOrigin={{
+											vertical: 'bottom',
+											horizontal: 'left'
+										}}
+										transformOrigin={{
+											vertical: 'top',
+											horizontal: 'left'
+										}}
+										onClose={handlePopoverClose}
+									>
+										<Typography>Please click to the field from the attached classification table 1-4 the classes which best describe the subject fields of your publications and enter them in the box below. If your publications cover several subject fields, use 000 General.</Typography>
+										<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
+										<Typography>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
+										<List dense>
+											<ListItem>
+												<ListItemAvatar>
+													<Avatar>
+														<FolderIcon />
+													</Avatar>
+												</ListItemAvatar>
+												<ListItemText primary="The ISBN must appear on all the publications published." secondary={null}/>
+											</ListItem>
+											<ListItem>
+												<ListItemText primary="The ISBN should be printed as advised on the ISBN Agency's website." secondary={null}/>
+											</ListItem>
+											<ListItem>
+												<ListItemText primary="The publisher should keep a list of its publications sorted according to the ISBN number." secondary={null}/>
+											</ListItem>
+											<ListItem>
+												<ListItemText primary="The publisher should send one copy of each publication immediately after its issue to the Finnish ISBN Agency." secondary={null}/>
+											</ListItem>
+											<ListItem>
+												<ListItemText primary="The information for each publisher is published in the international database Global Register of Publishers and/or Music Publishers' International ISMN Database. The information is also used by the Finnish ISBN Agency and published on its website." secondary={null}/>
+											</ListItem>
+										</List>
+									</Popover>
+								</Grid>
 							</Grid>
 						);
 					case 'checkbox':
 						return (
-							<Grid key={list.name} item xs={6}>
-								<Field
-									component={renderCheckbox}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-								/>
+							<Grid key={list.name} container item xs={6}>
+								<Grid item>
+									<Field
+										component={renderCheckbox}
+										label={list.label}
+										name={list.name}
+										type={list.type}
+									/>
+								</Grid>
+								{
+									list.name === 'postalAddress[public]' &&
+										<Grid item className={classes.publicInstructionPopover}>
+											<Typography
+												aria-owns={popoverOpen ? 'mouse-over-popover' : undefined}
+												aria-haspopup="true"
+												onMouseEnter={handlePopoverOpen}
+												onMouseLeave={handlePopoverClose}
+											>
+												<HelpIcon/>
+											</Typography>
+											<Popover
+												disableRestoreFocus
+												id="mouse-over-popover"
+												className={classes.popover}
+												classes={{
+													paper: classes.paper
+												}}
+												open={popoverOpen}
+												anchorEl={instruction}
+												anchorOrigin={{
+													vertical: 'bottom',
+													horizontal: 'left'
+												}}
+												transformOrigin={{
+													vertical: 'top',
+													horizontal: 'left'
+												}}
+												onClose={handlePopoverClose}
+											>
+												<Typography>I use Popover.</Typography>
+											</Popover>
+										</Grid>
+								}
+
 							</Grid>
 						);
 					case 'text':

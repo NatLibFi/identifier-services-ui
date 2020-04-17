@@ -33,7 +33,7 @@ import {FormattedMessage} from 'react-intl';
 
 import useStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
-import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
+import PublisherRegistrationForm from '../form/publisherRegistrationForm/PublisherRegistrationForm';
 import SwitchPublicationForm from '../form/SwitchPublicationForm';
 import ContactForm from '../form/ContactForm';
 
