@@ -40,13 +40,14 @@ import renderCheckbox from './render/renderCheckbox';
 import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
 import renderFieldArray from './render/renderFieldArray';
-import {fieldArray as publisherFieldArray} from './PublisherRegistrationForm';
-import PublisherRegistrationForm from './PublisherRegistrationForm';
+import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/PublisherRegistrationForm';
+import PublisherRegistrationForm from './publisherRegistrationForm/PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
 import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 import PopoverComponent from '../PopoverComponent';
+import HelpIcon from '@material-ui/icons/Help';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnRegForm',
@@ -429,7 +430,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									name={list.name}
 									type={list.type}
 								/>
-								<PopoverComponent infoText={list.info}/>
+								<PopoverComponent icon={<HelpIcon/>} infoText={list.info}/>
 							</Grid>
 						);
 					case 'dateTime':
