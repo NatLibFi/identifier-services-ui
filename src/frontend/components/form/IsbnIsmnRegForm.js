@@ -46,6 +46,7 @@ import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
 import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
+import PopoverComponent from '../PopoverComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnRegForm',
@@ -170,7 +171,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		async function handlePublicationRegistration(values) {
 			if (isAuthenticated) {
 				const result = await publicationCreation({values: formatPublicationValues(values), token: cookie[COOKIE_NAME], subType: 'isbn-ismn'});
-				if (result === HttpStatus.OK) {
+				if (result === HttpStatus.CREATED) {
 					handleClose();
 					setIsCreating(true);
 				}
@@ -196,13 +197,41 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				authors: formatAuthors,
 				publisher: isAuthenticated ? user.publisher : publisher,
 				seriesDetails: formatTitle,
-				formatDetails: values.formatDetails.fileFormat ?
-					{...values.formatDetails, fileFormat: values.formatDetails.fileFormat.value} :
-					{...values.formatDetails,
-						run: values.formatDetails.run && Number(values.formatDetails.run),
-						edition: values.formatDetails.edition && Number(values.formatDetails.edition)}
+				formatDetails: formatDetail()
 			};
 			return formattedPublicationValue;
+
+			function formatDetail() {
+				if (values.selectFormat === 'electronic') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'electronic',
+						fileFormat: values.formatDetails.fileFormat.value
+					};
+					return formatDetails;
+				}
+
+				if (values.selectFormat === 'printed') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'printed',
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
+
+				if (values.selectFormat === 'both') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'printed-and-electronic',
+						fileFormat: values.formatDetails.fileFormat.value,
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
+			}
 		}
 
 		async function submitPublication(values, result) {
@@ -393,13 +422,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 					case 'checkbox':
 						return (
-							<Grid key={list.name} item xs={6}>
+							<Grid key={list.name} item xs={6} className={classes.popOver}>
 								<Field
 									component={renderCheckbox}
 									label={list.label}
 									name={list.name}
 									type={list.type}
 								/>
+								<PopoverComponent infoText={list.info}/>
 							</Grid>
 						);
 					case 'dateTime':
@@ -458,14 +488,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										options={list.options}
 										props={{className: classes.radioDirectionRow, publicationValues: publicationValues, clearFields: clearFields}}
 									/>
-									{ publicationValues && publicationValues.select ?
-										<Field
-											className={`${classes.textField} ${list.width}`}
-											component={renderTextField}
-											label={publicationValues && publicationValues.select}
-											name={publicationValues && `seriesDetails[${publicationValues.select}]`}
-											type="text"
-										/> : null}
 								</>
 
 							</Grid>
@@ -591,7 +613,9 @@ function getFieldArray(user) {
 					name: 'isPublic',
 					type: 'checkbox',
 					label: 'Is Public',
-					width: 'full'
+					width: 'full',
+					info: `Check the box if your publication intended for public use (e.g., for library use or sale in bookshops) or available to the public.
+							If it is for private use only, publication will not be assigned an ISBN `
 				}
 			]
 		},
@@ -635,20 +659,22 @@ function getFieldArray(user) {
 					title: 'Series Details',
 					fields: [
 						{
+							name: 'seriesDetails[seriesTitle]',
+							type: 'text',
+							label: 'Series title',
+							width: 'half'
+						},
+						{
+							name: 'seriesDetails[identifier]',
+							type: 'text',
+							label: 'Identifier',
+							width: 'half'
+						},
+						{
 							name: 'seriesDetails[volume]',
 							type: 'number',
 							label: 'Volume',
-							width: 'full'
-						},
-						{
-							name: 'select',
-							type: 'radio',
-							label: 'Select*',
-							width: 'full',
-							options: [
-								{label: 'Title', value: 'seriesTitle'},
-								{label: 'Identifier', value: 'identifier'}
-							]
+							width: 'half'
 						}
 					]
 				}
@@ -663,7 +689,7 @@ function getFieldArray(user) {
 					options: [
 						{label: 'Electronic', value: 'electronic'},
 						{label: 'Printed', value: 'printed'},
-						{label: 'Both', value: 'both'}
+						{label: 'Both (Printed and Electronic)', value: 'both'}
 					]
 				}
 			]
@@ -690,16 +716,6 @@ function getSubFormatDetailsFieldArray() {
 						{label: 'Pdf', value: 'pdf'},
 						{label: 'Epub', value: 'epbu'},
 						{label: 'CD', value: 'cd'}
-					]
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Electronic', value: 'electronic'}
 					]
 				}
 			]
@@ -741,16 +757,6 @@ function getSubFormatDetailsFieldArray() {
 					name: 'formatDetails[edition]',
 					type: 'number',
 					width: 'half'
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Printed', value: 'printed'}
-					]
 				}
 			]
 		},
@@ -803,16 +809,6 @@ function getSubFormatDetailsFieldArray() {
 					name: 'formatDetails[edition]',
 					type: 'number',
 					width: 'half'
-				},
-				{
-					label: 'Format*',
-					name: 'formatDetails[format]',
-					type: 'select',
-					width: 'full',
-					options: [
-						{label: '', value: ''},
-						{label: 'Printed And Electronic', value: 'printed-and-electronic'}
-					]
 				}
 			]
 		}

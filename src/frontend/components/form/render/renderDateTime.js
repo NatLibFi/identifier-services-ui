@@ -30,7 +30,6 @@ import React from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import {
 	MuiPickersUtilsProvider,
-	KeyboardTimePicker,
 	KeyboardDatePicker
 } from '@material-ui/pickers';
 
@@ -50,18 +49,6 @@ export default function MaterialUIPickers(props) {
 					value={input.value || null}
 					KeyboardButtonProps={{
 						'aria-label': 'change date'
-					}}
-					onChange={value => input.onChange(value)}
-				/>
-				<KeyboardTimePicker
-					{...input}
-					className={className}
-					margin="normal"
-					id="time-picker"
-					label="Publication time"
-					value={input.value || null}
-					KeyboardButtonProps={{
-						'aria-label': 'change time'
 					}}
 					onChange={value => input.onChange(value)}
 				/>
