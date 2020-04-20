@@ -40,7 +40,7 @@ import renderCheckbox from './render/renderCheckbox';
 import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
 import renderFieldArray from './render/renderFieldArray';
-import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/PublisherRegistrationForm';
+import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/classificationCodes';
 import PublisherRegistrationForm from './publisherRegistrationForm/PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
