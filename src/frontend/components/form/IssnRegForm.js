@@ -41,7 +41,7 @@ import renderCheckbox from './render/renderCheckbox';
 import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
 import renderFieldArray from './render/renderFieldArray';
-import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/PublisherRegistrationForm';
+import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/formFieldVariable';
 import PublisherRegistrationForm from './publisherRegistrationForm/PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderDateTime from './render/renderDateTime';

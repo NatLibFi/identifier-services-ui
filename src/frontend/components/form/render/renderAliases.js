@@ -27,13 +27,12 @@
  */
 import React, {useState} from 'react';
 import {Field, getFormValues} from 'redux-form';
-import {Fab, Grid, Chip} from '@material-ui/core';
+import {Fab, Grid, Chip, Tooltip} from '@material-ui/core';
 import {PropTypes} from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import {connect} from 'react-redux';
 
 import renderTextField from './renderTextField';
-import PopoverComponent from '../../PopoverComponent';
 
 export default connect(state => ({
 	values: getFormValues('userCreation')(state) || getFormValues('publisherRegistrationForm')(state)
@@ -76,14 +75,16 @@ export default connect(state => ({
 						label={label}
 						props={{errors}}
 					/>
-					<Fab
-						color="primary"
-						aria-label="Add"
-						size="small"
-						onClick={handleAliasesClick}
-					>
-						<PopoverComponent icon={<AddIcon/>} infoText="Press this button to add the aliases value typed "/>
-					</Fab>
+					<Tooltip title="Press this button to add the aliases value typed " aria-label="add aliases">
+						<Fab
+							color="primary"
+							aria-label="Add"
+							size="small"
+							onClick={handleAliasesClick}
+						>
+							<AddIcon/>
+						</Fab>
+					</Tooltip>
 				</Grid>
 			</Grid>
 			{values && values[name] && values[name].map((item, index) => (

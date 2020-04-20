@@ -28,10 +28,11 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, ListItem} from '@material-ui/core';
 import HelpIcon from '@material-ui/icons/Help';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
+import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
 import renderTextField from '../render/renderTextField';
@@ -42,289 +43,10 @@ import renderCheckbox from '../render/renderCheckbox';
 import renderMultiSelect from '../render/renderMultiSelect';
 import ListComponent from '../../ListComponent';
 import Captcha from '../../Captcha';
-import classificationCodes from './classificationCodes';
+import {fieldArray} from './formFieldVariable';
+import notes from './notes';
 import * as actions from '../../../store/actions';
 import PopoverComponent from '../../PopoverComponent';
-
-export const fieldArray = [
-	{
-		basicInformation: [
-			{
-				name: 'name',
-				type: 'text',
-				label: 'Name*',
-				width: 'half'
-			},
-			{
-				name: 'postalAddress[address]',
-				type: 'text',
-				label: 'Address*',
-				width: 'half'
-			},
-			{
-				name: 'postalAddress[addressDetails]',
-				type: 'text',
-				label: 'Address Details',
-				width: 'half'
-			},
-			{
-				name: 'postalAddress[city]',
-				type: 'text',
-				label: 'City*',
-				width: 'half'
-			},
-			{
-				name: 'postalAddress[zip]',
-				type: 'text',
-				label: 'Zip*',
-				width: 'half'
-			},
-			{
-				name: 'publisherEmail',
-				type: 'text',
-				label: 'Publisher Email*',
-				width: 'half'
-			},
-			{
-				name: 'phone',
-				type: 'text',
-				label: 'Phone*',
-				width: 'half'
-			},
-			{
-				name: 'website',
-				type: 'text',
-				label: 'Website',
-				width: 'half'
-			},
-			{
-				name: 'language',
-				type: 'select',
-				label: 'Select Language',
-				width: 'half',
-				defaultValue: 'eng',
-				options: [
-					{label: 'English (Default Language)', value: 'eng'},
-					{label: 'Suomi', value: 'fin'},
-					{label: 'Svenska', value: 'swe'}
-				]
-			},
-			{
-				name: 'postalAddress[public]',
-				type: 'checkbox',
-				label: 'Public',
-				width: 'half',
-				info: 'Check to make your postal address available to public.'
-			}
-		]
-	},
-	{
-		publishingActivities: [
-			{
-				name: 'code',
-				type: 'text',
-				label: 'Code',
-				width: 'half'
-			},
-			{
-				name: 'publicationDetails[frequency]',
-				type: 'text',
-				label: 'Publication Estimate*',
-				width: 'half'
-			},
-			{
-				name: 'aliases',
-				type: 'arrayString',
-				label: 'Aliases',
-				width: 'half',
-				subName: 'alias'
-			},
-			{
-				name: 'classification',
-				type: 'multiSelect',
-				label: 'Classification*',
-				options: classificationCodes,
-				width: 'half'
-			}
-		]
-	},
-	{
-		primaryContact: [
-			{
-				name: 'givenName',
-				type: 'text',
-				label: 'Given Name',
-				width: 'full'
-			},
-			{
-				name: 'familyName',
-				type: 'text',
-				label: 'Family Name',
-				width: 'full'
-			},
-			{
-				name: 'email',
-				type: 'email',
-				label: 'Email*',
-				width: 'full'
-			}
-
-		]
-	},
-	{
-		organization: [
-			{
-				title: 'AffiliateOf',
-				fields: [
-					{
-						name: 'affiliateOf[affiliateOfAddress]',
-						type: 'text',
-						label: 'Address*',
-						width: 'half'
-					},
-					{
-						name: 'affiliateOf[affiliateOfAddressDetails]',
-						type: 'text',
-						label: 'Address Details',
-						width: 'half'
-					},
-					{
-						name: 'affiliateOf[affiliateOfCity]',
-						type: 'text',
-						label: 'City*',
-						width: 'half'
-					},
-					{
-						name: 'affiliateOf[affiliateOfZip]',
-						type: 'text',
-						label: 'Zip*',
-						width: 'half'
-					},
-					{
-						name: 'affiliateOf[affiliateOfName]',
-						type: 'text',
-						label: 'Name*',
-						width: 'half'
-					}
-
-				]
-			},
-			{
-				title: 'Affiliates',
-				fields: [
-					{
-						name: 'affiliatesAddress',
-						type: 'text',
-						label: 'Address*',
-						width: 'half'
-					},
-					{
-						name: 'affiliatesAddressDetails',
-						type: 'text',
-						label: 'Address Details',
-						width: 'half'
-					},
-					{
-						name: 'affiliatesCity',
-						type: 'text',
-						label: 'City*',
-						width: 'half'
-					},
-					{
-						name: 'affiliatesZip',
-						type: 'text',
-						label: 'Zip*',
-						width: 'half'
-					},
-					{
-						name: 'affiliatesName',
-						type: 'text',
-						label: 'Name*',
-						width: 'half'
-					}
-				]
-			}
-		]
-	},
-	{
-		organization: [
-			{
-				title: 'DistributorOf',
-				fields: [
-					{
-						name: 'distributorOf[distributorOfAddress]',
-						type: 'text',
-						label: 'Address*',
-						width: 'half'
-					},
-					{
-						name: 'distributorOf[distributorOfAddressDetails]',
-						type: 'text',
-						label: 'Address Details',
-						width: 'half'
-					},
-					{
-						name: 'distributorOf[distributorOfCity]',
-						type: 'text',
-						label: 'City*',
-						width: 'half'
-					},
-					{
-						name: 'distributorOf[distributorOfZip]',
-						type: 'text',
-						label: 'Zip*',
-						width: 'half'
-					},
-					{
-						name: 'distributorOf[distributorOfName]',
-						type: 'text',
-						label: 'Name*',
-						width: 'half'
-					}
-				]
-			},
-			{
-				title: 'Distributor',
-				fields: [
-					{
-						name: 'distributor[distributorAddress]',
-						type: 'text',
-						label: 'Address*',
-						width: 'half'
-					},
-					{
-						name: 'distributor[distributorAddressDetails]',
-						type: 'text',
-						label: 'Address Details',
-						width: 'half'
-					},
-					{
-						name: 'distributor[distributorCity]',
-						type: 'text',
-						label: 'City*',
-						width: 'half'
-					},
-					{
-						name: 'distributor[distributorZip]',
-						type: 'text',
-						label: 'Zip*',
-						width: 'half'
-					},
-					{
-						name: 'distributor[distributorName]',
-						type: 'text',
-						label: 'Name*',
-						width: 'half'
-					}
-				]
-			}
-
-		]
-	},
-	{
-		review: 'review'
-	}
-];
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherRegistrationForm',
@@ -507,6 +229,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					))}
 				</Stepper>
 				<div className={classes.subContainer}>
+					{activeStep === steps.length - 1 && renderNotes()}
 					<Grid container spacing={2} direction="row">
 						{(getStepContent(activeStep))}
 
@@ -607,7 +330,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						);
 					case 'checkbox':
 						return (
-							<Grid key={list.name} container item xs={6}>
+							<Grid key={list.name} container item xs={6} className={classes.popOver}>
 								<Grid item>
 									<Field
 										component={renderCheckbox}
@@ -737,6 +460,22 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</List>
 					</Grid>
 				</>
+			);
+		}
+
+		function renderNotes() {
+			return (
+				<div className={classes.notesContainer}>
+					<Typography className={classes.notes}>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
+					<List>
+						{notes.map(item => (
+							<ListItem key={item} className={classes.notesList}>
+								<ArrowRightAltIcon/>
+								<Typography className={classes.notes}>{item}</Typography>
+							</ListItem>
+						))}
+					</List>
+				</div>
 			);
 		}
 
