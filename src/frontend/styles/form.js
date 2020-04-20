@@ -154,11 +154,15 @@ const useStyles = makeStyles(theme => ({
 		margin: theme.spacing(0.5)
 	},
 	pubFormSelect: {
+		width: 600,
 		display: 'flex',
-		justifyContent: 'space-between',
 		flexDirection: 'column',
-		height: 100,
-		padding: '10px 20px'
+		alignItems: 'center',
+		'& button': {
+			height: 60,
+			width: 200,
+			margin: '20px 0px'
+		}
 	},
 
 	resetForm: {

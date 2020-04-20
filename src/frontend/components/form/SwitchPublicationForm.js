@@ -51,8 +51,8 @@ export default function (props) {
 		<>
 			{value === '' ?
 				<>
-					<Typography variant="caption">Choose:</Typography>
 					<div className={classes.pubFormSelect}>
+						<Typography variant="h6">Select Type of Publication Form:</Typography>
 						<Button variant="contained" color="primary" onClick={handleIsbnIsmnClick}>ISBN-ISMN</Button>
 						<Button variant="contained" color="primary" onClick={handleIssnClick}>ISSN</Button>
 					</div>
