@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, Box} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
@@ -40,7 +40,7 @@ import renderCheckbox from './render/renderCheckbox';
 import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
 import renderFieldArray from './render/renderFieldArray';
-import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/classificationCodes';
+import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/formFieldVariable';
 import PublisherRegistrationForm from './publisherRegistrationForm/PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderRadioButton from './render/renderRadioButton';
@@ -191,7 +191,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const {seriesTitle, ...formatTitle} = {
 				...values.seriesDetails,
 				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
-				title: values.seriesDetails.seriesTitle
+				title: values.seriesDetails.seriesTitle && values.seriesDetails.seriesTitle
 			};
 			const {select, selectFormat, ...formattedPublicationValue} = {
 				...values,
@@ -464,6 +464,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							return (
 								<>
 									<Grid key={list.name} item xs={12}>
+										<Box mt={1}><Typography variant="h6">Select the way you want Publication to be issued</Typography></Box>
 										<Field
 											value={publicationValues && publicationValues.selectFormat}
 											component={renderRadioButton}

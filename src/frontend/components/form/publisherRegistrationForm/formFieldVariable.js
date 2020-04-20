@@ -239,7 +239,7 @@ export const fieldArray = [
 		]
 	},
 	{
-		organizationalDetails1: [
+		organization: [
 			{
 				title: 'AffiliateOf',
 				fields: [
@@ -314,7 +314,7 @@ export const fieldArray = [
 		]
 	},
 	{
-		organizationalDetails2: [
+		organization: [
 			{
 				title: 'DistributorOf',
 				fields: [
