@@ -195,7 +195,7 @@ export const fieldArray = [
 			},
 			{
 				name: 'publicationDetails[frequency]',
-				type: 'text',
+				type: 'number',
 				label: 'Publication Estimate*',
 				width: 'half'
 			},

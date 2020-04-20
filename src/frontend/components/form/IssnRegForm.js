@@ -172,7 +172,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const formattedPublicationValues = {
 				...values,
 				publisher: isAuthenticated ? user.publisher : publisher,
-				firstNumber: Number(values.firstNumber),
+				firstNumber: values.firstNumber,
 				firstYear: Number(values.firstYear),
 				frequency: values.frequency.value,
 				previousPublication: values.previousPublication && {
