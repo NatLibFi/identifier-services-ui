@@ -141,7 +141,10 @@ export const commonStyles = makeStyles({
 	listSearch: {
 		maxWidth: '1200px',
 		margin: '0 auto',
-		paddingTop: '60px'
+		paddingTop: '60px',
+		'& h5': {
+			marginBottom: 8
+		}
 	},
 	listItemSpinner: {
 		justifyContent: 'center'

@@ -43,7 +43,7 @@ import renderCheckbox from '../render/renderCheckbox';
 import renderMultiSelect from '../render/renderMultiSelect';
 import ListComponent from '../../ListComponent';
 import Captcha from '../../Captcha';
-import {fieldArray} from './classificationCodes';
+import {fieldArray} from './formFieldVariable';
 import notes from './notes';
 import * as actions from '../../../store/actions';
 import PopoverComponent from '../../PopoverComponent';
@@ -85,7 +85,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [affiliates, setAffiliates] = useState(false);
 		const [distributor, setDistributor] = useState(false);
 		const [distributorOf, setDistributorOf] = useState(false);
-
 		useEffect(() => {
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
@@ -94,6 +93,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (publicationRegistration) {
 				setPublisherRegForm(false);
 			}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		}, [isAuthenticated, loadSvgCaptcha]);
 
@@ -107,9 +107,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 2:
 					return fieldArrayElement(fieldArray[2].primaryContact, 'primaryContact', clearFields);
 				case 3:
-					return orgDetail1(fieldArray[3].organizationalDetails1, classes, 'affiliates', clearFields);
+					return orgDetail1(fieldArray[3].organization, classes, 'affiliates', clearFields);
 				case 4:
-					return orgDetail2(fieldArray[4].organizationalDetails2, classes);
+					return orgDetail2(fieldArray[4].organization, classes);
 				case 5:
 					return renderPreview(publisherValues);
 				default:
