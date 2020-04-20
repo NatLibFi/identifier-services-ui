@@ -175,10 +175,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				firstNumber: Number(values.firstNumber),
 				firstYear: Number(values.firstYear),
 				frequency: values.frequency.value,
-				previousPublication: {
+				previousPublication: values.previousPublication && {
 					...values.previousPublication,
-					lastYear: Number(values.previousPublication.lastYear),
-					lastNumber: Number(values.previousPublication.lastNumber)
+					lastYear: Number(values.previousPublication.lastYear && values.previousPublication.lastYear),
+					lastNumber: Number(values.previousPublication.lastNumber && values.previousPublication.lastNumber)
 				},
 				type: values.type.value
 			};
@@ -199,7 +199,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publicationValues) {
 			const values = formatPublicationValues(publicationValues);
-			const {seriesDetails, publisher, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
+			const {seriesDetails, publisher, ...formatValues} = {...values, mainSeries: values.seriesDetails && values.seriesDetails.mainSeries, subSeries: values.seriesDetails && values.seriesDetails.subSeries};
 			return (
 				<>
 					<Grid item xs={12} md={6}>
@@ -493,12 +493,12 @@ function getFieldArray(user) {
 						{
 							name: 'firstYear',
 							type: 'number',
-							label: 'FirstYear',
+							label: 'FirstYear*',
 							width: 'half'
 						},
 						{
 							name: 'firstNumber',
-							type: 'number',
+							type: 'text',
 							label: 'FirstNumber*',
 							width: 'half'
 						},
@@ -506,7 +506,7 @@ function getFieldArray(user) {
 							name: 'frequency',
 							type: 'multiSelect',
 							width: 'half',
-							label: 'Frequency',
+							label: 'Frequency*',
 							options: [
 								{label: '', value: ''},
 								{label: 'Yearly', value: 'yearly'},
@@ -525,18 +525,17 @@ function getFieldArray(user) {
 							name: 'type',
 							type: 'multiSelect',
 							width: 'half',
-							label: 'Type',
+							label: 'Type*',
 							options: [
 								{label: '', value: ''},
-								{label: 'Yearly', value: 'yearly'},
-								{label: 'Monthly', value: 'monthly'},
-								{label: 'Weekly', value: 'weekly'},
-								{label: 'Daily', value: 'daily'},
-								{label: 'Bi-Yearly', value: 'bi-yearly'},
-								{label: 'Quarterly', value: 'Quarterly'},
-								{label: 'Bi-Monthly', value: 'bi-monthly'},
-								{label: 'Continuously', value: 'continuously'},
-								{label: 'Irregular', value: 'irregular'}
+								{label: 'Journal', value: 'journal'},
+								{label: 'Newsletter', value: 'newsletter'},
+								{label: 'Staff-magazine', value: 'staff-magazine'},
+								{label: 'Membership-magazine', value: 'membership-magazine'},
+								{label: 'Cartoon', value: 'cartoon'},
+								{label: 'Newspaper', value: 'newspaper'},
+								{label: 'Free-paper', value: 'free-paper'},
+								{label: 'Monography', value: 'monography'}
 
 							]
 						},
@@ -549,7 +548,8 @@ function getFieldArray(user) {
 								{label: '', value: ''},
 								{label: 'Printed', value: 'printed'},
 								{label: 'CD', value: 'cd'},
-								{label: 'Electronic', value: 'electronic'}
+								{label: 'Electronic', value: 'electronic'},
+								{label: 'Printed and Electronic', value: 'printed-and-electronic'}
 							]
 						}
 					]
