@@ -176,6 +176,16 @@ const useStyles = makeStyles(theme => ({
 	popOver: {
 		display: 'flex',
 		alignItems: 'center'
+	},
+	notesContainer: {
+		background: '#f1eded'
+	},
+	notesList: {
+		borderBottom: 'none !important',
+		padding: 0
+	},
+	notes: {
+		fontSize: '10px'
 	}
 }));
 

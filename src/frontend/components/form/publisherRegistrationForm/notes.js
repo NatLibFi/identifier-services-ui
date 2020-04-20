@@ -26,32 +26,12 @@
  *
  */
 
-import React from 'react';
-import CreatableSelect from 'react-select/creatable';
-import {Typography} from '@material-ui/core';
+const notes = [
+	'The ISBN must appear on all the publications published.',
+	'The ISBN should be printed as advised on the ISBN Agency\'s website.',
+	'The publisher should keep a list of its publications sorted according to the ISBN number.',
+	'The publisher should send one copy of each publication immediately after its issue to the Finnish ISBN Agency.',
+	'The information for each publisher is published in the international database Global Register of Publishers and/or Music Publishers\' International ISMN Database. The information is also used by the Finnish ISBN Agency and published on its website.'
+];
 
-export default function (props) {
-	const {input, label, options, className, isMulti} = props;
-	const {meta: {touched, error}} = props;
-	const component = (
-		<>
-			<Typography>{label && label}</Typography>
-			<CreatableSelect
-				isMulti={isMulti}
-				{...input}
-				error={touched && error}
-				options={options}
-				className={className}
-				placeholder={label}
-				value={input.value}
-				onBlur={() => input.onBlur(input.value)}
-				onChange={value => input.onChange(value)}
-			/>
-			{touched && error && <span>{error}</span>}
-		</>
-	);
-
-	return {
-		...component
-	};
-}
+module.exports = notes;
