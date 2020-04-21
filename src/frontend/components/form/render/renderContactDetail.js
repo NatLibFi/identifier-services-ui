@@ -37,7 +37,7 @@ import renderTextField from './renderTextField';
 import useStyles from '../../../styles/form';
 
 export default connect(state => ({
-	values: getFormValues('publisherRegistrationForm')(state)
+	values: getFormValues('publisherRegistrationForm')(state) || getFormValues('issnRegForm')(state)
 
 }))(props => {
 	const [errors, setErrors] = React.useState();

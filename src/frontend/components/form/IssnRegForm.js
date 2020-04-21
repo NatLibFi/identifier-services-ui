@@ -27,7 +27,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {Field, FieldArray, reduxForm, getFormValues} from 'redux-form';
+import {Field, reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
@@ -40,12 +40,10 @@ import renderTextField from './render/renderTextField';
 import renderCheckbox from './render/renderCheckbox';
 import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
-import renderFieldArray from './render/renderFieldArray';
-import {fieldArray as publisherFieldArray} from './publisherRegistrationForm/formFieldVariable';
-import PublisherRegistrationForm from './publisherRegistrationForm/PublisherRegistrationForm';
 import renderMultiSelect from './render/renderMultiSelect';
 import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
+import {element as publisherElement, fieldArrayElement} from './publisherRegistrationForm/commons';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'issnRegForm',
@@ -85,50 +83,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				loadSvgCaptcha();
 			}
 		}, [isAuthenticated, loadSvgCaptcha, publisher]);
-
-		function getStepContent(step) {
-			if (user.id === undefined) {
-				switch (step) {
-					case 0:
-						return (
-							<>
-								<Typography className={classes.fullWidth} variant="h6" align="center">Publisher Details</Typography>
-								<PublisherRegistrationForm
-									publicationRegistration
-									handleSetPublisher={handleSetPublisher}
-									setPublisherRegForm={setPublisherRegForm}
-								/>
-							</>
-						);
-					case 1:
-						return element(fieldArray[1].basicInformation, undefined, publicationValues);
-					case 2:
-						return withFormTitle(fieldArray[2].Time, publicationValues, clearFields);
-					case 3:
-						return withFormTitle(fieldArray[3].PreviousPublication, publicationValues, clearFields);
-					case 4:
-						return withFormTitle(fieldArray[4].SeriesDetails, publicationValues, clearFields);
-					case 5:
-						return renderPreview(publicationValues);
-					default:
-						return 'Unknown step';
-				}
+		useEffect(() => {
+			if (isAuthenticated) {
+				setActiveStep(2);
 			}
-
-			return run(step, 0);
-		}
-
-		function run(step, x) {
+		}, []);
+		function getStepContent(step) {
 			switch (step) {
-				case x:
-					return element(fieldArray[x].basicInformation, undefined, publicationValues);
-				case x + 1:
-					return withFormTitle(fieldArray[x + 1].Time, publicationValues, clearFields);
-				case x + 2:
-					return withFormTitle(fieldArray[x + 2].PreviousPublication, publicationValues, clearFields);
-				case x + 3:
-					return withFormTitle(fieldArray[3].SeriesDetails, publicationValues, clearFields);
-				case x + 4:
+				case 0:
+					return publisherElement(fieldArray[0].publisherBasicInfo, classes, clearFields);
+				case 1:
+					return fieldArrayElement(fieldArray[1].primaryContact, 'primaryContact', clearFields);
+				case 2:
+					return publisherElement(fieldArray[2].basicInformation, classes, clearFields);
+				case 3:
+					return withFormTitle(fieldArray[3].Time, publicationValues, clearFields);
+				case 4:
+					return withFormTitle(fieldArray[4].PreviousPublication, publicationValues, clearFields);
+				case 5:
+					return withFormTitle(fieldArray[5].SeriesDetails, publicationValues, clearFields);
+				case 6:
 					return renderPreview(publicationValues);
 				default:
 					return 'Unknown step';
@@ -145,12 +119,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function handleBack() {
 			setActiveStep(activeStep - 1);
-		}
-
-		function handleSetPublisher(value) {
-			handleNext();
-			setPublisher(value);
-			setPublisherRegForm(true);
 		}
 
 		async function handlePublicationRegistration(values) {
@@ -267,7 +235,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						publisherRegForm ?
 							(
 								<div className={classes.btnContainer}>
-									<Button disabled={activeStep === 0} onClick={handleBack}>
+									<Button disabled={isAuthenticated ? activeStep === 2 : activeStep === 0} onClick={handleBack}>
 									Back
 									</Button>
 									{activeStep === steps.length - 1 ?
@@ -332,7 +300,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									label={list.label}
 									name={list.name}
 									type={list.type}
-									disabled={Boolean(list.name === 'publisher')}
 								/>
 							</Grid>
 						);
@@ -403,7 +370,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									{item.title}
 								</Typography>
 							</div>
-							{item.title === 'Author Details' ? fieldArrayElement(item.fields, 'authors', clearFields) : element(item.fields, undefined, publicationValues, clearFields)}
+							{item.title === 'Author Details' ? fieldArrayElement(item.fields, 'authors', clearFields) : publisherElement(item.fields, classes, clearFields)}
 						</Grid>
 
 					))}
@@ -417,16 +384,6 @@ function getSteps(fieldArray) {
 	return fieldArray.map(item => Object.keys(item));
 }
 
-function fieldArrayElement(data, fieldName, clearFields) {
-	return (
-		<FieldArray
-			name={fieldName}
-			component={renderFieldArray}
-			props={{clearFields, data, fieldName, formName: 'issnRegForm'}}
-		/>
-	);
-}
-
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
@@ -437,8 +394,103 @@ function mapStateToProps(state) {
 	});
 }
 
-function getFieldArray(user) {
-	const fieldsWithUser = [
+function getFieldArray() {
+	const fields = [
+		{
+			publisherBasicInfo: [
+				{
+					name: 'name',
+					type: 'text',
+					label: 'Name*',
+					width: 'half'
+				},
+				{
+					name: 'postalAddress[address]',
+					type: 'text',
+					label: 'Address*',
+					width: 'half'
+				},
+				{
+					name: 'postalAddress[addressDetails]',
+					type: 'text',
+					label: 'Address Details',
+					width: 'half'
+				},
+				{
+					name: 'postalAddress[city]',
+					type: 'text',
+					label: 'City*',
+					width: 'half'
+				},
+				{
+					name: 'postalAddress[zip]',
+					type: 'text',
+					label: 'Zip*',
+					width: 'half'
+				},
+				{
+					name: 'publisherEmail',
+					type: 'text',
+					label: 'Publisher Email*',
+					width: 'half'
+				},
+				{
+					name: 'phone',
+					type: 'text',
+					label: 'Phone*',
+					width: 'half'
+				},
+				{
+					name: 'language',
+					type: 'select',
+					label: 'Select Language',
+					width: 'half',
+					defaultValue: 'eng',
+					options: [
+						{label: 'English (Default Language)', value: 'eng'},
+						{label: 'Suomi', value: 'fin'},
+						{label: 'Svenska', value: 'swe'}
+					]
+				},
+				{
+					name: 'postalAddress[public]',
+					type: 'checkbox',
+					label: 'Public',
+					width: 'half',
+					info: 'Check to make your postal address available to public.'
+				},
+				{
+					name: 'aliases',
+					type: 'arrayString',
+					label: 'Aliases',
+					width: 'half',
+					subName: 'alias'
+				}
+			]
+		},
+		{
+			primaryContact: [
+				{
+					name: 'givenName',
+					type: 'text',
+					label: 'Given Name',
+					width: 'full'
+				},
+				{
+					name: 'familyName',
+					type: 'text',
+					label: 'Family Name',
+					width: 'full'
+				},
+				{
+					name: 'email',
+					type: 'email',
+					label: 'Email*',
+					width: 'full'
+				}
+
+			]
+		},
 		{
 			basicInformation: [
 				{
@@ -648,8 +700,8 @@ function getFieldArray(user) {
 			preview: 'preview'
 		}
 	];
-	const fieldsWithoutUser = [{publisher: publisherFieldArray}];
-	return user.id === undefined ? [...fieldsWithoutUser, ...fieldsWithUser] : fieldsWithUser;
+
+	return fields;
 }
 
 function getUrl() {
