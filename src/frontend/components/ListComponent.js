@@ -22,6 +22,7 @@ export default function (props) {
 	}
 
 	function renderSwitch(value) {
+		console.log('vallllllllll', value)
 		switch (typeof value) {
 			case 'string':
 			case 'number':
@@ -46,6 +47,7 @@ export default function (props) {
 		}
 
 		function renderObject(obj) {
+			console.log('222222222', obj)
 			if (obj.length === 0) {
 				return null;
 			}
@@ -67,6 +69,18 @@ export default function (props) {
 				}
 
 				return renderExpansion(obj);
+			}
+
+			if (Object.keys(obj).length > 0) {
+				if (Object.entries(obj).some((key, val) => typeof val === 'object')) {
+					console.log('sdfsfdsfsfsa')
+				}
+				//return renderExpansion(obj);
+				// Object.values(obj).forEach(item => {
+				// 	if (typeof item === 'object') {
+				// 		return renderObject(item);
+				// 	}
+				// });
 			}
 
 			return renderExpansion(obj);

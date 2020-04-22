@@ -50,7 +50,7 @@ export function element(array, classes, clearFields) {
 								name={list.name}
 								type={list.type}
 								options={list.options}
-								props={{isMulti: true}}
+								props={{isMulti: list.isMulti ? list.isMulti : false}}
 							/>
 						</Grid>
 						<Grid item>
@@ -70,6 +70,19 @@ export function element(array, classes, clearFields) {
 							/>
 						</Grid>
 						<PopoverComponent icon={<HelpIcon/>} infoText={list.info}/>
+					</Grid>
+				);
+			case 'number':
+				return (
+					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+						<Field
+							className={`${classes.textField} ${list.width}`}
+							component={renderTextField}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+							disabled={Boolean(list.name === 'publisher')}
+						/>
 					</Grid>
 				);
 			case 'text':

@@ -48,7 +48,11 @@ import {element as publisherElement, fieldArrayElement} from './publisherRegistr
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'issnRegForm',
 	initialValues: {
-		language: 'eng'
+		language: 'eng',
+		postalAddress:
+			{
+				public: false
+			}
 	},
 	validate
 })(
@@ -69,7 +73,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			handleClose,
 			setIsCreating,
 			handleSubmit} = props;
-		const [publisher, setPublisher] = useState('');
 		const fieldArray = getFieldArray(user);
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -82,7 +85,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
 			}
-		}, [isAuthenticated, loadSvgCaptcha, publisher]);
+		}, [isAuthenticated, loadSvgCaptcha]);
 		useEffect(() => {
 			if (isAuthenticated) {
 				setActiveStep(2);
@@ -137,7 +140,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function formatPublicationValues(values) {
-			const formattedPublicationValues = {
+			const publisher = {
+				name: values.name,
+				postalAddress: values.postalAddress,
+				publisherEmail: values.publisherEmail,
+				phone: values.phone,
+				language: values.language,
+				primaryContact: values.primaryContact
+			};
+			const {name, postalAddress, publisherEmail, phone, language, primaryContact, ...formattedPublicationValues} = {
 				...values,
 				publisher: isAuthenticated ? user.publisher : publisher,
 				firstNumber: Number(values.firstNumber),
@@ -150,6 +161,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				},
 				type: values.type.value
 			};
+			console.log('####', formattedPublicationValues)
 			return formattedPublicationValues;
 		}
 
@@ -167,7 +179,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publicationValues) {
 			const values = formatPublicationValues(publicationValues);
-			const {seriesDetails, publisher, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
+			const {seriesDetails, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
+			const publisherOnly = values.publisher;
+			//delete formatValues.publisher.postalAddress;
+			delete formatValues.publisher.primaryContact;
 			return (
 				<>
 					<Grid item xs={12} md={6}>
@@ -389,7 +404,6 @@ function mapStateToProps(state) {
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
-		publisherValues: getFormValues('publisherRegistrationForm')(state),
 		publicationValues: getFormValues('issnRegForm')(state)
 	});
 }
