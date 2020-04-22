@@ -22,7 +22,6 @@ export default function (props) {
 	}
 
 	function renderSwitch(value) {
-		console.log('vallllllllll', value)
 		switch (typeof value) {
 			case 'string':
 			case 'number':
@@ -47,7 +46,6 @@ export default function (props) {
 		}
 
 		function renderObject(obj) {
-			console.log('222222222', obj)
 			if (obj.length === 0) {
 				return null;
 			}
@@ -68,25 +66,13 @@ export default function (props) {
 					);
 				}
 
-				return renderExpansion(obj);
+				return renderExpansion(label, obj);
 			}
 
-			if (Object.keys(obj).length > 0) {
-				if (Object.entries(obj).some((key, val) => typeof val === 'object')) {
-					console.log('sdfsfdsfsfsa')
-				}
-				//return renderExpansion(obj);
-				// Object.values(obj).forEach(item => {
-				// 	if (typeof item === 'object') {
-				// 		return renderObject(item);
-				// 	}
-				// });
-			}
-
-			return renderExpansion(obj);
+			return renderExpansion(label, obj);
 		}
 
-		function renderExpansion(value) {
+		function renderExpansion(label, value) {
 			const component = (
 				<Grid item xs={12}>
 					<ExpansionPanel>
@@ -113,13 +99,16 @@ export default function (props) {
 									</ul>
 								))
 							) : (
-								Object.keys(value).map(key =>
-									(
-										<li key={key}>
-											<span className={classes.label}>{formatLabel(key)}: </span>
-											<span>{typeof value[key] === 'boolean' ? value[key].toString() : value[key]}</span>
-										</li>
-									)
+								Object.entries(value).map(([key, val]) =>
+									typeof val === 'object' ?
+										renderExpansion(key, val) :
+
+										(
+											<li key={key}>
+												<span className={classes.label}>{formatLabel(key)}: </span>
+												<span>{typeof value[key] === 'boolean' ? value[key].toString() : value[key]}</span>
+											</li>
+										)
 								)
 							)}
 						</ExpansionPanelDetails>

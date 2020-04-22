@@ -10,7 +10,7 @@ import renderContactDetail from '../render/renderContactDetail';
 import PopoverComponent from '../../PopoverComponent';
 import HelpIcon from '@material-ui/icons/Help';
 
-export function element(array, classes, clearFields) {
+export function element({array, classes, clearFields, publicationIssnValues}) {
 	return array.map(list => {
 		switch (list.type) {
 			case 'arrayString':
@@ -28,16 +28,20 @@ export function element(array, classes, clearFields) {
 				);
 			case 'select':
 				return (
-					<Grid key={list.name} item xs={6}>
-						<Field
-							className={`${classes.selectField} ${list.width}`}
-							component={renderSelect}
-							label={list.label}
-							name={list.name}
-							type={list.type}
-							options={list.options}
-						/>
-					</Grid>
+					<>
+						<Grid key={list.name} item xs={6}>
+							<Field
+								className={`${classes.selectField} ${list.width}`}
+								component={renderSelect}
+								label={list.label}
+								name={list.name}
+								type={list.type}
+								options={list.options}
+								props={{publicationValues: publicationIssnValues, clearFields}}
+							/>
+						</Grid>
+						{publicationIssnValues && publicationIssnValues.formatDetails && publicationIssnValues.formatDetails.format === 'electronic' ? element({array: getUrl(), classes, clearFields}) : null}
+					</>
 				);
 			case 'multiSelect':
 				return (
@@ -120,14 +124,18 @@ export function element(array, classes, clearFields) {
 	);
 }
 
-export function fieldArrayElement(data, fieldName, clearFields) {
-	return (
+export function fieldArrayElement({data, fieldName, clearFields}) {
+	const comp = (
 		<FieldArray
 			component={renderContactDetail}
 			name={fieldName}
 			props={{clearFields, data, fieldName}}
 		/>
 	);
+
+	return {
+		...comp
+	};
 }
 
 function getClassificationInstruction() {
@@ -137,4 +145,15 @@ function getClassificationInstruction() {
 			<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
 		</>
 	);
+}
+
+function getUrl() {
+	return [
+		{
+			label: 'URL*',
+			name: 'formatDetails[url]',
+			type: 'text',
+			width: 'half'
+		}
+	];
 }

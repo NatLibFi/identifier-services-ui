@@ -27,7 +27,7 @@
  */
 
 import React, {useState, useEffect} from 'react';
-import {Field, reduxForm, getFormValues} from 'redux-form';
+import {reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
@@ -36,12 +36,7 @@ import {useCookies} from 'react-cookie';
 
 import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
-import renderTextField from './render/renderTextField';
-import renderCheckbox from './render/renderCheckbox';
-import renderSelect from './render/renderSelect';
 import Captcha from '../Captcha';
-import renderMultiSelect from './render/renderMultiSelect';
-import renderDateTime from './render/renderDateTime';
 import ListComponent from '../ListComponent';
 import {element as publisherElement, fieldArrayElement} from './publisherRegistrationForm/commons';
 
@@ -49,6 +44,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'issnRegForm',
 	initialValues: {
 		language: 'eng',
+		publisherLanguage: 'eng',
 		postalAddress:
 			{
 				public: false
@@ -77,7 +73,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
-		const [publisherRegForm, setPublisherRegForm] = useState(true);
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 		const steps = getSteps(fieldArray);
@@ -94,17 +89,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function getStepContent(step) {
 			switch (step) {
 				case 0:
-					return publisherElement(fieldArray[0].publisherBasicInfo, classes, clearFields);
+					return publisherElement({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
 				case 1:
-					return fieldArrayElement(fieldArray[1].primaryContact, 'primaryContact', clearFields);
+					return fieldArrayElement({data: fieldArray[1].primaryContact, fieldName: 'primaryContact', clearFields});
 				case 2:
-					return publisherElement(fieldArray[2].basicInformation, classes, clearFields);
+					return publisherElement({array: fieldArray[2].basicInformation, classes, clearFields});
 				case 3:
-					return withFormTitle(fieldArray[3].Time, publicationValues, clearFields);
+					return withFormTitle({arr: fieldArray[3].Time, publicationValues, clearFields});
 				case 4:
-					return withFormTitle(fieldArray[4].PreviousPublication, publicationValues, clearFields);
+					return withFormTitle({arr: fieldArray[4].PreviousPublication, publicationValues, clearFields});
 				case 5:
-					return withFormTitle(fieldArray[5].SeriesDetails, publicationValues, clearFields);
+					return withFormTitle({arr: fieldArray[5].SeriesDetails, publicationValues, clearFields});
 				case 6:
 					return renderPreview(publicationValues);
 				default:
@@ -145,10 +140,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				postalAddress: values.postalAddress,
 				publisherEmail: values.publisherEmail,
 				phone: values.phone,
-				language: values.language,
+				language: values.publisherLanguage,
 				primaryContact: values.primaryContact
 			};
-			const {name, postalAddress, publisherEmail, phone, language, primaryContact, ...formattedPublicationValues} = {
+			const {name, postalAddress, publisherEmail, phone, publisherLanguage, primaryContact, ...formattedPublicationValues} = {
 				...values,
 				publisher: isAuthenticated ? user.publisher : publisher,
 				firstNumber: Number(values.firstNumber),
@@ -161,7 +156,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				},
 				type: values.type.value
 			};
-			console.log('####', formattedPublicationValues)
 			return formattedPublicationValues;
 		}
 
@@ -180,9 +174,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function renderPreview(publicationValues) {
 			const values = formatPublicationValues(publicationValues);
 			const {seriesDetails, ...formatValues} = {...values, mainSeries: values.seriesDetails.mainSeries, subSeries: values.seriesDetails.subSeries};
-			const publisherOnly = values.publisher;
-			//delete formatValues.publisher.postalAddress;
-			delete formatValues.publisher.primaryContact;
 			return (
 				<>
 					<Grid item xs={12} md={6}>
@@ -246,28 +237,22 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								</Grid>
 						}
 					</Grid>
-					{
-						publisherRegForm ?
-							(
-								<div className={classes.btnContainer}>
-									<Button disabled={isAuthenticated ? activeStep === 2 : activeStep === 0} onClick={handleBack}>
-									Back
-									</Button>
-									{activeStep === steps.length - 1 ?
-										null :
-										<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-										Next
-										</Button>}
-									{
-										activeStep === steps.length - 1 &&
-											<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-											Submit
-											</Button>
-									}
-								</div>
-							) :
-							null
-					}
+					<div className={classes.btnContainer}>
+						<Button disabled={isAuthenticated ? activeStep === 2 : activeStep === 0} onClick={handleBack}>
+							Back
+						</Button>
+						{activeStep === steps.length - 1 ?
+							null :
+							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
+								Next
+							</Button>}
+						{
+							activeStep === steps.length - 1 &&
+								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+									Submit
+								</Button>
+						}
+					</div>
 				</div>
 			</form>
 		);
@@ -282,101 +267,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		};
 
-		function element(array, fieldName, publicationValues) {
-			return array.map(list => {
-				switch (list.type) {
-					case 'select':
-						return (
-							<>
-								<Grid key={list.name} item xs={6}>
-									<form>
-										<Field
-											className={`${classes.selectField} ${list.width}`}
-											component={renderSelect}
-											label={list.label}
-											name={list.name}
-											type={list.type}
-											options={list.options}
-											props={{publicationValues: publicationValues, clearFields: clearFields}}
-										/>
-									</form>
-								</Grid>
-
-								{publicationValues && publicationValues.formatDetails && publicationValues.formatDetails.format === 'electronic' ? element(getUrl()) : null}
-							</>
-						);
-
-					case 'text':
-						return (
-							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-								<Field
-									className={`${classes.textField} ${list.width}`}
-									component={renderTextField}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-								/>
-							</Grid>
-						);
-					case 'number':
-						return (
-							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-								<Field
-									className={`${classes.textField} ${list.width}`}
-									component={renderTextField}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-									disabled={Boolean(list.name === 'publisher')}
-								/>
-							</Grid>
-						);
-
-					case 'checkbox':
-						return (
-							<Grid key={list.name} item xs={6}>
-								<Field
-									component={renderCheckbox}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-								/>
-							</Grid>
-						);
-					case 'dateTime':
-						return (
-							<Grid key={list.name} item xs={6}>
-								<Field
-									className={classes.dateTimePicker}
-									component={renderDateTime}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-								/>
-							</Grid>
-						);
-					case 'multiSelect':
-						return (
-							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
-								<Field
-									className={`${classes.selectField} ${list.width}`}
-									component={renderMultiSelect}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-									options={list.options}
-									props={{isMulti: false}}
-								/>
-							</Grid>
-						);
-					default:
-						return null;
-				}
-			});
-		}
-
-		function withFormTitle(arr, publicationValues, clearFields) {
-			return (
+		function withFormTitle({arr, publicationValues, clearFields}) {
+			const comp = (
 				<>
 					{arr.map(item => (
 						<Grid key={item.title} container spacing={2} direction="row">
@@ -385,12 +277,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									{item.title}
 								</Typography>
 							</div>
-							{item.title === 'Author Details' ? fieldArrayElement(item.fields, 'authors', clearFields) : publisherElement(item.fields, classes, clearFields)}
+							{item.title === 'Author Details' ?
+								fieldArrayElement({data: item.fields, fieldName: 'authors', clearFields}) :
+								publisherElement({array: item.fields, classes, clearFields, publicationIssnValues: publicationValues})}
 						</Grid>
 
 					))}
 				</>
 			);
+
+			return {
+				...comp
+			};
 		}
 	}
 ));
@@ -455,7 +353,7 @@ function getFieldArray() {
 					width: 'half'
 				},
 				{
-					name: 'language',
+					name: 'publisherLanguage',
 					type: 'select',
 					label: 'Select Language',
 					width: 'half',
@@ -716,15 +614,4 @@ function getFieldArray() {
 	];
 
 	return fields;
-}
-
-function getUrl() {
-	return [
-		{
-			label: 'URL*',
-			name: 'formatDetails[url]',
-			type: 'text',
-			width: 'half'
-		}
-	];
 }
