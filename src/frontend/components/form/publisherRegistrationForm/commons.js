@@ -18,7 +18,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 		switch (list.type) {
 			case 'arrayString':
 				return (
-					<Grid key={list.name} item xs={12}>
+					<Grid key={list.name} item xs={list.width === 'half' ? 6 : 12}>
 						<FieldArray
 							className={`${classes.arrayString} ${list.width}`}
 							component={renderAliases}
@@ -62,8 +62,8 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 				);
 			case 'multiSelect':
 				return (
-					<Grid key={list.name} container item xs={6}>
-						<Grid item xs={10}>
+					<Grid key={list.name} container item xs={list.width === 'half' ? 6 : 12}>
+						<Grid item xs={11}>
 							<Field
 								className={`${classes.selectField} ${list.width}`}
 								component={renderMultiSelect}

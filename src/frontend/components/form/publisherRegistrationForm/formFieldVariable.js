@@ -129,12 +129,6 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'postalAddress[addressDetails]',
-				type: 'text',
-				label: 'Address Details',
-				width: 'half'
-			},
-			{
 				name: 'postalAddress[city]',
 				type: 'text',
 				label: 'City*',
@@ -147,15 +141,15 @@ export const fieldArray = [
 				width: 'half'
 			},
 			{
-				name: 'publisherEmail',
-				type: 'text',
-				label: 'Publisher Email*',
-				width: 'half'
-			},
-			{
 				name: 'phone',
 				type: 'text',
 				label: 'Phone*',
+				width: 'half'
+			},
+			{
+				name: 'publisherEmail',
+				type: 'text',
+				label: 'Publisher Email*',
 				width: 'half'
 			},
 			{
@@ -188,12 +182,6 @@ export const fieldArray = [
 	{
 		publishingActivities: [
 			{
-				name: 'code',
-				type: 'text',
-				label: 'Code',
-				width: 'half'
-			},
-			{
 				name: 'publicationDetails[frequency]',
 				type: 'text',
 				label: 'Publication Estimate*',
@@ -203,7 +191,7 @@ export const fieldArray = [
 				name: 'aliases',
 				type: 'arrayString',
 				label: 'Aliases',
-				width: 'half',
+				width: 'full',
 				subName: 'alias'
 			},
 			{
@@ -211,7 +199,7 @@ export const fieldArray = [
 				type: 'multiSelect',
 				label: 'Classification*',
 				options: classificationCodes,
-				width: 'half',
+				width: 'full',
 				isMulti: true
 			}
 		]
