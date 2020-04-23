@@ -211,14 +211,11 @@ app.post('/requests/publications/isbn-ismn', async (req, res) => {
 });
 
 app.post('/requests/publications/issn', async (req, res) => {
-	const {values, token} = req.body;
+	const values = req.body;
 	const systemToken = await systemAuth();
 	const response = await fetch(`${API_URL}/requests/publications/issn`, {
 		method: 'POST',
-		headers: token ? {
-			Authorization: `Bearer ${token}`,
-			'Content-Type': 'application/json'
-		} :
+		headers:
 			{
 				Authorization: `Bearer ${systemToken}`,
 				'Content-Type': 'application/json'

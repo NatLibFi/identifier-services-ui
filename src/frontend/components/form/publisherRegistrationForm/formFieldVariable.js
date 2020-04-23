@@ -211,7 +211,8 @@ export const fieldArray = [
 				type: 'multiSelect',
 				label: 'Classification*',
 				options: classificationCodes,
-				width: 'half'
+				width: 'half',
+				isMulti: true
 			}
 		]
 	},
