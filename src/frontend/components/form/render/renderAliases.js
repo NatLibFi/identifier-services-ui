@@ -35,11 +35,14 @@ import {connect} from 'react-redux';
 import renderTextField from './renderTextField';
 
 export default connect(state => ({
-	values: getFormValues('userCreation')(state) || getFormValues('publisherRegistrationForm')(state) || getFormValues('issnRegForm')(state)
+	values: getFormValues('userCreation')(state) ||
+		getFormValues('publisherRegistrationForm')(state) ||
+		getFormValues('issnRegForm')(state) ||
+		getFormValues('isbnIsmnRegForm')(state)
 }))(props => {
 	const [errors, setErrors] = useState();
 	const {fields, values, className, clearFields, name, subName, label} = props;
-
+	console.log('values', values)
 	const handleAliasesClick = () => {
 		setErrors();
 		if (values) {

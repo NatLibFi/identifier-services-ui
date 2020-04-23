@@ -135,17 +135,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function formatPublicationValues(values) {
-			const publisher = {
+			const publisher = isAuthenticated ? user.publisher : {
 				name: values.name,
 				postalAddress: values.postalAddress,
 				publisherEmail: values.publisherEmail,
 				phone: values.phone,
 				language: values.publisherLanguage,
-				primaryContact: values.primaryContact
+				primaryContact: values.primaryContact,
+				aliases: values.aliases && values.aliases
 			};
 			const {name, postalAddress, publisherEmail, phone, publisherLanguage, primaryContact, ...formattedPublicationValues} = {
 				...values,
-				publisher: isAuthenticated ? user.publisher : publisher,
+				publisher,
 				firstNumber: Number(values.firstNumber),
 				firstYear: Number(values.firstYear),
 				frequency: values.frequency.value,

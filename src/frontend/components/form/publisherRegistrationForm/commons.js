@@ -1,16 +1,19 @@
 import React from 'react';
-import {Grid, Typography} from '@material-ui/core';
+import {Grid, Typography, Box} from '@material-ui/core';
 import {Field, FieldArray} from 'redux-form';
 import renderTextField from '../render/renderTextField';
 import renderAliases from '../render/renderAliases';
 import renderSelect from '../render/renderSelect';
+import renderDateTime from '../render/renderDateTime';
+import renderFieldArray from '../render/renderFieldArray';
+import renderRadioButton from '../render/renderRadioButton';
 import renderCheckbox from '../render/renderCheckbox';
 import renderMultiSelect from '../render/renderMultiSelect';
 import renderContactDetail from '../render/renderContactDetail';
 import PopoverComponent from '../../PopoverComponent';
 import HelpIcon from '@material-ui/icons/Help';
 
-export function element({array, classes, clearFields, publicationIssnValues}) {
+export function element({array, classes, clearFields, publicationIssnValues, fieldName, publicationIsbnValues}) {
 	return array.map(list => {
 		switch (list.type) {
 			case 'arrayString':
@@ -26,6 +29,18 @@ export function element({array, classes, clearFields, publicationIssnValues}) {
 						/>
 					</Grid>
 				);
+			case 'dateTime':
+				return (
+					<Grid key={list.name} item xs={6}>
+						<Field
+							className={classes.dateTimePicker}
+							component={renderDateTime}
+							label={list.label}
+							name={list.name}
+							type={list.type}
+						/>
+					</Grid>
+				);
 			case 'select':
 				return (
 					<>
@@ -37,10 +52,12 @@ export function element({array, classes, clearFields, publicationIssnValues}) {
 								name={list.name}
 								type={list.type}
 								options={list.options}
-								props={{publicationValues: publicationIssnValues, clearFields}}
+								props={{publicationValues: publicationIssnValues || publicationIsbnValues, clearFields}}
 							/>
 						</Grid>
-						{publicationIssnValues && publicationIssnValues.formatDetails && publicationIssnValues.formatDetails.format === 'electronic' ? element({array: getUrl(), classes, clearFields}) : null}
+						{publicationIssnValues && publicationIssnValues.formatDetails &&
+						publicationIssnValues.formatDetails.format === 'electronic' ? element({array: getUrl(), classes, clearFields}) : null}
+						{publicationIsbnValues && (publicationIsbnValues.type === 'map') ? element({array: getScale(), classes, clearFields}) : null}
 					</>
 				);
 			case 'multiSelect':
@@ -117,6 +134,42 @@ export function element({array, classes, clearFields, publicationIssnValues}) {
 
 				);
 
+			case 'radio':
+				if (fieldName === 'formatDetails') {
+					return (
+						<>
+							<Grid key={list.name} item xs={12}>
+								<Box mt={1}><Typography variant="h6">Select the way you want Publication to be issued</Typography></Box>
+								<Field
+									value={publicationIsbnValues && publicationIsbnValues.selectFormat}
+									component={renderRadioButton}
+									name={list.name}
+									type={list.type}
+									options={list.options}
+									props={{className: classes.radioDirectionRow, publicationValues: publicationIsbnValues, clearFields: clearFields}}
+								/>
+							</Grid>
+							{publicationIsbnValues && publicationIsbnValues.selectFormat && subElementFormatDetails({value: publicationIsbnValues.selectFormat, classes})}
+						</>
+					);
+				}
+
+				return (
+					<Grid key={list.name} item xs={12}>
+						<>
+							<Field
+								value={publicationIsbnValues && publicationIsbnValues.select}
+								component={renderRadioButton}
+								name={list.name}
+								type={list.type}
+								options={list.options}
+								props={{className: classes.radioDirectionRow, publicationValues: publicationIsbnValues, clearFields: clearFields}}
+							/>
+						</>
+
+					</Grid>
+				);
+
 			default:
 				return null;
 		}
@@ -124,12 +177,12 @@ export function element({array, classes, clearFields, publicationIssnValues}) {
 	);
 }
 
-export function fieldArrayElement({data, fieldName, clearFields}) {
+export function fieldArrayElement({data, fieldName, clearFields, formName}) {
 	const comp = (
 		<FieldArray
-			component={renderContactDetail}
+			component={fieldName === 'authors' ? renderFieldArray : renderContactDetail}
 			name={fieldName}
-			props={{clearFields, data, fieldName}}
+			props={{clearFields, data, fieldName, formName}}
 		/>
 	);
 
@@ -156,4 +209,183 @@ function getUrl() {
 			width: 'half'
 		}
 	];
+}
+
+function subElementFormatDetails({value, classes}) {
+	const array = getSubFormatDetailsFieldArray();
+	switch (value) {
+		case 'electronic':
+			return element({array: array[0].electronic, fieldName: 'electronic', classes});
+		case 'printed':
+			return element({array: array[1].printed, fieldName: 'printed', classes});
+		case 'both':
+			return element({array: array[2].both, fieldName: 'both', classes});
+		default:
+			return null;
+	}
+}
+
+function getSubFormatDetailsFieldArray() {
+	const array = [
+		{
+			electronic: [
+				{
+					label: 'Fileformat*',
+					name: 'formatDetails[fileFormat]',
+					type: 'multiSelect',
+					width: 'full',
+					options: [
+						{label: '', value: ''},
+						{label: 'Pdf', value: 'pdf'},
+						{label: 'Epub', value: 'epbu'},
+						{label: 'CD', value: 'cd'}
+					]
+				}
+			]
+		},
+		{
+			printed: [
+				{
+					label: 'PrintFormat*',
+					name: 'formatDetails[printFormat]',
+					type: 'select',
+					width: 'half',
+					options: [
+						{label: '', value: ''},
+						{label: 'paperback', value: 'paperback'},
+						{label: 'hardback', value: 'hardback'},
+						{label: 'spiral-binding', value: 'spiral-binding'}
+					]
+				},
+				{
+					label: 'Manufacturer',
+					name: 'formatDetails[manufacturer]',
+					type: 'text',
+					width: 'half'
+				},
+				{
+					label: 'city',
+					name: 'formatDetails[city]',
+					type: 'text',
+					width: 'half'
+				},
+				{
+					label: 'Run',
+					name: 'formatDetails[run]',
+					type: 'number',
+					width: 'half'
+				},
+				{
+					label: 'Edition',
+					name: 'formatDetails[edition]',
+					type: 'number',
+					width: 'half'
+				}
+			]
+		},
+		{
+			both: [
+				{
+					label: 'Fileformat*',
+					name: 'formatDetails[fileFormat]',
+					type: 'multiSelect',
+					width: 'full',
+					options: [
+						{label: '', value: ''},
+						{label: 'Pdf', value: 'pdf'},
+						{label: 'Epub', value: 'epbu'},
+						{label: 'CD', value: 'cd'}
+					]
+				},
+				{
+					label: 'PrintFormat*',
+					name: 'formatDetails[printFormat]',
+					type: 'select',
+					width: 'full',
+					options: [
+						{label: '', value: ''},
+						{label: 'paperback', value: 'paperback'},
+						{label: 'hardback', value: 'hardback'},
+						{label: 'spiral-binding', value: 'spiral-binding'}
+					]
+				},
+				{
+					label: 'Manufacturer',
+					name: 'formatDetails[manufacturer]',
+					type: 'text',
+					width: 'half'
+				},
+				{
+					label: 'city',
+					name: 'formatDetails[city]',
+					type: 'text',
+					width: 'half'
+				},
+				{
+					label: 'Run',
+					name: 'formatDetails[run]',
+					type: 'number',
+					width: 'half'
+				},
+				{
+					label: 'Edition',
+					name: 'formatDetails[edition]',
+					type: 'number',
+					width: 'half'
+				}
+			]
+		}
+	];
+	return array;
+}
+
+function getScale() {
+	return [
+		{
+			label: 'Scale',
+			name: 'mapDetails[scale]',
+			type: 'text',
+			width: 'half'
+		}
+	];
+}
+
+export function formatAddress(obj) {
+	const result = Object.keys(obj).reduce((acc, key) => {
+		return {...acc, [replaceKey(key)]: obj[key]};
+	}, {});
+	return result;
+}
+
+// eslint-disable-next-line complexity
+function replaceKey(key) {
+	switch (key) {
+		case 'affiliateOfAddress':
+		case 'affiliatesAddress':
+		case 'distributorAddress':
+		case 'distributorOfAddress':
+			return 'address';
+		case 'affiliateOfAddressDetails':
+		case 'affiliatesAddressDetails':
+		case 'distributorAddressDetails':
+		case 'distributorOfAddressDetails':
+			return 'addressDetails';
+		case 'affiliateOfCity':
+		case 'affiliatesCity':
+		case 'distributorCity':
+		case 'distributorOfCity':
+			return 'city';
+		case 'affiliateOfName':
+		case 'affiliatesName':
+		case 'distributorName':
+		case 'distributorOfName':
+			return 'name';
+		case 'affiliateOfZip':
+		case 'affiliatesZip':
+		case 'distributorZip':
+		case 'distributorOfZip':
+			return 'zip';
+		default:
+			return null;
+	}
 }

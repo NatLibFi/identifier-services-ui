@@ -39,7 +39,7 @@ import Captcha from '../../Captcha';
 import {fieldArray} from './formFieldVariable';
 import notes from './notes';
 import * as actions from '../../../store/actions';
-import {element, fieldArrayElement} from './commons';
+import {element, fieldArrayElement, formatAddress} from './commons';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherRegistrationForm',
@@ -168,46 +168,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
 			};
 			return newPublisher;
-		}
-
-		function formatAddress(obj) {
-			const result = Object.keys(obj).reduce((acc, key) => {
-				return {...acc, [replaceKey(key)]: obj[key]};
-			}, {});
-			return result;
-		}
-
-		// eslint-disable-next-line complexity
-		function replaceKey(key) {
-			switch (key) {
-				case 'affiliateOfAddress':
-				case 'affiliatesAddress':
-				case 'distributorAddress':
-				case 'distributorOfAddress':
-					return 'address';
-				case 'affiliateOfAddressDetails':
-				case 'affiliatesAddressDetails':
-				case 'distributorAddressDetails':
-				case 'distributorOfAddressDetails':
-					return 'addressDetails';
-				case 'affiliateOfCity':
-				case 'affiliatesCity':
-				case 'distributorCity':
-				case 'distributorOfCity':
-					return 'city';
-				case 'affiliateOfName':
-				case 'affiliatesName':
-				case 'distributorName':
-				case 'distributorOfName':
-					return 'name';
-				case 'affiliateOfZip':
-				case 'affiliatesZip':
-				case 'distributorZip':
-				case 'distributorOfZip':
-					return 'zip';
-				default:
-					return null;
-			}
 		}
 
 		const component = (
