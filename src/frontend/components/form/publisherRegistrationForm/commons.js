@@ -63,19 +63,17 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 			case 'multiSelect':
 				return (
 					<Grid key={list.name} container item xs={list.width === 'half' ? 6 : 12}>
-						<Grid item xs={11}>
+						<Grid item xs={12}>
 							<Field
 								className={`${classes.selectField} ${list.width}`}
 								component={renderMultiSelect}
 								label={list.label}
+								infoIconComponent={<PopoverComponent icon={<HelpIcon/>} infoText={getClassificationInstruction()}/>}
 								name={list.name}
 								type={list.type}
 								options={list.options}
 								props={{isMulti: list.isMulti ? list.isMulti : false}}
 							/>
-						</Grid>
-						<Grid item>
-							<PopoverComponent icon={<HelpIcon/>} infoText={getClassificationInstruction()}/>
 						</Grid>
 					</Grid>
 				);
