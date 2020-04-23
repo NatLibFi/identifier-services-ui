@@ -91,7 +91,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (isAuthenticated) {
 				setActiveStep(5);
 			}
-		}, []);
+		}, [isAuthenticated]);
 
 		function getStepContent(step) {
 			switch (step) {
@@ -467,12 +467,6 @@ function getFieldArray() {
 					width: 'half'
 				},
 				{
-					name: 'postalAddress[addressDetails]',
-					type: 'text',
-					label: 'Address Details',
-					width: 'half'
-				},
-				{
 					name: 'postalAddress[city]',
 					type: 'text',
 					label: 'City*',
@@ -485,15 +479,15 @@ function getFieldArray() {
 					width: 'half'
 				},
 				{
-					name: 'publisherEmail',
-					type: 'text',
-					label: 'Publisher Email*',
-					width: 'half'
-				},
-				{
 					name: 'phone',
 					type: 'text',
 					label: 'Phone*',
+					width: 'half'
+				},
+				{
+					name: 'publisherEmail',
+					type: 'text',
+					label: 'Publisher Email*',
 					width: 'half'
 				},
 				{
@@ -541,7 +535,7 @@ function getFieldArray() {
 					name: 'aliases',
 					type: 'arrayString',
 					label: 'Aliases',
-					width: 'half',
+					width: 'full',
 					subName: 'alias'
 				},
 				{
@@ -549,7 +543,7 @@ function getFieldArray() {
 					type: 'multiSelect',
 					label: 'Classification*',
 					options: classificationCodes,
-					width: 'half',
+					width: 'full',
 					isMulti: true
 				}
 			]

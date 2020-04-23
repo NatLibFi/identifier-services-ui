@@ -42,7 +42,6 @@ export default connect(state => ({
 }))(props => {
 	const [errors, setErrors] = useState();
 	const {fields, values, className, clearFields, name, subName, label} = props;
-	console.log('values', values)
 	const handleAliasesClick = () => {
 		setErrors();
 		if (values) {
