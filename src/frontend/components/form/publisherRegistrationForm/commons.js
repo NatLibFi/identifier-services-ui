@@ -389,3 +389,9 @@ function replaceKey(key) {
 			return null;
 	}
 }
+
+export function formatLabel(label) {
+	const res = label[0].replace(/([A-Z])/g, ' $1').trim();
+	const result = `${res.charAt(0).toUpperCase()}${res.slice(1)}`;
+	return result;
+}

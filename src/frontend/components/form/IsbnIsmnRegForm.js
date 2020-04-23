@@ -36,7 +36,7 @@ import HttpStatus from 'http-status';
 import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
 import Captcha from '../Captcha';
-import {element, fieldArrayElement, formatAddress} from './publisherRegistrationForm/commons';
+import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';
 import {classificationCodes} from './publisherRegistrationForm/formFieldVariable';
 import ListComponent from '../ListComponent';
 
@@ -306,11 +306,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		const component = (
 			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
-				<Stepper alternativeLabel activeStep={activeStep}>
+				<Stepper alternativeLabel activeStep={activeStep} className={classes.test}>
 					{steps.map(label => (
 						<Step key={label}>
 							<StepLabel className={classes.stepLabel}>
-								{label}
+								{formatLabel(label)}
 							</StepLabel>
 						</Step>
 					))}
