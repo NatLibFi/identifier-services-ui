@@ -42,6 +42,25 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 					</Grid>
 				);
 			case 'select':
+				if (list.name === 'type') {
+					return (
+						<>
+							<Grid key={list.name} item xs={6}>
+								<Field
+									className={`${classes.selectField} ${list.width}`}
+									component={renderSelect}
+									label={list.label}
+									name={list.name}
+									type={list.type}
+									options={list.options}
+									props={{publicationValues: publicationIssnValues || publicationIsbnValues, clearFields}}
+								/>
+							</Grid>
+							{publicationIsbnValues && (publicationIsbnValues.type === 'map') ? element({array: getScale(), classes, clearFields}) : null}
+						</>
+					);
+				}
+
 				return (
 					<>
 						<Grid key={list.name} item xs={6}>
@@ -57,7 +76,6 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 						</Grid>
 						{publicationIssnValues && publicationIssnValues.formatDetails &&
 						publicationIssnValues.formatDetails.format === 'electronic' ? element({array: getUrl(), classes, clearFields}) : null}
-						{publicationIsbnValues && (publicationIsbnValues.type === 'map') ? element({array: getScale(), classes, clearFields}) : null}
 					</>
 				);
 			case 'multiSelect':
@@ -79,7 +97,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 				);
 			case 'checkbox':
 				return (
-					<Grid key={list.name} container item xs={6} className={classes.popOver}>
+					<Grid key={list.name} container item xs={6}>
 						<Grid item>
 							<Field
 								component={renderCheckbox}
@@ -105,22 +123,8 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 					</Grid>
 				);
 			case 'text':
-				if (list.width === 'full') {
-					return (
-						<Grid key={list.name} item xs={12}>
-							<Field
-								className={`${classes.textField} ${list.width}`}
-								component={renderTextField}
-								label={list.label}
-								name={list.name}
-								type={list.type}
-							/>
-						</Grid>
-					);
-				}
-
 				return (
-					<Grid key={list.name} item xs={6}>
+					<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 						<Field
 							className={`${classes.textField} ${list.width}`}
 							component={renderTextField}

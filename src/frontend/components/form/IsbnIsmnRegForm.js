@@ -208,13 +208,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				distributorOf,
 				distributor,
 				publicationDetails,
+				isbnClassification,
 				...formattedPublicationValue
 			} = {
 				...values,
 				publisher,
 				authors: formatAuthors,
 				seriesDetails: formatTitle,
-				formatDetails: formatDetail()
+				formatDetails: formatDetail(),
+				classification: values.isbnClassification && values.isbnClassification.map(item => item.value.toString())
 			};
 			return formattedPublicationValue;
 
@@ -768,6 +770,19 @@ function getFieldArray() {
 						{label: 'Dissertation', value: 'dissertation'},
 						{label: 'Music', value: 'music'},
 						{label: 'Other', value: 'other'}
+					]
+				},
+				{
+					name: 'isbnClassification',
+					type: 'select',
+					width: 'half',
+					label: 'Classification',
+					options: [
+						{label: '', value: ''},
+						{label: 'Non-Fiction', value: 'non-fiction'},
+						{label: 'Fiction', value: 'fiction'},
+						{label: 'Cartoon', value: 'cartoon'},
+						{label: 'Children Book', value: 'children-book'}
 					]
 				},
 				{
