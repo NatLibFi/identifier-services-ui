@@ -34,6 +34,7 @@ import {connect} from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
 
 import renderTextField from './renderTextField';
+import renderSelect from './renderSelect';
 import useStyles from '../../../styles/form';
 
 export default connect(state => ({
@@ -43,7 +44,7 @@ export default connect(state => ({
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
-	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
+	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, formName} = props;
 	const classes = useStyles();
 
 	const contactDetail = values && {
@@ -58,6 +59,12 @@ export default connect(state => ({
 		affiliatesZip: values.affiliatesZip,
 		affiliatesName: values.affiliatesName
 	};
+	const author = values && {
+		authorGivenName: values.authorGivenName,
+		authorFamilyName: values.authorFamilyName,
+		role: values.role
+	};
+
 	const handleContactClick = () => {
 		setErrors();
 		if (values) {
@@ -84,20 +91,15 @@ export default connect(state => ({
 				affiliate.affiliatesCity !== undefined ||
 				affiliate.affiliatesZip !== undefined ||
 				affiliate.affiliatesName !== undefined)) {
+				const condition = affiliate.affiliatesAddress !== undefined && affiliate.affiliatesCity !== undefined && affiliate.affiliatesZip !== undefined && affiliate.affiliatesName !== undefined;
 				if (values.affiliates) {
 					if (values.affiliates.some(item => item.affiliatesName === affiliate.affiliatesName)) {
 						setErrors('already exist');
-					} else if (affiliate.affiliatesAddress !== undefined &&
-						affiliate.affiliatesCity !== undefined &&
-						affiliate.affiliatesZip !== undefined &&
-						affiliate.affiliatesName !== undefined) {
+					} else if (condition) {
 						fields.push(affiliate);
 						clearFields(undefined, false, false, 'affiliatesAddress', 'affiliatesAddressDetails', 'affiliatesCity', 'affiliatesZip', 'affiliatesZip', 'affiliatesName');
 					}
-				} else if (affiliate.affiliatesAddress !== undefined &&
-					affiliate.affiliatesCity !== undefined &&
-					affiliate.affiliatesZip !== undefined &&
-					affiliate.affiliatesName !== undefined) {
+				} else if (condition) {
 					fields.push(affiliate);
 					clearFields(undefined, false, false, 'affiliatesAddress', 'affiliatesAddressDetails', 'affiliatesCity', 'affiliatesZip', 'affiliatesZip', 'affiliatesName');
 				}
@@ -105,26 +107,43 @@ export default connect(state => ({
 		}
 	};
 
+	const handleAuthorClick = () => {
+		setErrors();
+		if (values) {
+			if (author && (
+				author.role !== undefined ||
+				author.authorGivenName !== undefined ||
+				author.authorFamilyName !== undefined)) {
+				const condition = author.role !== undefined && author.authorGivenName !== undefined && author.authorFamilyName !== undefined;
+				if (condition) {
+					fields.push(author);
+					clearFields(undefined, false, false, 'authorGivenName', 'authorFamilyName', 'role');
+				}
+			}
+		}
+	}
+
 	const component = (
 		<>
 			{data.map(list => {
-				switch (list.width) {
-					case 'half':
+				switch (list.type) {
+					case 'select':
 						return (
-							<Grid key={list.name} item xs={6}>
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 								<Field
 									className={`${classes.textField} ${list.width}`}
-									component={renderTextField}
+									component={renderSelect}
 									label={list.label}
 									name={list.name}
 									type={list.type}
+									options={list.options}
 									props={{errors}}
 								/>
 							</Grid>
 						);
-					case 'full':
+					case 'text': case 'email':
 						return (
-							<Grid key={list.name} item xs={12}>
+							<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
 								<Field
 									className={`${classes.textField} ${list.width}`}
 									component={renderTextField}
@@ -141,50 +160,78 @@ export default connect(state => ({
 			}
 			)}
 			{touched && error && <span>{error}</span>}
-			{(fieldName === 'primaryContact' &&
-				<div className={classes.addBtn}>
-					<Button
-						aria-label="Add"
-						variant="outlined"
-						color="primary"
-						title="click to add"
-						startIcon={<AddIcon/>}
-						onClick={handleContactClick}
-					>
-						Add
-					</Button>
-					{values && values.primaryContact && values.primaryContact.map((item, index) => {
-						return (
-							<Chip
-								key={item.email}
-								label={item.email}
-								onDelete={() => fields.remove(index)}
-							/>
-						);
-					})}
-
-				</div>) || (fieldName === 'affiliates' &&
-					<div className={classes.affiliatesAddBtn}>
+			{
+				(fieldName === 'primaryContact' &&
+					<div className={classes.addBtn}>
 						<Button
 							aria-label="Add"
 							variant="outlined"
 							color="primary"
 							title="click to add"
 							startIcon={<AddIcon/>}
-							onClick={handleAffiliatesClick}
+							onClick={handleContactClick}
 						>
 							Add
 						</Button>
-						{values && values.affiliates && values.affiliates.map((item, index) => {
+						{values && values.primaryContact && values.primaryContact.map((item, index) => {
 							return (
 								<Chip
-									key={item.affiliatesName}
-									label={`${item.affiliatesName}${item.affiliatesAddress}`}
+									key={item.email}
+									label={item.email}
 									onDelete={() => fields.remove(index)}
 								/>
 							);
 						})}
-					</div>) || null}
+
+					</div>
+				) || (
+					fieldName === 'affiliates' &&
+						<div className={classes.affiliatesAddBtn}>
+							<Button
+								aria-label="Add"
+								variant="outlined"
+								color="primary"
+								title="click to add"
+								startIcon={<AddIcon/>}
+								onClick={handleAffiliatesClick}
+							>
+								Add
+							</Button>
+							{values && values.affiliates && values.affiliates.map((item, index) => {
+								return (
+									<Chip
+										key={item.affiliatesName}
+										label={`${item.affiliatesName}${item.affiliatesAddress}`}
+										onDelete={() => fields.remove(index)}
+									/>
+								);
+							})}
+						</div>
+				) || (
+					fieldName === 'authors' &&
+						<div className={classes.affiliatesAddBtn}>
+							<Button
+								aria-label="Add"
+								variant="outlined"
+								color="primary"
+								title="click to add"
+								startIcon={<AddIcon/>}
+								onClick={handleAuthorClick}
+							>
+								Add
+							</Button>
+							{values && values.authors && values.authors.map((item, index) => {
+								return (
+									<Chip
+										key={`${item.authorGivenName}${index}`}// eslint-disable-line react/no-array-index-key
+										label={`${item.authorGivenName} ${item.authorFamilyName}`}
+										onDelete={() => fields.remove(index)}
+									/>
+								);
+							})}
+						</div>
+				) || null
+			}
 		</>
 	);
 
