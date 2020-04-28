@@ -10,6 +10,7 @@ import renderRadioButton from '../render/renderRadioButton';
 import renderCheckbox from '../render/renderCheckbox';
 import renderMultiSelect from '../render/renderMultiSelect';
 import renderContactDetail from '../render/renderContactDetail';
+import renderSelectAutoComplete from '../render/renderSelectAutoComplete';
 import PopoverComponent from '../../PopoverComponent';
 import HelpIcon from '@material-ui/icons/Help';
 
@@ -172,6 +173,25 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 					</Grid>
 				);
 
+			case 'selectAutoComplete':
+				return (
+					<>
+						<Grid key={list.name} item xs={list.width === 'full' ? 12 : 6}>
+							<Field
+								disableClearable
+								freeSolo
+								className={`${classes.selectField} ${list.width}`}
+								name={list.name}
+								component={renderSelectAutoComplete}
+								placeholder={list.placeholder}
+								label={list.label}
+								options={list.options}
+							/>
+						</Grid>
+						{list.showCheckbox && element({array: dissertCheckBox(), classes})}
+					</>
+				);
+
 			default:
 				return null;
 		}
@@ -209,6 +229,18 @@ function getUrl() {
 			name: 'formatDetails[url]',
 			type: 'text',
 			width: 'half'
+		}
+	];
+}
+
+function dissertCheckBox() {
+	return [
+		{
+			name: 'insertUniversity',
+			type: 'checkbox',
+			label: 'Check if you do not find the university',
+			width: 'half',
+			info: 'You can enter university name and city which you did not find'
 		}
 	];
 }

@@ -8,7 +8,6 @@ export default function (props) {
 		input,
 		options,
 		className,
-		className2,
 		disableClearable,
 		freeSolo,
 		placeholder,
@@ -25,11 +24,10 @@ export default function (props) {
 				disableClearable={!disableClearable}
 				freeSolo={!freeSolo}
 				options={options}
-				getOptionLabel={option => option.name || option.title}
+				getOptionLabel={option => option.title}
 				renderInput={params => (
-					<TextField {...params} className={className2} placeholder={placeholder} variant="outlined"/>
+					<TextField {...params} className={className} placeholder={placeholder} variant="outlined"/>
 				)}
-				className={className}
 				value={input.value}
 				onBlur={() => input.onBlur(input.value)}
 				onChange={(event, value) => {

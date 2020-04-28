@@ -46,6 +46,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		language: 'eng',
 		publisherLanguage: 'eng',
 		isPublic: false,
+		insertUniversity: false,
 		postalAddress:
 			{
 				public: false
@@ -66,6 +67,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreation,
 			publicationCreationRequest,
+			listLoading,
+			getUniversityPublisher,
+			universityPublisher,
 			setMessage,
 			handleClose,
 			setIsCreating,
@@ -81,7 +85,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [distributorOf, setDistributorOf] = useState(false);
 		const [pubType, setPubType] = useState(null);
 		const [typeSelect, setTypeSelect] = useState(true);
-		const [test, setTest] = useState(false)
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 		const steps = getSteps(fieldArray, dissFieldArray);
@@ -92,6 +95,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		}, [isAuthenticated, loadSvgCaptcha]);
 
+		useEffect(() => {
+			getUniversityPublisher();
+		}, []);
+console.log('uuuuuuuuuu', universityPublisher)
 		function getStepContent(step) {
 			if (isAuthenticated) {
 				switch (step) {
@@ -140,7 +147,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (!isAuthenticated && pubType === 'dissertation') {
 				switch (step) {
 					case 0:
-						return test ? element({array: dissFieldArray[0].UniversityInfo, classes, clearFields}) : searchPublisherComponent();
+						return publicationValues.insertUniversity ?
+							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
+							element({array: searchPublisherComponent(), classes});
 					case 1:
 						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
 					case 2:
@@ -395,29 +404,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return dissertationFields;
 		}
 
-		const searchPublisherComponent = () => {
-			const comp = [
+		function searchPublisherComponent() {
+			const publisher = universityPublisher.results.map(item => {
+				return {
+					id: item.id,
+					title: item.name
+				};
+			});
+
+			return [
 				{
 					name: 'universityName',
 					type: 'selectAutoComplete',
 					label: 'Select University/Publisher',
-					width: 'full'
+					width: 'full',
+					placeholder: 'Select University/Publisher',
+					showCheckbox: true,
+					options: listLoading ? 'loading...' : publisher
 				}
-			]
-		// 	<Field
-		// 	disableClearable
-		// 	freeSolo
-		// 	name="category"
-		// 	component={RenderSelectField}
-		// 	className2={classes.category}
-		// 	placeholder="category"
-		// 	label="Select the suitable category"
-		// 	options={categoriesList}
-		// />;
-			return {
-				...comp
-			};
-		};
+			];
+		}
 
 		const component = (
 			<>
@@ -575,6 +581,8 @@ function mapStateToProps(state) {
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
+		universityPublisher: state.publisher.universityPublisher,
+		listLoading: state.publisher.listLoading,
 		publicationValues: getFormValues('isbnIsmnRegForm')(state)
 	});
 }
