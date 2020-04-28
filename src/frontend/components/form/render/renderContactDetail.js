@@ -44,7 +44,7 @@ export default connect(state => ({
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
-	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, formName} = props;
+	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
 	const classes = useStyles();
 
 	const contactDetail = values && {
@@ -121,7 +121,7 @@ export default connect(state => ({
 				}
 			}
 		}
-	}
+	};
 
 	const component = (
 		<>
