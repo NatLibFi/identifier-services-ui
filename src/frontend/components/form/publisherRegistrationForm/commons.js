@@ -97,7 +97,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 				);
 			case 'checkbox':
 				return (
-					<Grid key={list.name} container item xs={6}>
+					<Grid key={list.name} container item xs={6} className={classes.popOver}>
 						<Grid item>
 							<Field
 								component={renderCheckbox}
