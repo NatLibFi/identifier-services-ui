@@ -53,7 +53,6 @@ export default function ({
 					onChange={value => {
 						input.onChange(value);
 						if (publicationValues && publicationValues.type !== value) {
-							clearFields(undefined, false, false, 'mapDetails[scale]');
 							clearFields(undefined, false, false, 'formatDetails[url]');
 						}
 					}}

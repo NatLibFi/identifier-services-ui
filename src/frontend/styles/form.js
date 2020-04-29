@@ -190,6 +190,16 @@ const useStyles = makeStyles(theme => ({
 	},
 	notes: {
 		fontSize: '10px'
+	},
+	typeSelect: {
+		width: 600,
+		height: 200,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	pubSelect: {
+		width: 500
 	}
 }));
 
