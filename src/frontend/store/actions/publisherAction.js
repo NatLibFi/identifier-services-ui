@@ -146,7 +146,7 @@ export const getUniversityPublisher = () => async dispatch => {
 			})
 		});
 		const result = await response.json();
-		dispatch(success(UNIVERSITY_PUBLISHER, result))
+		dispatch(success(UNIVERSITY_PUBLISHER, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

@@ -73,8 +73,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setMessage,
 			handleClose,
 			setIsCreating,
-			handleSubmit} = props;
-		const fieldArray = getFieldArray();
+			handleSubmit
+		} = props;
+
 		const dissFieldArray = getDissertationFieldArray();
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -87,6 +88,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [typeSelect, setTypeSelect] = useState(true);
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
+
+		const fieldArray = getFieldArray();
+		if (pubType === 'map') {
+			fieldArray[5].basicInformation.push({
+				label: 'Scale',
+				name: 'mapDetails[scale]',
+				type: 'text',
+				width: 'half'
+			});
+		}
+
 		const steps = getSteps(fieldArray, dissFieldArray);
 
 		useEffect(() => {
@@ -98,12 +110,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		useEffect(() => {
 			getUniversityPublisher();
 		}, []);
-console.log('uuuuuuuuuu', universityPublisher)
+
 		function getStepContent(step) {
 			if (isAuthenticated) {
 				switch (step) {
 					case 0:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 1:
 						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 2:
@@ -130,7 +142,7 @@ console.log('uuuuuuuuuu', universityPublisher)
 					case 4:
 						return orgDetail2({arr: fieldArray[4].organization, classes});
 					case 5:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 6:
 						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 7:
@@ -151,7 +163,7 @@ console.log('uuuuuuuuuu', universityPublisher)
 							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
 							element({array: searchPublisherComponent(), classes});
 					case 1:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 2:
 						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 3:
@@ -216,26 +228,30 @@ console.log('uuuuuuuuuu', universityPublisher)
 		}
 
 		function formatPublicationValues(values) {
-			const publisher = isAuthenticated ? user.publisher : {
-				name: values.name,
-				postalAddress: values.postalAddress,
-				publisherEmail: values.publisherEmail,
-				phone: values.phone && values.phone,
-				website: values.website && values.website,
-				language: values.publisherLanguage,
-				aliases: values.aliases && values.aliases,
-				primaryContact: values.primaryContact,
-				code: values.code && values.code,
-				classification: values.classification.map(item => item.value.toString()),
-				organizationDetails: {
-					affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
-					affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
-					distributorOf: values.distributorOf && formatAddress(values.distributorOf),
-					distributor: values.distributor && formatAddress(values.distributor)
-				},
-				publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
-				}
-			};
+			const dissertPublisher = pubType === 'dissertation' ?
+				values.universityName.id || {university: values.universityName, city: values.universityCity} :
+				{
+					name: values.name,
+					postalAddress: values.postalAddress,
+					publisherEmail: values.publisherEmail,
+					phone: values.phone && values.phone,
+					website: values.website && values.website,
+					language: values.publisherLanguage,
+					aliases: values.aliases && values.aliases,
+					primaryContact: values.primaryContact,
+					code: values.code && values.code,
+					classification: values.classification.map(item => item.value.toString()),
+					publisherType: values.publisherType,
+					organizationDetails: {
+						affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
+						affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
+						distributorOf: values.distributorOf && formatAddress(values.distributorOf),
+						distributor: values.distributor && formatAddress(values.distributor)
+					},
+					publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
+					}
+				};
+			const publisher = isAuthenticated ? user.publisher : dissertPublisher;
 
 			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
 				return {...acc, [replaceKey(key)]: item[key]};
@@ -245,6 +261,7 @@ console.log('uuuuuuuuuu', universityPublisher)
 				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
 				title: values.seriesDetails.seriesTitle && values.seriesDetails.seriesTitle
 			};
+			const map = values.mapDetails ? values.mapDetails : undefined;
 			const {
 				select,
 				selectFormat,
@@ -258,12 +275,15 @@ console.log('uuuuuuuuuu', universityPublisher)
 				primaryContact,
 				code,
 				classification,
+				publisherType,
 				affiliateOf,
 				affiliates,
 				distributorOf,
 				distributor,
 				publicationDetails,
-				isbnClassification,
+				insertUniversity,
+				universityName,
+				universityCity,
 				...formattedPublicationValue
 			} = {
 				...values,
@@ -271,7 +291,8 @@ console.log('uuuuuuuuuu', universityPublisher)
 				authors: formatAuthors,
 				seriesDetails: formatTitle,
 				formatDetails: formatDetail(),
-				classification: values.isbnClassification && values.isbnClassification.map(item => item.value.toString())
+				type: pubType,
+				mapDetails: pubType === 'map' ? map : undefined
 			};
 			return formattedPublicationValue;
 
@@ -439,6 +460,7 @@ console.log('uuuuuuuuuu', universityPublisher)
 								<MenuItem value="book">Book</MenuItem>
 								<MenuItem value="dissertation">Dissertation</MenuItem>
 								<MenuItem value="music">Music</MenuItem>
+								<MenuItem value="map">Map</MenuItem>
 								<MenuItem value="other">Other</MenuItem>
 							</Select>
 						</FormControl>
@@ -643,6 +665,17 @@ function getFieldArray() {
 						{label: 'English (Default Language)', value: 'eng'},
 						{label: 'Suomi', value: 'fin'},
 						{label: 'Svenska', value: 'swe'}
+					]
+				},
+				{
+					name: 'publisherType',
+					type: 'select',
+					label: 'Select Type of Publisher *',
+					width: 'half',
+					options: [
+						{label: '', value: ''},
+						{label: 'University', value: 'university'},
+						{label: 'Other', value: 'other'}
 					]
 				},
 				{
@@ -892,20 +925,6 @@ function getFieldArray() {
 					type: 'dateTime',
 					label: 'Publication Time*',
 					width: 'half'
-				},
-				{
-					name: 'type',
-					type: 'select',
-					label: 'Type',
-					width: 'half',
-					options: [
-						{label: '', value: ''},
-						{label: 'Book', value: 'book'},
-						{label: 'Map', value: 'map'},
-						{label: 'Dissertation', value: 'dissertation'},
-						{label: 'Music', value: 'music'},
-						{label: 'Other', value: 'other'}
-					]
 				},
 				{
 					name: 'isbnClassification',

@@ -43,25 +43,6 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 					</Grid>
 				);
 			case 'select':
-				if (list.name === 'type') {
-					return (
-						<>
-							<Grid key={list.name} item xs={6}>
-								<Field
-									className={`${classes.selectField} ${list.width}`}
-									component={renderSelect}
-									label={list.label}
-									name={list.name}
-									type={list.type}
-									options={list.options}
-									props={{publicationValues: publicationIssnValues || publicationIsbnValues, clearFields}}
-								/>
-							</Grid>
-							{publicationIsbnValues && (publicationIsbnValues.type === 'map') ? element({array: getScale(), classes, clearFields}) : null}
-						</>
-					);
-				}
-
 				return (
 					<>
 						<Grid key={list.name} item xs={6}>
@@ -371,17 +352,6 @@ function getSubFormatDetailsFieldArray() {
 		}
 	];
 	return array;
-}
-
-function getScale() {
-	return [
-		{
-			label: 'Scale',
-			name: 'mapDetails[scale]',
-			type: 'text',
-			width: 'half'
-		}
-	];
 }
 
 export function formatAddress(obj) {

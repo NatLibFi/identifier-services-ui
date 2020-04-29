@@ -10,10 +10,8 @@ export default function (props) {
 		className,
 		disableClearable,
 		freeSolo,
-		placeholder,
-		height,
-		width,
-		meta: {touched, error}, ...custom} = props;
+		placeholder
+	} = props;
 
 	const component = (
 		<>
