@@ -75,6 +75,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								name={list.name}
 								type={list.type}
 								options={list.options}
+								creatable={list.isCreatable}
 								props={{isMulti: list.isMulti ? list.isMulti : false}}
 							/>
 						</Grid>

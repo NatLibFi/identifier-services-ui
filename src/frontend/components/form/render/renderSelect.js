@@ -73,8 +73,7 @@ export default function (props) {
 			{touched && error &&
 				<Box mt={2}>
 					<Typography variant="caption" color="error" className={classes.selectErrors}><ErrorIcons fontSize="inherit"/>{error}</Typography>
-				</Box>
-			}
+				</Box>}
 		</>
 	);
 

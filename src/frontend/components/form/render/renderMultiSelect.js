@@ -28,13 +28,14 @@
 
 import React from 'react';
 import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 import ErrorIcons from '@material-ui/icons/ErrorOutline';
 import {Typography} from '@material-ui/core';
 
 import useStyles from '../../../styles/error';
 
 export default function (props) {
-	const {input, label, options, className, isMulti, infoIconComponent} = props;
+	const {input, label, options, className, isMulti, infoIconComponent, creatable} = props;
 	const {meta: {touched, error}} = props;
 	const classes = useStyles();
 
@@ -44,22 +45,33 @@ export default function (props) {
 				<Typography>{label && label}&nbsp;</Typography>
 				{infoIconComponent}
 			</div>
-			<CreatableSelect
-				isMulti={isMulti}
-				{...input}
-				error={touched && error}
-				options={options}
-				className={className}
-				placeholder={label}
-				value={input.value}
-				onBlur={() => input.onBlur(input.value)}
-				onChange={value => input.onChange(value)}
-			/>
+			{creatable === false ?
+				<Select
+					isMulti={isMulti}
+					{...input}
+					error={touched && error}
+					options={options}
+					className={className}
+					placeholder={label}
+					value={input.value}
+					onBlur={() => input.onBlur(input.value)}
+					onChange={value => input.onChange(value)}
+				/> :
+				<CreatableSelect
+					isMulti={isMulti}
+					{...input}
+					error={touched && error}
+					options={options}
+					className={className}
+					placeholder={label}
+					value={input.value}
+					onBlur={() => input.onBlur(input.value)}
+					onChange={value => input.onChange(value)}
+				/>}
 			{touched && error &&
 				<Typography variant="caption" color="error" className={classes.selectErrors}>
 					<ErrorIcons fontSize="inherit"/>{error}
-				</Typography>
-			}
+				</Typography>}
 		</>
 	);
 

@@ -230,7 +230,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function formatPublicationValues(values) {
-			const dissertPublisher = pubType === 'dissertation' ?
+			const dissertPublisher = !isAuthenticated && (pubType === 'dissertation' ?
 				values.universityName.id || {university: values.universityName, city: values.universityCity} :
 				{
 					name: values.name,
@@ -252,7 +252,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					},
 					publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
 					}
-				};
+				});
 			const publisher = isAuthenticated ? user.publisher : dissertPublisher;
 
 			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
@@ -300,6 +300,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				seriesDetails: values.seriesDetails && formatTitle(),
 				formatDetails: formatDetail(),
 				type: pubType,
+				isbnClassification: values.isbnClassification ? values.isbnClassification.map(item => item.value.toString()) : undefined,
 				mapDetails: pubType === 'map' ? map : undefined
 			};
 			return formattedPublicationValue;
@@ -931,15 +932,16 @@ function getFieldArray() {
 				},
 				{
 					name: 'isbnClassification',
-					type: 'select',
+					type: 'multiSelect',
 					width: 'half',
 					label: 'Classification',
+					isMulti: true,
+					isCreatable: false,
 					options: [
-						{label: '', value: ''},
-						{label: 'Non-Fiction', value: '1'},
-						{label: 'Fiction', value: '2'},
-						{label: 'Cartoon', value: '3'},
-						{label: 'Children Book', value: '4'}
+						{label: 'Non-Fiction', value: 1},
+						{label: 'Fiction', value: 2},
+						{label: 'Cartoon', value: 3},
+						{label: 'Children Book', value: 4}
 					]
 				},
 				{
