@@ -267,6 +267,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				};
 				return formatTitle;
 			}
+
 			const map = values.mapDetails ? values.mapDetails : undefined;
 
 			const {

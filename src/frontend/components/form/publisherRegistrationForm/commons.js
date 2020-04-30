@@ -61,7 +61,6 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								element({array: getUrl(), classes, clearFields}) :
 								null
 						}
-						{publicationIsbnValues && (publicationIsbnValues.type === 'map') ? element({array: getScale(), classes, clearFields}) : null}
 					</>
 				);
 			case 'multiSelect':
