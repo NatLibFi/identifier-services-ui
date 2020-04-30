@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {reduxForm, getFormValues} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
@@ -46,6 +46,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		language: 'eng',
 		publisherLanguage: 'eng',
 		isPublic: false,
+		insertUniversity: false,
 		postalAddress:
 			{
 				public: false
@@ -67,6 +68,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreation,
 			publicationCreationRequest,
+			listLoading,
+			getUniversityPublisher,
+			universityPublisher,
 			setMessage,
 			handleClose,
 			setIsCreating,
@@ -74,6 +78,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			reset
 		} = props;
 		const fieldArray = getFieldArray(user);
+		const dissFieldArray = getDissertationFieldArray();
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
@@ -81,9 +86,22 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [affiliates, setAffiliates] = useState(false);
 		const [distributor, setDistributor] = useState(false);
 		const [distributorOf, setDistributorOf] = useState(false);
+		const [pubType, setPubType] = useState(null);
+		const [typeSelect, setTypeSelect] = useState(true);
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
-		const steps = getSteps(fieldArray);
+
+		if (pubType === 'map') {
+			fieldArray[5].basicInformation.push({
+				label: 'Scale',
+				name: 'mapDetails[scale]',
+				type: 'text',
+				width: 'half'
+			});
+		}
+
+		const steps = getSteps(fieldArray, dissFieldArray);
+
 		useEffect(() => {
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
@@ -91,37 +109,80 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}, [isAuthenticated, loadSvgCaptcha]);
 
 		useEffect(() => {
-			if (isAuthenticated) {
-				setActiveStep(5);
-			}
-		}, [isAuthenticated]);
+			getUniversityPublisher();
+		}, []);
 
 		function getStepContent(step) {
-			switch (step) {
-				case 0:
-					return element({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
-				case 1:
-					return element({array: fieldArray[1].publishingActivities, classes, clearFields});
-				case 2:
-					return fieldArrayElement({data: fieldArray[2].primaryContact, fieldName: 'primaryContact', clearFields});
-				case 3:
-					return orgDetail1({arr: fieldArray[3].organization, classes, fieldName: 'affiliates', clearFields});
-				case 4:
-					return orgDetail2({arr: fieldArray[4].organization, classes});
-				case 5:
-					return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
-				case 6:
-					return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
-				case 7:
-					return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
-				case 8:
-					return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
-				case 9:
-					return renderPreview(publicationValues);
-				default:
-					return 'Unknown step';
+			if (isAuthenticated) {
+				switch (step) {
+					case 0:
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+					case 1:
+						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+					case 2:
+						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+					case 3:
+						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+					case 4:
+						return renderPreview(publicationValues);
+					default:
+						return 'Unknown step';
+				}
+			}
+
+			if (!isAuthenticated && pubType !== 'dissertation') {
+				switch (step) {
+					case 0:
+						return element({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
+					case 1:
+						return element({array: fieldArray[1].publishingActivities, classes, clearFields});
+					case 2:
+						return fieldArrayElement({data: fieldArray[2].primaryContact, fieldName: 'primaryContact', clearFields});
+					case 3:
+						return orgDetail1({arr: fieldArray[3].organization, classes, fieldName: 'affiliates', clearFields});
+					case 4:
+						return orgDetail2({arr: fieldArray[4].organization, classes});
+					case 5:
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+					case 6:
+						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+					case 7:
+						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+					case 8:
+						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+					case 9:
+						return renderPreview(publicationValues);
+					default:
+						return 'Unknown step';
+				}
+			}
+
+			if (!isAuthenticated && pubType === 'dissertation') {
+				switch (step) {
+					case 0:
+						return publicationValues.insertUniversity ?
+							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
+							element({array: searchPublisherComponent(), classes});
+					case 1:
+						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+					case 2:
+						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+					case 3:
+						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+					case 4:
+						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+					case 5:
+						return renderPreview(publicationValues);
+					default:
+						return 'Unknown step';
+				}
 			}
 		}
+
+		const handleTypeChange = e => {
+			setPubType(e.target.value);
+			setTypeSelect(!typeSelect);
+		};
 
 		const handleCaptchaInput = e => {
 			setCaptchaInput(e.target.value);
@@ -132,7 +193,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function handleBack() {
-			setActiveStep(activeStep - 1);
+			if (activeStep === 0 || (isAuthenticated && activeStep === 5)) {
+				setTypeSelect(!typeSelect);
+			} else {
+				setActiveStep(activeStep - 1);
+			}
 		}
 
 		function replaceKey(key) {
@@ -165,26 +230,30 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function formatPublicationValues(values) {
-			const publisher = isAuthenticated ? user.publisher : {
-				name: values.name,
-				postalAddress: values.postalAddress,
-				publisherEmail: values.publisherEmail,
-				phone: values.phone && values.phone,
-				website: values.website && values.website,
-				language: values.publisherLanguage,
-				aliases: values.aliases && values.aliases,
-				primaryContact: values.primaryContact,
-				code: values.code && values.code,
-				classification: values.classification.map(item => item.value.toString()),
-				organizationDetails: {
-					affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
-					affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
-					distributorOf: values.distributorOf && formatAddress(values.distributorOf),
-					distributor: values.distributor && formatAddress(values.distributor)
-				},
-				publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
-				}
-			};
+			const dissertPublisher = pubType === 'dissertation' ?
+				values.universityName.id || {university: values.universityName, city: values.universityCity} :
+				{
+					name: values.name,
+					postalAddress: values.postalAddress,
+					publisherEmail: values.publisherEmail,
+					phone: values.phone && values.phone,
+					website: values.website && values.website,
+					language: values.publisherLanguage,
+					aliases: values.aliases && values.aliases,
+					primaryContact: values.primaryContact,
+					code: values.code && values.code,
+					classification: values.classification.map(item => item.value.toString()),
+					publisherType: values.publisherType,
+					organizationDetails: {
+						affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
+						affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
+						distributorOf: values.distributorOf && formatAddress(values.distributorOf),
+						distributor: values.distributor && formatAddress(values.distributor)
+					},
+					publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
+					}
+				};
+			const publisher = isAuthenticated ? user.publisher : dissertPublisher;
 
 			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
 				return {...acc, [replaceKey(key)]: item[key]};
@@ -198,6 +267,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				};
 				return formatTitle;
 			}
+			const map = values.mapDetails ? values.mapDetails : undefined;
 
 			const {
 				select,
@@ -212,18 +282,24 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				primaryContact,
 				code,
 				classification,
+				publisherType,
 				affiliateOf,
 				affiliates,
 				distributorOf,
 				distributor,
 				publicationDetails,
+				insertUniversity,
+				universityName,
+				universityCity,
 				...formattedPublicationValue
 			} = {
 				...values,
 				publisher,
 				authors: formatAuthors,
 				seriesDetails: values.seriesDetails && formatTitle(),
-				formatDetails: formatDetail()
+				formatDetails: formatDetail(),
+				type: pubType,
+				mapDetails: pubType === 'map' ? map : undefined
 			};
 			return formattedPublicationValue;
 
@@ -314,55 +390,138 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			);
 		}
 
-		const component = (
-			<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
-				<Stepper alternativeLabel activeStep={activeStep} className={classes.test}>
-					{steps.map(label => (
-						<Step key={label}>
-							<StepLabel className={classes.stepLabel}>
-								{formatLabel(label)}
-							</StepLabel>
-						</Step>
-					))}
-				</Stepper>
-				<div className={classes.subContainer}>
-					<Grid container spacing={2} direction="row">
-						{(getStepContent(activeStep))}
+		function getSteps(fieldArray, dissFieldArray) {
+			const result = [];
+			if (isAuthenticated) {
+				fieldArray.forEach((item, i) => {
+					if (i >= 5) {
+						result.push(Object.keys(item));
+					}
+				});
+				return result;
+			}
 
+			if (!isAuthenticated && pubType === 'dissertation') {
+				dissFieldArray.forEach(item => result.push(Object.keys(item)));
+				fieldArray.forEach((item, i) => i >= 5 && result.push(Object.keys(item)));
+				return result;
+			}
+
+			return fieldArray.map(item => Object.keys(item));
+		}
+
+		function getDissertationFieldArray() {
+			const dissertationFields = [
+				{
+					UniversityInfo: [
 						{
-							activeStep === steps.length - 1 &&
-								<Grid item xs={12}>
-									{isAuthenticated ? null : (
-										<>
-											<Captcha
-												captchaInput={captchaInput}
-												handleCaptchaInput={handleCaptchaInput}
-												className={classes.captcha}/>
-											{/* eslint-disable-next-line react/no-danger */}
-											<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-										</>
-									)}
-								</Grid>
+							name: 'universityName',
+							type: 'text',
+							label: 'University Name *',
+							width: 'full'
+						},
+						{
+							name: 'universityCity',
+							type: 'text',
+							label: 'City *',
+							width: 'full'
 						}
-					</Grid>
-					<div className={classes.btnContainer}>
-						<Button disabled={isAuthenticated ? activeStep === 5 : activeStep === 0} onClick={handleBack}>
-									Back
-						</Button>
-						{activeStep === steps.length - 1 ?
-							null :
-							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-										Next
-							</Button>}
-						{
-							activeStep === steps.length - 1 &&
-								<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-											Submit
+					]
+				}
+			];
+
+			return dissertationFields;
+		}
+
+		function searchPublisherComponent() {
+			const publisher = universityPublisher.results.map(item => {
+				return {
+					id: item.id,
+					title: item.name
+				};
+			});
+
+			return [
+				{
+					name: 'universityName',
+					type: 'selectAutoComplete',
+					label: 'Select University/Publisher',
+					width: 'full',
+					placeholder: 'Select University/Publisher',
+					showCheckbox: true,
+					options: listLoading ? 'loading...' : publisher
+				}
+			];
+		}
+
+		const component = (
+			<>
+				{typeSelect ?
+					<div className={classes.typeSelect}>
+						<FormControl className={classes.pubSelect}>
+							<InputLabel id="type-selection">The publication type is:</InputLabel>
+							<Select
+								labelId="type-selection"
+								value={pubType}
+								onChange={handleTypeChange}
+							>
+								<MenuItem value="book">Book</MenuItem>
+								<MenuItem value="dissertation">Dissertation</MenuItem>
+								<MenuItem value="music">Music</MenuItem>
+								<MenuItem value="map">Map</MenuItem>
+								<MenuItem value="other">Other</MenuItem>
+							</Select>
+						</FormControl>
+					</div> :
+					<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
+						<Stepper alternativeLabel activeStep={activeStep} className={classes.test}>
+							{steps.map(label => (
+								<Step key={label}>
+									<StepLabel className={classes.stepLabel}>
+										{formatLabel(label)}
+									</StepLabel>
+								</Step>
+							))}
+						</Stepper>
+						<div className={classes.subContainer}>
+							<Grid container spacing={2} direction="row">
+								{(getStepContent(activeStep))}
+
+								{
+									activeStep === steps.length - 1 &&
+										<Grid item xs={12}>
+											{isAuthenticated ? null : (
+												<>
+													<Captcha
+														captchaInput={captchaInput}
+														handleCaptchaInput={handleCaptchaInput}
+														className={classes.captcha}/>
+													{/* eslint-disable-next-line react/no-danger */}
+													<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+												</>
+											)}
+										</Grid>
+								}
+							</Grid>
+							<div className={classes.btnContainer}>
+								<Button onClick={handleBack}>
+											Back
 								</Button>
-						}
-					</div>
-				</div>
-			</form>
+								{activeStep === steps.length - 1 ?
+									null :
+									<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
+												Next
+									</Button>}
+								{
+									activeStep === steps.length - 1 &&
+										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
+													Submit
+										</Button>
+								}
+							</div>
+						</div>
+					</form>}
+			</>
 		);
 
 		return {
@@ -447,15 +606,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 ));
 
-function getSteps(fieldArray) {
-	return fieldArray.map(item => Object.keys(item));
-}
-
 function mapStateToProps(state) {
 	return ({
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
+		universityPublisher: state.publisher.universityPublisher,
+		listLoading: state.publisher.listLoading,
 		publicationValues: getFormValues('isbnIsmnRegForm')(state)
 	});
 }
@@ -516,6 +673,17 @@ function getFieldArray() {
 						{label: 'English (Default Language)', value: 'eng'},
 						{label: 'Suomi', value: 'fin'},
 						{label: 'Svenska', value: 'swe'}
+					]
+				},
+				{
+					name: 'publisherType',
+					type: 'select',
+					label: 'Select Type of Publisher *',
+					width: 'half',
+					options: [
+						{label: '', value: ''},
+						{label: 'University', value: 'university'},
+						{label: 'Other', value: 'other'}
 					]
 				},
 				{
@@ -761,17 +929,16 @@ function getFieldArray() {
 					width: 'half'
 				},
 				{
-					name: 'type',
+					name: 'isbnClassification',
 					type: 'select',
-					label: 'Type',
 					width: 'half',
+					label: 'Classification',
 					options: [
 						{label: '', value: ''},
-						{label: 'Book', value: 'book'},
-						{label: 'Map', value: 'map'},
-						{label: 'Dissertation', value: 'dissertation'},
-						{label: 'Music', value: 'music'},
-						{label: 'Other', value: 'other'}
+						{label: 'Non-Fiction', value: '1'},
+						{label: 'Fiction', value: '2'},
+						{label: 'Cartoon', value: '3'},
+						{label: 'Children Book', value: '4'}
 					]
 				},
 				{
