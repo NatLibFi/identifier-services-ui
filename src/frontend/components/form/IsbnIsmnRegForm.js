@@ -52,6 +52,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				public: false
 			}
 	},
+	destroyOnUnmount: false,
 	validate
 })(
 	props => {
@@ -73,9 +74,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setMessage,
 			handleClose,
 			setIsCreating,
-			handleSubmit
+			handleSubmit,
+			reset
 		} = props;
-
+		const fieldArray = getFieldArray(user);
 		const dissFieldArray = getDissertationFieldArray();
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -89,7 +91,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 
-		const fieldArray = getFieldArray();
 		if (pubType === 'map') {
 			fieldArray[5].basicInformation.push({
 				label: 'Scale',
@@ -218,6 +219,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (result === HttpStatus.CREATED) {
 					handleClose();
 					setIsCreating(true);
+					reset();
 				}
 			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
@@ -256,12 +258,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const formatAuthors = values.authors.map(item => Object.keys(item).reduce((acc, key) => {
 				return {...acc, [replaceKey(key)]: item[key]};
 			}, {}));
-			const {seriesTitle, ...formatTitle} = {
-				...values.seriesDetails,
-				volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
-				title: values.seriesDetails.seriesTitle && values.seriesDetails.seriesTitle
-			};
+
+			function formatTitle() {
+				const {seriesTitle, ...formatTitle} = values.seriesDetails && {
+					...values.seriesDetails,
+					volume: values.seriesDetails.volume && Number(values.seriesDetails.volume),
+					title: values.seriesDetails.seriesTitle && values.seriesDetails.seriesTitle
+				};
+				return formatTitle;
+			}
+
 			const map = values.mapDetails ? values.mapDetails : undefined;
+
 			const {
 				select,
 				selectFormat,
@@ -289,7 +297,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				...values,
 				publisher,
 				authors: formatAuthors,
-				seriesDetails: formatTitle,
+				seriesDetails: values.seriesDetails && formatTitle(),
 				formatDetails: formatDetail(),
 				type: pubType,
 				mapDetails: pubType === 'map' ? map : undefined
@@ -334,6 +342,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				const result = await publicationCreationRequest({values: values, subType: 'isbn-ismn'});
 				if (result === HttpStatus.CREATED) {
 					handleClose();
+					reset();
 				}
 			} else {
 				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
@@ -689,12 +698,6 @@ function getFieldArray() {
 		},
 		{
 			publishingActivities: [
-				{
-					name: 'code',
-					type: 'text',
-					label: 'Code',
-					width: 'half'
-				},
 				{
 					name: 'publicationDetails[frequency]',
 					type: 'text',

@@ -165,6 +165,8 @@ export const publisherCreationRequest = values => async dispatch => {
 	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
 	}
+
+	return response.status;
 };
 
 export const fetchPublishersRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {

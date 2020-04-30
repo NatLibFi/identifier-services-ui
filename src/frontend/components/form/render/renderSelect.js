@@ -27,20 +27,26 @@
  */
 
 import React from 'react';
-import {PropTypes} from 'prop-types';
 import {Input, InputLabel, NativeSelect, FormControl, Box, Typography} from '@material-ui/core';
+import ErrorIcons from '@material-ui/icons/ErrorOutline';
 
-export default function ({
-	label,
-	input,
-	name,
-	options,
-	className,
-	defaultValue,
-	disabled,
-	meta: {touched, error},
-	publicationValues,
-	clearFields}) {
+import useStyles from '../../../styles/error';
+
+export default function (props) {
+	const classes = useStyles();
+	const {
+		label,
+		input,
+		name,
+		options,
+		className,
+		defaultValue,
+		disabled,
+		publicationValues,
+		clearFields
+	} = props;
+	const {meta: {touched, error}} = props;
+
 	const component = (
 		<>
 			<FormControl className={className} error={touched && error} disabled={disabled}>
@@ -64,20 +70,15 @@ export default function ({
 					}
 				</NativeSelect>
 			</FormControl>
-			{touched && error && <Box mt={2}><Typography color="error">{error}</Typography></Box>}
+			{touched && error &&
+				<Box mt={2}>
+					<Typography variant="caption" color="error" className={classes.selectErrors}><ErrorIcons fontSize="inherit"/>{error}</Typography>
+				</Box>
+			}
 		</>
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			meta: {},
-			input: {}
-		},
-		propTypes: {
-			input: PropTypes.shape({}),
-			label: PropTypes.string.isRequired,
-			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
-		}
+		...component
 	};
 }

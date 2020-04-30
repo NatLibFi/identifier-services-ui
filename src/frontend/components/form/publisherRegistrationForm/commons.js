@@ -5,7 +5,6 @@ import renderTextField from '../render/renderTextField';
 import renderAliases from '../render/renderAliases';
 import renderSelect from '../render/renderSelect';
 import renderDateTime from '../render/renderDateTime';
-import renderFieldArray from '../render/renderFieldArray';
 import renderRadioButton from '../render/renderRadioButton';
 import renderCheckbox from '../render/renderCheckbox';
 import renderMultiSelect from '../render/renderMultiSelect';
@@ -56,8 +55,12 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								props={{publicationValues: publicationIssnValues || publicationIsbnValues, clearFields}}
 							/>
 						</Grid>
-						{publicationIssnValues && publicationIssnValues.formatDetails &&
-						publicationIssnValues.formatDetails.format === 'electronic' ? element({array: getUrl(), classes, clearFields}) : null}
+						{
+							publicationIssnValues && publicationIssnValues.formatDetails &&
+							(publicationIssnValues.formatDetails.format === 'electronic' || publicationIssnValues.formatDetails.format === 'printed-and-electronic') ?
+								element({array: getUrl(), classes, clearFields}) :
+								null
+						}
 					</>
 				);
 			case 'multiSelect':
@@ -68,7 +71,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								className={`${classes.selectField} ${list.width}`}
 								component={renderMultiSelect}
 								label={list.label}
-								infoIconComponent={<PopoverComponent icon={<HelpIcon/>} infoText={getClassificationInstruction()}/>}
+								infoIconComponent={list.name === 'classification' && <PopoverComponent icon={<HelpIcon/>} infoText={getClassificationInstruction()}/>}
 								name={list.name}
 								type={list.type}
 								options={list.options}
@@ -183,7 +186,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 export function fieldArrayElement({data, fieldName, clearFields, formName}) {
 	const comp = (
 		<FieldArray
-			component={fieldName === 'authors' ? renderFieldArray : renderContactDetail}
+			component={renderContactDetail}
 			name={fieldName}
 			props={{clearFields, data, fieldName, formName}}
 		/>
