@@ -34,6 +34,10 @@ const useStyles = makeStyles({
 		position: 'absolute',
 		padding: 0,
 		right: 0
+	},
+	selectErrors: {
+		padding: 0,
+		position: 'absolute'
 	}
 
 });

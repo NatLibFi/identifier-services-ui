@@ -31,6 +31,7 @@ import {reduxForm, getFormValues} from 'redux-form';
 import {Button, Grid, Stepper, Step, StepLabel, Typography, List, ListItem} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
+import HttpStatus from 'http-status';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
@@ -50,6 +51,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				public: false
 			}
 	},
+	destroyOnUnmount: false,
 	validate
 })(
 	props => {
@@ -69,7 +71,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			handleClose,
 			setMessage,
-			setIsCreating
+			setIsCreating,
+			reset
 		} = props;
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
@@ -127,11 +130,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				publisherCreationRequest(formatPublisher(values));
 				setIsCreating(true);
 				handleClose();
+				reset();
 			} else if (captchaInput.length === 0) {
 				setMessage({color: 'error', msg: 'Captcha not provided'});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
-				makeNewPublisherObj(values, result);
+				await makeNewPublisherObj(values, result);
 			}
 		};
 
@@ -139,11 +143,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			handleSetPublisher(formatPublisher(publisherValues));
 		}
 
-		function makeNewPublisherObj(values, result) {
+		async function makeNewPublisherObj(values, result) {
 			const newPublisher = formatPublisher(values);
 			if (result === true) {
-				publisherCreationRequest(newPublisher);
-				handleClose();
+				const result = await publisherCreationRequest(newPublisher);
+				if (result === HttpStatus.CREATED) {
+					handleClose();
+					reset();
+				}
 			} else {
 				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
 				loadSvgCaptcha();
