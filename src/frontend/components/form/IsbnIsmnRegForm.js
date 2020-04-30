@@ -933,10 +933,10 @@ function getFieldArray() {
 					label: 'Classification',
 					options: [
 						{label: '', value: ''},
-						{label: 'Non-Fiction', value: 'non-fiction'},
-						{label: 'Fiction', value: 'fiction'},
-						{label: 'Cartoon', value: 'cartoon'},
-						{label: 'Children Book', value: 'children-book'}
+						{label: 'Non-Fiction', value: '1'},
+						{label: 'Fiction', value: '2'},
+						{label: 'Cartoon', value: '3'},
+						{label: 'Children Book', value: '4'}
 					]
 				},
 				{
