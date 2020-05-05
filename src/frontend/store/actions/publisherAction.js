@@ -29,7 +29,7 @@
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
+import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST, UNIVERSITY_PUBLISHER} from './types';
 import {setLoader, setListLoader, setMessage, success, fail} from './commonAction';
 import HttpStatus from 'http-status';
 
@@ -130,6 +130,28 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 	}
 };
 
+export const getUniversityPublisher = () => async dispatch => {
+	dispatch(setListLoader());
+	const query = {type: 'university'};
+	try {
+		const response = await fetch(`${API_URL}/publishers/query`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				queries: [{
+					query: query
+				}]
+			})
+		});
+		const result = await response.json();
+		dispatch(success(UNIVERSITY_PUBLISHER, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
 // ****************REQUESTS**********************************
 export const publisherCreationRequest = values => async dispatch => {
 	const response = await fetch('/requests/publishers', {
@@ -140,9 +162,11 @@ export const publisherCreationRequest = values => async dispatch => {
 		credentials: 'same-origin',
 		body: JSON.stringify(values)
 	});
-	if (response.status === HttpStatus.OK) {
+	if (response.status === HttpStatus.CREATED) {
 		dispatch(setMessage({color: 'success', msg: 'Registration request sent successfully'}));
 	}
+
+	return response.status;
 };
 
 export const fetchPublishersRequestsList = ({searchText, token, sortStateBy, offset}) => async dispatch => {

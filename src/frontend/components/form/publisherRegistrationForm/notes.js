@@ -25,38 +25,13 @@
  * for the JavaScript code in this file.
  *
  */
-import 'date-fns';
-import React from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import {
-	MuiPickersUtilsProvider,
-	KeyboardDatePicker
-} from '@material-ui/pickers';
 
-export default function MaterialUIPickers(props) {
-	const {input, className} = props;
+const notes = [
+	'The ISBN must appear on all the publications published.',
+	'The ISBN should be printed as advised on the ISBN Agency\'s website.',
+	'The publisher should keep a list of its publications sorted according to the ISBN number.',
+	'The publisher should send one copy of each publication immediately after its issue to the Finnish ISBN Agency.',
+	'The information for each publisher is published in the international database Global Register of Publishers and/or Music Publishers\' International ISMN Database. The information is also used by the Finnish ISBN Agency and published on its website.'
+];
 
-	const component = (
-		<MuiPickersUtilsProvider utils={DateFnsUtils}>
-			<>
-				<KeyboardDatePicker
-					{...input}
-					className={className}
-					margin="normal"
-					id="date-picker-dialog"
-					label="Publication date"
-					format="MM/dd/yyyy"
-					value={input.value || null}
-					KeyboardButtonProps={{
-						'aria-label': 'change date'
-					}}
-					onChange={value => input.onChange(value)}
-				/>
-			</>
-		</MuiPickersUtilsProvider>
-	);
-
-	return {
-		...component
-	};
-}
+module.exports = notes;

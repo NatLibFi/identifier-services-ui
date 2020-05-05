@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
 		marginTop: '15px'
 	},
 	dateTimePicker: {
-		width: '50%',
+		width: '100%',
 		marginTop: '0 !important'
 	},
 	paperRoot: {
@@ -154,11 +154,15 @@ const useStyles = makeStyles(theme => ({
 		margin: theme.spacing(0.5)
 	},
 	pubFormSelect: {
+		width: 600,
 		display: 'flex',
-		justifyContent: 'space-between',
 		flexDirection: 'column',
-		height: 100,
-		padding: '10px 20px'
+		alignItems: 'center',
+		'& button': {
+			height: 60,
+			width: 200,
+			margin: '20px 0px'
+		}
 	},
 
 	resetForm: {
@@ -169,6 +173,33 @@ const useStyles = makeStyles(theme => ({
 	usercreationSelect: {
 		display: 'flex',
 		justifyContent: 'center'
+	},
+	addBtn: {
+		padding: 8
+	},
+	popOver: {
+		display: 'flex',
+		alignItems: 'center'
+	},
+	notesContainer: {
+		background: '#f1eded'
+	},
+	notesList: {
+		borderBottom: 'none !important',
+		padding: 0
+	},
+	notes: {
+		fontSize: '10px'
+	},
+	typeSelect: {
+		width: 600,
+		height: 200,
+		display: 'flex',
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	pubSelect: {
+		width: 500
 	}
 }));
 

@@ -27,53 +27,57 @@
  */
 
 import React from 'react';
-import {PropTypes} from 'prop-types';
-import {Input, InputLabel, NativeSelect, FormControl} from '@material-ui/core';
+import {Input, InputLabel, NativeSelect, FormControl, Box, Typography} from '@material-ui/core';
+import ErrorIcons from '@material-ui/icons/ErrorOutline';
 
-export default function ({
-	label,
-	input,
-	name,
-	options,
-	className,
-	defaultValue,
-	meta: {touched, error},
-	publicationValues,
-	clearFields}) {
+import useStyles from '../../../styles/error';
+
+export default function (props) {
+	const classes = useStyles();
+	const {
+		label,
+		input,
+		name,
+		options,
+		className,
+		defaultValue,
+		disabled,
+		publicationValues,
+		clearFields
+	} = props;
+	const {meta: {touched, error}} = props;
+
 	const component = (
-		<FormControl className={className}>
-			<InputLabel htmlFor="language-helper">{label}</InputLabel>
-			<NativeSelect
-				{...input}
-				error={touched && Boolean(error)}
-				input={<Input name={name} id="language-helper"/>}
-				value={input.value}
-				onChange={value => {
-					input.onChange(value);
-					if (publicationValues && publicationValues.type !== value) {
-						clearFields(undefined, false, false, 'mapDetails[scale]');
+		<>
+			<FormControl className={className} error={touched && error} disabled={disabled}>
+				<InputLabel htmlFor="language-helper">{label}</InputLabel>
+				<NativeSelect
+					{...input}
+					error={touched && error}
+					input={<Input name={name} id="language-helper"/>}
+					value={input.value}
+					onChange={value => {
+						input.onChange(value);
+						if (publicationValues && publicationValues.type !== value) {
+							clearFields(undefined, false, false, 'formatDetails[url]');
+						}
+					}}
+				>
+					{
+						options.map(item =>
+							<option key={item.value} defaultValue={defaultValue} value={item.value}>{item.label}</option>
+						)
 					}
-				}}
-			>
-				{
-					options.map(item =>
-						<option key={item.value} defaultValue={defaultValue} value={item.value}>{item.label}</option>
-					)
-				}
-			</NativeSelect>
-		</FormControl>
+				</NativeSelect>
+			</FormControl>
+			{touched && error &&
+				<Box mt={2}>
+					<Typography variant="caption" color="error" className={classes.selectErrors}><ErrorIcons fontSize="inherit"/>{error}</Typography>
+				</Box>}
+		</>
 	);
 
 	return {
-		...component,
-		defaultProps: {
-			meta: {},
-			input: {}
-		},
-		propTypes: {
-			input: PropTypes.shape({}),
-			label: PropTypes.string.isRequired,
-			meta: PropTypes.shape({touched: PropTypes.bool, error: PropTypes.bool})
-		}
+		...component
 	};
 }

@@ -177,7 +177,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
-						<Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button>
+						{/* <Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button> */}
 
 						<Button disabled={publisherRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>Reject</Button>

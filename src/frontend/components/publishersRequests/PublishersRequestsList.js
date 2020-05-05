@@ -40,7 +40,7 @@ import useModalStyles from '../../styles/formList';
 import SearchComponent from '../SearchComponent';
 import TabComponent from '../TabComponent';
 import ModalLayout from '../ModalLayout';
-import PublisherRegistrationForm from '../form/PublisherRegistrationForm';
+import PublisherRegistrationForm from '../form/publisherRegistrationForm/PublisherRegistrationForm';
 import {commonStyles} from '../../styles/app';
 export default connect(mapStateToProps, actions)(props => {
 	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;

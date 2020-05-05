@@ -38,9 +38,6 @@ export default function (props) {
 		const Keys = Object.keys(publicationValues);
 		Keys.map(key => {
 			switch (key) {
-				case 'select':
-					return publicationValues && publicationValues.select !== value &&
-					clearFields(undefined, false, false, publicationValues.select);
 				case 'selectFormat':
 					return publicationValues && publicationValues.selectFormat !== value &&
 					Object.keys(publicationValues && publicationValues.formatDetails).map(item => clearFields(undefined, false, false, `formatDetails[${item}]`));

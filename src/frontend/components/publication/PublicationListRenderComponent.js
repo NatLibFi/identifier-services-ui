@@ -100,17 +100,17 @@ export default function (props) {
 	const component = (
 		<Grid>
 			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">List of Avaiable Publication</Typography>
+				<Typography variant="h5">List of Avaiable Publications</Typography>
 				{(role === 'publisher' || role === 'publisher-admin') && (
 					isbnIsmn ?
 						(
-							<ModalLayout form label="ISBN-ISMN Registration" title="ISBN-ISMN Registration" name="newIsbnIsmn" variant="outlined" classed={modalClasses.button} color="primary">
+							<ModalLayout form label="ISBN-ISMN Publication Form" title="Create ISBN-ISMN" name="newIsbnIsmn" variant="outlined" classed={modalClasses.button} color="primary">
 								<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
 							</ModalLayout>
 						) : (
 							issn ?
 								(
-									<ModalLayout form label="ISSN Registration" title="ISSN Registration" name="newIssn" variant="outlined" classed={modalClasses.button} color="primary">
+									<ModalLayout form label="ISSN Publication Form" title="Create ISSN" name="newIssn" variant="outlined" classed={modalClasses.button} color="primary">
 										<IssnRegForm setIsCreating={setIsCreating} {...props}/>
 									</ModalLayout>
 								) : null

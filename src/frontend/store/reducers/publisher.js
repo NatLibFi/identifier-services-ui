@@ -26,7 +26,15 @@
  *
  */
 
-import {PUBLISHERS_LIST, PUBLISHER, LOADER, LIST_LOADER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from '../actions/types';
+import {
+	PUBLISHERS_LIST,
+	PUBLISHER, LOADER,
+	LIST_LOADER, ERROR,
+	SEARCH_PUBLISHER,
+	PUBLISHERS_REQUESTS_LIST,
+	PUBLISHER_REQUEST,
+	UNIVERSITY_PUBLISHER
+} from '../actions/types';
 
 const initialState = {
 	publishersList: [],
@@ -35,6 +43,8 @@ const initialState = {
 
 	publishersRequestsList: [],
 	publisherRequest: {},
+
+	universityPublisher: [],
 
 	offset: null,
 	totalDoc: null,
@@ -83,6 +93,13 @@ export default function (state = initialState, action) {
 				...state,
 				publisherRequest: action.payload,
 				loading: false
+			};
+		case UNIVERSITY_PUBLISHER:
+			return {
+				...state,
+				universityPublisher: action.payload,
+				loading: false,
+				listLoading: false
 			};
 		case ERROR:
 			return {
