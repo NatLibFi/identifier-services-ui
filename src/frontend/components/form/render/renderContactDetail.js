@@ -91,7 +91,7 @@ export default connect(state => ({
 				affiliate.affiliatesCity !== undefined ||
 				affiliate.affiliatesZip !== undefined ||
 				affiliate.affiliatesName !== undefined)) {
-				const condition = affiliate.affiliatesAddress !== undefined && affiliate.affiliatesCity !== undefined && affiliate.affiliatesZip !== undefined && affiliate.affiliatesName !== undefined;
+				const condition = affiliate.affiliatesAddress && affiliate.affiliatesCity && affiliate.affiliatesZip && affiliate.affiliatesName;
 				if (values.affiliates) {
 					if (values.affiliates.some(item => item.affiliatesName === affiliate.affiliatesName)) {
 						setErrors('already exist');
@@ -114,7 +114,7 @@ export default connect(state => ({
 				author.role !== undefined ||
 				author.authorGivenName !== undefined ||
 				author.authorFamilyName !== undefined)) {
-				const condition = author.role !== undefined && author.authorGivenName !== undefined && author.authorFamilyName !== undefined;
+				const condition = author.role && author.authorGivenName && author.authorFamilyName;
 				if (condition) {
 					fields.push(author);
 					clearFields(undefined, false, false, 'authorGivenName', 'authorFamilyName', 'role');

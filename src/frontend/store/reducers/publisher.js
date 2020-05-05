@@ -98,6 +98,7 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				universityPublisher: action.payload,
+				loading: false,
 				listLoading: false
 			};
 		case ERROR:

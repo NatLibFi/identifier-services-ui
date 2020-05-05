@@ -482,7 +482,7 @@ function getFieldArray() {
 								{label: 'Weekly', value: 'weekly'},
 								{label: 'Daily', value: 'daily'},
 								{label: 'Bi-Yearly', value: 'bi-yearly'},
-								{label: 'Quarterly', value: 'Quarterly'},
+								{label: 'Quarterly', value: 'quarterly'},
 								{label: 'Bi-Monthly', value: 'bi-monthly'},
 								{label: 'Continuously', value: 'continuously'},
 								{label: 'Irregular', value: 'irregular'}

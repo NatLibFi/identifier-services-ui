@@ -24,7 +24,7 @@ export default function (props) {
 	function renderSwitch(value) {
 		switch (typeof value) {
 			case undefined:
-				return null;
+				return undefined;
 			case 'string':
 			case 'number':
 				return (

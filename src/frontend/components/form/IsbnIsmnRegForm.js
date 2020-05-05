@@ -68,7 +68,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreation,
 			publicationCreationRequest,
-			listLoading,
 			getUniversityPublisher,
 			universityPublisher,
 			setMessage,
@@ -105,12 +104,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		useEffect(() => {
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
+				getUniversityPublisher();
 			}
 		}, [isAuthenticated, loadSvgCaptcha]);
-
-		useEffect(() => {
-			getUniversityPublisher();
-		}, []);
 
 		function getStepContent(step) {
 			if (isAuthenticated) {
@@ -231,7 +227,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function formatPublicationValues(values) {
 			const dissertPublisher = !isAuthenticated && (pubType === 'dissertation' ?
-				values.universityName.id || {university: values.universityName, city: values.universityCity} :
+				(values.university && values.university.id) || {university: values.universityName, city: values.universityCity} :
 				{
 					name: values.name,
 					postalAddress: values.postalAddress,
@@ -290,6 +286,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				distributor,
 				publicationDetails,
 				insertUniversity,
+				university,
 				universityName,
 				universityCity,
 				...formattedPublicationValue
@@ -420,13 +417,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							name: 'universityName',
 							type: 'text',
 							label: 'University Name *',
-							width: 'full'
+							width: 'full',
+							disable: publicationValues && typeof publicationValues.university === 'object' && true
 						},
 						{
 							name: 'universityCity',
 							type: 'text',
 							label: 'City *',
-							width: 'full'
+							width: 'full',
+							disable: publicationValues && typeof publicationValues.university === 'object' && true
 						}
 					]
 				}
@@ -436,22 +435,21 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function searchPublisherComponent() {
-			const publisher = universityPublisher.results.map(item => {
+			const publisher = universityPublisher && universityPublisher.results.map(item => {
 				return {
 					id: item.id,
 					title: item.name
 				};
 			});
-
 			return [
 				{
-					name: 'universityName',
+					name: 'university',
 					type: 'selectAutoComplete',
 					label: 'Select University/Publisher',
 					width: 'full',
 					placeholder: 'Select University/Publisher',
 					showCheckbox: true,
-					options: listLoading ? 'loading...' : publisher
+					options: publisher
 				}
 			];
 		}
@@ -614,7 +612,6 @@ function mapStateToProps(state) {
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
 		universityPublisher: state.publisher.universityPublisher,
-		listLoading: state.publisher.listLoading,
 		publicationValues: getFormValues('isbnIsmnRegForm')(state)
 	});
 }

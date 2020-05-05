@@ -117,6 +117,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 							label={list.label}
 							name={list.name}
 							type={list.type}
+							disabled={list.disable}
 						/>
 					</Grid>
 
