@@ -224,7 +224,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function formatPublicationValues(values) {
 			const dissertPublisher = !isAuthenticated && (pubType === 'dissertation' ?
-				(values.university && values.university.id) || {university: values.universityName, city: values.universityCity} :
+				(values.university && values.university.id) || {universityName: values.universityName, universityCity: values.universityCity} :
 				{
 					name: values.name,
 					postalAddress: values.postalAddress,
@@ -434,9 +434,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				{
 					name: 'university',
 					type: 'selectAutoComplete',
-					label: 'Select University/Publisher',
+					label: 'Select University',
 					width: 'full',
-					placeholder: 'Select University/Publisher',
+					placeholder: 'Select University',
 					showCheckbox: true,
 					options: [
 						{title: 'Helsinki Univesity', id: 'eng'},
