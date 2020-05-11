@@ -83,7 +83,7 @@ const ContactForm = ({handleSubmit}) => {
 					color="primary"
 					type="submit"
 				>
-				Submit
+					Submit
 				</Button>
 			</FormGroup>
 		</form>

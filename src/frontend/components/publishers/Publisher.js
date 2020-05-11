@@ -242,7 +242,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>Cancel</Button>
 							<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
-                            UPDATE
+								UPDATE
 							</Button>
 						</div>
 					</form>

@@ -29,7 +29,7 @@
 /* global API_URL */
 /* eslint no-undef: "error" */
 import fetch from 'node-fetch';
-import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST, UNIVERSITY_PUBLISHER} from './types';
+import {PUBLISHER, ERROR, SEARCH_PUBLISHER, PUBLISHERS_REQUESTS_LIST, PUBLISHER_REQUEST} from './types';
 import {setLoader, setListLoader, setMessage, success, fail} from './commonAction';
 import HttpStatus from 'http-status';
 
@@ -125,28 +125,6 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 
 		const result = await response.json();
 		dispatch(success(SEARCH_PUBLISHER, result));
-	} catch (err) {
-		dispatch(fail(ERROR, err));
-	}
-};
-
-export const getUniversityPublisher = () => async dispatch => {
-	dispatch(setListLoader());
-	const query = {type: 'university'};
-	try {
-		const response = await fetch(`${API_URL}/publishers/query`, {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({
-				queries: [{
-					query: query
-				}]
-			})
-		});
-		const result = await response.json();
-		dispatch(success(UNIVERSITY_PUBLISHER, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

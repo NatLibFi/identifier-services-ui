@@ -300,7 +300,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							startIcon={<ArrowBackIosIcon/>}
 							onClick={handleRange}
 						>
-								Back
+							Back
 						</Button>
 						{displayRanges(rangeType)}
 					</div> :

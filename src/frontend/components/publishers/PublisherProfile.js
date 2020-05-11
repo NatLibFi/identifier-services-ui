@@ -150,7 +150,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<Grid item className={commonStyle.btnContainer} xs={12} md={3}>
 								<Button onClick={handleCancel}>Cancel</Button>
 								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
-								UPDATE
+									UPDATE
 								</Button>
 							</Grid>
 						</Grid>

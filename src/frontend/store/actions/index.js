@@ -34,8 +34,7 @@ export {
 	publisherCreationRequest,
 	fetchPublishersRequestsList,
 	fetchPublisherRequest,
-	updatePublisherRequest,
-	getUniversityPublisher
+	updatePublisherRequest
 } from './publisherAction';
 
 export {

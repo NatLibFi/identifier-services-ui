@@ -68,8 +68,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			isAuthenticated,
 			publicationCreation,
 			publicationCreationRequest,
-			getUniversityPublisher,
-			universityPublisher,
 			setMessage,
 			handleClose,
 			setIsCreating,
@@ -104,7 +102,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		useEffect(() => {
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
-				getUniversityPublisher();
 			}
 		}, [isAuthenticated, loadSvgCaptcha]);
 
@@ -239,7 +236,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					primaryContact: values.primaryContact,
 					code: values.code && values.code,
 					classification: values.classification.map(item => item.value.toString()),
-					publisherType: values.publisherType,
 					organizationDetails: {
 						affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
 						affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
@@ -279,7 +275,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				primaryContact,
 				code,
 				classification,
-				publisherType,
 				affiliateOf,
 				affiliates,
 				distributorOf,
@@ -435,12 +430,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function searchPublisherComponent() {
-			const publisher = universityPublisher && universityPublisher.results.map(item => {
-				return {
-					id: item.id,
-					title: item.name
-				};
-			});
 			return [
 				{
 					name: 'university',
@@ -449,7 +438,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					width: 'full',
 					placeholder: 'Select University/Publisher',
 					showCheckbox: true,
-					options: publisher
+					options: [
+						{title: 'Helsinki Univesity', id: 'eng'},
+						{title: 'Alto', id: 'fin'}
+					]
 				}
 			];
 		}
@@ -505,17 +497,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 							<div className={classes.btnContainer}>
 								<Button onClick={handleBack}>
-											Back
+									Back
 								</Button>
 								{activeStep === steps.length - 1 ?
 									null :
 									<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-												Next
+										Next
 									</Button>}
 								{
 									activeStep === steps.length - 1 &&
 										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-													Submit
+											Submit
 										</Button>
 								}
 							</div>
@@ -611,7 +603,6 @@ function mapStateToProps(state) {
 		captcha: state.common.captcha,
 		user: state.login.userInfo,
 		isAuthenticated: state.login.isAuthenticated,
-		universityPublisher: state.publisher.universityPublisher,
 		publicationValues: getFormValues('isbnIsmnRegForm')(state)
 	});
 }
@@ -672,17 +663,6 @@ function getFieldArray() {
 						{label: 'English (Default Language)', value: 'eng'},
 						{label: 'Suomi', value: 'fin'},
 						{label: 'Svenska', value: 'swe'}
-					]
-				},
-				{
-					name: 'publisherType',
-					type: 'select',
-					label: 'Select Type of Publisher *',
-					width: 'half',
-					options: [
-						{label: '', value: ''},
-						{label: 'University', value: 'university'},
-						{label: 'Other', value: 'other'}
 					]
 				},
 				{
