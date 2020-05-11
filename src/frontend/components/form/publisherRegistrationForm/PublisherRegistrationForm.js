@@ -35,6 +35,7 @@ import HttpStatus from 'http-status';
 import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
+import ResetCaptchaButton from '../ResetCaptchaButton';
 import ListComponent from '../../ListComponent';
 import Captcha from '../../Captcha';
 import {fieldArray} from './formFieldVariable';
@@ -195,7 +196,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 						{(!publicationRegistration &&
 							activeStep === steps.length - 1) &&
-								<Grid item xs={12}>
+								<Grid item xs={12} className={classes.captchaContainer}>
 									{isAuthenticated ? null : (
 										<>
 											<Captcha
@@ -204,6 +205,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 												className={classes.captcha}/>
 											{/* eslint-disable-next-line react/no-danger */}
 											<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+											<ResetCaptchaButton loadSvgCaptcha={loadSvgCaptcha}/>
 										</>
 									)}
 								</Grid>}

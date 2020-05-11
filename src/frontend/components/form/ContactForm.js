@@ -34,6 +34,7 @@ import {validate} from '@natlibfi/identifier-services-commons';
 import {connect} from 'react-redux';
 
 import renderTextField from './render/renderTextField';
+import ResetCaptchaButton from './ResetCaptchaButton';
 import renderTextArea from './render/renderTextArea';
 import useStyles from '../../styles/form';
 import * as actions from '../../store/actions';
@@ -138,7 +139,7 @@ export default connect(mapToProps, actions)(reduxForm({
 								</Grid>
 						))
 					}
-					<Grid item xs={12}>
+					<Grid item xs={12} className={classes.captchaContainer}>
 						{isAuthenticated ? null : (
 							<>
 								<Captcha
@@ -147,6 +148,7 @@ export default connect(mapToProps, actions)(reduxForm({
 									className={classes.captcha}/>
 								{/* eslint-disable-next-line react/no-danger */}
 								<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+								<ResetCaptchaButton loadSvgCaptcha={loadSvgCaptcha}/>
 							</>
 						)}
 					</Grid>
