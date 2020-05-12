@@ -175,17 +175,6 @@ export const fieldArray = [
 				]
 			},
 			{
-				name: 'publisherType',
-				type: 'select',
-				label: 'Select Type of Publisher *',
-				width: 'half',
-				options: [
-					{label: '', value: ''},
-					{label: 'University', value: 'university'},
-					{label: 'Other', value: 'other'}
-				]
-			},
-			{
 				name: 'postalAddress[public]',
 				type: 'checkbox',
 				label: 'Public',

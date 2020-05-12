@@ -33,9 +33,7 @@ import {Button, Grid, Stepper, Step, StepLabel, Typography, List, FormControl, I
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
-
 import * as actions from '../../store/actions';
-import ResetCaptchaButton from './RangeCreationForm';
 import useStyles from '../../styles/form';
 import Captcha from '../Captcha';
 import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';
@@ -162,14 +160,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
 							element({array: searchPublisherComponent(), classes});
 					case 1:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+						return element({array: fieldArray[5].contactInfo, classes});
 					case 2:
-						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+						return element({array: fieldArray[6].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 3:
-						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+						return withFormTitle({arr: fieldArray[7].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 4:
-						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+						return withFormTitle({arr: fieldArray[8].Series, publicationValues, clearFields});
 					case 5:
+						return element({array: fieldArray[9].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+					case 6:
 						return renderPreview(publicationValues);
 					default:
 						return 'Unknown step';
@@ -229,7 +229,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function formatPublicationValues(values) {
 			const dissertPublisher = !isAuthenticated && (pubType === 'dissertation' ?
-				(values.university && values.university.id) || {university: values.universityName, city: values.universityCity} :
+				{
+					firstName: values.firstName,
+					lastName: values.lastName,
+					address: values.address,
+					postCode: values.postCode,
+					city: values.city,
+					country: values.country,
+					telephone: values.telephone,
+					contactEmail: values.contactEmail,
+					universityName: values.universityName || values.university.title,
+					universityCity: values.universityCity || values.university.city} :
 				{
 					name: values.name,
 					postalAddress: values.postalAddress,
@@ -241,7 +251,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					primaryContact: values.primaryContact,
 					code: values.code && values.code,
 					classification: values.classification.map(item => item.value.toString()),
-					publisherType: values.publisherType,
 					organizationDetails: {
 						affiliateOf: values.affiliateOf && formatAddress(values.affiliateOf),
 						affiliates: values.affiliates && values.affiliates.map(item => formatAddress(item)),
@@ -281,7 +290,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				primaryContact,
 				code,
 				classification,
-				publisherType,
 				affiliateOf,
 				affiliates,
 				distributorOf,
@@ -289,6 +297,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				publicationDetails,
 				insertUniversity,
 				university,
+				firstName,
+				lastName,
+				address,
+				postCode,
+				city,
+				country,
+				telephone,
+				contactEmail,
 				universityName,
 				universityCity,
 				...formattedPublicationValue
@@ -440,7 +456,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const publisher = universityPublisher && universityPublisher.results.map(item => {
 				return {
 					id: item.id,
-					title: item.name
+					title: item.universityName,
+					city: item.universityCity
 				};
 			});
 			return [
@@ -491,7 +508,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 								{
 									activeStep === steps.length - 1 &&
-										<Grid item xs={12} className={classes.captchaContainer}>
+										<Grid item xs={12}>
 											{isAuthenticated ? null : (
 												<>
 													<Captcha
@@ -500,7 +517,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 														className={classes.captcha}/>
 													{/* eslint-disable-next-line react/no-danger */}
 													<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
-													<ResetCaptchaButton loadSvgCaptcha={loadSvgCaptcha}/>
 												</>
 											)}
 										</Grid>
@@ -508,17 +524,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 							<div className={classes.btnContainer}>
 								<Button onClick={handleBack}>
-											Back
+									Back
 								</Button>
 								{activeStep === steps.length - 1 ?
 									null :
 									<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-												Next
+										Next
 									</Button>}
 								{
 									activeStep === steps.length - 1 &&
 										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-													Submit
+											Submit
 										</Button>
 								}
 							</div>
@@ -650,7 +666,7 @@ function getFieldArray() {
 				{
 					name: 'phone',
 					type: 'text',
-					label: 'Phone',
+					label: 'Phone*',
 					width: 'half'
 				},
 				{
@@ -675,17 +691,6 @@ function getFieldArray() {
 						{label: 'English (Default Language)', value: 'eng'},
 						{label: 'Suomi', value: 'fin'},
 						{label: 'Svenska', value: 'swe'}
-					]
-				},
-				{
-					name: 'publisherType',
-					type: 'select',
-					label: 'Select Type of Publisher *',
-					width: 'half',
-					options: [
-						{label: '', value: ''},
-						{label: 'University', value: 'university'},
-						{label: 'Other', value: 'other'}
 					]
 				},
 				{
@@ -889,6 +894,58 @@ function getFieldArray() {
 							width: 'half'
 						}
 					]
+				}
+			]
+		},
+		{
+			contactInfo: [
+				{
+					name: 'firstName',
+					type: 'text',
+					label: 'First Name*',
+					width: 'half'
+				},
+				{
+					name: 'lastName',
+					type: 'text',
+					label: 'Last Name*',
+					width: 'half'
+				},
+				{
+					name: 'address',
+					type: 'text',
+					label: 'Address*',
+					width: 'half'
+				},
+				{
+					name: 'postCode',
+					type: 'text',
+					label: 'Postcode/zip*',
+					width: 'half'
+				},
+				{
+					name: 'city',
+					type: 'text',
+					label: 'City*',
+					width: 'half'
+				},
+				{
+					name: 'country',
+					type: 'text',
+					label: 'Country*',
+					width: 'half'
+				},
+				{
+					name: 'telephone',
+					type: 'text',
+					label: 'Telephone/Mobile',
+					width: 'half'
+				},
+				{
+					name: 'contactEmail',
+					type: 'text',
+					label: 'Contact email*',
+					width: 'half'
 				}
 			]
 		},
