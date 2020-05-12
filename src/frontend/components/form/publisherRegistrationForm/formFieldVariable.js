@@ -147,7 +147,7 @@ export const fieldArray = [
 			{
 				name: 'phone',
 				type: 'text',
-				label: 'Phone*',
+				label: 'Phone',
 				width: 'half'
 			},
 			{

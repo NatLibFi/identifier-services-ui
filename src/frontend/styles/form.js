@@ -45,6 +45,15 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 		padding: '0 20px'
 	},
+	captchaContainer: {
+		display: 'flex',
+		alignItems: 'center',
+		'& button': {
+			fontWeight: 600,
+			color: theme.palette.primary.main,
+			textTransform: 'Capitalize'
+		}
+	},
 	btnContainer: {
 		marginTop: 35,
 		'& button': {
