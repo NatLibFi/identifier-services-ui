@@ -138,15 +138,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						return orgDetail1({arr: fieldArray[3].organization, classes, fieldName: 'affiliates', clearFields});
 					case 4:
 						return orgDetail2({arr: fieldArray[4].organization, classes});
-					case 5:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 6:
-						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+						return element({array: fieldArray[6].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
 					case 7:
-						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+						return withFormTitle({arr: fieldArray[7].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 8:
-						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+						return withFormTitle({arr: fieldArray[8].Series, publicationValues, clearFields});
 					case 9:
+						return element({array: fieldArray[9].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+					case 10:
 						return renderPreview(publicationValues);
 					default:
 						return 'Unknown step';
