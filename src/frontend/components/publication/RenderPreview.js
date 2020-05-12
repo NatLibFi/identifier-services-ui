@@ -50,7 +50,7 @@ export default function (props) {
 		dataDetail = (
 			<Grid item xs={12}>
 				<Typography variant="h6">
-						Publication Details
+					Publication Details
 				</Typography>
 				<List>
 					<Grid container xs={12}>

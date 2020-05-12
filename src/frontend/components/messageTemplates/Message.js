@@ -146,7 +146,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								color="primary"
 								onClick={handleSubmit(handleMessageUpdate)}
 							>
-							UPDATE
+								UPDATE
 							</Button>
 						</div>
 					</form>

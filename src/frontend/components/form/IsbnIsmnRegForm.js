@@ -35,6 +35,7 @@ import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
 import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
+import ResetCaptchaButton from './ResetCaptchaButton';
 import Captcha from '../Captcha';
 import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';
 import {classificationCodes} from './publisherRegistrationForm/formFieldVariable';
@@ -508,7 +509,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 								{
 									activeStep === steps.length - 1 &&
-										<Grid item xs={12}>
+										<Grid item xs={12} className={classes.captchaContainer}>
 											{isAuthenticated ? null : (
 												<>
 													<Captcha
@@ -517,6 +518,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 														className={classes.captcha}/>
 													{/* eslint-disable-next-line react/no-danger */}
 													<span dangerouslySetInnerHTML={{__html: captcha.data}}/>
+													<ResetCaptchaButton loadSvgCaptcha={loadSvgCaptcha}/>
 												</>
 											)}
 										</Grid>
