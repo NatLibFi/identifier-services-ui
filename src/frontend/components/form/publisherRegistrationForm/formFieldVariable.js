@@ -197,9 +197,15 @@ export const fieldArray = [
 	{
 		publishingActivities: [
 			{
-				name: 'publicationDetails[frequency]',
+				name: 'publicationDetails[frequency][currentYear]',
 				type: 'text',
-				label: 'Publication Estimate*',
+				label: 'Publication Estimate this Year*',
+				width: 'half'
+			},
+			{
+				name: 'publicationDetails[frequency][nextYear]',
+				type: 'text',
+				label: 'Publication Estimate next Year*',
 				width: 'half'
 			},
 			{

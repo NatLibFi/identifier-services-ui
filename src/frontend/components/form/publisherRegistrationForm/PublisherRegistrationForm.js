@@ -171,7 +171,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				...rest,
 				organizationDetails: organizationDetails && organizationDetails,
 				classification: newClassification,
-				publicationDetails: {...publicationDetails, frequency: Number(Object.values(publicationDetails))}
+				publicationDetails: {...publicationDetails, frequency: {currentYear: Number(publicationDetails.frequency.currentYear), nextYear: Number(publicationDetails.frequency.nextYear)}}
 			};
 			return newPublisher;
 		}
