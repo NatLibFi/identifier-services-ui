@@ -35,7 +35,7 @@ import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
 
 import * as actions from '../../store/actions';
-import ResetCaptchaButton from './RangeCreationForm';
+import ResetCaptchaButton from './ResetCaptchaButton';
 import useStyles from '../../styles/form';
 import Captcha from '../Captcha';
 import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';

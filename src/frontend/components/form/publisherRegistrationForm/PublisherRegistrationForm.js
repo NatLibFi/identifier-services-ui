@@ -28,18 +28,16 @@
 import React, {useState, useEffect} from 'react';
 import {connect} from 'react-redux';
 import {reduxForm, getFormValues} from 'redux-form';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List, ListItem} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
-import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 
 import useStyles from '../../../styles/form';
 import ResetCaptchaButton from '../ResetCaptchaButton';
 import ListComponent from '../../ListComponent';
 import Captcha from '../../Captcha';
 import {fieldArray} from './formFieldVariable';
-import notes from './notes';
 import * as actions from '../../../store/actions';
 import {element, fieldArrayElement, formatAddress, formatLabel} from './commons';
 
@@ -190,7 +188,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					))}
 				</Stepper>
 				<div className={classes.subContainer}>
-					{activeStep === 0 && renderNotes()}
 					<Grid container spacing={2} direction="row">
 						{(getStepContent(activeStep))}
 
@@ -319,22 +316,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</List>
 					</Grid>
 				</>
-			);
-		}
-
-		function renderNotes() {
-			return (
-				<div className={classes.notesContainer}>
-					<Typography className={classes.notes}>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
-					<List>
-						{notes.map(item => (
-							<ListItem key={item} className={classes.notesList}>
-								<ArrowRightAltIcon/>
-								<Typography className={classes.notes}>{item}</Typography>
-							</ListItem>
-						))}
-					</List>
-				</div>
 			);
 		}
 

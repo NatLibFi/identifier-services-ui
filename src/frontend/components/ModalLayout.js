@@ -38,7 +38,7 @@ import useStyles from '../styles/modalLayout';
 import AlertDialogs from './AlertDialogs';
 
 export default connect(mapStateToProps)(withRouter(props => {
-	const {label, name, children, icon, fab, variant, color, classed, isTableRow, form, title, dynamicTitle, setDynamicTitle, setPwd, modal, setModal} = props;
+	const {label, name, children, icon, fab, variant, color, setInformation, classed, isTableRow, form, title, dynamicTitle, setDynamicTitle, setPwd, modal, setModal} = props;
 	const classes = useStyles();
 	const [openModal, setOpen] = useState(false);
 	const [message, setMessage] = useState(null);
@@ -62,6 +62,7 @@ export default connect(mapStateToProps)(withRouter(props => {
 	function handleClose() {
 		setOpen(false);
 		setAgree(null);
+		setInformation(true);
 		if (title === 'Forgot Password ?') {
 			setPwd(false);
 		}
