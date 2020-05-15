@@ -35,7 +35,7 @@ import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
 
 import * as actions from '../../store/actions';
-import ResetCaptchaButton from './RangeCreationForm';
+import ResetCaptchaButton from './ResetCaptchaButton';
 import useStyles from '../../styles/form';
 import Captcha from '../Captcha';
 import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';
@@ -508,17 +508,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 							<div className={classes.btnContainer}>
 								<Button onClick={handleBack}>
-											Back
+									Back
 								</Button>
 								{activeStep === steps.length - 1 ?
 									null :
 									<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-												Next
+										Next
 									</Button>}
 								{
 									activeStep === steps.length - 1 &&
 										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-													Submit
+											Submit
 										</Button>
 								}
 							</div>
