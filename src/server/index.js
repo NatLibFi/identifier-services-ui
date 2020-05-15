@@ -102,7 +102,8 @@ app.get('/captcha', (req, res) => {
 	captcha = svgCaptcha.createMathExpr({
 		mathMin: 1,
 		mathMax: 9,
-		mathOperator: '+-'
+		mathOperator: '+-',
+		noise: 0
 	});
 	captcha.id = uuidv4();
 	const {text, ...captchaWithoutText} = captcha;
