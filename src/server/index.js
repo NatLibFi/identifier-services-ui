@@ -135,7 +135,6 @@ app.post('/auth', async (req, res) => {
 		res.cookie(COOKIE_NAME, token, {maxAge: TOKEN_MAX_AGE, secure: false});
 		res.status(HttpStatus.OK).json(token);
 	}
-
 });
 
 // =====> TO BE DELETED LATER <======
