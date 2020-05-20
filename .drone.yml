@@ -22,11 +22,6 @@ steps:
       from_secret: docker_username
     password:
       from_secret: docker_password
-  when:
-    branch: [dev]
-    event: [push]
-trigger:
-  event: [push]
 ---
 kind: secret
 name: docker_username

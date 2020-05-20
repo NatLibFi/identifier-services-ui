@@ -512,17 +512,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Grid>
 							<div className={classes.btnContainer}>
 								<Button onClick={handleBack}>
-											Back
+									Back
 								</Button>
 								{activeStep === steps.length - 1 ?
 									null :
 									<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-												Next
+										Next
 									</Button>}
 								{
 									activeStep === steps.length - 1 &&
 										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-													Submit
+											Submit
 										</Button>
 								}
 							</div>

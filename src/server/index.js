@@ -99,9 +99,10 @@ let captchaList = [];
 let captcha;
 
 app.get('/captcha', (req, res) => {
-	captcha = svgCaptcha.create({
-		size: 6,
-		noise: 4
+	captcha = svgCaptcha.createMathExpr({
+		mathMin: 1,
+		mathMax: 9,
+		mathOperator: '+-'
 	});
 	captcha.id = uuidv4();
 	const {text, ...captchaWithoutText} = captcha;
