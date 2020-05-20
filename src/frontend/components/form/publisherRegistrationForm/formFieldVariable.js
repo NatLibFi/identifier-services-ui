@@ -173,24 +173,6 @@ export const fieldArray = [
 					{label: 'Suomi', value: 'fin'},
 					{label: 'Svenska', value: 'swe'}
 				]
-			},
-			{
-				name: 'publisherType',
-				type: 'select',
-				label: 'Select Type of Publisher *',
-				width: 'half',
-				options: [
-					{label: '', value: ''},
-					{label: 'University', value: 'university'},
-					{label: 'Other', value: 'other'}
-				]
-			},
-			{
-				name: 'postalAddress[public]',
-				type: 'checkbox',
-				label: 'Public',
-				width: 'half',
-				info: 'Check to make your postal address available to public.'
 			}
 		]
 	},
