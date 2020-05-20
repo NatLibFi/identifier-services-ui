@@ -47,7 +47,7 @@ export default withRouter(props => {
 			title: 'Publisher Registration',
 			name: 'publisherRegistration',
 			component: information ?
-				<RenderInformation setInformation={setInformation} {...props}/> :
+				<RenderInformation information setInformation={setInformation} {...props}/> :
 				<PublisherRegistrationForm setInformation={setInformation} {...props}/>
 		},
 		{
