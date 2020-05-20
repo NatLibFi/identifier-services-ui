@@ -280,7 +280,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		}
 
-
 		function orgDetail2({arr, classes, fieldName, clearFields}) {
 			const comp = (
 				<>
