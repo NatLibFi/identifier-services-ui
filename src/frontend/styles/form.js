@@ -201,11 +201,23 @@ const useStyles = makeStyles(theme => ({
 		fontSize: '10px'
 	},
 	typeSelect: {
-		width: 600,
-		height: 200,
+		width: 900,
+		height: 'auto',
 		display: 'flex',
 		justifyContent: 'center',
-		alignItems: 'center'
+		flexDirection: 'column',
+		padding: 20,
+		alignItems: 'center',
+		'& .select-useType': {
+			display: 'flex',
+			flexDirection: 'column'
+		},
+		'& h6': {
+			fontSize: 15
+		},
+		'& .note-txt': {
+			margin: '30px 0'
+		}
 	},
 	pubSelect: {
 		width: 500
