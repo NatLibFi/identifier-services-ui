@@ -172,9 +172,9 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								placeholder={list.placeholder}
 								label={list.label}
 								options={list.options}
+								disabled={list.disable}
 							/>
 						</Grid>
-						{list.showCheckbox && element({array: dissertCheckBox(), classes})}
 					</>
 				);
 
@@ -215,18 +215,6 @@ function getUrl() {
 			name: 'formatDetails[url]',
 			type: 'text',
 			width: 'half'
-		}
-	];
-}
-
-function dissertCheckBox() {
-	return [
-		{
-			name: 'insertUniversity',
-			type: 'checkbox',
-			label: 'Check if you do not find the university',
-			width: 'half',
-			info: 'You can enter university name and city which you did not find'
 		}
 	];
 }

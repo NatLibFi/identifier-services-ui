@@ -10,9 +10,9 @@ export default function (props) {
 		className,
 		disableClearable,
 		freeSolo,
-		placeholder
+		placeholder,
+		disabled
 	} = props;
-
 	const component = (
 		<>
 			{label && <Typography variant="h6">{label}</Typography>}
@@ -21,6 +21,7 @@ export default function (props) {
 				{...input}
 				disableClearable={!disableClearable}
 				freeSolo={!freeSolo}
+				disabled={disabled}
 				options={options}
 				getOptionLabel={option => option.title}
 				renderInput={params => (

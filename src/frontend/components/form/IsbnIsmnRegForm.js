@@ -29,7 +29,7 @@
 import React, {useState, useEffect} from 'react';
 import {reduxForm, getFormValues, Field} from 'redux-form';
 import {validate} from '@natlibfi/identifier-services-commons';
-import {Button, Grid, Stepper, Step, StepLabel, Typography, List, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
+import {Button, Grid, Stepper, Step, StepLabel, Typography, List} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {useCookies} from 'react-cookie';
 import HttpStatus from 'http-status';
@@ -37,7 +37,7 @@ import * as actions from '../../store/actions';
 import useStyles from '../../styles/form';
 import ResetCaptchaButton from './ResetCaptchaButton';
 import Captcha from '../Captcha';
-import {element, fieldArrayElement, formatAddress, formatLabel} from './publisherRegistrationForm/commons';
+import {element, fieldArrayElement, formatLabel} from './publisherRegistrationForm/commons';
 import ListComponent from '../ListComponent';
 import renderSelectAutoComplete from './render/renderSelectAutoComplete';
 
@@ -46,7 +46,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	initialValues: {
 		language: 'eng',
 		publisherLanguage: 'eng',
-		//isPublic: false,
 		insertUniversity: false
 	},
 	destroyOnUnmount: false,
@@ -78,12 +77,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const classes = useStyles();
 		const [activeStep, setActiveStep] = useState(0);
 		const [captchaInput, setCaptchaInput] = useState('');
-		const [pubType, setPubType] = useState(null);
 		const [typeSelect, setTypeSelect] = useState(true);
 		/* global COOKIE_NAME */
 		const [cookie] = useCookies(COOKIE_NAME);
 
-		if (pubType === 'map') {
+		if (publicationValues && publicationValues.type && publicationValues.type.value === 'map') {
 			fieldArray[4].basicInformation.push({
 				label: 'Scale',
 				name: 'mapDetails[scale]',
@@ -92,7 +90,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			});
 		}
 
-		if (pubType !== 'dissertation') {
+		if (publicationValues && publicationValues.type && publicationValues.type.value !== 'dissertation') {
 			fieldArray[4].basicInformation.push({
 				name: 'isbnClassification',
 				type: 'multiSelect',
@@ -106,7 +104,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					{label: 'Cartoon', value: 3},
 					{label: 'Children Book', value: 4}
 				]
-			})
+			});
 		}
 
 		const steps = getSteps(fieldArray, dissFieldArray);
@@ -122,13 +120,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			if (isAuthenticated) {
 				switch (step) {
 					case 0:
-						return element({array: fieldArray[5].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
 					case 1:
-						return withFormTitle({arr: fieldArray[6].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
+						return withFormTitle({arr: fieldArray[5].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 2:
-						return withFormTitle({arr: fieldArray[7].Series, publicationValues, clearFields});
+						return withFormTitle({arr: fieldArray[6].Series, publicationValues, clearFields});
 					case 3:
-						return element({array: fieldArray[8].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
+						return element({array: fieldArray[7].formatDetails, fieldName: 'formatDetails', publicationIsbnValues: publicationValues, classes, clearFields});
 					case 4:
 						return renderPreview(publicationValues);
 					default:
@@ -136,7 +134,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				}
 			}
 
-			if (!isAuthenticated && pubType !== 'dissertation') {
+			if (!isAuthenticated && publicationValues.type.value !== 'dissertation') {
 				switch (step) {
 					case 0:
 						return element({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
@@ -145,7 +143,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 2:
 						return fieldArrayElement({data: fieldArray[2].primaryContact, fieldName: 'primaryContact', clearFields});
 					case 3:
-						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
 					case 4:
 						return withFormTitle({arr: fieldArray[5].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 5:
@@ -159,16 +157,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				}
 			}
 
-			if (!isAuthenticated && pubType === 'dissertation') {
+			if (!isAuthenticated && publicationValues.type.value === 'dissertation') {
 				switch (step) {
 					case 0:
 						return publicationValues.insertUniversity ?
-							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
-							element({array: searchPublisherComponent(), classes});
+							<>{element({array: dissertCheckBox(), classes})}{element({array: dissFieldArray[0].UniversityInfo, classes})}</> :
+							<>{element({array: searchPublisherComponent(), classes})}{element({array: dissertCheckBox(), classes})}</>;
 					case 1:
 						return element({array: fieldArray[3].contactInfo, classes});
 					case 2:
-						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues, isbnPubType: pubType});
+						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
 					case 3:
 						return withFormTitle({arr: fieldArray[5].Authors, publicationValues, clearFields, formName: 'isbnIsmnRegForm'});
 					case 4:
@@ -183,8 +181,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			}
 		}
 
-		const handleTypeChange = e => {
-			setPubType(e.target.value);
+		const handleContinueClick = () => {
 			setTypeSelect(!typeSelect);
 		};
 
@@ -234,7 +231,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function formatPublicationValues(values) {
-			const dissertPublisher = !isAuthenticated && (pubType === 'dissertation' ?
+			const dissertPublisher = !isAuthenticated && (publicationValues.type.value === 'dissertation' ?
 				{
 					givenName: values.givenName,
 					familyName: values.familyName,
@@ -245,8 +242,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					phone: values.phone,
 					email: values.email,
 					university: {
-						name: values.university.name || values.university.title,
-						city: values.university.city || values.university.city
+						name: values.university.name || values.selectUniversity.title,
+						city: values.university.city || values.selectUniversity.place
 					}
 				} :
 				{
@@ -309,10 +306,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				authors: formatAuthors,
 				seriesDetails: values.seriesDetails && formatTitle(),
 				formatDetails: formatDetail(),
-				type: pubType,
+				type: values.type.value,
 				isPublic: values.isPublic.value,
 				isbnClassification: values.isbnClassification ? values.isbnClassification.map(item => item.value.toString()) : undefined,
-				mapDetails: pubType === 'map' ? map : undefined
+				mapDetails: publicationValues.type.value === 'map' ? map : undefined
 			};
 			return formattedPublicationValue;
 
@@ -407,20 +404,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const result = [];
 			if (isAuthenticated) {
 				fieldArray.forEach((item, i) => {
-					if (i >= 5) {
+					if (i >= 4) {
 						result.push(Object.keys(item));
 					}
 				});
 				return result;
 			}
 
-			if (!isAuthenticated && pubType === 'dissertation') {
+			if (!isAuthenticated && publicationValues && publicationValues.type && publicationValues.type.value === 'dissertation') {
 				dissFieldArray.forEach(item => result.push(Object.keys(item)));
 				fieldArray.forEach((item, i) => i >= 3 && result.push(Object.keys(item)));
 				return result;
 			}
 
-			if (!isAuthenticated && pubType !== 'dissertation') {
+			if (!isAuthenticated && publicationValues && publicationValues.type && publicationValues.type.value !== 'dissertation') {
 				fieldArray.forEach(item => result.push(Object.keys(item)));
 				result.splice(3, 1);
 				return result;
@@ -436,14 +433,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							type: 'text',
 							label: 'University Name *',
 							width: 'full',
-							// disable: publicationValues && typeof publicationValues.university === 'object' && true
+							disable: publicationValues && typeof publicationValues.selectUniversity === 'object' && true
 						},
 						{
 							name: 'university[city]',
 							type: 'text',
 							label: 'City *',
 							width: 'full',
-							//disable: publicationValues && typeof publicationValues.university === 'object' && true
+							disable: publicationValues && typeof publicationValues.selectUniversity === 'object' && true
 						}
 					]
 				}
@@ -455,20 +452,34 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		function searchPublisherComponent() {
 			const publisher = universityPublisher && universityPublisher.results.map(item => {
 				return {
-					id: item.id,
-					title: item.universityName,
-					city: item.universityCity
+					title: item.name,
+					place: item.city
 				};
 			});
+			const val = publicationValues && publicationValues.university && Object.values(publicationValues.university);
+			const checkDisable = val && val.some(item => item !== undefined);
+
 			return [
 				{
-					name: 'university',
+					name: 'selectUniversity',
 					type: 'selectAutoComplete',
 					label: 'Select University/Publisher',
 					width: 'full',
 					placeholder: 'Select University/Publisher',
-					showCheckbox: true,
+					disable: checkDisable,
 					options: publisher
+				}
+			];
+		}
+
+		function dissertCheckBox() {
+			return [
+				{
+					name: 'insertUniversity',
+					type: 'checkbox',
+					label: 'Check if you do not find the university',
+					width: 'half',
+					info: 'You can enter university name and city which you did not find'
 				}
 			];
 		}
@@ -482,6 +493,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								disableClearable
 								freeSolo
 								name="isPublic"
+								placeholder="Select..."
 								className={classes.selectField}
 								component={renderSelectAutoComplete}
 								label="Is your publication intended for public use (e.g., for library use or sale in bookshops) or will it be made otherwise available to the public? If your publication is a web-version or an ebook, will it be free to download or to buy?"
@@ -491,20 +503,32 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<strong>NOTE: If your publication is intended for private use only(e.g., for friends, relatives or the internal use of an association or organisation), publication will not be assigned an ISBN.</strong>
 							</Typography>
 						</Grid>
-						<FormControl className={classes.pubSelect}>
-							<InputLabel id="type-selection">The publication type is:</InputLabel>
-							<Select
-								labelId="type-selection"
-								value={pubType}
-								onChange={handleTypeChange}
-							>
-								<MenuItem value="book">Book</MenuItem>
-								<MenuItem value="dissertation">Dissertation</MenuItem>
-								<MenuItem value="music">Music</MenuItem>
-								<MenuItem value="map">Map</MenuItem>
-								<MenuItem value="other">Other</MenuItem>
-							</Select>
-						</FormControl>
+						<Grid item xs={12} className="select-useType">
+							<Field
+								disableClearable
+								freeSolo
+								name="type"
+								placeholder="Type of publication"
+								className={classes.selectField}
+								component={renderSelectAutoComplete}
+								label="The publication type is:"
+								options={[
+									{title: 'Book', value: 'book'},
+									{title: 'Dissertation', value: 'dissertation'},
+									{title: 'Music', value: 'music'},
+									{title: 'Map', value: 'map'},
+									{title: 'Other', value: 'other'}
+								]}
+							/>
+						</Grid>
+						<Button
+							disabled={publicationValues && (!publicationValues.isPublic || !publicationValues.type)}
+							variant="contained"
+							color="primary"
+							className="continue-button"
+							onClick={handleContinueClick}
+						>Continue
+						</Button>
 					</div> :
 					<form className={classes.container} onSubmit={handleSubmit(handlePublicationRegistration)}>
 						<Stepper alternativeLabel activeStep={activeStep} className={classes.test}>
@@ -606,14 +630,6 @@ function getFieldArray() {
 	const fields = [
 		{
 			publisherBasicInfo: [
-				{
-					name: 'isPublic',
-					type: 'checkbox',
-					label: 'Is Public',
-					width: 'full',
-					info: `Check the box if your publication intended for public use (e.g., for library use or sale in bookshops) or available to the public.
-							If it is for private use only, publication will not be assigned an ISBN `
-				},
 				{
 					name: 'name',
 					type: 'text',

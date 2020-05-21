@@ -204,10 +204,9 @@ const useStyles = makeStyles(theme => ({
 		width: 900,
 		height: 'auto',
 		display: 'flex',
-		justifyContent: 'center',
 		flexDirection: 'column',
 		padding: 20,
-		alignItems: 'center',
+		margin: '20px 0',
 		'& .select-useType': {
 			display: 'flex',
 			flexDirection: 'column'
@@ -217,6 +216,10 @@ const useStyles = makeStyles(theme => ({
 		},
 		'& .note-txt': {
 			margin: '30px 0'
+		},
+		'& .continue-button': {
+			marginTop: 50,
+			width: 100
 		}
 	},
 	pubSelect: {
