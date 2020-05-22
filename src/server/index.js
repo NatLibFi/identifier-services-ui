@@ -129,8 +129,12 @@ app.post('/auth', async (req, res) => {
 		}
 	});
 	const token = result.headers.get('Token');
-	res.cookie(COOKIE_NAME, token, {maxAge: TOKEN_MAX_AGE, secure: false});
-	res.status(HttpStatus.OK).json(token);
+	if (token === null) {
+		res.status(HttpStatus.BAD_REQUEST).json();
+	} else {
+		res.cookie(COOKIE_NAME, token, {maxAge: TOKEN_MAX_AGE, secure: false});
+		res.status(HttpStatus.OK).json(token);
+	}
 });
 
 // =====> TO BE DELETED LATER <======

@@ -241,10 +241,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					country: values.country,
 					phone: values.phone,
 					email: values.email,
-					university: {
-						name: values.university.name || values.selectUniversity.title,
-						city: values.university.city || values.selectUniversity.place
-					}
+					university: values.selectUniversity ? {name: values.selectUniversity.title, city: values.selectUniversity.place} :
+						{name: values.university.name, city: values.university.city}
 				} :
 				{
 					name: values.name,
@@ -256,8 +254,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					code: values.code && values.code,
 					publicationDetails: {
 						...values.publicationDetails,
-						previouslyPublished: values.publicationDetails.previouslyPublished,
-						frequency: Number(values.publicationDetails.frequency)
+						previouslyPublished: Boolean(values.publicationDetails.previouslyPublished),
+						frequency: {
+							currentYear: Number(values.publicationDetails.frequency.currentYear),
+							nextYear: Number(values.publicationDetails.frequency.nextYear)
+						}
 					}
 				});
 			const publisher = isAuthenticated ? user.publisher : dissertPublisher;
@@ -290,15 +291,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				publicationDetails,
 				insertUniversity,
 				university,
+				place,
 				givenName,
 				familyName,
 				address,
 				zip,
 				city,
 				country,
-				contactEmail,
-				universityName,
-				universityCity,
+				email,
 				...formattedPublicationValue
 			} = {
 				...values,
@@ -311,6 +311,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				isbnClassification: values.isbnClassification ? values.isbnClassification.map(item => item.value.toString()) : undefined,
 				mapDetails: publicationValues.type.value === 'map' ? map : undefined
 			};
+
 			return formattedPublicationValue;
 
 			function formatDetail() {
@@ -497,7 +498,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								className={classes.selectField}
 								component={renderSelectAutoComplete}
 								label="Is your publication intended for public use (e.g., for library use or sale in bookshops) or will it be made otherwise available to the public? If your publication is a web-version or an ebook, will it be free to download or to buy?"
-								options={[{id: 1,	title: 'Yes', value: true}, {id: 1,	title: 'No', value: false}]}
+								options={[{title: 'Yes', value: true}, {title: 'No', value: false}]}
 							/>
 							<Typography variant="h6" className="note-txt">
 								<strong>NOTE: If your publication is intended for private use only(e.g., for friends, relatives or the internal use of an association or organisation), publication will not be assigned an ISBN.</strong>
@@ -683,9 +684,15 @@ function getFieldArray() {
 		{
 			publishingActivities: [
 				{
-					name: 'publicationDetails[frequency]',
+					name: 'publicationDetails[frequency][currentYear]',
 					type: 'text',
-					label: 'Publication Estimate*',
+					label: 'Publication Estimate this Year*',
+					width: 'half'
+				},
+				{
+					name: 'publicationDetails[frequency][nextYear]',
+					type: 'text',
+					label: 'Publication Estimate next Year*',
 					width: 'half'
 				},
 				{
@@ -695,8 +702,8 @@ function getFieldArray() {
 					width: 'half',
 					options: [
 						{label: '', value: ''},
-						{label: 'Yes', value: 'yes'},
-						{label: 'No', value: 'no'}
+						{label: 'Yes', value: 'true'},
+						{label: 'No', value: 'false'}
 					]
 				},
 				{
