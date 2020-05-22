@@ -48,7 +48,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		publisherLanguage: 'eng',
 		insertUniversity: false
 	},
-	destroyOnUnmount: false,
 	validate
 })(
 	props => {
