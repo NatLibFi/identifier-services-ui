@@ -173,33 +173,21 @@ export const fieldArray = [
 					{label: 'Suomi', value: 'fin'},
 					{label: 'Svenska', value: 'swe'}
 				]
-			},
-			{
-				name: 'publisherType',
-				type: 'select',
-				label: 'Select Type of Publisher *',
-				width: 'half',
-				options: [
-					{label: '', value: ''},
-					{label: 'University', value: 'university'},
-					{label: 'Other', value: 'other'}
-				]
-			},
-			{
-				name: 'postalAddress[public]',
-				type: 'checkbox',
-				label: 'Public',
-				width: 'half',
-				info: 'Check to make your postal address available to public.'
 			}
 		]
 	},
 	{
 		publishingActivities: [
 			{
-				name: 'publicationDetails[frequency]',
+				name: 'publicationDetails[frequency][currentYear]',
 				type: 'text',
-				label: 'Publication Estimate*',
+				label: 'Publication Estimate this Year*',
+				width: 'half'
+			},
+			{
+				name: 'publicationDetails[frequency][nextYear]',
+				type: 'text',
+				label: 'Publication Estimate next Year*',
 				width: 'half'
 			},
 			{

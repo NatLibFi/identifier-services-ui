@@ -4,6 +4,11 @@ import Typography from '@material-ui/core/Typography';
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
+	rootPopover: {
+		display: 'flex',
+		alignItems: 'center',
+		marginLeft: '8px'
+	},
 	popover: {
 		pointerEvents: 'none'
 	},
@@ -31,7 +36,7 @@ export default function MouseOverPopover(props) {
 	const open = Boolean(anchorEl);
 
 	const comp = (
-		<div>
+		<div className={classes.rootPopover}>
 			<Typography
 				aria-owns={open ? 'mouse-over-popover' : undefined}
 				aria-haspopup="true"

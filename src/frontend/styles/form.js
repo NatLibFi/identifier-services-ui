@@ -191,14 +191,18 @@ const useStyles = makeStyles(theme => ({
 		alignItems: 'center'
 	},
 	notesContainer: {
-		background: '#f1eded'
+		background: '#f1eded',
+		padding: '20px',
+		'& button': {
+			margin: '20px 0'
+		}
 	},
 	notesList: {
 		borderBottom: 'none !important',
 		padding: 0
 	},
 	notes: {
-		fontSize: '10px'
+		fontSize: '14px'
 	},
 	typeSelect: {
 		width: 600,

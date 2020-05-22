@@ -248,7 +248,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						distributorOf: values.distributorOf && formatAddress(values.distributorOf),
 						distributor: values.distributor && formatAddress(values.distributor)
 					},
-					publicationDetails: {frequency: Number(Object.values(values.publicationDetails))
+					publicationDetails: {
+						frequency: {
+							currentYear: Number(publicationDetails.frequency.currentYear),
+							nextYear: Number(publicationDetails.frequency.nextYear)
+						}
 					}
 				});
 			const publisher = isAuthenticated ? user.publisher : dissertPublisher;
@@ -700,9 +704,15 @@ function getFieldArray() {
 		{
 			publishingActivities: [
 				{
-					name: 'publicationDetails[frequency]',
+					name: 'publicationDetails[frequency][currentYear]',
 					type: 'text',
-					label: 'Publication Estimate*',
+					label: 'Publication Estimate this Year*',
+					width: 'half'
+				},
+				{
+					name: 'publicationDetails[frequency][nextYear]',
+					type: 'text',
+					label: 'Publication Estimate next Year*',
 					width: 'half'
 				},
 				{
