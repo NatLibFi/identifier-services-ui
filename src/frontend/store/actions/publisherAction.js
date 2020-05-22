@@ -132,7 +132,7 @@ export const searchPublisher = ({searchText, token, offset, activeCheck}) => asy
 
 export const getUniversityPublisher = () => async dispatch => {
 	dispatch(setListLoader());
-	const query = {type: 'university'};
+	const query = {publisherType: 'university'};
 	try {
 		const response = await fetch(`${API_URL}/publishers/query`, {
 			method: 'POST',
