@@ -33,22 +33,18 @@ import {FormattedMessage} from 'react-intl';
 
 import useStyles from '../../styles/formList';
 import ModalLayout from '../ModalLayout';
-import RenderInformation from '../form/publisherRegistrationForm/RenderInformation';
 import PublisherRegistrationForm from '../form/publisherRegistrationForm/PublisherRegistrationForm';
 import SwitchPublicationForm from '../form/SwitchPublicationForm';
 import ContactForm from '../form/ContactForm';
 
 export default withRouter(props => {
 	const [dynamicTitle, setDynamicTitle] = useState('');
-	const [information, setInformation] = useState(true);
 	const formListsArray = [
 		{
 			label: <FormattedMessage id="app.home.formButtons.publisherRegistration"/>,
 			title: 'Publisher Registration',
 			name: 'publisherRegistration',
-			component: information ?
-				<RenderInformation information setInformation={setInformation} {...props}/> :
-				<PublisherRegistrationForm setInformation={setInformation} {...props}/>
+			component: <PublisherRegistrationForm {...props}/>
 		},
 		{
 			label: <FormattedMessage id="app.home.formButtons.publicationRegistration"/>,
@@ -72,7 +68,7 @@ export default withRouter(props => {
 				</Grid>
 
 				{formListsArray.map(item => (
-					<ModalLayout key={item.label} form label={item.label} title={item.title} dynamicTitle={dynamicTitle} setInformation={setInformation} setDynamicTitle={setDynamicTitle} name={item.name} variant="outlined" classed={classes.button} color="primary">
+					<ModalLayout key={item.label} form label={item.label} title={item.title} dynamicTitle={dynamicTitle} setDynamicTitle={setDynamicTitle} name={item.name} variant="outlined" classed={classes.button} color="primary">
 						{item.component}
 					</ModalLayout>
 				))}

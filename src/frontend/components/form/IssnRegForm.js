@@ -84,11 +84,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				loadSvgCaptcha();
 			}
 		}, [isAuthenticated, loadSvgCaptcha]);
-		useEffect(() => {
-			if (isAuthenticated) {
-				setActiveStep(2);
-			}
-		}, [isAuthenticated]);
+
 		function getStepContent(step) {
 			switch (step) {
 				case 0:
@@ -249,7 +245,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 					</Grid>
 					<div className={classes.btnContainer}>
-						<Button disabled={isAuthenticated ? activeStep === 2 : activeStep === 0} onClick={handleBack}>
+						<Button disabled={activeStep === 0} onClick={handleBack}>
 							Back
 						</Button>
 						{activeStep === steps.length - 1 ?
@@ -301,12 +297,22 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				...comp
 			};
 		}
+
+		function getSteps(fieldArray) {
+			const result = [];
+			if (isAuthenticated) {
+				fieldArray.forEach((item, i) => {
+					if (i >= 2) {
+						result.push(Object.keys(item));
+					}
+				});
+				return result;
+			}
+
+			return fieldArray.map(item => Object.keys(item));
+		}
 	}
 ));
-
-function getSteps(fieldArray) {
-	return fieldArray.map(item => Object.keys(item));
-}
 
 function mapStateToProps(state) {
 	return ({
