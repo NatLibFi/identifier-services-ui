@@ -45,6 +45,10 @@ const useStyles = makeStyles(theme => ({
 		flexGrow: 1,
 		padding: '0 20px'
 	},
+	bodyContainer: {
+		maxHeight: '500px',
+		overflowY: 'auto'
+	},
 	captchaContainer: {
 		display: 'flex',
 		alignItems: 'center',
@@ -191,6 +195,7 @@ const useStyles = makeStyles(theme => ({
 		alignItems: 'center'
 	},
 	notesContainer: {
+		maxWidth: '900px',
 		background: '#f1eded',
 		padding: '20px',
 		'& button': {

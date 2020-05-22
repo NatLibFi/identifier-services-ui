@@ -186,7 +186,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				subSeries: values.seriesDetails && values.seriesDetails.subSeries
 			};
 			return (
-				<>
+				<Grid container item className={classes.bodyContainer} xs={12}>
 					<Grid item xs={12} md={6}>
 						<List>
 							{
@@ -213,7 +213,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							}
 						</List>
 					</Grid>
-				</>
+				</Grid>
 			);
 		}
 
@@ -369,20 +369,6 @@ function getFieldArray() {
 						{label: 'Suomi', value: 'fin'},
 						{label: 'Svenska', value: 'swe'}
 					]
-				},
-				{
-					name: 'postalAddress[public]',
-					type: 'checkbox',
-					label: 'Public',
-					width: 'half',
-					info: 'Check to make your postal address available to public.'
-				},
-				{
-					name: 'aliases',
-					type: 'arrayString',
-					label: 'Aliases',
-					width: 'full',
-					subName: 'alias'
 				}
 			]
 		},

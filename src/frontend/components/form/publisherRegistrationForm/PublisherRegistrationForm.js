@@ -70,6 +70,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setPublisherRegForm,
 			publisherValues,
 			isAuthenticated,
+			setInformation,
 			handleClose,
 			setMessage,
 			setIsCreating,
@@ -123,6 +124,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function handleBack() {
+			if (activeStep === 0) {
+				return setInformation(true);
+			}
+
 			setActiveStep(activeStep - 1);
 		}
 
@@ -210,7 +215,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								</Grid>}
 					</Grid>
 					<div className={classes.btnContainer}>
-						<Button disabled={activeStep === 0} onClick={handleBack}>
+						<Button onClick={handleBack}>
 							Back
 						</Button>
 						{activeStep === steps.length - 1 ?
@@ -303,7 +308,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publisherValues) {
 			return (
-				<>
+				<Grid container item className={classes.bodyContainer} xs={12}>
 					<Grid item xs={12} md={6}>
 						<List>
 							{
@@ -329,7 +334,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							}
 						</List>
 					</Grid>
-				</>
+				</Grid>
 			);
 		}
 
