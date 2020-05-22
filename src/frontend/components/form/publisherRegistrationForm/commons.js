@@ -172,9 +172,9 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								placeholder={list.placeholder}
 								label={list.label}
 								options={list.options}
+								disabled={list.disable}
 							/>
 						</Grid>
-						{list.showCheckbox && element({array: dissertCheckBox(), classes})}
 					</>
 				);
 
@@ -219,18 +219,6 @@ function getUrl() {
 	];
 }
 
-function dissertCheckBox() {
-	return [
-		{
-			name: 'insertUniversity',
-			type: 'checkbox',
-			label: 'Check if you do not find the university',
-			width: 'half',
-			info: 'You can enter university name and city which you did not find'
-		}
-	];
-}
-
 function subElementFormatDetails({value, classes}) {
 	const array = getSubFormatDetailsFieldArray();
 	switch (value) {
@@ -258,7 +246,8 @@ function getSubFormatDetailsFieldArray() {
 						{label: '', value: ''},
 						{label: 'Pdf', value: 'pdf'},
 						{label: 'Epub', value: 'epbu'},
-						{label: 'CD', value: 'cd'}
+						{label: 'CD', value: 'cd'},
+						{label: 'MP3', value: 'mp3'}
 					]
 				}
 			]
@@ -314,7 +303,8 @@ function getSubFormatDetailsFieldArray() {
 						{label: '', value: ''},
 						{label: 'Pdf', value: 'pdf'},
 						{label: 'Epub', value: 'epbu'},
-						{label: 'CD', value: 'cd'}
+						{label: 'CD', value: 'cd'},
+						{label: 'MP3', value: 'mp3'}
 					]
 				},
 				{

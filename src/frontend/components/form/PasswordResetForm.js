@@ -51,7 +51,7 @@ export default connect(null, actions)(props => {
 	const component = (
 		<>
 			<div>
-                Enter your email address and we will send you a link to reset your password.
+				Enter your email address and we will send you a link to reset your password.
 			</div>
 			<form onSubmit={handleEmailSubmit}>
 				<TextField
@@ -66,7 +66,7 @@ export default connect(null, actions)(props => {
 					className={classes.resetBtn}
 					onClick={handleEmailSubmit}
 				>
-                Send password reset email
+					Send password reset email
 				</Button>
 			</form>
 		</>

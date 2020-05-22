@@ -51,7 +51,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				public: false
 			}
 	},
-	destroyOnUnmount: false,
 	validate
 })(
 	props => {
