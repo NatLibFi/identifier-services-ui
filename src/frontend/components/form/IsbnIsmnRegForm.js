@@ -363,7 +363,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			publicationValues = {...publicationValues, publicationTime: publicationValues.publicationTime.toLocaleString()};
 			const formatPublicationValue = formatPublicationValues(publicationValues);
 			return (
-				<>
+				<Grid container item xs={12}>
 					<Grid item xs={12} md={6}>
 						<List>
 							{
@@ -377,7 +377,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							}
 						</List>
 					</Grid>
-					<Grid item xs={12} md={6}>
+					<Grid item className={classes.bodyContainer} xs={12} md={6}>
 						<List>
 							{
 								Object.keys(formatPublicationValue).map(key => {
@@ -396,7 +396,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							}
 						</List>
 					</Grid>
-				</>
+				</Grid>
 			);
 		}
 

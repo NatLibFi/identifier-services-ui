@@ -38,6 +38,7 @@ import useStyles from '../../../styles/form';
 import ResetCaptchaButton from '../ResetCaptchaButton';
 import ListComponent from '../../ListComponent';
 import PopoverComponent from '../../PopoverComponent';
+import RenderInformation from './RenderInformation';
 import Captcha from '../../Captcha';
 import {fieldArray} from './formFieldVariable';
 import * as actions from '../../../store/actions';
@@ -81,6 +82,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const [affiliates, setAffiliates] = useState(false);
 		const [distributor, setDistributor] = useState(false);
 		const [distributorOf, setDistributorOf] = useState(false);
+		const [information, setInformation] = useState(true);
+
 		useEffect(() => {
 			if (!isAuthenticated) {
 				loadSvgCaptcha();
@@ -122,6 +125,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 
 		function handleBack() {
+			if (activeStep === 0) {
+				return setInformation(true);
+			}
+
 			setActiveStep(activeStep - 1);
 		}
 
@@ -177,22 +184,26 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			return newPublisher;
 		}
 
-		const component = (
-			<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
-				<Stepper alternativeLabel className={publicationRegistration ? classes.smallStepper : null} activeStep={activeStep}>
-					{steps.map(label => (
-						<Step key={label}>
-							<StepLabel className={publicationRegistration ? classes.smallFontStepLabel : classes.stepLabel}>
-								{formatLabel(label)}
-							</StepLabel>
-						</Step>
-					))}
-				</Stepper>
-				<div className={classes.subContainer}>
-					<Grid container spacing={2} direction="row">
-						{(getStepContent(activeStep))}
+		const component = information ?
+			(
+				<RenderInformation setInformation={setInformation}/>
+			) :
+			(
+				<form className={classes.container} onSubmit={handleSubmit(handlePublisherRegistration)}>
+					<Stepper alternativeLabel className={publicationRegistration ? classes.smallStepper : null} activeStep={activeStep}>
+						{steps.map(label => (
+							<Step key={label}>
+								<StepLabel className={publicationRegistration ? classes.smallFontStepLabel : classes.stepLabel}>
+									{formatLabel(label)}
+								</StepLabel>
+							</Step>
+						))}
+					</Stepper>
+					<div className={classes.subContainer}>
+						<Grid container spacing={2} direction="row">
+							{(getStepContent(activeStep))}
 
-						{(!publicationRegistration &&
+							{(!publicationRegistration &&
 							activeStep === steps.length - 1) &&
 								<Grid item xs={12} className={classes.captchaContainer}>
 									{isAuthenticated ? null : (
@@ -207,18 +218,18 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										</>
 									)}
 								</Grid>}
-					</Grid>
-					<div className={classes.btnContainer}>
-						<Button disabled={activeStep === 0} onClick={handleBack}>
-							Back
-						</Button>
-						{activeStep === steps.length - 1 ?
-							null :
-							<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-								Next
-							</Button>}
-						{
-							activeStep === steps.length - 1 &&
+						</Grid>
+						<div className={classes.btnContainer}>
+							<Button onClick={handleBack}>
+								Back
+							</Button>
+							{activeStep === steps.length - 1 ?
+								null :
+								<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
+									Next
+								</Button>}
+							{
+								activeStep === steps.length - 1 &&
 								(publicationRegistration ?
 									(
 										<Button type="button" disabled={pristine || !valid} variant="contained" color="primary" onClick={handleFormatPublisher}>
@@ -230,11 +241,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										</Button>
 									)
 								)
-						}
+							}
+						</div>
 					</div>
-				</div>
-			</form>
-		);
+				</form>
+			);
 
 		function getSteps() {
 			return fieldArray.map(item => Object.keys(item));
@@ -302,7 +313,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 		function renderPreview(publisherValues) {
 			return (
-				<>
+				<Grid container item className={classes.bodyContainer} xs={12}>
 					<Grid item xs={12} md={6}>
 						<List>
 							{
@@ -328,7 +339,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							}
 						</List>
 					</Grid>
-				</>
+				</Grid>
 			);
 		}
 
