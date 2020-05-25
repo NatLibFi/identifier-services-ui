@@ -144,7 +144,7 @@ export default connect(mapStateToProps, actions)(props => {
 function mapStateToProps(state) {
 	return ({
 		userInfo: state.login.userInfo,
-		loading: state.identifierRanges.listLoading,
+		loading: state.identifierRanges.rangeListLoading,
 		issnList: state.identifierRanges.issnList,
 		offset: state.identifierRanges.offset,
 		totalDoc: state.identifierRanges.totalDoc,
