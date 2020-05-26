@@ -62,7 +62,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		fetchIssnRequest,
 		issnRequest,
 		updateIssnRequest,
-		id
+		id,
+		setIsUpdating
 	} = props;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
@@ -103,6 +104,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		delete newIssnRequest._id;
 		updateIssnRequest(issnRequest._id, newIssnRequest, cookie[COOKIE_NAME]);
 		setButtonState(issnRequest.state);
+		setIsUpdating(true);
 	}
 
 	function renderButton(state) {

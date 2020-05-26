@@ -89,7 +89,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		if (id !== null) {
 			fetchPublisher(id, cookie[COOKIE_NAME]);
 		}
-	}, [cookie, fetchPublisher, id]);
+	}, [cookie, fetchPublisher, id, isbnValue, ismnValue]);
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -257,8 +257,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							>
 								Back
 							</Button>&nbsp;
-							<Button variant="outlined" color="primary" onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>&nbsp;
-							<Button variant="outlined" color="primary" onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
+							<Button variant={rangeType === 'isbn' ? 'contained' : 'outlined'} color="primary" onClick={() => displayISBNRanges('isbn')}>ISBN Ranges</Button>&nbsp;
+							<Button variant={rangeType === 'ismn' ? 'contained' : 'outlined'} color="primary" onClick={() => displayISMNRanges('ismn')}>ISMN Ranges</Button>
 							{displayRanges(rangeType)}
 							{rangeType ? <Button variant="outlined" color="primary" onClick={handleRangeUpdate}>Update {rangeType}</Button> : null}
 						</div> :
