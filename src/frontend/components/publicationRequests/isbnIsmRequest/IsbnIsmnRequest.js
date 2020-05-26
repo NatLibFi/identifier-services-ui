@@ -51,7 +51,7 @@ import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
 import CustomColor from '../../../styles/app';
 import TableComponent from '../../publishersRequests/TableComponent';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publicationRequestIsbnIsmn',
@@ -68,7 +68,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		ismnRangeList,
 		fetchIDRIsbnList,
 		fetchIDRIsmnList,
-		rangeListLoading
+		rangeListLoading,
+		setIsUpdating
 	} = props;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
@@ -119,6 +120,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		delete newPublicationIsbnIsmnRequest._id;
 		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
 		setButtonState(publicationIsbnIsmnRequest.state);
+		setIsUpdating(true);
 	}
 
 	function handleRange() {
@@ -294,15 +296,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		<ModalLayout isTableRow color="primary" title="Publication Request Detail" {...props}>
 			<div className={classes.listItem}>
 				{assignRange ?
-					<div className={classes.listItem}>
+					<div>
+						{displayRanges(rangeType)}
 						<Button
 							variant="outlined"
-							startIcon={<ArrowBackIosIcon/>}
+							endIcon={<ArrowForwardIosIcon/>}
 							onClick={handleRange}
 						>
-							Back
+							Next
 						</Button>
-						{displayRanges(rangeType)}
 					</div> :
 					<Grid container spacing={3} className={classes.listItemSpinner}>
 						{publicationIsbnIsmnRequestDetail}

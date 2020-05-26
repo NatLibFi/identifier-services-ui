@@ -52,10 +52,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [issnRequestId, setIssnRequestId] = useState(null);
 	const [modal, setModal] = useState(false);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	useEffect(() => {
 		fetchIssnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
-	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
+		setIsUpdating(false);
+	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor, isUpdating]);
 
 	const handleTableRowClick = id => {
 		setIssnRequestId(id);
@@ -117,7 +119,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				{issnRequestData}
-				<IssnRequest modal={modal} setModal={setModal} id={issnRequestId} setIssnId={setIssnRequestId}/>
+				<IssnRequest modal={modal} setModal={setModal} setIsUpdating={setIsUpdating} id={issnRequestId} setIssnId={setIssnRequestId}/>
 			</Grid>
 		</Grid>
 	);

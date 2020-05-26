@@ -52,10 +52,12 @@ export default connect(mapStateToProps, actions)(props => {
 	const [modal, setModal] = useState(false);
 	const [isbnIsmnRequestId, setIsbnIsmnRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
+	const [isUpdating, setIsUpdating] = useState(false);
 
 	useEffect(() => {
 		fetchPublicationIsbnIsmnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
-	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor]);
+		setIsUpdating(false);
+	}, [cookie, fetchPublicationIsbnIsmnRequestsList, inputVal, sortStateBy, lastCursor, isUpdating]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnRequestId(id);
@@ -117,7 +119,7 @@ export default connect(mapStateToProps, actions)(props => {
 					handleChange={handleChange}
 				/>
 				{publicationIsbnIsmnRequestData}
-				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setModal={setModal}/>
+				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setIsUpdating={setIsUpdating} setModal={setModal}/>
 			</Grid>
 		</Grid>
 	);

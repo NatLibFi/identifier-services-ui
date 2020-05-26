@@ -207,7 +207,7 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 			body: JSON.stringify(values)
 		});
 		const result = await response.json();
-		dispatch(success(PUBLICATIONISBNISMN_REQUESTS_LIST, result));
+		dispatch(success(PUBLICATION_ISBN_ISMN_REQUEST, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
@@ -254,7 +254,7 @@ export const fetchIssnRequest = (id, token) => async dispatch => {
 };
 
 export const updateIssnRequest = (id, values, token) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setLoader());
 	try {
 		delete values.backgroundProcessingState;
 		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {
@@ -267,7 +267,7 @@ export const updateIssnRequest = (id, values, token) => async dispatch => {
 			body: JSON.stringify(values)
 		});
 		const result = await response.json();
-		dispatch(success(ISSN_REQUESTS_LIST, result));
+		dispatch(success(ISSN_REQUEST, result));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

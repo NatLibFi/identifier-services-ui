@@ -95,6 +95,7 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 		});
 		const result = await response.json();
 		dispatch(success(PUBLISHER, result.value));
+		dispatch(setMessage({color: 'success', msg: 'Range updated'}));
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
