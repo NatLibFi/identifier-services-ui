@@ -293,7 +293,7 @@ function mapStateToProps(state) {
 		loading: state.publisher.loading,
 		isAuthenticated: state.login.isAuthenticated,
 		userInfo: state.login.userInfo,
-		rangleListLoading: state.identifierRanges.listLoading,
+		rangleListLoading: state.identifierRanges.rangeListLoading,
 		isbnRangeList: state.identifierRanges.isbnList,
 		ismnRangeList: state.identifierRanges.ismnList
 	});

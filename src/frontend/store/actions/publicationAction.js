@@ -254,7 +254,7 @@ export const fetchIssnRequest = (id, token) => async dispatch => {
 };
 
 export const updateIssnRequest = (id, values, token) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		delete values.backgroundProcessingState;
 		const response = await fetch(`${API_URL}/requests/publications/issn/${id}`, {

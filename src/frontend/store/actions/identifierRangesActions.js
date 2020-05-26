@@ -28,13 +28,13 @@
 /* global API_URL */
 import fetch from 'node-fetch';
 import {ERROR, IDR_ISBN_LIST, IDR_ISBN, IDR_ISMN_LIST, IDR_ISMN, IDR_ISSN_LIST, IDR_ISSN} from './types';
-import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
+import {setLoader, setRangeListLoader, success, fail, setMessage} from './commonAction';
 import HttpStatus from 'http-status';
 
 // ***************ISBN****************************
 
 export const fetchIDRIsbnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setRangeListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};
 
@@ -77,7 +77,7 @@ export const fetchIDRIsbn = (id, token) => async dispatch => {
 };
 
 export const updateIsbnRange = (id, values, token) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setRangeListLoader());
 
 	try {
 		const response = await fetch(`${API_URL}/ranges/isbn/${id}`, {
@@ -122,7 +122,7 @@ export const createIsbnRange = (values, token) => async dispatch => {
 // ***************ISMN****************************
 
 export const fetchIDRIsmnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setRangeListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};
 
@@ -165,7 +165,7 @@ export const fetchIDRIsmn = (id, token) => async dispatch => {
 };
 
 export const updateIsmnRange = (id, values, token) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setRangeListLoader());
 
 	try {
 		const response = await fetch(`${API_URL}/ranges/ismn/${id}`, {
@@ -209,7 +209,7 @@ export const createIsmnRange = (values, token) => async dispatch => {
 // ***************ISSN****************************
 
 export const fetchIDRIssnList = ({searchText, token, offset, activeCheck}) => async dispatch => {
-	dispatch(setListLoader());
+	dispatch(setRangeListLoader());
 	const query = (activeCheck !== undefined && activeCheck.checked === true) ? {prefix: searchText, active: true} :
 		{prefix: searchText};
 
