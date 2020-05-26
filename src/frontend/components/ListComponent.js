@@ -92,7 +92,7 @@ export default function (props) {
 									<ul key={item} style={{borderBottom: '1px dashed', listStyleType: 'none'}}>
 										{Object.keys(item).map(key => item[key] ?
 											(
-												<li key={key}>
+												<li key={key} className={classes.dropDownList}>
 													<span className={classes.label}>{formatLabel(key)}: </span>
 													<span>{item[key]}</span>
 												</li>
@@ -106,7 +106,7 @@ export default function (props) {
 										renderExpansion(key, val) :
 
 										(
-											<li key={key}>
+											<li key={key} className={classes.dropDownList}>
 												<span className={classes.label}>{formatLabel(key)}: </span>
 												<span>{typeof value[key] === 'boolean' ? value[key].toString() : value[key]}</span>
 											</li>

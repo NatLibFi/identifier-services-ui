@@ -59,7 +59,7 @@ const useStyles = makeStyles({
 		height: 50,
 		justifyContent: 'center',
 		boxShadow: 'none',
-		borderBottom: '1px solid rgba(0, 34, 79, 0.33)',
+		borderBottom: '1px solid rgba(0, 34, 79, 0.04)',
 		background: 'whitesmoke'
 	},
 	menuItem: {
