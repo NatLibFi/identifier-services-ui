@@ -44,7 +44,7 @@ export default connect(state => ({
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
-	const {fields, data, fieldName, clearFields, meta: {touched, error}, values} = props;
+	const {fields, data, fieldName, clearFields, meta: {touched, error}, values, publication} = props;
 	const classes = useStyles();
 
 	const contactDetail = values && {
@@ -167,6 +167,7 @@ export default connect(state => ({
 							aria-label="Add"
 							variant="outlined"
 							color="primary"
+							disabled={publication && values && values.primaryContact && values.primaryContact.length >= 1}
 							title="click to add"
 							startIcon={<AddIcon/>}
 							onClick={handleContactClick}

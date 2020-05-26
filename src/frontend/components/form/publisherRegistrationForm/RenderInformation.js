@@ -27,9 +27,9 @@
  */
 import React from 'react';
 import {List, ListItem, Typography, Button} from '@material-ui/core';
-import ArrowRightAltIcon from '@material-ui/icons/ArrowRightAlt';
 import notes from './notes';
 import useStyles from '../../../styles/form';
+import StopIcon from '@material-ui/icons/Stop';
 
 export default function (props) {
 	const classes = useStyles();
@@ -47,15 +47,15 @@ export default function (props) {
 	function renderNotes() {
 		return (
 			<div className={classes.notesContainer}>
-				<Typography className={classes.notes}>When joining the ISBN system, the publisher commits itself to the following obligations:</Typography>
+				<Typography className={classes.notes}><strong>When joining the ISBN system, the publisher commits itself to the following obligations:</strong></Typography>
 				<List>
 					{notes.map(item => (
 						<ListItem key={item} className={classes.notesList}>
-							<ArrowRightAltIcon/>
+							<StopIcon fontSize="small"/>
 							<Typography className={classes.notes}>{item}</Typography>
 						</ListItem>
 					))}
-					<Button variant="contained" onClick={() => setInformation(false)}> Next </Button>
+					<Button variant="contained" color="primary" onClick={() => setInformation(false)}> Continue </Button>
 				</List>
 			</div>
 		);

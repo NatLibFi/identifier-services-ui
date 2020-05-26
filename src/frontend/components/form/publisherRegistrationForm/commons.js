@@ -185,12 +185,12 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 	);
 }
 
-export function fieldArrayElement({data, fieldName, clearFields, formName}) {
+export function fieldArrayElement({data, fieldName, clearFields, formName, publication}) {
 	const comp = (
 		<FieldArray
 			component={renderContactDetail}
 			name={fieldName}
-			props={{clearFields, data, fieldName, formName}}
+			props={{clearFields, data, fieldName, formName, publication}}
 		/>
 	);
 
