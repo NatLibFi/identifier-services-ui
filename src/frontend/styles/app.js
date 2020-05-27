@@ -92,6 +92,12 @@ const theme = createMuiTheme({
 				boxShadow: 'none'
 			}
 		},
+		MuiExpansionPanel: {
+			root: {
+				borderLeft: '2px solid #00224f42',
+				borderRadius: 0
+			}
+		},
 		MuiExpansionPanelSummary: {
 			root: {
 				background: '#fafafa'

@@ -204,7 +204,11 @@ const useStyles = makeStyles(theme => ({
 	},
 	notesList: {
 		borderBottom: 'none !important',
-		padding: 0
+		padding: 0,
+		'& svg': {
+			fontSize: 15,
+			marginRight: 10
+		}
 	},
 	notes: {
 		fontSize: '14px'

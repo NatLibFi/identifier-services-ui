@@ -37,6 +37,10 @@ const useStyles = makeStyles({
 	},
 	label: {
 		fontWeight: 600
+	},
+	dropDownList: {
+		display: 'flex',
+		justifyContent: 'space-between'
 	}
 });
 

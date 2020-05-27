@@ -140,7 +140,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 1:
 						return element({array: fieldArray[1].publishingActivities, classes, clearFields});
 					case 2:
-						return fieldArrayElement({data: fieldArray[2].primaryContact, fieldName: 'primaryContact', clearFields});
+						return fieldArrayElement({data: fieldArray[2].primaryContact, fieldName: 'primaryContact', clearFields, publication: true});
 					case 3:
 						return element({array: fieldArray[4].basicInformation, classes, clearFields, publicationIsbnValues: publicationValues});
 					case 4:

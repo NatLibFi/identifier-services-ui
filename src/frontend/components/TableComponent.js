@@ -84,7 +84,7 @@ function EnhancedTableHead(props) {
 							direction={order}
 							onClick={createSortHandler(row.id)}
 						>
-							{row.label}
+							<strong>{row.label}</strong>
 						</TableSortLabel>
 					</TableCell>
 				))}
@@ -125,6 +125,10 @@ const useStyles = makeStyles(theme => ({
 
 	tableWrapper: {
 		overflowX: 'auto'
+	},
+	selected: {
+		background: '#1cec2e29 !important',
+		borderLeft: `2px solid ${theme.palette.primary.main}`
 	}
 }));
 
@@ -160,6 +164,7 @@ export default function (props) {
 								<TableRow
 									key={row.id}
 									selected={row.userId ? row.userId === rowSelectedId : row.id === rowSelectedId}
+									classes={{selected: classes.selected}}
 									className={classes.tableRow}
 									onClick={() => handleTableRowClick(row.userId ? row.userId : row.id)}
 								>
