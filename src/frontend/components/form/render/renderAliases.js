@@ -31,6 +31,7 @@ import {Fab, Grid, Chip, Tooltip} from '@material-ui/core';
 import {PropTypes} from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
 import {connect} from 'react-redux';
+import {FormattedMessage} from 'react-intl';
 
 import renderTextField from './renderTextField';
 
@@ -77,7 +78,7 @@ export default connect(state => ({
 						label={label}
 						props={{errors}}
 					/>
-					<Tooltip title="Press this button to add the aliases value typed " aria-label="add aliases">
+					<Tooltip title={<FormattedMessage id="form.aliases.tooltip"/>} aria-label="add aliases">
 						<Fab
 							color="primary"
 							aria-label="Add"

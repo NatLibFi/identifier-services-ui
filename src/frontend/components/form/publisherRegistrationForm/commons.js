@@ -12,6 +12,7 @@ import renderContactDetail from '../render/renderContactDetail';
 import renderSelectAutoComplete from '../render/renderSelectAutoComplete';
 import PopoverComponent from '../../PopoverComponent';
 import HelpIcon from '@material-ui/icons/Help';
+import { FormattedMessage } from 'react-intl';
 
 export function element({array, classes, clearFields, publicationIssnValues, fieldName, publicationIsbnValues}) {
 	return array.map(list => {
@@ -128,7 +129,11 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 					return (
 						<>
 							<Grid key={list.name} item xs={12}>
-								<Box mt={1}><Typography variant="h6">Select the way you want Publication to be issued</Typography></Box>
+								<Box mt={1}>
+									<Typography variant="h6">
+										Select the way you want Publication to be issued
+									</Typography>
+								</Box>
 								<Field
 									value={publicationIsbnValues && publicationIsbnValues.selectFormat}
 									component={renderRadioButton}
@@ -202,8 +207,12 @@ export function fieldArrayElement({data, fieldName, clearFields, formName, publi
 function getClassificationInstruction() {
 	return (
 		<>
-			<Typography>Please click to the field from the attached classification table 1-4 the classes which best describe the subject fields of your publications and enter them in the box below. If your publications cover several subject fields, use 000 General.</Typography>
-			<Typography>If you are unable to find a suitable class in the table, you can also describe the contents in your own words (use a few short terms).</Typography>
+			<Typography>
+				<FormattedMessage id="publisherRegistration.form.classificationInstruction1"/>	
+			</Typography>
+			<Typography>
+				<FormattedMessage id="publisherRegistration.form.classificationInstruction2"/>
+			</Typography>
 		</>
 	);
 }

@@ -33,6 +33,7 @@ import PropTypes from 'prop-types';
 import {validate} from '@natlibfi/identifier-services-commons';
 import HttpStatus from 'http-status';
 import HelpIcon from '@material-ui/icons/Help';
+import {FormattedMessage} from 'react-intl';
 
 import useStyles from '../../../styles/form';
 import ResetCaptchaButton from '../ResetCaptchaButton';
@@ -76,7 +77,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			reset
 		} = props;
 		const classes = useStyles();
-		const [activeStep, setActiveStep] = useState(0);
+		const [activeStep, setActiveStep] = useState(2);
 		const [captchaInput, setCaptchaInput] = useState('');
 		const [affiliateOf, setAffiliateOf] = useState(false);
 		const [affiliates, setAffiliates] = useState(false);
@@ -139,7 +140,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				handleClose();
 				reset();
 			} else if (captchaInput.length === 0) {
-				setMessage({color: 'error', msg: 'Captcha not provided'});
+				setMessage({color: 'error', msg: <FormattedMessage id="publisherRegistration.form.submit.captchaEmptyError"/>});
 			} else if (captchaInput.length > 0) {
 				const result = await postCaptchaInput(captchaInput, captcha.id);
 				await makeNewPublisherObj(values, result);
@@ -159,7 +160,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					reset();
 				}
 			} else {
-				setMessage({color: 'error', msg: 'Please type the correct word in the image below'});
+				setMessage({color: 'error', msg: <FormattedMessage id="publisherRegistration.form.submit.captchaVerificationError"/>});
 				loadSvgCaptcha();
 			}
 		}
@@ -194,7 +195,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						{steps.map(label => (
 							<Step key={label}>
 								<StepLabel className={publicationRegistration ? classes.smallFontStepLabel : classes.stepLabel}>
-									{formatLabel(label)}
+									<FormattedMessage id={`publisherRegistration.stepper.label.${label}`}/>
 								</StepLabel>
 							</Step>
 						))}
@@ -221,23 +222,23 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleBack}>
-								Back
+								<FormattedMessage id="form.button.label.back"/>
 							</Button>
 							{activeStep === steps.length - 1 ?
 								null :
 								<Button type="button" disabled={(pristine || !valid) || activeStep === steps.length - 1} variant="contained" color="primary" onClick={handleNext}>
-									Next
+									<FormattedMessage id="form.button.label.next"/>
 								</Button>}
 							{
 								activeStep === steps.length - 1 &&
 								(publicationRegistration ?
 									(
 										<Button type="button" disabled={pristine || !valid} variant="contained" color="primary" onClick={handleFormatPublisher}>
-											Next
+											<FormattedMessage id="form.button.label.next"/>
 										</Button>
 									) : (
 										<Button type="submit" disabled={pristine || !valid} variant="contained" color="primary">
-											Submit
+											<FormattedMessage id="form.button.label.submit"/>
 										</Button>
 									)
 								)
@@ -285,7 +286,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			};
 
 			function getPopoverText() {
-				const text = 'AffiliateOf and Affilates are optional, press next button to skip or by pressing the related button you can add or remove optional fields.';
+				const text = <FormattedMessage id="publisherRegistration.form.orgDetail1.popoverText"/>;
 				return text;
 			}
 		}
@@ -306,7 +307,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			};
 
 			function getPopoverText() {
-				const text = 'DistributorOf and Distributor are optional, press next button to skip or by pressing the related button you can add or remove optional fields.';
+				const text = <FormattedMessage id="publisherRegistration.form.orgDetail2.popoverText"/>;
 				return text;
 			}
 		}

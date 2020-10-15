@@ -123,49 +123,49 @@ export const fieldArray = [
 			{
 				name: 'name',
 				type: 'text',
-				label: 'Name*',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.name"/>,
 				width: 'half'
 			},
 			{
 				name: 'postalAddress[address]',
 				type: 'text',
-				label: 'Address*',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.postalAddress"/>,
 				width: 'half'
 			},
 			{
 				name: 'postalAddress[city]',
 				type: 'text',
-				label: 'City*',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.postalCity"/>,
 				width: 'half'
 			},
 			{
 				name: 'postalAddress[zip]',
 				type: 'text',
-				label: 'Zip*',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.postalZip"/>,
 				width: 'half'
 			},
 			{
 				name: 'phone',
 				type: 'text',
-				label: 'Phone',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.phone"/>,
 				width: 'half'
 			},
 			{
 				name: 'publisherEmail',
 				type: 'text',
-				label: 'Publisher Email*',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.publisherEmail"/>,
 				width: 'half'
 			},
 			{
 				name: 'website',
 				type: 'text',
-				label: 'Website',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.website"/>,
 				width: 'half'
 			},
 			{
 				name: 'language',
 				type: 'select',
-				label: 'Select Language',
+				label: <FormattedMessage id="publisherRegistration.form.basicInformation.selectLanguage"/>,
 				width: 'half',
 				defaultValue: 'eng',
 				options: [
@@ -181,26 +181,26 @@ export const fieldArray = [
 			{
 				name: 'publicationDetails[frequency][currentYear]',
 				type: 'text',
-				label: 'Publication Estimate this Year*',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.frequency.currentYear"/>, 
 				width: 'half'
 			},
 			{
 				name: 'publicationDetails[frequency][nextYear]',
 				type: 'text',
-				label: 'Publication Estimate next Year*',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.frequency.nextYear"/>,
 				width: 'half'
 			},
 			{
 				name: 'aliases',
 				type: 'arrayString',
-				label: 'Aliases',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.aliases"/>,
 				width: 'full',
 				subName: 'alias'
 			},
 			{
 				name: 'classification',
 				type: 'multiSelect',
-				label: 'Classification*',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.classification"/>,
 				options: classificationCodes,
 				width: 'full',
 				isMulti: true
@@ -212,19 +212,19 @@ export const fieldArray = [
 			{
 				name: 'givenName',
 				type: 'text',
-				label: 'Given Name',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.primaryContact.givenName"/>,
 				width: 'full'
 			},
 			{
 				name: 'familyName',
 				type: 'text',
-				label: 'Family Name',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.primaryContact.familyName"/>,
 				width: 'full'
 			},
 			{
 				name: 'email',
 				type: 'email',
-				label: 'Email*',
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.primaryContact.email"/>,
 				width: 'full'
 			}
 
@@ -238,31 +238,31 @@ export const fieldArray = [
 					{
 						name: 'affiliateOf[affiliateOfAddress]',
 						type: 'text',
-						label: 'Address*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateOfAddress"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliateOf[affiliateOfAddressDetails]',
 						type: 'text',
-						label: 'Address Details',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateOfAddressDetails"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliateOf[affiliateOfCity]',
 						type: 'text',
-						label: 'City*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateOfCity"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliateOf[affiliateOfZip]',
 						type: 'text',
-						label: 'Zip*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateOfZip"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliateOf[affiliateOfName]',
 						type: 'text',
-						label: 'Name*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateOfName"/>,
 						width: 'half'
 					}
 
@@ -274,31 +274,31 @@ export const fieldArray = [
 					{
 						name: 'affiliatesAddress',
 						type: 'text',
-						label: 'Address*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateAddress"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliatesAddressDetails',
 						type: 'text',
-						label: 'Address Details',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateAddressDetails"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliatesCity',
 						type: 'text',
-						label: 'City*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateCity"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliatesZip',
 						type: 'text',
-						label: 'Zip*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateZip"/>,
 						width: 'half'
 					},
 					{
 						name: 'affiliatesName',
 						type: 'text',
-						label: 'Name*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.affiliateName"/>,
 						width: 'half'
 					}
 				]
@@ -313,31 +313,31 @@ export const fieldArray = [
 					{
 						name: 'distributorOf[distributorOfAddress]',
 						type: 'text',
-						label: 'Address*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorOfAddress"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributorOf[distributorOfAddressDetails]',
 						type: 'text',
-						label: 'Address Details',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorOfAddressDetails"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributorOf[distributorOfCity]',
 						type: 'text',
-						label: 'City*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorOfCity"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributorOf[distributorOfZip]',
 						type: 'text',
-						label: 'Zip*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorOfZip"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributorOf[distributorOfName]',
 						type: 'text',
-						label: 'Name*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorOfName"/>,
 						width: 'half'
 					}
 				]
@@ -348,31 +348,31 @@ export const fieldArray = [
 					{
 						name: 'distributor[distributorAddress]',
 						type: 'text',
-						label: 'Address*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorAddress"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributor[distributorAddressDetails]',
 						type: 'text',
-						label: 'Address Details',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorAddressDetails"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributor[distributorCity]',
 						type: 'text',
-						label: 'City*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorCity"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributor[distributorZip]',
 						type: 'text',
-						label: 'Zip*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorZip"/>,
 						width: 'half'
 					},
 					{
 						name: 'distributor[distributorName]',
 						type: 'text',
-						label: 'Name*',
+						label: <FormattedMessage id="publisherRegistration.form.publishingActivities.organization.distributorName"/>,
 						width: 'half'
 					}
 				]

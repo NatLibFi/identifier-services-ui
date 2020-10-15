@@ -32,6 +32,7 @@ import {Field, getFormValues} from 'redux-form';
 import {PropTypes} from 'prop-types';
 import {connect} from 'react-redux';
 import AddIcon from '@material-ui/icons/Add';
+import {FormattedMessage} from 'react-intl';
 
 import renderTextField from './renderTextField';
 import renderSelect from './renderSelect';
@@ -123,6 +124,11 @@ export default connect(state => ({
 		}
 	};
 
+	const getAddTitle = () => {
+		const result = <FormattedMessage id="form.primaryContact.button.tooltip"/>;
+		return result;
+	}
+
 	const component = (
 		<>
 			{data.map(list => {
@@ -168,11 +174,11 @@ export default connect(state => ({
 							variant="outlined"
 							color="primary"
 							disabled={publication && values && values.primaryContact && values.primaryContact.length >= 1}
-							title="click to add"
+							title={getAddTitle()}
 							startIcon={<AddIcon/>}
 							onClick={handleContactClick}
 						>
-							Add
+							<FormattedMessage id="form.button.add"/>
 						</Button>
 						{values && values.primaryContact && values.primaryContact.map((item, index) => {
 							return (
@@ -196,7 +202,7 @@ export default connect(state => ({
 								startIcon={<AddIcon/>}
 								onClick={handleAffiliatesClick}
 							>
-								Add
+								<FormattedMessage id="form.button.add"/>
 							</Button>
 							{values && values.affiliates && values.affiliates.map((item, index) => {
 								return (
@@ -219,7 +225,7 @@ export default connect(state => ({
 								startIcon={<AddIcon/>}
 								onClick={handleAuthorClick}
 							>
-								Add
+								<FormattedMessage id="form.button.add"/>
 							</Button>
 							{values && values.authors && values.authors.map((item, index) => {
 								return (

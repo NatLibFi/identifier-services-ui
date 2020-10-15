@@ -27,13 +27,15 @@
  */
 import React from 'react';
 import {List, ListItem, Typography, Button} from '@material-ui/core';
-import notes from './notes';
+import {FormattedMessage} from 'react-intl';
 import useStyles from '../../../styles/form';
 import StopIcon from '@material-ui/icons/Stop';
 
 export default function (props) {
 	const classes = useStyles();
 	const {setInformation} = props;
+
+	const notes= ['note0', 'note1', 'note2','note3','note4'];
 
 	const component = (
 		<>
@@ -47,15 +49,23 @@ export default function (props) {
 	function renderNotes() {
 		return (
 			<div className={classes.notesContainer}>
-				<Typography className={classes.notes}><strong>When joining the ISBN system, the publisher commits itself to the following obligations:</strong></Typography>
+				<Typography className={classes.notes}>
+					<strong>
+						<FormattedMessage id="publisherRegistration.renderInformation.heading"/>
+					</strong>
+				</Typography>
 				<List>
 					{notes.map(item => (
 						<ListItem key={item} className={classes.notesList}>
 							<StopIcon fontSize="small"/>
-							<Typography className={classes.notes}>{item}</Typography>
+							<Typography className={classes.notes}>
+								<FormattedMessage id={`publisherRegistration.renderInformation.${item}`}/>
+							</Typography>
 						</ListItem>
 					))}
-					<Button variant="contained" color="primary" onClick={() => setInformation(false)}> Continue </Button>
+					<Button variant="contained" color="primary" onClick={() => setInformation(false)}> 
+						<FormattedMessage id="publisherRegistration.renderInformation.btnLabel"/>
+					</Button>
 				</List>
 			</div>
 		);

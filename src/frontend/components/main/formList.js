@@ -42,19 +42,21 @@ export default withRouter(props => {
 	const formListsArray = [
 		{
 			label: <FormattedMessage id="app.home.formButtons.publisherRegistration"/>,
-			title: 'Publisher Registration',
+			title: <FormattedMessage id="app.modal.title.publisherRegistration"/>,
 			name: 'publisherRegistration',
 			component: <PublisherRegistrationForm {...props}/>
 		},
 		{
 			label: <FormattedMessage id="app.home.formButtons.publicationRegistration"/>,
-			title: `Publication Registration ${dynamicTitle}`,
+			title: <FormattedMessage
+					id={dynamicTitle === '' ? "app.modal.title.publicationRegistration" : `app.modal.title.publicationRegistration${dynamicTitle}`}
+				/>,
 			name: 'publicationRegistration',
 			component: <SwitchPublicationForm title={dynamicTitle} setTitle={setDynamicTitle} {...props}/>
 		},
 		{
 			label: <FormattedMessage id="app.home.formButtons.contactForm"/>,
-			title: 'Contact Form',
+			title: <FormattedMessage id="app.modal.title.contactForm"/>,
 			name: 'contactForm',
 			component: <ContactForm {...props}/>
 		}
