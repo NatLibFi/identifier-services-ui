@@ -31,7 +31,7 @@ import useStyles from '../../styles/form';
 
 import IsbnIsmnRegForm from './IsbnIsmnRegForm';
 import IssnRegForm from './IssnRegForm';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 export default function (props) {
 	const {setTitle} = props;
@@ -54,14 +54,14 @@ export default function (props) {
 				<>
 					<div className={classes.pubFormSelect}>
 						<Typography variant="h6">
-							<FormattedMessage id="app.modal.publicationRegistration.selectType" />
+							<FormattedMessage id="app.modal.publicationRegistration.selectType"/>
 						</Typography>
 						<Button variant="contained" color="primary" onClick={handleIsbnIsmnClick}>
 							<FormattedMessage id="app.modal.publicationRegistration.btnLabel.ISBN-ISMN"/>
 						</Button>
 						<Button variant="contained" color="primary" onClick={handleIssnClick}>
-						<FormattedMessage id="app.modal.publicationRegistration.btnLabel.ISSN"/>
-							
+							<FormattedMessage id="app.modal.publicationRegistration.btnLabel.ISSN"/>
+
 						</Button>
 					</div>
 				</> :

@@ -181,7 +181,7 @@ export const fieldArray = [
 			{
 				name: 'publicationDetails[frequency][currentYear]',
 				type: 'text',
-				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.frequency.currentYear"/>, 
+				label: <FormattedMessage id="publisherRegistration.form.publishingActivities.frequency.currentYear"/>,
 				width: 'half'
 			},
 			{

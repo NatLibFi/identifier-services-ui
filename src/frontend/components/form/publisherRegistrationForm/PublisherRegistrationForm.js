@@ -43,7 +43,7 @@ import RenderInformation from './RenderInformation';
 import Captcha from '../../Captcha';
 import {fieldArray} from './formFieldVariable';
 import * as actions from '../../../store/actions';
-import {element, fieldArrayElement, formatAddress, formatLabel} from './commons';
+import {element, fieldArrayElement, formatAddress} from './commons';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'publisherRegistrationForm',

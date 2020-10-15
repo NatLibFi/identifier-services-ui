@@ -127,7 +127,7 @@ export default connect(state => ({
 	const getAddTitle = () => {
 		const result = <FormattedMessage id="form.primaryContact.button.tooltip"/>;
 		return result;
-	}
+	};
 
 	const component = (
 		<>

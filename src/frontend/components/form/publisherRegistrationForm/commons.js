@@ -12,7 +12,7 @@ import renderContactDetail from '../render/renderContactDetail';
 import renderSelectAutoComplete from '../render/renderSelectAutoComplete';
 import PopoverComponent from '../../PopoverComponent';
 import HelpIcon from '@material-ui/icons/Help';
-import { FormattedMessage } from 'react-intl';
+import {FormattedMessage} from 'react-intl';
 
 export function element({array, classes, clearFields, publicationIssnValues, fieldName, publicationIsbnValues}) {
 	return array.map(list => {
@@ -208,7 +208,7 @@ function getClassificationInstruction() {
 	return (
 		<>
 			<Typography>
-				<FormattedMessage id="publisherRegistration.form.classificationInstruction1"/>	
+				<FormattedMessage id="publisherRegistration.form.classificationInstruction1"/>
 			</Typography>
 			<Typography>
 				<FormattedMessage id="publisherRegistration.form.classificationInstruction2"/>

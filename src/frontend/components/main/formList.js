@@ -49,8 +49,8 @@ export default withRouter(props => {
 		{
 			label: <FormattedMessage id="app.home.formButtons.publicationRegistration"/>,
 			title: <FormattedMessage
-					id={dynamicTitle === '' ? "app.modal.title.publicationRegistration" : `app.modal.title.publicationRegistration${dynamicTitle}`}
-				/>,
+				id={dynamicTitle === '' ? 'app.modal.title.publicationRegistration' : `app.modal.title.publicationRegistration${dynamicTitle}`}
+			/>,
 			name: 'publicationRegistration',
 			component: <SwitchPublicationForm title={dynamicTitle} setTitle={setDynamicTitle} {...props}/>
 		},

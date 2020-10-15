@@ -35,7 +35,7 @@ export default function (props) {
 	const classes = useStyles();
 	const {setInformation} = props;
 
-	const notes= ['note0', 'note1', 'note2','note3','note4'];
+	const notes = ['note0', 'note1', 'note2', 'note3', 'note4'];
 
 	const component = (
 		<>
@@ -63,7 +63,7 @@ export default function (props) {
 							</Typography>
 						</ListItem>
 					))}
-					<Button variant="contained" color="primary" onClick={() => setInformation(false)}> 
+					<Button variant="contained" color="primary" onClick={() => setInformation(false)}>
 						<FormattedMessage id="publisherRegistration.renderInformation.btnLabel"/>
 					</Button>
 				</List>
