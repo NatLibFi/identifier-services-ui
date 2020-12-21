@@ -59,13 +59,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		userInfo,
 		fetchIsbnIsmn,
 		handleSubmit,
+		sendMessage,
 		clearFields,
 		updatePublicationIsbnIsmn,
 		updatedIsbnIsmn,
 		fetchPublisherOption,
 		fetchAllMessagesList,
+		fetchMessage,
 		publisherOption,
 		messageTemplates,
+		messageInfo,
 		createIsbnIsmnBatch
 	} = props;
 	const intl = useIntl();
@@ -80,6 +83,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [disableAssign, setDisableAssign] = useState(true);
 	const [sendingMessage, setSendingMessage] = useState(false);
 	const [selectedTemplate, setSelectedTemplate] = useState(null);
+	const [messageToBeSend, setMessageToBeSend] = useState(null);
+	const [publisherEmail, setPublisherEmail] = useState(null);
 
 	useEffect(() => {
 		if (id !== null) {
@@ -110,6 +115,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}
 	}, [cookie, createIsbnIsmnBatch, fetchIsbnIsmn, id, isbnIsmn, publisherId, subRangeId]);
 
+	useEffect(() => {
+		if (selectedTemplate !== null) {
+			fetchMessage(selectedTemplate.value, cookie[COOKIE_NAME]);
+		}
+	}, [cookie, fetchMessage, selectedTemplate]);
+
 	const handleEditClick = () => {
 		setIsEdit(true);
 	};
@@ -127,6 +138,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	function handleOnClickSendMessage() {
 		setSendingMessage(true);
+	}
+
+	function handleOnClickSend() {
+		setSendingMessage(false);
+		if (messageToBeSend !== null && publisherEmail !== null) {
+			sendMessage({...messageToBeSend, sendTo: publisherEmail});
+		}
 	}
 
 	function isEditable(key) {
@@ -164,7 +182,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<div className={classes.listItem}>
 							<form>
 								<Grid container spacing={3} className={classes.listItemSpinner}>
-									<PublicationRenderComponent publication={isbnIsmn} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
+									<PublicationRenderComponent publication={isbnIsmn} setPublisherEmail={setPublisherEmail} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
 								</Grid>
 								<div className={classes.btnContainer}>
 									<Button onClick={handleCancel}>
@@ -207,7 +225,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</div> :
 							<div className={classes.listItem}>
 								<Grid container spacing={3} className={classes.listItemSpinner}>
-									<PublicationRenderComponent publication={isbnIsmn} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
+									<PublicationRenderComponent publication={isbnIsmn} setPublisherEmail={setPublisherEmail} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
 								</Grid>
 								{role !== undefined && role === 'admin' &&
 									<div className={classes.btnContainer}>
@@ -253,11 +271,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					options={messageSelectOptions(messageTemplates)}
 					placeholder="Select message template from the list"
 					value={selectedTemplate}
-					onBlur={value => setSelectedTemplate(value)}
 					onChange={value => setSelectedTemplate(value)}
 				/>
 				{/* Format and Edit Message */}
-				<RichTextEditor/>
+				<RichTextEditor messageInfo={messageInfo} setMessageToBeSend={setMessageToBeSend}/>
+				<Button disabled={messageToBeSend === null} variant="outlined" color="primary" onClick={handleOnClickSend}>
+					<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
+				</Button>
 			</div>
 		);
 	}
@@ -278,6 +298,7 @@ function mapStateToProps(state) {
 		updatedIsbnIsmn: state.publication.updatedIsbnIsmn,
 		userInfo: state.login.userInfo,
 		messageListLoading: state.contact.listLoading,
-		messageTemplates: state.contact.messagesList
+		messageTemplates: state.contact.messagesList,
+		messageInfo: state.contact.messageInfo
 	});
 }

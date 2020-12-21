@@ -44,7 +44,7 @@ import Spinner from '../Spinner';
 import * as actions from '../../store/actions';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {publication, isEdit, isEditable, clearFields, fetchPublisher, fetchedPublisher, publisherLoading} = props;
+	const {publication, isEdit, isEditable, clearFields, fetchPublisher, fetchedPublisher, publisherLoading, setPublisherEmail} = props;
 	const intl = useIntl();
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
@@ -64,8 +64,9 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		if (Object.keys(fetchedPublisher).length > 0) {
 			setPublisherName(fetchedPublisher.name);
+			setPublisherEmail(fetchedPublisher.email);
 		}
-	}, [fetchedPublisher]);
+	}, [fetchedPublisher, setPublisherEmail]);
 
 	function formatValueforAssociatedRange(value) {
 		return value.map(item => item.subRange);

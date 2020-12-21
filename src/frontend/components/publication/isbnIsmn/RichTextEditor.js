@@ -26,14 +26,14 @@
  *
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 
 import {useQuill} from 'react-quilljs';
 import 'quill/dist/quill.snow.css';
 
-export default function () {
+export default function (props) {
 	const theme = 'snow';
-
+	const {messageInfo, setMessageToBeSend} = props;
 	const modules = {
 		toolbar: [
 			['bold', 'italic', 'underline', 'strike'],
@@ -44,7 +44,7 @@ export default function () {
 
 			[{size: ['small', false, 'large', 'huge']}],
 			[{header: [1, 2, 3, 4, 5, 6, false]}],
-			['link', 'image', 'video'],
+			['link'],
 			[{color: []}, {background: []}],
 
 			['clean']
@@ -67,17 +67,33 @@ export default function () {
 		'size',
 		'header',
 		'link',
-		'image',
-		'video',
 		'color',
 		'background',
 		'clean'
 	];
 
-	const {quillRef} = useQuill({theme, modules, formats, placeholder});
+	const {quill, quillRef} = useQuill({theme, modules, formats, placeholder});
+	useEffect(() => {
+		if (quill !== undefined & messageInfo !== null) {
+			quill.clipboard.dangerouslyPasteHTML(
+				`<span>${Buffer.from(messageInfo.body, 'base64').toString('utf8')}</span>`
+			);
+		}
+	}, [messageInfo, quill]);
+
+	useEffect(() => {
+		if (quill) {
+			quill.on('text-change', () => {
+				const text = quill.getText();
+				if (messageInfo !== null) {
+					setMessageToBeSend({...messageInfo, body: text});
+				}
+			});
+		}
+	}, [messageInfo, quill, setMessageToBeSend]);
 
 	const component = (
-		<div style={{width: '100%', height: 400, border: '1px solid lightgray'}}>
+		<div style={{width: '100%', minHeight: 400, border: '1px solid lightgray'}}>
 			<div ref={quillRef}/>
 		</div>
 	);

@@ -63,16 +63,17 @@ process.on('SIGINT', () => {
 app.use(express.static(path.resolve(__dirname, 'public')));
 
 app.post('/message', (req, res) => {
+	const {body} = req;
 	async function main() {
 		const parseUrl = parse(SMTP_URL, true);
 		const emailcontent = `
 			<h3>Contact Details</h3>
 			<ul>
-				<li>Name: ${req.body.name}</li>
-				<li>Email: ${req.body.email}</li>
+				<li>Name: ${body.name}</li>
+				<li>Email: ${body.email}</li>
 			</ul>
 			<h3>Message</h3>
-			<p>${req.body.description}</p>
+			<p>${body.description ? body.description : body.body}</p>
 		`;
 
 		let transporter = nodemailer.createTransport({
@@ -83,10 +84,9 @@ app.post('/message', (req, res) => {
 
 		await transporter.sendMail({
 			from: 'test@test.com',
-			to: 'sanjogstha7@gmail.com',
+			to: body.sendTo ? body.sendTo : body.email,
 			replyTo: 'test@test.com',
-			subject: 'New Message',
-			text: 'hello World!!',
+			subject: body.subject,
 			html: emailcontent
 		});
 		res.send('Message Sent');
