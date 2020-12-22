@@ -41,6 +41,8 @@ export const API_URL = readEnvironmentVariable('API_URL', {
 	defaultValue: 'http://localhost:8081'
 });
 
+export const ADMINISTRATORS_EMAIL = readEnvironmentVariable('ADMINISTRATORS_EMAIL');
+
 export const QUERY_LIMIT = readEnvironmentVariable('QUERY_LIMIT', {
 	defaultValue: 5
 });

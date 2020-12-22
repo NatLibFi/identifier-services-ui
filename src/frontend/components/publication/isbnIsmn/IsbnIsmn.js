@@ -142,9 +142,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	function handleOnClickSend() {
 		setSendingMessage(false);
-		if (messageToBeSend !== null && publisherEmail !== null) {
-			sendMessage({...messageToBeSend, sendTo: publisherEmail});
-		}
+		sendMessage({...messageToBeSend, sendTo: publisherEmail});
 	}
 
 	function isEditable(key) {
@@ -275,7 +273,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				/>
 				{/* Format and Edit Message */}
 				<RichTextEditor messageInfo={messageInfo} setMessageToBeSend={setMessageToBeSend}/>
-				<Button disabled={messageToBeSend === null} variant="outlined" color="primary" onClick={handleOnClickSend}>
+				<Button disabled={messageToBeSend === null || publisherEmail === null} variant="outlined" color="primary" onClick={handleOnClickSend}>
 					<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
 				</Button>
 			</div>

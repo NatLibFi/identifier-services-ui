@@ -40,7 +40,7 @@ import uuidv4 from 'uuid/v4';
 import fs from 'fs';
 import HttpStatus from 'http-status';
 import jose from 'jose';
-import {HTTP_PORT, TOKEN_MAX_AGE, SMTP_URL, API_URL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
+import {HTTP_PORT, TOKEN_MAX_AGE, SMTP_URL, API_URL, ADMINISTRATORS_EMAIL, SYSTEM_USERNAME, SYSTEM_PASSWORD, PRIVATE_KEY_URL, NOTIFICATION_URL, COOKIE_NAME} from './config';
 import * as frontendConfig from './frontEndConfig';
 
 function bodyParse() {
@@ -83,9 +83,9 @@ app.post('/message', (req, res) => {
 		});
 
 		await transporter.sendMail({
-			from: 'test@test.com',
+			from: ADMINISTRATORS_EMAIL,
 			to: body.sendTo ? body.sendTo : body.email,
-			replyTo: 'test@test.com',
+			replyTo: ADMINISTRATORS_EMAIL,
 			subject: body.subject,
 			html: emailcontent
 		});
