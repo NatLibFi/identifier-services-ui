@@ -75,7 +75,6 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'phone', label: intl.formatMessage({id: 'publisherList.headRows.phone'})}
 	];
 	let publishersData;
-	console.log('this is loading', loading)
 	if (loading) {
 		publishersData = <Spinner/>;
 	} else if (searchedPublishers === null || searchedPublishers.length === 0) {
