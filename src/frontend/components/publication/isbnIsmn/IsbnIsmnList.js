@@ -35,7 +35,7 @@ import * as actions from '../../../store/actions';
 import PublicationListRenderComponent from '../PublicationListRenderComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIsbnIsmnList, isbnIsmnList, loading} = props;
+	const {fetchIsbnIsmnList, isbnIsmnList} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const [cursors] = useState([]);
@@ -48,7 +48,7 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		fetchIsbnIsmnList({token: cookie[COOKIE_NAME], offset: lastCursor});
 		setIsCreating(false);
-	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie, isCreating]);
+	}, [lastCursor, cursors, fetchIsbnIsmnList, cookie, isCreating, modal]);
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnId(id);
@@ -65,7 +65,6 @@ export default connect(mapStateToProps, actions)(props => {
 	return (
 		<PublicationListRenderComponent
 			isbnIsmn
-			loading={loading}
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}
 			rowSelectedId={rowSelectedId}
@@ -83,7 +82,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publication.listLoading,
 		isbnIsmnList: state.publication.isbnIsmnList,
 		totalpublication: state.publication.totalDoc,
 		offset: state.publication.offset,

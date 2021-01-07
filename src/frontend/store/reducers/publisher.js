@@ -29,12 +29,14 @@
 import {
 	PUBLISHERS_LIST,
 	PUBLISHER, LOADER,
-	LIST_LOADER, ERROR,
+	LIST_LOADER,
+	ERROR,
 	SEARCH_PUBLISHER,
 	PUBLISHERS_REQUESTS_LIST,
 	PUBLISHER_REQUEST,
 	UNIVERSITY_PUBLISHER,
 	PUBLISHER_OPTIONS,
+	SEARCH_LIST_LOADER,
 	UPDATE_PUBLISHER
 } from '../actions/types';
 
@@ -71,6 +73,11 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				listLoading: true
+			};
+		case SEARCH_LIST_LOADER:
+			return {
+				...state,
+				searchListLoading: true
 			};
 		case PUBLISHERS_LIST:
 			return {

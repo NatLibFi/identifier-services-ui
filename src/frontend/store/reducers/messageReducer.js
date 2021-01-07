@@ -70,7 +70,7 @@ export default function (state = initialState, action) {
 				offset: action.payload.offset,
 				totalMessages: action.payload.totalDoc,
 				queryDocCount: action.payload.queryDocCount,
-				loading: false
+				listLoading: false
 			};
 		case FETCH_ALL_MESSAGES_LIST:
 			return {

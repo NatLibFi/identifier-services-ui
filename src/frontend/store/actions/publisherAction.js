@@ -34,7 +34,7 @@ import {setLoader, setListLoader, setMessage, success, fail, setSearchListLoader
 import HttpStatus from 'http-status';
 
 export const fetchPublisher = (id, token) => async dispatch => {
-	dispatch(setLoader());
+	dispatch(setListLoader());
 	try {
 		const response = await fetch(`${API_URL}/publishers/${id}`, {
 			method: 'GET',

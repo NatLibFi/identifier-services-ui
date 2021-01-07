@@ -27,6 +27,7 @@
  */
 
 import React, {useState} from 'react';
+import {connect} from 'react-redux';
 import {Grid, Typography} from '@material-ui/core';
 import {FormattedMessage, useIntl} from 'react-intl';
 
@@ -40,7 +41,7 @@ import ModalLayout from '../ModalLayout';
 import IsbnIsmnRegForm from '../form/IsbnIsmnRegForm';
 import IssnRegForm from '../form/IssnRegForm';
 
-export default function (props) {
+export default connect(mapStateToProps)(props => {
 	const intl = useIntl();
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
@@ -146,4 +147,10 @@ export default function (props) {
 	return {
 		...component
 	};
+});
+
+function mapStateToProps(state) {
+	return ({
+		loading: state.publication.listLoading
+	});
 }

@@ -75,6 +75,7 @@ export default connect(mapStateToProps, actions)(props => {
 		{id: 'phone', label: intl.formatMessage({id: 'publisherList.headRows.phone'})}
 	];
 	let publishersData;
+	console.log('this is loading', loading)
 	if (loading) {
 		publishersData = <Spinner/>;
 	} else if (searchedPublishers === null || searchedPublishers.length === 0) {
@@ -133,7 +134,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 function mapStateToProps(state) {
 	return ({
-		loading: state.publisher.listLoading,
+		loading: state.publisher.searchListLoading,
 		searchedPublishers: state.publisher.searchedPublisher,
 		publishersList: state.publisher.publishersList,
 		offset: state.publisher.offset,
