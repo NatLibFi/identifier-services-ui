@@ -32,6 +32,8 @@ import {
 	Grid,
 	Fab
 } from '@material-ui/core';
+import RichTextEditor from '../isbnIsmn/RichTextEditor';
+import Select from 'react-select';
 import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
@@ -62,7 +64,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		fetchAllMessagesList,
 		fetchMessage,
 		messageTemplates,
-		messageInfo,
+		messageInfo
 	} = props;
 	const intl = useIntl();
 	const classes = commonStyles();
