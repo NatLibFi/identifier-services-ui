@@ -15,8 +15,7 @@
         "app.subMenu.users": "--",
     "app.menu.users": "--",
     "app.menu.identifierRanges": "--",
-        "app.subMenu.IRISBN": "ISBN",
-        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISBNISMN": "ISBN and ISMN",
         "app.subMenu.IRISSN": "ISSN",
     "app.menu.messageTemplates": "--",
 

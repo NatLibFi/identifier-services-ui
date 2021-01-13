@@ -72,7 +72,11 @@ export default function ({userInfo, isAuthenticated}) {
 		{
 			label: <FormattedMessage id="app.menu.identifierRanges"/>,
 			roleView: ['admin'],
-			path: 'ranges'
+			// path: 'ranges'
+			listItem: [
+				{label: <FormattedMessage id="app.subMenu.IRISBNISMN"/>, path: 'ranges', roleView: ['admin']},
+				{label: <FormattedMessage id="app.subMenu.IRISSN"/>, path: 'ranges/issn', roleView: ['admin']}
+			]
 		},
 		// {
 		// 	label: <FormattedMessage id="app.menu.identifierRanges"/>,

@@ -149,6 +149,7 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								/>
 							</Grid>
 							{publicationIsbnValues && publicationIsbnValues.selectFormat && subElementFormatDetails({value: publicationIsbnValues.selectFormat, classes, intl})}
+							{publicationIssnValues && publicationIssnValues.selectFormat && subElementFormatDetails({value: publicationIssnValues.selectFormat, classes, intl})}
 						</>
 					);
 				}

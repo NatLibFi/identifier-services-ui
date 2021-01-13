@@ -100,6 +100,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				case 4:
 					return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
 				case 5:
+					return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
+				case 6:
 					return renderPreview(publicationValues);
 				default:
 					return 'Unknown step';
@@ -138,7 +140,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const publisher = isAuthenticated ? user.publisher : {
 				name: values.name,
 				postalAddress: values.postalAddress,
-				publisherEmail: values.publisherEmail,
+				publisherEmail: values.email,
 				phone: values.phone,
 				language: values.publisherLanguage,
 				aliases: values.aliases && values.aliases
@@ -154,9 +156,51 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					lastYear: values.previousPublication.lastYear && Number(values.previousPublication.lastYear),
 					lastNumber: values.previousPublication.lastNumber && values.previousPublication.lastNumber
 				},
+				formatDetails: formatDetail(),
 				type: values.type.value
 			};
 			return formattedPublicationValues;
+
+			function formatDetail() {
+				if (values.selectFormat === 'electronic') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'electronic',
+						fileFormat: reFormat(values.formatDetails.fileFormat)
+					};
+					return formatDetails;
+				}
+
+				if (values.selectFormat === 'printed') {
+					const formatDetails = {
+						...values.formatDetails,
+						printFormat: reFormat(values.formatDetails.printFormat),
+						format: 'printed',
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
+
+				if (values.selectFormat === 'both') {
+					const formatDetails = {
+						...values.formatDetails,
+						format: 'printed-and-electronic',
+						fileFormat: reFormat(values.formatDetails.fileFormat),
+						printFormat: reFormat(values.formatDetails.printFormat),
+						run: values.formatDetails.run && Number(values.formatDetails.run),
+						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
+					};
+					return formatDetails;
+				}
+			}
+
+			function reFormat(value) {
+				return value.reduce((acc, item) => {
+					acc.push(item.value);
+					return acc;
+				}, []);
+			}
 		}
 
 		async function submitPublication(values, result) {
@@ -198,11 +242,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<List>
 							{
 								Object.keys(formatValues).map(key => {
-									return (typeof formatValues[key] === 'object') ?
-										(
-											<ListComponent label={intl.formatMessage({id: `listComponent.${key}`})} value={formatValues[key]}/>
-										) :
-										null;
+									if (typeof formatValues[key] === 'object') {
+										if (Array.isArray(formatValues[key])) {
+											return <ListComponent label={intl.formatMessage({id: `listComponent.${key}`})} value={formatValues[key]}/>;
+										}
+
+										const obj = formatValues[key];
+										Object.keys(obj).forEach(key => obj[key] === undefined ? delete obj[key] : '');
+										return <ListComponent label={intl.formatMessage({id: `listComponent.${key}`})} value={obj}/>;
+									}
+
+									return null;
 								})
 							}
 						</List>
@@ -487,19 +537,6 @@ function getFieldArray(intl) {
 								{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.monography'}), value: 'monography'}
 
 							]
-						},
-						{
-							name: 'formatDetails[format]',
-							type: 'select',
-							label: intl.formatMessage({id: 'publicationRegistration.form.Time.format'}),
-							width: 'half',
-							options: [
-								{label: '', value: ''},
-								{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.printed'}), value: 'printed'},
-								{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.cd'}), value: 'cd'},
-								{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.electronic'}), value: 'electronic'},
-								{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.both'}), value: 'printed-and-electronic'}
-							]
 						}
 					]
 				}
@@ -589,6 +626,20 @@ function getFieldArray(intl) {
 							label: intl.formatMessage({id: 'publicationRegistration.form.seriesDetails.identifier'}),
 							width: 'half'
 						}
+					]
+				}
+			]
+		},
+		{
+			formatDetails: [
+				{
+					name: 'selectFormat',
+					type: 'radio',
+					width: 'full',
+					options: [
+						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.printed'}), value: 'printed'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.electronic'}), value: 'electronic'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.both'}), value: 'both'}
 					]
 				}
 			]

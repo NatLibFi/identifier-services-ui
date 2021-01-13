@@ -326,7 +326,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				if (values.selectFormat === 'printed') {
 					const formatDetails = {
 						...values.formatDetails,
-						printFormat: reFormat(values.formatDetail.printFormat),
+						printFormat: reFormat(values.formatDetails.printFormat),
 						format: 'printed',
 						run: values.formatDetails.run && Number(values.formatDetails.run),
 						edition: values.formatDetails.edition && Number(values.formatDetails.edition)

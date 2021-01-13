@@ -290,7 +290,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 function mapStateToProps(state) {
 	return ({
 		isbnIsmn: state.publication.isbnIsmn,
-		loading: state.publication.loading,
 		initialValues: state.publication.isbnIsmn,
 		publisherOption: state.publisher.publisherOptions,
 		updatedIsbnIsmn: state.publication.updatedIsbnIsmn,

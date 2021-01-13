@@ -15,8 +15,7 @@
         "app.subMenu.users": "Users",
     "app.menu.users": "Users",
     "app.menu.identifierRanges": "Identifier Ranges",
-        "app.subMenu.IRISBN": "ISBN",
-        "app.subMenu.IRISMN": "ISMN",
+        "app.subMenu.IRISBNISMN": "ISBN and ISMN",
         "app.subMenu.IRISSN": "ISSN",
     "app.menu.messageTemplates": "Message Templates",
 
@@ -557,7 +556,7 @@
     "publicationRequestRender.heading.search.IsbnIsmn": "Search Publication Requests for ISBN-ISMN",
     "publicationRequestRender.heading.search.Issn": "Search Publication Requests for ISSN",
 
-    "publicationRequest.label.language": "Langugage",
+    "publicationRequest.label.language": "Language",
     "publicationRequest.label.isPublic": "Is Public",
     "publicationRequest.label.type": "Type",
     "publicationRequest.label.email": "Email",
@@ -590,6 +589,9 @@
     "publicationRequest.label.identifier": "Identifier",
     "publicationRequest.label.previousPublication": "Previous Publication",
     "publicationRequest.label.publisherDetails": "Publisher Details",
+    "publicationRequest.label.firstYear": "First Year",
+    "publicationRequest.label.selectFormat": "Select Format",
+    "publicationRequest.label.givenName": "Given Name",
     
     "publisherRender.label.lastUpdated": "Last Updated",
     "publisherRender.label.givenName": "Given Name",
