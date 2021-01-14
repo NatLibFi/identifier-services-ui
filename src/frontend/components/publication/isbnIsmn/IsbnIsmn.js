@@ -85,6 +85,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [selectedTemplate, setSelectedTemplate] = useState(null);
 	const [messageToBeSend, setMessageToBeSend] = useState(null);
 	const [publisherEmail, setPublisherEmail] = useState(null);
+	const [next, setNext] = useState(false);
 
 	useEffect(() => {
 		if (id !== null) {
@@ -201,6 +202,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									setPublisherId={setPublisherId}
 									handleRange={handleRange}
 									publisherOption={publisherOption}
+									next={next}
+									setNext={setNext}
 									{...props}
 								/>
 								{
@@ -212,13 +215,23 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										>
 											<FormattedMessage id="form.button.label.next"/>
 										</Button> :
-										<Button
-											variant="outlined"
-											startIcon={<ArrowBackIosIcon/>}
-											onClick={handleRange}
-										>
-											<FormattedMessage id="form.button.label.back"/>
-										</Button>
+										(
+											next ?
+												<Button
+													variant="outlined"
+													endIcon={<ArrowForwardIosIcon/>}
+													onClick={() => setNext(false)}
+												>
+													<FormattedMessage id="form.button.label.next"/>
+												</Button> :
+												<Button
+													variant="outlined"
+													startIcon={<ArrowBackIosIcon/>}
+													onClick={handleRange}
+												>
+													<FormattedMessage id="form.button.label.back"/>
+												</Button>
+										)
 								}
 							</div> :
 							<div className={classes.listItem}>

@@ -34,6 +34,7 @@ import moment from 'moment';
 import {FormattedMessage, useIntl} from 'react-intl';
 import {
 	Grid,
+	List,
 	FormControlLabel,
 	Checkbox,
 	Typography,
@@ -46,6 +47,7 @@ import Spinner from '../../Spinner';
 import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import AlertDialogs from '../../AlertDialogs';
+import ListComponent from '../../ListComponent';
 
 export default connect(mapStateToProps, actions)(props => {
 	const {
@@ -59,7 +61,12 @@ export default connect(mapStateToProps, actions)(props => {
 		setPublisherId,
 		isbnIsmn,
 		publisherOption,
-		handleRange
+		fetchPublisher,
+		fetchedPublisher,
+		publisherLoading,
+		handleRange,
+		next,
+		setNext
 	} = props;
 	const intl = useIntl();
 	/* global COOKIE_NAME */
@@ -80,6 +87,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [selectedId, setSelectedId] = useState(null);
 	const [selectedPublisher, setSelectedPublisher] = useState(null);
 	const [publisher, setPublisher] = useState(null);
+	const [renderingPublisherProperties, setRenderingPublisherProperties] = useState(false);
 
 	useEffect(() => {
 		setPublisher(isbnIsmn.publisher);
@@ -90,11 +98,10 @@ export default connect(mapStateToProps, actions)(props => {
 	}, [updateComponent, isbnIsmn.publisher, fetchIDRList, cookie, lastCursor, activeCheck, rangeType]);
 
 	useEffect(() => {
-		if (selectedPublisher !== null) {
-			const {value} = selectedPublisher;
-			fetchIDRList({searchText: value, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck, rangeType});
+		if (next && fetchedPublisher !== undefined) {
+			fetchIDRList({searchText: fetchedPublisher._id, token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck, rangeType});
 		}
-	}, [updateComponent, isbnIsmn.publisher, fetchIDRList, cookie, lastCursor, activeCheck, rangeType, selectedPublisher]);
+	}, [updateComponent, isbnIsmn.publisher, fetchIDRList, cookie, lastCursor, activeCheck, rangeType, fetchedPublisher, next]);
 
 	useEffect(() => {
 		if (confirmation && selectedId !== null) {
@@ -111,6 +118,18 @@ export default connect(mapStateToProps, actions)(props => {
 			}
 		}
 	}, [confirmation, handleRange, rangeType, publisher, selectedId, selectedPublisher, setPublisherId, setSubRangeId]);
+
+	useEffect(() => {
+		if (selectedPublisher !== null) {
+			fetchPublisher(selectedPublisher.value, cookie[COOKIE_NAME]);
+			setRenderingPublisherProperties(true);
+			setNext(true);
+		}
+	}, [cookie, fetchPublisher, selectedPublisher, setNext, setRenderingPublisherProperties]);
+
+	useEffect(() => {
+		setRenderingPublisherProperties(next);
+	}, [next]);
 
 	const handleTableRowClick = id => {
 		// TO DO alert Confirm message
@@ -153,24 +172,44 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	let data;
-	if ((rangesList === undefined) || (rangeLoading)) {
+	if (rangesList === undefined || rangeLoading || publisherLoading) {
 		data = <Spinner/>;
-	} else if (rangesList.length === 0) {
-		data = (
-			<FormControl className={classes.formControl}>
-				<InputLabel id="select-publisher">Please select a Publisher</InputLabel>
-				<Select
-					isSearchable
-					isClearable
-					name="select-publisher"
-					value={selectedPublisher !== null && selectedPublisher}
-					options={publisherOption}
-					onChange={value => {
-						setSelectedPublisher(value);
-					}}
-				/>
-			</FormControl>
-		);
+	} else if (rangesList.length === 0 || renderingPublisherProperties) {
+		data =
+			(
+				<FormControl className={classes.formControl}>
+					<InputLabel id="select-publisher">Please select a Publisher</InputLabel>
+					<Select
+						isSearchable
+						isClearable
+						name="select-publisher"
+						value={selectedPublisher !== null && selectedPublisher}
+						options={publisherOption}
+						onChange={value => {
+							setRenderingPublisherProperties(false);
+							setSelectedPublisher(value);
+							setRenderingPublisherProperties(true);
+						}}
+					/>
+					{
+						renderingPublisherProperties &&
+							<Grid item xs={12} md={12} style={{border: '1px solid', padding: 10}}>
+								<List>
+									{
+										Object.keys(fetchedPublisher).map(key => {
+											const {_id, language, request, metadataDelivery, isbnRange, ismnRange, ...formattedFetchedPublisher} = fetchedPublisher;
+											return typeof formattedFetchedPublisher[key] === 'string' ?
+												(
+													<ListComponent label={intl.formatMessage({id: `publisherRender.label.${key}`})} value={formattedFetchedPublisher[key]}/>
+												) :
+												null;
+										})
+									}
+								</List>
+							</Grid>
+					}
+				</FormControl>
+			);
 	} else {
 		data = (
 			<TableComponent
@@ -226,6 +265,7 @@ export default connect(mapStateToProps, actions)(props => {
 						label={intl.formatMessage({id: 'rangesList.label.checkbox'})}
 					/>
 					{data}
+					{publisherLoading}
 				</>
 			</Grid>
 			{
@@ -252,6 +292,8 @@ function mapStateToProps(state) {
 		rangesList: state.identifierRanges.rangesList,
 		offset: state.identifierRanges.offset,
 		totalDoc: state.identifierRanges.totalDoc,
-		queryDocCount: state.identifierRanges.queryDocCount
+		queryDocCount: state.identifierRanges.queryDocCount,
+		publisherLoading: state.publisher.loading,
+		fetchedPublisher: state.publisher.publisher
 	});
 }
