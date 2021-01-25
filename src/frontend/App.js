@@ -30,8 +30,9 @@ import React, {useState, useEffect} from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import {Switch, Route, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {MuiThemeProvider} from '@material-ui/core/styles';
+import {Grid} from '@material-ui/core';
 import {IntlProvider} from 'react-intl';
+import {MuiThemeProvider} from '@material-ui/core/styles';
 import {useCookies} from 'react-cookie';
 
 import Home from './components/main';
@@ -42,7 +43,9 @@ import PublishersList from './components/publishers/PublishersList';
 import PublisherProfile from './components/publishers/PublisherProfile';
 import UsersList from './components/users/UsersList';
 import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
+import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
 import IssnList from './components/publication/issn/IssnList';
+import Issn from './components/publication/issn/Issn';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
 import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
@@ -85,9 +88,9 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/users', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
 		{path: '/users/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
 		{path: '/publications/isbn-ismn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
-		{path: '/publication/isbn-ismn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
+		{path: '/publications/isbn-ismn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmn},
 		{path: '/publications/issn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
-		{path: '/publication/issn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
+		{path: '/publications/issn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: Issn},
 		{path: '/requests/users', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
 		{path: '/requests/users/:id', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
 		{path: '/templates', role: ['admin'], component: MessagesList},
@@ -140,21 +143,29 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const component = (
 		<IntlProvider locale={lang} messages={translations[lang]}>
 			<MuiThemeProvider theme={theme}>
-				<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
-				<CssBaseline/>
-				<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
-				<section className={classes.bodyContainer}>
-					{
-						isAuthenticatedState ? (userInfo.role === 'publisher') &&
-							<Tooltips label="contact form" title="contactForm"/> :
-							null
-					}
-					<Switch>
-						{routes}
-					</Switch>
-					{responseMessage && <SnackBar variant={responseMessage.color} openSnackBar={Boolean(responseMessage)} {...props}/>}
-				</section>
-				<Footer/>
+				<Grid container>
+					<Grid container item xs={12}>
+						<TopNav userInfo={userInfo} isAuthenticated={isAuthenticatedState} history={history}/>
+					</Grid>
+					<Grid container item xs={12}>
+						<CssBaseline/>
+					</Grid>
+					<Grid container item xs={12}>
+						<AdminNav userInfo={userInfo} isAuthenticated={isAuthenticatedState}/>
+					</Grid>
+					<Grid container item xs={12} className={classes.bodyContainer}>
+						{
+							isAuthenticatedState ? (userInfo.role === 'publisher') &&
+								<Tooltips label="contact form" title="contactForm"/> :
+								null
+						}
+						<Switch>
+							{routes}
+						</Switch>
+						{responseMessage && <SnackBar variant={responseMessage.color} openSnackBar={Boolean(responseMessage)} {...props}/>}
+					</Grid>
+					<Footer/>
+				</Grid>
 			</MuiThemeProvider>
 		</IntlProvider>
 	);

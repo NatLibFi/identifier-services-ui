@@ -35,7 +35,7 @@ import * as actions from '../../../store/actions';
 import PublicationListRenderComponent from '../PublicationListRenderComponent';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIsbnIsmnList, isbnIsmnList} = props;
+	const {fetchIsbnIsmnList, isbnIsmnList, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const [cursors] = useState([]);
@@ -52,7 +52,8 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnId(id);
-		setModal(true);
+		// setModal(true);
+		history.push(`/publications/isbn-ismn/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -64,7 +65,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	return (
 		<PublicationListRenderComponent
-			isbnIsmn
+			// isbnIsmn 
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}
 			rowSelectedId={rowSelectedId}

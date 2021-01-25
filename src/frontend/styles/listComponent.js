@@ -29,17 +29,18 @@
 import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
-	objDetail: {
-		flexDirection: 'column'
-	},
 	exPanel: {
 		paddingLeft: 5
+	},
+	objectContainer: {
+		margin: '10px 0'
 	},
 	label: {
 		fontWeight: 600
 	},
 	dropDownList: {
 		display: 'flex',
+		marginLeft: 60,
 		justifyContent: 'space-between',
 		'& span': {
 			minWidth: '80px'

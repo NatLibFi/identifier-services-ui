@@ -106,24 +106,22 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5"><FormattedMessage id="publisher.search.title"/></Typography>
-				<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
-				<FormControlLabel
-					control={
-						<Checkbox
-							checked={activeCheck.checked}
-							value="checked"
-							color="primary"
-							onChange={handleChange('checked')}
-						/>
-					}
-					label={<FormattedMessage id="publisher.search.filter"/>}
-				/>
-				{publishersData}
-				<Publisher id={publisherId} modal={modal} setModal={setModal}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5"><FormattedMessage id="publisher.search.title"/></Typography>
+			<SearchComponent offset={offset} searchFunction={searchPublisher} setSearchInputVal={setSearchInputVal}/>
+			<FormControlLabel
+				control={
+					<Checkbox
+						checked={activeCheck.checked}
+						value="checked"
+						color="primary"
+						onChange={handleChange('checked')}
+					/>
+				}
+				label={<FormattedMessage id="publisher.search.filter"/>}
+			/>
+			{publishersData}
+			<Publisher id={publisherId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

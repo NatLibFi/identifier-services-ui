@@ -36,10 +36,10 @@ export default function () {
 		<Grid container className={classes.footer}>
 			<Grid item xs={12} className={classes.footerContainer}>
 				<Box component="span">
-					The National Library of Finland <br/> P.O.Box 15(Unioninkatu 36) <br/> 00014 University of Helsinki
+					The National Library of Finland <br/> P.O.Box 15(Unioninkatu 36), 00014
 				</Box>
 				<Box component="span">
-					Telephone: <br/> +358294123196
+					+358294123196
 				</Box>
 				<Box component="span">
 					&copy;University of Helsinki 2019

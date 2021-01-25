@@ -113,39 +113,37 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="ismnList.title.search"/>
-				</Typography>
-				<SearchComponent searchFunction={fetchIDRIsmnList} setSearchInputVal={setSearchInputVal}/>
-				<FormControlLabel
-					control={
-						<Checkbox
-							checked={activeCheck.checked}
-							value="checked"
-							color="primary"
-							onChange={handleChange('checked')}
-						/>
-					}
-					label={intl.formatMessage({id: 'ismnList.label.checkbox'})}
-				/>
-				{
-					userInfo.role === 'admin' &&
-						<ModalLayout
-							form
-							label={intl.formatMessage({id: 'ismnList.label.button.create'})}
-							title={intl.formatMessage({id: 'ismnList.label.button.create'})}
-							name="issnCreationRange"
-							variant="outlined"
-							color="primary"
-						>
-							<RangeCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
-						</ModalLayout>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="ismnList.title.search"/>
+			</Typography>
+			<SearchComponent searchFunction={fetchIDRIsmnList} setSearchInputVal={setSearchInputVal}/>
+			<FormControlLabel
+				control={
+					<Checkbox
+						checked={activeCheck.checked}
+						value="checked"
+						color="primary"
+						onChange={handleChange('checked')}
+					/>
 				}
-				{ismnData}
-				<Ismn id={ismnId} modal={modal} setModal={setModal}/>
-			</Grid>
+				label={intl.formatMessage({id: 'ismnList.label.checkbox'})}
+			/>
+			{
+				userInfo.role === 'admin' &&
+					<ModalLayout
+						form
+						label={intl.formatMessage({id: 'ismnList.label.button.create'})}
+						title={intl.formatMessage({id: 'ismnList.label.button.create'})}
+						name="issnCreationRange"
+						variant="outlined"
+						color="primary"
+					>
+						<RangeCreationForm setUpdateComponent={setUpdateComponent} {...props}/>
+					</ModalLayout>
+			}
+			{ismnData}
+			<Ismn id={ismnId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

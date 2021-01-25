@@ -109,21 +109,19 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="publicationRequestRender.heading.search.IsbnIsmn"/>
-				</Typography>
-				<SearchComponent searchFunction={fetchPublicationIsbnIsmnRequestsList} setSearchInputVal={setSearchInputVal}/>
-				<TabComponent
-					tabClass={classes.tab}
-					tabsClass={classes.tabs}
-					sortStateBy={sortStateBy}
-					handleChange={handleChange}
-				/>
-				{publicationIsbnIsmnRequestData}
-				<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setIsUpdating={setIsUpdating} setModal={setModal}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="publicationRequestRender.heading.search.IsbnIsmn"/>
+			</Typography>
+			<SearchComponent searchFunction={fetchPublicationIsbnIsmnRequestsList} setSearchInputVal={setSearchInputVal}/>
+			<TabComponent
+				tabClass={classes.tab}
+				tabsClass={classes.tabs}
+				sortStateBy={sortStateBy}
+				handleChange={handleChange}
+			/>
+			{publicationIsbnIsmnRequestData}
+			<IsbnIsmnRequest id={isbnIsmnRequestId} modal={modal} setIsUpdating={setIsUpdating} setModal={setModal}/>
 		</Grid>
 	);
 	return {

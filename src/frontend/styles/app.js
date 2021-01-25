@@ -75,11 +75,18 @@ const theme = createMuiTheme({
 		MuiListItem: {
 			gutters: {
 				paddingLeft: 0,
-				paddingRight: 0
+				paddingRight: 0,
+				background: 'white'
 			},
 			root: {
 				paddingTop: 5,
 				paddingBottom: 5
+			}
+		},
+		MuiListItemText: {
+			root: {
+				margin: '5px 0',
+				background: '#edf7fb'
 			}
 		},
 		MuiMenu: {
@@ -149,12 +156,16 @@ const theme = createMuiTheme({
 			root: {
 				padding: 0
 			}
+		},
+		MuiInputBase: {
+			root: {
+				display: 'flex'
+			}
 		}
 	}
 });
 
 export const commonStyles = makeStyles({
-
 	'@global': {
 		body: {
 			overflow: 'auto !important',
@@ -171,19 +182,17 @@ export const commonStyles = makeStyles({
 	},
 
 	bodyContainer: {
-		minHeight: 'calc(100vh - 300px)'
+		marginBottom: 40
 	},
 	listSearch: {
-		maxWidth: '1200px',
 		margin: '0 auto',
-		paddingTop: '60px',
+		padding: '60px',
 		'& h5': {
 			marginBottom: 8
 		}
 	},
 	listComponent: {
 		minHeight: '300px',
-		maxWidth: '1200px',
 		margin: '0 auto',
 		'& h5': {
 			marginBottom: 8
@@ -194,11 +203,9 @@ export const commonStyles = makeStyles({
 		marginBottom: 10
 	},
 	listItem: {
-		maxHeight: '60vh',
 		minWidth: '750px',
-		padding: '20px',
-		height: 'auto',
-		overflowY: 'auto'
+		padding: '60px',
+		height: 'auto'
 	},
 	btnContainer: {
 		display: 'flex',

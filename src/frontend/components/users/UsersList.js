@@ -105,27 +105,25 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="user.listAvailable"/>
-				</Typography>
-				{
-					userInfo.role === 'admin' &&
-						<ModalLayout
-							form
-							label={intl.formatMessage({id: 'app.modal.title.createUser'})}
-							title={intl.formatMessage({id: 'app.modal.title.createUser'})}
-							name="userCreation" variant="outlined"
-							classed={modalClasses.button}
-							color="primary"
-						>
-							<UserCreationForm setIsCreating={setIsCreating} {...props}/>
-						</ModalLayout>
-				}
-				{usersData}
-				<User id={userId} modal={modal} setModal={setModal} setIsCreating={setIsCreating}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="user.listAvailable"/>
+			</Typography>
+			{
+				userInfo.role === 'admin' &&
+					<ModalLayout
+						form
+						label={intl.formatMessage({id: 'app.modal.title.createUser'})}
+						title={intl.formatMessage({id: 'app.modal.title.createUser'})}
+						name="userCreation" variant="outlined"
+						classed={modalClasses.button}
+						color="primary"
+					>
+						<UserCreationForm setIsCreating={setIsCreating} {...props}/>
+					</ModalLayout>
+			}
+			{usersData}
+			<User id={userId} modal={modal} setModal={setModal} setIsCreating={setIsCreating}/>
 		</Grid>
 	);
 	return {

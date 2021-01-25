@@ -43,7 +43,6 @@ import {FormattedMessage, useIntl} from 'react-intl';
 
 import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
-import ModalLayout from '../../ModalLayout';
 import PublicationRenderComponent from '../PublicationRenderComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
@@ -52,7 +51,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {
-		id,
 		issn,
 		userInfo,
 		fetchIssn,
@@ -64,8 +62,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		fetchAllMessagesList,
 		fetchMessage,
 		messageTemplates,
+		match,
+		history,
 		messageInfo
 	} = props;
+	const {id} = match.params;
 	const intl = useIntl();
 	const classes = commonStyles();
 	const {role} = userInfo;
@@ -108,6 +109,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		console.log(updateValues, token);
 		updatePublicationIssn(id, updateValues, token);
 		setIsEdit(false);
+		history.push('/publications/issn');
 	};
 
 	function handleOnClickSendMessage() {
@@ -130,16 +132,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title={intl.formatMessage({id: 'app.modal.title.publicationIssn'})} {...props}>
+		<Grid item xs={12}>
+			{/* <ModalLayout isTableRow color="primary" title={intl.formatMessage({id: 'app.modal.title.publicationIssn'})} {...props}> */}
 			{ sendingMessage ?
 				messageElement() :
 				(
 					isEdit ?
 						<div className={classes.listItem}>
 							<form>
-								<Grid container spacing={3} className={classes.listItemSpinner}>
-									<PublicationRenderComponent publication={issn} setPublisherEmail={setPublisherEmail} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
-								</Grid>
 								<div className={classes.btnContainer}>
 									<Button onClick={handleCancel}>
 										<FormattedMessage id="form.button.label.cancel"/>
@@ -148,12 +148,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										<FormattedMessage id="form.button.label.update"/>
 									</Button>
 								</div>
+								<Grid container spacing={3} className={classes.listItemSpinner}>
+									<PublicationRenderComponent
+										issn
+										publication={issn}
+										setPublisherEmail={setPublisherEmail}
+										isEdit={isEdit}
+										clearFields={clearFields}
+										isEditable={isEditable}
+									/>
+								</Grid>
 							</form>
 						</div> :
 						<div className={classes.listItem}>
-							<Grid container spacing={3} className={classes.listItemSpinner}>
-								<PublicationRenderComponent publication={issn} setPublisherEmail={setPublisherEmail} isEdit={isEdit} clearFields={clearFields} isEditable={isEditable}/>
-							</Grid>
 							{role !== undefined && role === 'admin' &&
 								<div className={classes.btnContainer}>
 									<Grid item xs={12}>
@@ -173,9 +180,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										<EditIcon/>
 									</Fab>
 								</div>}
+							<Grid container spacing={3} className={classes.listItemSpinner}>
+								<PublicationRenderComponent
+									issn
+									publication={issn}
+									setPublisherEmail={setPublisherEmail}
+									isEdit={isEdit}
+									clearFields={clearFields}
+									isEditable={isEditable}
+								/>
+							</Grid>
 						</div>
 				)}
-		</ModalLayout>
+			{/* </ModalLayout> */}
+		</Grid>
 	);
 	return {
 		...component
@@ -183,21 +201,28 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	function messageElement() {
 		return (
-			<div className={classes.listItem}>
-				{/* Selectable list of Message Templates */}
-				<Select
-					isMulti={false}
-					options={messageSelectOptions(messageTemplates)}
-					placeholder="Select message template from the list"
-					value={selectedTemplate}
-					onChange={value => setSelectedTemplate(value)}
-				/>
-				{/* Format and Edit Message */}
-				<RichTextEditor messageInfo={messageInfo} setMessageToBeSend={setMessageToBeSend}/>
-				<Button disabled={messageToBeSend === null || publisherEmail === null} variant="outlined" color="primary" onClick={handleOnClickSend}>
-					<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
-				</Button>
-			</div>
+			<Grid Container className={classes.listItem}>
+				<Grid item xs={12}>
+					{/* Selectable list of Message Templates */}
+					<Select
+						isMulti={false}
+						options={messageSelectOptions(messageTemplates)}
+						placeholder="Select message template from the list"
+						value={selectedTemplate}
+						onChange={value => setSelectedTemplate(value)}
+					/>
+					{/* Format and Edit Message */}
+					<RichTextEditor messageInfo={messageInfo} setMessageToBeSend={setMessageToBeSend}/>
+				</Grid>
+				<Grid item xs={12}>
+					<Button variant="outlined" color="primary" onClick={() => setSendingMessage(false)}>
+						<FormattedMessage id="publicationRequestRender.button.label.cancel"/>
+					</Button>
+					<Button disabled={messageToBeSend === null || publisherEmail === null} variant="outlined" color="primary" onClick={handleOnClickSend}>
+						<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
+					</Button>
+				</Grid>
+			</Grid>
 		);
 	}
 

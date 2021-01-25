@@ -111,22 +111,20 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5"><FormattedMessage id="request.publisher.search-title"/></Typography>
-				<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
-				<TabComponent
-					tabClass={classes.tab}
-					tabsClass={classes.tabs}
-					sortStateBy={sortStateBy}
-					handleChange={handleChange}
-				/>
-				<ModalLayout form label="Publisher Registration" title={<FormattedMessage id="request.button.publisher-registration"/>} name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
-					<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
-				</ModalLayout>
-				{publishersRequestsData}
-				<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5"><FormattedMessage id="request.publisher.search-title"/></Typography>
+			<SearchComponent searchFunction={fetchPublishersRequestsList} setSearchInputVal={setSearchInputVal}/>
+			<TabComponent
+				tabClass={classes.tab}
+				tabsClass={classes.tabs}
+				sortStateBy={sortStateBy}
+				handleChange={handleChange}
+			/>
+			<ModalLayout form label="Publisher Registration" title={<FormattedMessage id="request.button.publisher-registration"/>} name="newPublisher" variant="outlined" classed={modalClasses.button} color="primary">
+				<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
+			</ModalLayout>
+			{publishersRequestsData}
+			<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

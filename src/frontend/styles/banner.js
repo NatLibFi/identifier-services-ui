@@ -30,6 +30,7 @@ import {makeStyles} from '@material-ui/core/styles';
 const useStyles = makeStyles({
 	bannerContainer: {
 		display: 'flex',
+		width: '100%',
 		position: 'relative',
 		backgroundSize: 'cover',
 		height: '500px',

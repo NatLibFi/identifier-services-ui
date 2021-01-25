@@ -101,47 +101,45 @@ export default connect(mapStateToProps)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="publicationListRender.heading.list"/>
-				</Typography>
-				{(role === 'publisher' || role === 'publisher-admin') && (
-					isbnIsmn ?
-						(
-							<ModalLayout
-								form
-								label={intl.formatMessage({id: 'app.modal.label.publicationIsbnIsmn.create'})}
-								title={intl.formatMessage({id: 'app.modal.title.publicationIsbnIsmn.create'})}
-								name="newIsbnIsmn"
-								variant="outlined"
-								classed={modalClasses.button}
-								color="primary"
-							>
-								<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
-							</ModalLayout>
-						) : (
-							issn ?
-								(
-									<ModalLayout
-										form
-										label={intl.formatMessage({id: 'app.modal.label.publicationIssn.create'})}
-										title={intl.formatMessage({id: 'app.modal.title.publicationIssn.create'})}
-										name="newIssn"
-										variant="outlined"
-										classed={modalClasses.button}
-										color="primary"
-									>
-										<IssnRegForm setIsCreating={setIsCreating} {...props}/>
-									</ModalLayout>
-								) : null
-						)
-				)}
-				{usersData}
-				{issn ?	<Issn {...props}/> : (
-					isbnIsmn ?	<IsbnIsmn {...props}/> : null
-				)}
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="publicationListRender.heading.list"/>
+			</Typography>
+			{(role === 'publisher' || role === 'publisher-admin') && (
+				isbnIsmn ?
+					(
+						<ModalLayout
+							form
+							label={intl.formatMessage({id: 'app.modal.label.publicationIsbnIsmn.create'})}
+							title={intl.formatMessage({id: 'app.modal.title.publicationIsbnIsmn.create'})}
+							name="newIsbnIsmn"
+							variant="outlined"
+							classed={modalClasses.button}
+							color="primary"
+						>
+							<IsbnIsmnRegForm setIsCreating={setIsCreating} {...props}/>
+						</ModalLayout>
+					) : (
+						issn ?
+							(
+								<ModalLayout
+									form
+									label={intl.formatMessage({id: 'app.modal.label.publicationIssn.create'})}
+									title={intl.formatMessage({id: 'app.modal.title.publicationIssn.create'})}
+									name="newIssn"
+									variant="outlined"
+									classed={modalClasses.button}
+									color="primary"
+								>
+									<IssnRegForm setIsCreating={setIsCreating} {...props}/>
+								</ModalLayout>
+							) : null
+					)
+			)}
+			{usersData}
+			{issn ?	<Issn {...props}/> : (
+				isbnIsmn ?	<IsbnIsmn {...props}/> : null
+			)}
 		</Grid>
 	);
 	return {

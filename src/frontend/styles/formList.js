@@ -32,6 +32,7 @@ const useStyles = makeStyles({
 
 	formListContainer: {
 		background: 'whitesmoke',
+		width: '100%',
 		height: '200px',
 		display: 'flex',
 		alignSelf: 'center'

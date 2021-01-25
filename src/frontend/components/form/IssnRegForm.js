@@ -88,23 +88,44 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		}, [isAuthenticated, loadSvgCaptcha]);
 
 		function getStepContent(step) {
-			switch (step) {
-				case 0:
-					return publisherElement({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
-				case 1:
-					return publisherElement({array: fieldArray[1].basicInformation, classes, clearFields});
-				case 2:
-					return withFormTitle({arr: fieldArray[2].Time, publicationValues, clearFields});
-				case 3:
-					return withFormTitle({arr: fieldArray[3].PreviousPublication, publicationValues, clearFields});
-				case 4:
-					return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
-				case 5:
-					return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
-				case 6:
-					return renderPreview(publicationValues);
-				default:
-					return 'Unknown step';
+			if (isAuthenticated) {
+				switch (step) {
+					case 0:
+						return publisherElement({array: fieldArray[1].basicInformation, classes, clearFields});
+					case 1:
+						return withFormTitle({arr: fieldArray[2].Time, publicationValues, clearFields});
+					case 2:
+						return withFormTitle({arr: fieldArray[3].PreviousPublication, publicationValues, clearFields});
+					case 3:
+						return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
+					case 4:
+						return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
+					case 5:
+						return renderPreview(publicationValues);
+					default:
+						return 'Unknown step';
+				}
+			}
+
+			if (!isAuthenticated) {
+				switch (step) {
+					case 0:
+						return publisherElement({array: fieldArray[0].publisherBasicInfo, classes, clearFields});
+					case 1:
+						return publisherElement({array: fieldArray[1].basicInformation, classes, clearFields});
+					case 2:
+						return withFormTitle({arr: fieldArray[2].Time, publicationValues, clearFields});
+					case 3:
+						return withFormTitle({arr: fieldArray[3].PreviousPublication, publicationValues, clearFields});
+					case 4:
+						return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
+					case 5:
+						return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
+					case 6:
+						return renderPreview(publicationValues);
+					default:
+						return 'Unknown step';
+				}
 			}
 		}
 
@@ -351,7 +372,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			const result = [];
 			if (isAuthenticated) {
 				fieldArray.forEach((item, i) => {
-					if (i >= 2) {
+					if (i >= 1) {
 						result.push(Object.keys(item));
 					}
 				});

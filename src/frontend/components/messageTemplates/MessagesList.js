@@ -106,25 +106,23 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="messageList.list.heading"/>
-				</Typography>
-				<ModalLayout
-					form
-					label={intl.formatMessage({id: 'app.modal.title.newTemplate'})}
-					title={intl.formatMessage({id: 'app.modal.title.newTemplate'})}
-					name="template"
-					variant="outlined"
-					classed={modalClasses.button}
-					color="primary"
-				>
-					<TemplateCreationForm {...props}/>
-				</ModalLayout>
-				{messageData}
-				<Message id={templateId} modal={modal} setModal={setModal}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="messageList.list.heading"/>
+			</Typography>
+			<ModalLayout
+				form
+				label={intl.formatMessage({id: 'app.modal.title.newTemplate'})}
+				title={intl.formatMessage({id: 'app.modal.title.newTemplate'})}
+				name="template"
+				variant="outlined"
+				classed={modalClasses.button}
+				color="primary"
+			>
+				<TemplateCreationForm {...props}/>
+			</ModalLayout>
+			{messageData}
+			<Message id={templateId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

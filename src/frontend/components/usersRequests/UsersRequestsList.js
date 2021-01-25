@@ -113,33 +113,31 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				<Typography variant="h5">
-					<FormattedMessage id="userRequest.listAvailable"/>
-				</Typography>
-				<SearchComponent offset={offset} searchFunction={fetchUsersRequestsList} setSearchInputVal={setSearchInputVal}/>
-				<TabComponent
-					sortStateBy={sortStateBy}
-					handleChange={handleChange}
-				/>
-				{
-					userInfo.role === 'publisher-admin' &&
-						<ModalLayout
-							form
-							label={intl.formatMessage({id: 'app.modal.title.newUserRequest'})}
-							title={intl.formatMessage({id: 'app.modal.title.newUserRequest'})}
-							name="userRequest"
-							variant="outlined"
-							classed={modalClasses.button}
-							color="primary"
-						>
-							<UserRequestForm setIsCreating={setIsCreating} {...props}/>
-						</ModalLayout>
-				}
-				{usersData}
-				<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>
-			</Grid>
+		<Grid item xs={12} className={classes.listSearch}>
+			<Typography variant="h5">
+				<FormattedMessage id="userRequest.listAvailable"/>
+			</Typography>
+			<SearchComponent offset={offset} searchFunction={fetchUsersRequestsList} setSearchInputVal={setSearchInputVal}/>
+			<TabComponent
+				sortStateBy={sortStateBy}
+				handleChange={handleChange}
+			/>
+			{
+				userInfo.role === 'publisher-admin' &&
+					<ModalLayout
+						form
+						label={intl.formatMessage({id: 'app.modal.title.newUserRequest'})}
+						title={intl.formatMessage({id: 'app.modal.title.newUserRequest'})}
+						name="userRequest"
+						variant="outlined"
+						classed={modalClasses.button}
+						color="primary"
+					>
+						<UserRequestForm setIsCreating={setIsCreating} {...props}/>
+					</ModalLayout>
+			}
+			{usersData}
+			<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

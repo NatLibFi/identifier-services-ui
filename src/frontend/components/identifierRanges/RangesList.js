@@ -217,62 +217,60 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	const component = (
-		<Grid>
-			<Grid item xs={12} className={classes.listSearch}>
-				{(rangeType !== 'range') &&
-					<Breadcrumbs>
-						<Button variant="text" onClick={handleOnClickBreadCrumbsRange}>
-							<FormattedMessage id="rangesList.breadCrumbs.label.ranges"/>
-						</Button>
-						{(rangeType === 'isbnIsmnBatch' || rangeType === 'identifier') &&
-							<Button variant="text" onClick={handleOnClickBreadCrumbsSubRange}>
-								<FormattedMessage id="rangesList.breadCrumbs.label.subrange"/>
-							</Button>}
-						{rangeType === 'identifier' &&
-							<Button variant="text" onClick={handleOnClickBreadCrumbsIsbnIsmnBatch}>
-								<FormattedMessage id="rangesList.breadCrumbs.label.isbnIsmnBatch"/>
-							</Button>}
-						<Typography>{rowSelectedId}</Typography>
-					</Breadcrumbs>}
-				<Typography variant="h5">
-					<FormattedMessage id={`rangesList.title.${rangeType}`}/>
-				</Typography>
-				{/* <SearchComponent searchFunction={fetchIDRList} setSearchInputVal={setSearchInputVal}/> */}
-				<FormControlLabel
-					control={
-						<Checkbox
-							checked={activeCheck.checked}
-							value="checked"
-							color="primary"
-							onChange={handleChange('checked')}
-						/>
-					}
-					label={intl.formatMessage({id: 'rangesList.label.checkbox'})}
-				/>
-				<Grid>
-					{
-						userInfo.role === 'admin' &&
-							(
-								<ModalLayout
-									form
-									isTableRow
-									modal={modal}
-									setModal={setModal}
-									color="primary"
-									title={intl.formatMessage({id: 'app.modal.title.identifierRangesIsbn'})}
-									label={intl.formatMessage({id: 'app.modal.title.identifierRangesIsbn'})}
-									name="rangeCreation"
-									variant="outlined"
-								>
-									<CreateRange {...props}/>
-								</ModalLayout>
-							)
-					}
-				</Grid>
-				{ identifierModal && <Identifier id={identifierId} setIdentifierId={setIdentifierId} modal={identifierModal} setIdentifierModal={setIdentifierModal} {...props}/> }
-
-				{data}
+		<Grid item xs={12} className={classes.listSearch}>
+			{(rangeType !== 'range') &&
+				<Breadcrumbs>
+					<Button variant="text" onClick={handleOnClickBreadCrumbsRange}>
+						<FormattedMessage id="rangesList.breadCrumbs.label.ranges"/>
+					</Button>
+					{(rangeType === 'isbnIsmnBatch' || rangeType === 'identifier') &&
+						<Button variant="text" onClick={handleOnClickBreadCrumbsSubRange}>
+							<FormattedMessage id="rangesList.breadCrumbs.label.subrange"/>
+						</Button>}
+					{rangeType === 'identifier' &&
+						<Button variant="text" onClick={handleOnClickBreadCrumbsIsbnIsmnBatch}>
+							<FormattedMessage id="rangesList.breadCrumbs.label.isbnIsmnBatch"/>
+						</Button>}
+					<Typography>{rowSelectedId}</Typography>
+				</Breadcrumbs>}
+			<Typography variant="h5">
+				<FormattedMessage id={`rangesList.title.${rangeType}`}/>
+			</Typography>
+			{/* <SearchComponent searchFunction={fetchIDRList} setSearchInputVal={setSearchInputVal}/> */}
+			<FormControlLabel
+				control={
+					<Checkbox
+						checked={activeCheck.checked}
+						value="checked"
+						color="primary"
+						onChange={handleChange('checked')}
+					/>
+				}
+				label={intl.formatMessage({id: 'rangesList.label.checkbox'})}
+			/>
+			<Grid>
+				{
+					userInfo.role === 'admin' &&
+						(
+							<ModalLayout
+								form
+								isTableRow
+								modal={modal}
+								setModal={setModal}
+								color="primary"
+								title={intl.formatMessage({id: 'app.modal.title.identifierRangesIsbn'})}
+								label={intl.formatMessage({id: 'app.modal.title.identifierRangesIsbn'})}
+								name="rangeCreation"
+								variant="outlined"
+							>
+								<CreateRange {...props}/>
+							</ModalLayout>
+						)
+				}
 			</Grid>
+			{ identifierModal && <Identifier id={identifierId} setIdentifierId={setIdentifierId} modal={identifierModal} setIdentifierModal={setIdentifierModal} {...props}/> }
+
+			{data}
 		</Grid>
 	);
 	return {

@@ -502,9 +502,9 @@
     
     "publication.issn.edit.label": "Edit issn Detail",
     "publicationList.issn.headRows.title": "Title",
-    "publicationList.issn.headRows.frequency": "Frequency",
-    "publicationList.issn.headRows.firstNumber": "First Number",
-    "publicationList.issn.headRows.state": "State",
+    "publicationList.issn.headRows.type": "Type",
+    "publicationList.issn.headRows.publicationType": "Publication Type",
+    "publicationList.issn.headRows.email": "Email",
     "publicationList.issn.headRows.language": "Language",
 
     "publicationListRender.heading.noPublication": "No Publication Available",
@@ -518,6 +518,7 @@
     "publicationRender.label.firstNumber": "First Number",
     "publicationRender.label.city": "City",
     "publicationRender.label.title": "Title",
+    "publicationRender.label.subtitle": "Sub-title",
     "publicationRender.label.frequency": "Frequency",
     "publicationRender.label.publisher": "Publisher",
     "publicationRender.label.publicationType": "Publication Type",
@@ -549,6 +550,7 @@
     "publicationRequestRender.heading.chooseRange": "Choose range to assign",
     "publicationRequestRender.button.label.assignRanges": "Assign Ranges",
     "publicationRequestRender.button.label.sendMessage": "Send Message",
+    "publicationRequestRender.button.label.cancel": "Cancel",
     "publicationRequestRender.button.label.accept": "Accept",
     "publicationRequestRender.button.label.accepted": "Accepted",
     "publicationRequestRender.button.label.reject": "Reject",
@@ -592,6 +594,7 @@
     "publicationRequest.label.firstYear": "First Year",
     "publicationRequest.label.selectFormat": "Select Format",
     "publicationRequest.label.givenName": "Given Name",
+    "publicationRequest.label.familyName": "Family Name",
     
     "publisherRender.label.lastUpdated": "Last Updated",
     "publisherRender.label.givenName": "Given Name",
@@ -862,6 +865,11 @@
     "listComponent.createdResource": "Created Resource",
     "listComponent.lastUpdated": "Last Updated",
     "listComponent.associatedRange": "Associated Range",
+    "listComponent.request": "Request Id",
+    "listComponent.lastUpdatedBy": "Last Updated By",
+    "listComponent.selectFormat": "Format",
+    "listComponent.formatTypes": "Format Types",
+
     "listComponent.publisherDetails": "Publisher Details"
 
 }
