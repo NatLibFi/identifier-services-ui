@@ -42,7 +42,6 @@ import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
 import SelectRange from './SelectRange';
@@ -58,7 +57,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		fetchPublisher,
 		fetchIDR,
 		updatePublisher,
-		id,
+		match,
+		history,
 		publisher,
 		publisherUpdated,
 		loading,
@@ -69,6 +69,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		isAuthenticated,
 		clearFields,
 		userInfo} = props;
+	const {id} = match.params;
 	const classes = commonStyles();
 	const intl = useIntl();
 	const [isEdit, setIsEdit] = useState(false);
@@ -211,27 +212,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			setIsEdit(false);
 		}
 
-		handleCloseModal();
+		setIsEdit(false);
+		setAssignRange(false);
 	};
+
+	function handleBack() {
+		setAssignRange(false);
+		history.push(`/publishers/${id}`);
+	}
 
 	function handleRange() {
 		setAssignRange(!assignRange);
 		fetchIDRList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck, rangeType: 'range'});
 	}
 
-	function handleCloseModal() {
-		setAssignRange(false);
-		setIsEdit(false);
-	}
-
 	const component = (
-		<ModalLayout isTableRow handleCloseModal={handleCloseModal} mainClass={classes.main} color="primary" title={intl.formatMessage({id: 'app.modal.title.publisher'})} {...props}>
+		<Grid item xs={12}>
 			{isEdit ?
 				<div className={classes.listItem}>
 					<form>
-						<Grid container spacing={3} className={classes.listItemSpinner}>
-							{publisherDetail}
-						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>
 								<FormattedMessage id="form.button.label.cancel"/>
@@ -240,29 +239,32 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<FormattedMessage id="form.button.label.update"/>
 							</Button>
 						</div>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
+							{publisherDetail}
+						</Grid>
 					</form>
 				</div> :
 				<div className={classes.listItem}>
 					{assignRange ?
 						<>
-							<SelectRange rangeType="range" setNewPublisherRangeId={setNewPublisherRangeId} {...props}/>
 							<>
-								<Button
-									variant="outlined"
-									startIcon={<ArrowBackIosIcon/>}
-									onClick={handleRange}
-								>
-									<FormattedMessage id="form.button.label.back"/>
-								</Button>
+								{
+									!enableUpdate &&
+										<Button
+											variant="outlined"
+											startIcon={<ArrowBackIosIcon/>}
+											onClick={handleBack}
+										>
+											<FormattedMessage id="form.button.label.back"/>
+										</Button>
+								}
 								<Button disabled={!enableUpdate} variant="outlined" color="primary" onClick={handlePublisherUpdate}>
-									<FormattedMessage id="form.button.label.update"/> range
+									<FormattedMessage id="form.button.label.update"/>
 								</Button>
 							</>
+							<SelectRange rangeType="range" setNewPublisherRangeId={setNewPublisherRangeId} setAssignRange={setAssignRange} {...props}/>
 						</> :
 						<>
-							<Grid container spacing={3} className={classes.listItemSpinner}>
-								{publisherDetail}
-							</Grid>
 							{
 								isAuthenticated && userInfo.role === 'admin' &&
 									<>
@@ -301,9 +303,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 										<EditIcon/>
 									</Fab>
 								</div>}
+							<Grid container spacing={3} className={classes.listItemSpinner}>
+								{publisherDetail}
+							</Grid>
 						</>}
 				</div>}
-		</ModalLayout>
+		</Grid>
 	);
 	return {
 		...component

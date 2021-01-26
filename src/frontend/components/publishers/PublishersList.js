@@ -37,11 +37,10 @@ import {commonStyles} from '../../styles/app';
 import TableComponent from '../TableComponent';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
-import Publisher from './Publisher';
 
 export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
-	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount} = props;
+	const {loading, searchedPublishers, offset, location, searchPublisher, totalDoc, queryDocCount, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const intl = useIntl();
@@ -52,8 +51,6 @@ export default connect(mapStateToProps, actions)(props => {
 	});
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [modal, setModal] = useState(false);
-	const [publisherId, setPublisherId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
@@ -65,8 +62,7 @@ export default connect(mapStateToProps, actions)(props => {
 	};
 
 	const handleTableRowClick = id => {
-		setPublisherId(id);
-		setModal(true);
+		history.push(`/publishers/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -121,7 +117,6 @@ export default connect(mapStateToProps, actions)(props => {
 				label={<FormattedMessage id="publisher.search.filter"/>}
 			/>
 			{publishersData}
-			<Publisher id={publisherId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

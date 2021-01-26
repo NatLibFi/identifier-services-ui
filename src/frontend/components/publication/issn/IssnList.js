@@ -41,7 +41,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [modal, setModal] = useState(false);
-	const [issnId, setIssnId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	const [isCreating, setIsCreating] = useState(false);
 
@@ -51,8 +50,6 @@ export default connect(mapStateToProps, actions)(props => {
 	}, [lastCursor, cursors, fetchIssnList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
-		setIssnId(id);
-		// setModal(true);
 		history.push(`/publications/issn/${id}`);
 		setRowSelectedId(id);
 	};
@@ -66,7 +63,6 @@ export default connect(mapStateToProps, actions)(props => {
 
 	return (
 		<PublicationListRenderComponent
-			// issn
 			loading={loading}
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}

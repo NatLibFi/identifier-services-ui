@@ -209,6 +209,7 @@ export const commonStyles = makeStyles({
 	},
 	btnContainer: {
 		display: 'flex',
+		flexGrow: 1,
 		justifyContent: 'flex-end'
 	},
 	usersBtnContainer: {

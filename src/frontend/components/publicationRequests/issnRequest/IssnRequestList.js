@@ -38,10 +38,9 @@ import TableComponent from '../../TableComponent';
 import {commonStyles} from '../../../styles/app';
 import SearchComponent from '../../SearchComponent';
 import TabComponent from '../../TabComponent';
-import IssnRequest from './IssnRequest';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount} = props;
+	const {fetchIssnRequestsList, issnRequestList, loading, offset, queryDocCount, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -58,11 +57,10 @@ export default connect(mapStateToProps, actions)(props => {
 	useEffect(() => {
 		fetchIssnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
 		setIsUpdating(false);
-	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor, isUpdating]);
+	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
-		setIssnRequestId(id);
-		setModal(true);
+		history.push(`/requests/publications/issn/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -121,7 +119,6 @@ export default connect(mapStateToProps, actions)(props => {
 				handleChange={handleChange}
 			/>
 			{issnRequestData}
-			<IssnRequest modal={modal} setModal={setModal} setIsUpdating={setIsUpdating} id={issnRequestId} setIssnId={setIssnRequestId}/>
 		</Grid>
 	);
 	return {

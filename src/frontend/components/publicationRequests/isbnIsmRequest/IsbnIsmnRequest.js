@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -29,14 +30,13 @@
 import React, {useState, useEffect} from 'react';
 import {
 	Grid,
+	Fab,
 	ButtonGroup,
 	Button,
 	TextareaAutosize,
-	List,
-	ExpansionPanel,
-	ExpansionPanelDetails,
-	ExpansionPanelSummary
+	Typography
 } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
@@ -57,29 +57,41 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {
-		id,
+		match,
 		loading,
+		userInfo,
 		fetchPublicationIsbnIsmnRequest,
 		publicationIsbnIsmnRequest,
 		updatePublicationIsbnIsmnRequest,
-		setIsUpdating
+		setIsUpdating,
+		handleSubmit
 	} = props;
+	const {id} = match.params;
 	const classes = commonStyles();
 	const intl = useIntl();
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
+	const [isEdit, setIsEdit] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 
 	useEffect(() => {
 		if (id !== null) {
 			fetchPublicationIsbnIsmnRequest(id, cookie[COOKIE_NAME]);
 		}
-	}, [cookie, fetchPublicationIsbnIsmnRequest, id, buttonState]);
+	}, [cookie, fetchPublicationIsbnIsmnRequest, id, buttonState, isEdit]);
 
 	function handleRejectClick() {
 		setReject(!reject);
+	}
+
+	function handleEditClick() {
+		setIsEdit(true);
+	}
+
+	function handleCancel() {
+		setIsEdit(false);
 	}
 
 	function handleRejectReason(e) {
@@ -98,6 +110,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setButtonState(publicationIsbnIsmnRequest.state);
 	}
 
+	function handlePublicationRequestUpdate(values) {
+		const newPublicationIsbnIsmnRequest = {
+			...values,
+			state: 'new',
+			backgroundProcessingState: 'inProgress'
+		};
+		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
+		setIsEdit(false);
+		setButtonState(publicationIsbnIsmnRequest.state);
+	}
+
 	function handleAccept() {
 		const newPublicationIsbnIsmnRequest = {
 			...publicationIsbnIsmnRequest,
@@ -107,6 +130,20 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
 		setButtonState(publicationIsbnIsmnRequest.state);
 		setIsUpdating(true);
+	}
+
+	function isEditable(key) {
+		const nonEditableFields = userInfo.role === 'admin' ?
+			['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type', 'format'] :
+			(userInfo.role === 'publisher-admin' ?
+				['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type', 'format'] :
+				[]);
+
+		return isEdit && !nonEditableFields.includes(key);
+	}
+
+	function formatValueforAssociatedRange(value) {
+		return value.map(item => item.subRange);
 	}
 
 	function renderButton(state, bgState) {
@@ -165,7 +202,297 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} else {
 		publicationIsbnIsmnRequestDetail = (
 			<>
-				{typeof formattedPublicationIsbnIsmnRequest.publisher === 'string' ?
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								Basic Informations
+							</Typography>
+							<hr/>
+							<ListComponent edit={isEdit && isEditable} fieldName="title" label={intl.formatMessage({id: 'listComponent.title'})} value={publicationIsbnIsmnRequest.title ? publicationIsbnIsmnRequest.title : ''}/>
+							<ListComponent edit={isEdit && isEditable} fieldName="subtitle" label={intl.formatMessage({id: 'listComponent.subtitle'})} value={publicationIsbnIsmnRequest.subTitle ? publicationIsbnIsmnRequest.subTitle : ''}/>
+							<ListComponent edit={isEdit && isEditable} fieldName="language" label={intl.formatMessage({id: 'listComponent.language'})} value={publicationIsbnIsmnRequest.language ? publicationIsbnIsmnRequest.language : ''}/>
+							<ListComponent edit={isEdit && isEditable} fieldName="publicationTime" label={intl.formatMessage({id: 'listComponent.publicationTime'})} value={publicationIsbnIsmnRequest.publicationTime ? publicationIsbnIsmnRequest.publicationTime : ''}/>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								Publisher Basic Informations
+							</Typography>
+							<hr/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[name]"
+								label={intl.formatMessage({id: 'listComponent.name'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.name ? publicationIsbnIsmnRequest.publisher.name : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[postalAddress][address]"
+								label={intl.formatMessage({id: 'listComponent.address'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.postalAddress && publicationIsbnIsmnRequest.publisher.postalAddress ?
+									publicationIsbnIsmnRequest.publisher.postalAddress.address && publicationIsbnIsmnRequest.publisher.postalAddress.address :
+									(publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.address ?
+										publicationIsbnIsmnRequest.publisher.address :
+										'')}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[postalAddress][city]"
+								label={intl.formatMessage({id: 'listComponent.city'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.postalAddress && publicationIsbnIsmnRequest.publisher.postalAddress ?
+									publicationIsbnIsmnRequest.publisher.postalAddress.city && publicationIsbnIsmnRequest.publisher.postalAddress.city :
+									(publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.city ?
+										publicationIsbnIsmnRequest.publisher.city :
+										'')}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[postalAddress][zip]"
+								label={intl.formatMessage({id: 'listComponent.zip'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.postalAddress && publicationIsbnIsmnRequest.publisher.postalAddress ?
+									publicationIsbnIsmnRequest.publisher.postalAddress.zip && publicationIsbnIsmnRequest.publisher.postalAddress.zip :
+									(publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.zip ?
+										publicationIsbnIsmnRequest.publisher.zip :
+										'')}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[phone]"
+								label={intl.formatMessage({id: 'listComponent.phone'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.phone ? publicationIsbnIsmnRequest.publisher.phone : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[givenName]"
+								label={intl.formatMessage({id: 'listComponent.givenName'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.givenName ? publicationIsbnIsmnRequest.publisher.givenName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[familyName]"
+								label={intl.formatMessage({id: 'listComponent.familyName'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.familyName ? publicationIsbnIsmnRequest.publisher.familyName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[email]"
+								label={intl.formatMessage({id: 'listComponent.email'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.email ? publicationIsbnIsmnRequest.publisher.email : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher[language]"
+								label={intl.formatMessage({id: 'listComponent.language'})}
+								value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.language ? publicationIsbnIsmnRequest.publisher.language : ''}
+							/>
+						</Grid>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Publisher Publishing Activities
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publisher[publicationDetails][frequency][currentYear]"
+							label={intl.formatMessage({id: 'listComponent.currentYear'})}
+							value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.publicationDetails && publicationIsbnIsmnRequest.publisher.publicationDetails.frequency &&
+								publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.currentYear ? publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.currentYear : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publisher[publicationDetails][frequency][nextYear]"
+							label={intl.formatMessage({id: 'listComponent.nextYear'})}
+							value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.publicationDetails && publicationIsbnIsmnRequest.publisher.publicationDetails.frequency &&
+								publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.nextYear ? publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.nextYear : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publisher[publicationDetails][previouslyPublished]"
+							label={intl.formatMessage({id: 'listComponent.previouslyPublished'})}
+							value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.publicationDetails && publicationIsbnIsmnRequest.publisher.publicationDetails.previouslyPublished ?
+								publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.previouslyPublished : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publisher[publicationDetails][publishingActivities]"
+							label={intl.formatMessage({id: 'listComponent.publishingActivities'})}
+							value={publicationIsbnIsmnRequest.publisher && publicationIsbnIsmnRequest.publisher.publicationDetails && publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.publishingActivities ?
+								publicationIsbnIsmnRequest.publisher.publicationDetails.frequency.publishingActivities : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Author Details
+						</Typography>
+						<hr/>
+						{publicationIsbnIsmnRequest.authors && publicationIsbnIsmnRequest.authors.map((item, index) => (
+							<div key={`${item.givenName}${Math.random()}`}>
+								<ListComponent
+									edit={isEdit && isEditable} fieldName={`authors[${index}][givenName]`}
+									label={intl.formatMessage({id: 'listComponent.givenName'})}
+									value={item.givenName ? item.givenName : ''}
+								/>
+								<ListComponent
+									edit={isEdit && isEditable} fieldName={`authors[${index}][familyName]`}
+									label={intl.formatMessage({id: 'listComponent.familyName'})}
+									value={item.familyName ? item.familyName : ''}
+								/>
+								<ListComponent
+									edit={isEdit && isEditable} fieldName={`authors[${index}][role]`}
+									label={intl.formatMessage({id: 'listComponent.role'})}
+									value={item.role ? item.role : ''}
+								/>
+							</div>
+						))}
+					</Grid>
+				</Grid>
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Publication Details
+						</Typography>
+						<hr/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.isbnClassification'})} value={publicationIsbnIsmnRequest.isbnClassification ? publicationIsbnIsmnRequest.isbnClassification : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.publicationType'})} value={publicationIsbnIsmnRequest.publicationType ? publicationIsbnIsmnRequest.publicationType : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.isPublic'})} value={publicationIsbnIsmnRequest.isPublic ? publicationIsbnIsmnRequest.isPublic : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={publicationIsbnIsmnRequest.type ? publicationIsbnIsmnRequest.type : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.identifier'})} value={publicationIsbnIsmnRequest.identifier ? publicationIsbnIsmnRequest.identifier : ''}/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Series Details
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="seriesDetails[volume]"
+							label={intl.formatMessage({id: 'listComponent.volume'})}
+							value={publicationIsbnIsmnRequest.seriesDetails ?
+								(publicationIsbnIsmnRequest.seriesDetails.volume ?
+									publicationIsbnIsmnRequest.seriesDetails.volume :
+									''
+								) :	''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="seriesDetails[title]"
+							label={intl.formatMessage({id: 'listComponent.title'})}
+							value={publicationIsbnIsmnRequest.seriesDetails ?
+								(publicationIsbnIsmnRequest.seriesDetails.title ?
+									publicationIsbnIsmnRequest.seriesDetails.title :
+									''
+								) :	''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="seriesDetails[identifier]"
+							label={intl.formatMessage({id: 'listComponent.identifier'})}
+							value={publicationIsbnIsmnRequest.seriesDetails ?
+								(publicationIsbnIsmnRequest.seriesDetails.identifier ?
+									publicationIsbnIsmnRequest.seriesDetails.identifier :
+									''
+								) :	''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Format Details
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.selectFormat'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.format ?
+									publicationIsbnIsmnRequest.formatDetails.format :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.fileFormat'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.fileFormat ?
+									publicationIsbnIsmnRequest.formatDetails.fileFormat :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.printFormat'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.printFormat ?
+									publicationIsbnIsmnRequest.formatDetails.printFormat :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="formatDetails[manufacturer]"
+							label={intl.formatMessage({id: 'listComponent.manufacturer'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.manufacturer ?
+									publicationIsbnIsmnRequest.formatDetails.manufacturer :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="formatDetails[city]"
+							label={intl.formatMessage({id: 'listComponent.city'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.city ?
+									publicationIsbnIsmnRequest.formatDetails.city :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="formatDetails[run]"
+							label={intl.formatMessage({id: 'listComponent.run'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.run ?
+									publicationIsbnIsmnRequest.formatDetails.run :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="formatDetails[edition]"
+							label={intl.formatMessage({id: 'listComponent.edition'})}
+							value={publicationIsbnIsmnRequest.formatDetails ?
+								(publicationIsbnIsmnRequest.formatDetails.edition ?
+									publicationIsbnIsmnRequest.formatDetails.edition :
+									''
+								) : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Identifier
+						</Typography>
+						<hr/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={publicationIsbnIsmnRequest.identifier && publicationIsbnIsmnRequest.identifier.id ? publicationIsbnIsmnRequest.identifier.id : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={publicationIsbnIsmnRequest.identifier && publicationIsbnIsmnRequest.identifier.type ? publicationIsbnIsmnRequest.identifier.type : ''}/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Other References
+						</Typography>
+						<hr/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.state'})} value={publicationIsbnIsmnRequest.state ? publicationIsbnIsmnRequest.state : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.creator'})} value={publicationIsbnIsmnRequest.creator ? publicationIsbnIsmnRequest.creator : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={publicationIsbnIsmnRequest.associatedRange ? formatValueforAssociatedRange(publicationIsbnIsmnRequest.associatedRange) : ''}/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.lastUpdated'})}
+							value={publicationIsbnIsmnRequest.lastUpdated ?
+								(publicationIsbnIsmnRequest.lastUpdated.timestamp ?
+									publicationIsbnIsmnRequest.lastUpdated.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.lastUpdatedBy'})}
+							value={publicationIsbnIsmnRequest.lastUpdated ?
+								(publicationIsbnIsmnRequest.lastUpdated.user ?
+									publicationIsbnIsmnRequest.lastUpdated.user :
+									''
+								) : ''}
+						/>
+					</Grid>
+				</Grid>
+				{/* {typeof formattedPublicationIsbnIsmnRequest.publisher === 'string' ?
 					<>
 						<Grid item xs={12} md={6}>
 							<List>
@@ -226,43 +553,72 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</ExpansionPanel>
 
 						</Grid>
-					</>}
+					</>} */}
 			</>
 		);
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="Publication Request Detail" {...props}>
-			<div className={classes.listItem}>
-				<Grid container spacing={3} className={classes.listItemSpinner}>
-					{publicationIsbnIsmnRequestDetail}
-					{reject ?
-						<>
-							<Grid item xs={12}>
-								<TextareaAutosize
-									aria-label="Minimum height"
-									rows={8}
-									placeholder="Rejection reason here..."
-									className={classes.textArea}
-									value={rejectReason}
-									onChange={handleRejectReason}
-								/>
-							</Grid>
-							<Grid item xs={12}>
-								<Button variant="contained" onClick={handleRejectClick}>
+		<Grid item xs={12}>
+			{
+				isEdit ?
+					<div className={classes.listItem}>
+						<form>
+							<div className={classes.btnContainer}>
+								<Button onClick={handleCancel}>
 									<FormattedMessage id="form.button.label.cancel"/>
 								</Button>
-								<Button variant="contained" color="primary" onClick={handleRejectSubmit}>
-									<FormattedMessage id="form.button.label.submit"/>
+								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublicationRequestUpdate)}>
+									<FormattedMessage id="form.button.label.update"/>
 								</Button>
+							</div>
+							<Grid container item spacing={3} className={classes.listItemSpinner}>
+								{publicationIsbnIsmnRequestDetail}
 							</Grid>
-						</> :
-						<Grid item xs={12}>
-							{renderButton(publicationIsbnIsmnRequest.state, publicationIsbnIsmnRequest.backgroundProcessingState)}
-						</Grid>}
-				</Grid>
-			</div>
-		</ModalLayout>
+						</form>
+					</div> :
+					<Grid container className={classes.listItem}>
+						<div className={classes.btnContainer}>
+							{reject ?
+								<>
+									<Grid item xs={12}>
+										<TextareaAutosize
+											aria-label="Minimum height"
+											rows={8}
+											placeholder="Rejection reason here..."
+											className={classes.textArea}
+											value={rejectReason}
+											onChange={handleRejectReason}
+										/>
+									</Grid>
+									<Grid item xs={12}>
+										<Button variant="contained" onClick={handleRejectClick}>
+											<FormattedMessage id="form.button.label.cancel"/>
+										</Button>
+										<Button variant="contained" color="primary" onClick={handleRejectSubmit}>
+											<FormattedMessage id="form.button.label.submit"/>
+										</Button>
+									</Grid>
+								</> :
+								<Grid item xs={12}>
+									{renderButton(publicationIsbnIsmnRequest.state, publicationIsbnIsmnRequest.backgroundProcessingState)}
+								</Grid>}
+							<Fab
+								color="primary"
+								size="small"
+								title={intl.formatMessage({id: 'publication.isbnismn.edit.label'})}
+								onClick={handleEditClick}
+							>
+								<EditIcon/>
+							</Fab>
+						</div>
+						<Grid container item spacing={3} className={classes.listItemSpinner}>
+							{publicationIsbnIsmnRequestDetail}
+						</Grid>
+					</Grid>
+			}
+		</Grid>
+
 	);
 	return {
 		...component
@@ -271,6 +627,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
+		initialValues: state.publication.publicationIsbnIsmnRequest,
 		publicationIsbnIsmnRequest: state.publication.publicationIsbnIsmnRequest,
 		loading: state.publication.loading,
 		isAuthenticated: state.login.isAuthenticated,

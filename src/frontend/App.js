@@ -39,6 +39,7 @@ import Home from './components/main';
 import TopNav from './components/navbar/topNav';
 import AdminNav from './components/navbar/adminNav';
 import NewUserPasswordResetForm from './components/form/NewUserPasswordResetForm';
+import Publisher from './components/publishers/Publisher';
 import PublishersList from './components/publishers/PublishersList';
 import PublisherProfile from './components/publishers/PublisherProfile';
 import UsersList from './components/users/UsersList';
@@ -49,8 +50,10 @@ import Issn from './components/publication/issn/Issn';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
 import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
+import PublicationIsbnIsmnRequest from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequest';
 import PublicationIsbnIsmnRequestList from './components/publicationRequests/isbnIsmRequest/IsbnIsmnRequestList';
 import IssnRequestList from './components/publicationRequests/issnRequest/IssnRequestList';
+import IssnRequest from './components/publicationRequests/issnRequest/IssnRequest';
 import IDRISNBISMNList from './components/identifierRanges/RangesList';
 import IDRIsbnList from './components/identifierRanges/isbn/IsbnList';
 import IDRIsmnList from './components/identifierRanges/ismn/IsmnList';
@@ -80,8 +83,9 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 	const routeField = [
 		{path: '/', component: Home},
 		{path: '/publishers', component: PublishersList},
+		{path: '/publishers/:id', component: Publisher},
 		{path: '/users/passwordReset/:token', component: NewUserPasswordResetForm},
-		{path: '/publishers/:id', component: PublisherProfile}
+		{path: '/publishers/profile/:id', component: PublisherProfile}
 	];
 
 	const privateRoutesList = [
@@ -98,9 +102,9 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publishers/:id', role: ['system', 'admin'], component: PublishersRequestsList},
 		{path: '/requests/publications/isbn-ismn', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList},
-		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequestList},
+		{path: '/requests/publications/isbn-ismn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: PublicationIsbnIsmnRequest},
 		{path: '/requests/publications/issn', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
-		{path: '/requests/publications/issn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequestList},
+		{path: '/requests/publications/issn/:id', role: ['publisher', 'publisher-admin', 'admin'], component: IssnRequest},
 		{path: '/ranges', role: ['admin'], component: IDRISNBISMNList},
 		{path: '/ranges/isbn', role: ['admin'], component: IDRIsbnList},
 		{path: '/ranges/isbn/:id', role: ['admin'], component: IDRIsbnList},

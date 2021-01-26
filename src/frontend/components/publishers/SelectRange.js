@@ -40,11 +40,12 @@ import {
 
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
+import AlertDialogs from '../AlertDialogs';
 import TableComponent from '../TableComponent';
 import {commonStyles} from '../../styles/app';
 
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchIDRList, rangesList, loading, offset, queryDocCount, rangeType, setNewPublisherRangeId} = props;
+	const {fetchIDRList, rangesList, loading, offset, queryDocCount, rangeType, setNewPublisherRangeId, setAssignRange} = props;
 	const intl = useIntl();
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
@@ -53,23 +54,45 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
 	const [updateComponent] = useState(false);
+	const [selectedId, setSelectedId] = useState(null);
+	const [openAlert, setOpenAlert] = useState(false);
+	const [message, setMessage] = useState(null);
+	const [confirmation, setConfirmation] = useState(false);
+	const [rowSelectedId, setRowSelectedId] = useState(null);
 	const [activeCheck, setActiveCheck] = useState({
 		checked: false
 	});
-
-	const [rowSelectedId, setRowSelectedId] = useState(null);
 
 	useEffect(() => {
 		fetchIDRList({searchText: '', token: cookie[COOKIE_NAME], offset: lastCursor, activeCheck: activeCheck, rangeType});
 	}, [updateComponent, activeCheck, cookie, fetchIDRList, lastCursor, rangeType]);
 
+	useEffect(() => {
+		if (confirmation && selectedId !== null) {
+			setRowSelectedId(selectedId);
+			if (rangeType === 'subRange') {
+				setNewPublisherRangeId(selectedId);
+				setAssignRange(false);
+			}
+		}
+	}, [confirmation, rangeType, selectedId, setAssignRange, setNewPublisherRangeId]);
+
 	const handleTableRowClick = id => {
 		// TO DO alert Confirm message
 		setRowSelectedId(id);
-		if (rangeType === 'range') {
-			setNewPublisherRangeId(id);
+		if (id) {
+			setMessage('Please confirm to select this range');
+			setSelectedId(id);
 		}
 	};
+
+	function handleOnAgree() {
+		setConfirmation(true);
+	}
+
+	function handleOnCancel() {
+		setConfirmation(false);
+	}
 
 	const handleChange = name => event => {
 		setActiveCheck({...activeCheck, [name]: event.target.checked});
@@ -145,6 +168,17 @@ export default connect(mapStateToProps, actions)(props => {
 				/>
 				{data}
 			</Grid>
+			{
+				message &&
+					<AlertDialogs
+						openAlert={openAlert}
+						setOpenAlert={setOpenAlert}
+						message={message}
+						setMessage={setMessage}
+						handleOnAgree={handleOnAgree}
+						handleOnCancel={handleOnCancel}
+					/>
+			}
 		</Grid>
 	);
 	return {
