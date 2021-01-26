@@ -29,13 +29,14 @@
 import React, {useState, useEffect} from 'react';
 import {
 	Grid,
+	Fab,
 	ButtonGroup,
 	Button,
 	TextareaAutosize,
-	Typography,
 	List
 } from '@material-ui/core';
 import {reduxForm} from 'redux-form';
+import EditIcon from '@material-ui/icons/Edit';
 import {useCookies} from 'react-cookie';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
@@ -43,11 +44,9 @@ import {FormattedMessage, useIntl} from 'react-intl';
 
 import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
-import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
 import CustomColor from '../../styles/app';
-import TableComponent from './TableComponent';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
@@ -55,16 +54,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	enableReinitialize: true
 })(props => {
 	const {
-		id,
+		match,
 		loading,
+		handleSubmit,
+		isAuthenticated,
+		userInfo,
 		fetchPublisherRequest,
 		publisherRequest,
-		updatePublisherRequest,
-		fetchIDRIsbnList,
-		rangleListLoading,
-		isbnRangeList,
-		fetchIDRIsmnList,
-		ismnRangeList} = props;
+		updatePublisherRequest
+	} = props;
+	const {id} = match.params;
 	const classes = commonStyles();
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
@@ -72,13 +71,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [buttonState, setButtonState] = useState('');
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
-	const [assignRange, setAssignRange] = useState(false);
-	const [rangeTpye, setRangeType] = useState('');
-	const [isbnValue, setIsbnValue] = React.useState('');
-	const [ismnValue, setIsmnValue] = React.useState('');
-	const activeCheck = {
-		checked: true
-	};
+	const [isEdit, setIsEdit] = useState(false);
+
 	useEffect(() => {
 		if (id !== null) {
 			fetchPublisherRequest(id, cookie[COOKIE_NAME]);
@@ -104,83 +98,39 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setButtonState(publisherRequest.state);
 	}
 
+	function handlePublisherUpdate() {
+		const newPublisherRequest = {
+			...publisherRequest,
+			state: 'new',
+			backgroundProcessingState: 'inProgress'
+		};
+		delete newPublisherRequest._id;
+		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
+	}
+
 	function handleAccept() {
 		const newPublisherRequest = {
 			...publisherRequest,
-			state: 'accepted',
-			isbnRange: isbnValue,
-			ismnRange: ismnValue
-
+			state: 'accepted'
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
 		setButtonState(publisherRequest.state);
 	}
 
-	function handleRange() {
-		setAssignRange(!assignRange);
-	}
+	const handleEditClick = () => {
+		setIsEdit(true);
+	};
 
-	function displayISBNRanges(type) {
-		setRangeType(type);
-		fetchIDRIsbnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
-	}
-
-	function displayISMNRanges(type) {
-		setRangeType(type);
-		fetchIDRIsmnList({searchText: '', token: cookie[COOKIE_NAME], offset: null, activeCheck: activeCheck});
-	}
-
-	function handleChange(e, val) {
-		if (val === 'isbn') {
-			setIsbnValue(e.target.value);
-		}
-
-		if (val === 'ismn') {
-			setIsmnValue(e.target.value);
-		}
-	}
-
-	function displayRanges(val) {
-		let data;
-		if (val === 'isbn') {
-			if (rangleListLoading) {
-				data = <Spinner/>;
-			} else if (isbnRangeList.length === 0) {
-				data = intl.formatMessage({id: 'publisherRequest.noRanges'});
-			} else {
-				data = (
-					<TableComponent data={isbnRangeList} value={isbnValue} handleChange={e => handleChange(e, 'isbn')}/>
-				);
-			}
-
-			return data;
-		}
-
-		if (rangeTpye === 'ismn') {
-			if (rangleListLoading) {
-				data = <Spinner/>;
-			} else if (isbnRangeList.length === 0) {
-				data = intl.formatMessage({id: 'publisherRequest.noRanges'});
-			} else {
-				data = (
-					<TableComponent data={ismnRangeList} value={ismnValue} handleChange={e => handleChange(e, 'ismn')}/>
-				);
-			}
-
-			return data;
-		}
-
-		return <Typography variant="h5"><FormattedMessage id="publisher.heading.assignRange"/></Typography>;
-	}
+	const handleCancel = () => {
+		setIsEdit(false);
+	};
 
 	function renderButton(state) {
 		switch (state) {
 			case 'new':
 				return (
 					<ButtonGroup color="primary" aria-label="outlined primary button group">
-						{/* <Button variant="outlined" color="primary" onClick={handleRange}>Assign Ranges</Button> */}
-
 						<Button disabled={publisherRequest.backgroundProcessingState !== 'processed'} variant="outlined" color="primary" onClick={handleAccept}>Accept</Button>
 						<Button variant="outlined" style={{color: 'red'}} onClick={handleRejectClick}>
 							<FormattedMessage id="publisherRequest.button.label.reject"/>
@@ -259,50 +209,70 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title={intl.formatMessage({id: 'app.modal.title.publisherRequest'})} {...props}>
-			{assignRange ?
-				<div className={classes.listItem}>
-					<Button onClick={handleRange}>
-						<FormattedMessage id="publisherRequest.button.label.goBack"/>
-					</Button>
-					<Button onClick={() => displayISBNRanges('isbn')}>
-						<FormattedMessage id="publisherRequest.button.label.isbnRanges"/>
-					</Button>
-					<Button onClick={() => displayISMNRanges('ismn')}>
-						<FormattedMessage id="publisherRequest.button.label.ismnRanges"/>
-					</Button>
-					{displayRanges(rangeTpye)}
-				</div> :
-				<div className={classes.listItem}>
-					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{publisherRequestDetail}
-						{reject ?
-							<>
-								<Grid item xs={12}>
-									<TextareaAutosize
-										aria-label="Minimum height"
-										rows={8}
-										placeholder="Rejection reason here..."
-										className={classes.textArea}
-										value={rejectReason}
-										onChange={handleRejectReason}
-									/>
-								</Grid>
-								<Grid item xs={12}>
-									<Button variant="contained" onClick={handleRejectClick}>
-										<FormattedMessage id="form.button.label.cancel"/>
-									</Button>
-									<Button variant="contained" color="primary" onClick={handleRejectSubmit}>
-										<FormattedMessage id="form.button.label.submit"/>
-									</Button>
-								</Grid>
-							</> :
-							<Grid item xs={12}>
-								{renderButton(publisherRequest.state)}
-							</Grid>}
+		<Grid item xs={12}>
+			{
+				isEdit ?
+					<div className={classes.listItem}>
+						<form>
+							<div className={classes.btnContainer}>
+								<Button onClick={handleCancel}>
+									<FormattedMessage id="form.button.label.cancel"/>
+								</Button>
+								<Button variant="contained" color="primary" onClick={handleSubmit(handlePublisherUpdate)}>
+									<FormattedMessage id="form.button.label.update"/>
+								</Button>
+							</div>
+							<Grid container spacing={3} className={classes.listItemSpinner}>
+								{publisherRequestDetail}
+							</Grid>
+						</form>
+					</div> :
+					<Grid container className={classes.listItem}>
+						<div className={classes.btnContainer}>
+							{
+								reject ?
+									<>
+										<Grid item xs={12}>
+											<TextareaAutosize
+												aria-label="Minimum height"
+												rows={8}
+												placeholder="Rejection reason here..."
+												className={classes.textArea}
+												value={rejectReason}
+												onChange={handleRejectReason}
+											/>
+										</Grid>
+										<Grid item xs={12}>
+											<Button variant="contained" onClick={handleRejectClick}>
+												<FormattedMessage id="form.button.label.cancel"/>
+											</Button>
+											<Button variant="contained" color="primary" onClick={handleRejectSubmit}>
+												<FormattedMessage id="form.button.label.submit"/>
+											</Button>
+										</Grid>
+									</> :
+									<Grid item xs={12}>
+										{renderButton(publisherRequest.state)}
+									</Grid>
+							}
+							{isAuthenticated && userInfo.role === 'admin' &&
+								<>
+									<Fab
+										color="primary"
+										size="small"
+										title={intl.formatMessage({id: 'user.fab.label.editUser'})}
+										onClick={handleEditClick}
+									>
+										<EditIcon/>
+									</Fab>
+								</>}
+						</div>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
+							{publisherRequestDetail}
+						</Grid>
 					</Grid>
-				</div>}
-		</ModalLayout>
+			}
+		</Grid>
 	);
 	return {
 		...component

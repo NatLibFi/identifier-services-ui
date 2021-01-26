@@ -37,7 +37,6 @@ import {
 	Typography
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import {reduxForm} from 'redux-form';
 import {useCookies} from 'react-cookie';
 import {useIntl, FormattedMessage} from 'react-intl';
@@ -46,7 +45,6 @@ import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
-import ModalLayout from '../../ModalLayout';
 import Spinner from '../../Spinner';
 import ListComponent from '../../ListComponent';
 import CustomColor from '../../../styles/app';

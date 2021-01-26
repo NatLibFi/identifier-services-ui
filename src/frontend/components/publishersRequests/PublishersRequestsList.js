@@ -43,7 +43,7 @@ import ModalLayout from '../ModalLayout';
 import PublisherRegistrationForm from '../form/publisherRegistrationForm/PublisherRegistrationForm';
 import {commonStyles} from '../../styles/app';
 export default connect(mapStateToProps, actions)(props => {
-	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount} = props;
+	const {fetchPublishersRequestsList, publishersRequestsList, loading, offset, queryDocCount, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const classes = commonStyles();
@@ -64,7 +64,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const handleTableRowClick = id => {
 		setPublisherRequestId(id);
-		setModal(true);
+		history.push(`/requests/publishers/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -124,7 +124,6 @@ export default connect(mapStateToProps, actions)(props => {
 				<PublisherRegistrationForm setIsCreating={setIsCreating} {...props}/>
 			</ModalLayout>
 			{publishersRequestsData}
-			<PublisherRequest id={publisherRequestId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {
