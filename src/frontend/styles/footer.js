@@ -30,9 +30,9 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
 	footer: {
-		// marginTop: '60px',
+		// MarginTop: '60px',
 		paddingTop: '10px',
-		// height: '150px',
+		// Height: '150px',
 		background: '#00224f',
 		position: 'fixed',
 		bottom: 0

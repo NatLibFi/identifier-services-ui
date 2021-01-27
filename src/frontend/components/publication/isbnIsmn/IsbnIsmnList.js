@@ -52,7 +52,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	const handleTableRowClick = id => {
 		setIsbnIsmnId(id);
-		// setModal(true);
+		// SetModal(true);
 		history.push(`/publications/isbn-ismn/${id}`);
 		setRowSelectedId(id);
 	};
@@ -65,7 +65,7 @@ export default connect(mapStateToProps, actions)(props => {
 
 	return (
 		<PublicationListRenderComponent
-			// isbnIsmn 
+			// IsbnIsmn
 			headRows={headRows}
 			handleTableRowClick={handleTableRowClick}
 			rowSelectedId={rowSelectedId}

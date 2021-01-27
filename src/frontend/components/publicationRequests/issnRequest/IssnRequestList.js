@@ -49,14 +49,10 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [issnRequestId, setIssnRequestId] = useState(null);
-	const [modal, setModal] = useState(false);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
-	const [isUpdating, setIsUpdating] = useState(false);
 
 	useEffect(() => {
 		fetchIssnRequestsList({searchText: inputVal, token: cookie[COOKIE_NAME], sortStateBy: sortStateBy, offset: lastCursor});
-		setIsUpdating(false);
 	}, [cookie, fetchIssnRequestsList, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {

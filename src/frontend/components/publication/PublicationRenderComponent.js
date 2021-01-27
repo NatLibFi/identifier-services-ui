@@ -57,9 +57,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const [publisherName, setPublisherName] = useState(null);
 
 	const {_id, seriesDetails, id, ...formattedPublication} = {...publication, ...publication.seriesDetails};
-	const {publisher, ...withoutPublisher} = {...formattedPublication};
-	const onlyPublisher = formattedPublication && typeof formattedPublication.publisher === 'object' && formattedPublication.publisher;
-	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
 	useEffect(() => {
 		if (formattedPublication.publisher !== undefined) {

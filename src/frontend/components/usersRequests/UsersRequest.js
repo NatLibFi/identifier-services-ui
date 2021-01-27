@@ -45,7 +45,6 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import {commonStyles} from '../../styles/app';
 import * as actions from '../../store/actions';
-import ModalLayout from '../ModalLayout';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
 import CustomColor from '../../styles/app';
@@ -127,6 +126,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handleOnSubmit(values) {
+		console.log(publisherName);
 		updateUserRequest(id, values, cookie[COOKIE_NAME], lang);
 		setIsEdit(false);
 	}

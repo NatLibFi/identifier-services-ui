@@ -35,7 +35,6 @@ import {FormattedMessage, useIntl} from 'react-intl';
 import {commonStyles} from '../../styles/app';
 import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';
-import User from './User';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import ModalLayout from '../ModalLayout';

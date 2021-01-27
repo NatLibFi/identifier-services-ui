@@ -33,7 +33,6 @@ import {useCookies} from 'react-cookie';
 import {FormattedMessage, useIntl} from 'react-intl';
 
 import SearchComponent from '../SearchComponent';
-import UserRequest from './UsersRequest';
 import {commonStyles} from '../../styles/app';
 import useModalStyles from '../../styles/formList';
 import TableComponent from '../TableComponent';

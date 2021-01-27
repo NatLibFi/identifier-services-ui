@@ -35,7 +35,6 @@ import {FormattedMessage} from 'react-intl';
 import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import TableComponent from '../TableComponent';
-import PublisherRequest from './publisherRequest';
 import useModalStyles from '../../styles/formList';
 import SearchComponent from '../SearchComponent';
 import TabComponent from '../TabComponent';
@@ -53,8 +52,6 @@ export default connect(mapStateToProps, actions)(props => {
 	const [cursors] = useState([]);
 	const [sortStateBy, setSortStateBy] = useState('');
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [modal, setModal] = useState(false);
-	const [publisherRequestId, setPublisherRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	const [isCreating, setIsCreating] = useState(false);
 
@@ -63,7 +60,6 @@ export default connect(mapStateToProps, actions)(props => {
 	}, [cookie, fetchPublishersRequestsList, isCreating, inputVal, sortStateBy, lastCursor]);
 
 	const handleTableRowClick = id => {
-		setPublisherRequestId(id);
 		history.push(`/requests/publishers/${id}`);
 		setRowSelectedId(id);
 	};

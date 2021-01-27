@@ -189,9 +189,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const {_id, state, seriesDetails, ...formattedIssnRequest} = {...issnRequest, ...issnRequest.seriesDetails};
-	const {publisher, ...withoutPublisher} = {...formattedIssnRequest};
-	const onlyPublisher = formattedIssnRequest && typeof formattedIssnRequest.publisher === 'object' && formattedIssnRequest.publisher;
-	const {organizationDetails, ...formatOnlyPublisher} = {...onlyPublisher, ...onlyPublisher.organizationDetails};
 
 	let issnRequestDetail;
 	if (formattedIssnRequest === undefined || loading) {
