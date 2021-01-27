@@ -45,15 +45,13 @@ export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
 
-	const {loading, fetchUsersList, usersList, totalUsers, queryDocCount, offset, userInfo} = props;
+	const {loading, fetchUsersList, usersList, totalUsers, queryDocCount, offset, userInfo, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const intl = useIntl();
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [modal, setModal] = useState(false);
-	const [userId, setUserId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	const [isCreating, setIsCreating] = useState(false);
 
@@ -63,8 +61,7 @@ export default connect(mapStateToProps, actions)(props => {
 	}, [lastCursor, cursors, fetchUsersList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
-		setUserId(id);
-		setModal(true);
+		history.push(`/users/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -123,7 +120,6 @@ export default connect(mapStateToProps, actions)(props => {
 					</ModalLayout>
 			}
 			{usersData}
-			<User id={userId} modal={modal} setModal={setModal} setIsCreating={setIsCreating}/>
 		</Grid>
 	);
 	return {

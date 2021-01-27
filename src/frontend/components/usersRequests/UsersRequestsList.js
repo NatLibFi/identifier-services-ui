@@ -46,7 +46,7 @@ import TabComponent from '../TabComponent';
 export default connect(mapStateToProps, actions)(props => {
 	const classes = commonStyles();
 	const modalClasses = useModalStyles();
-	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset, userInfo} = props;
+	const {loading, fetchUsersRequestsList, usersRequestsList, queryDocCount, totalDoc, offset, userInfo, history} = props;
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
 	const intl = useIntl();
@@ -55,9 +55,7 @@ export default connect(mapStateToProps, actions)(props => {
 	const [page, setPage] = useState(1);
 	const [cursors] = useState([]);
 	const [lastCursor, setLastCursor] = useState(cursors.length === 0 ? null : cursors[cursors.length - 1]);
-	const [modal, setModal] = useState(false);
 	const [isCreating, setIsCreating] = useState(false);
-	const [userRequestId, setUserRequestId] = useState(null);
 	const [rowSelectedId, setRowSelectedId] = useState(null);
 	useEffect(() => {
 		fetchUsersRequestsList({searchText: inputVal, sortStateBy: sortStateBy, token: cookie[COOKIE_NAME], offset: lastCursor});
@@ -65,8 +63,7 @@ export default connect(mapStateToProps, actions)(props => {
 	}, [lastCursor, cursors, inputVal, sortStateBy, fetchUsersRequestsList, cookie, isCreating]);
 
 	const handleTableRowClick = id => {
-		setUserRequestId(id);
-		setModal(true);
+		history.push(`/requests/users/${id}`);
 		setRowSelectedId(id);
 	};
 
@@ -137,7 +134,6 @@ export default connect(mapStateToProps, actions)(props => {
 					</ModalLayout>
 			}
 			{usersData}
-			<UserRequest id={userRequestId} modal={modal} setModal={setModal}/>
 		</Grid>
 	);
 	return {

@@ -55,7 +55,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	validate,
 	enableReinitialize: true
 })(props => {
-	const {id, isAuthenticated, usersRequest, userInfo, loading, lang, fetchUserRequest, updateUserRequest, userRequestUpdated, handleSubmit} = props;
+	const {match, isAuthenticated, usersRequest, userInfo, loading, lang, fetchUserRequest, fetchedPublisher, updateUserRequest, userRequestUpdated, fetchPublisher, handleSubmit} = props;
+	const {id} = match.params;
 	const classes = commonStyles();
 	const intl = useIntl();
 	const {role} = userInfo;
@@ -65,12 +66,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const [reject, setReject] = useState(false);
 	const [rejectReason, setRejectReason] = useState('');
 	const [isEdit, setIsEdit] = useState(false);
+	const [publisherName, setPublisherName] = useState(null);
 
 	useEffect(() => {
 		if (id !== null) {
 			fetchUserRequest(id, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchUserRequest, id, buttonState, userRequestUpdated]);
+
+	useEffect(() => {
+		if (usersRequest.publisher !== undefined) {
+			fetchPublisher(usersRequest.publisher, cookie[COOKIE_NAME]);
+		}
+	}, [cookie, fetchPublisher, usersRequest.publisher]);
+
+	useEffect(() => {
+		if (Object.keys(fetchedPublisher).length > 0) {
+			setPublisherName(fetchedPublisher.name);
+		}
+	}, [fetchedPublisher]);
 
 	async function handleAccept() {
 		const requestToUpdate = {
@@ -241,13 +255,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	const component = (
-		<ModalLayout isTableRow color="primary" title="User Request Detail" {...props}>
+		<Grid item xs={12}>
 			{isEdit ?
 				<div className={classes.listItem}>
 					<form onSubmit={handleSubmit(handleOnSubmit)}>
-						<Grid container spacing={3} className={classes.listItemSpinner}>
-							{userRequestDetail}
-						</Grid>
 						<div className={classes.btnContainer}>
 							<Button onClick={handleCancel}>
 								<FormattedMessage id="form.button.label.cancel"/>
@@ -256,12 +267,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								<FormattedMessage id="form.button.label.update"/>
 							</Button>
 						</div>
+						<Grid container spacing={3} className={classes.listItemSpinner}>
+							{userRequestDetail}
+						</Grid>
 					</form>
 				</div> :
 				<div className={classes.listItem}>
-					<Grid container spacing={3} className={classes.listItemSpinner}>
-						{userRequestDetail}
-					</Grid>
 					{
 						isAuthenticated && (role === 'admin' || role === 'publisher-admin') &&
 							(
@@ -315,8 +326,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 									)
 							)
 					}
+					<Grid container spacing={3} className={classes.listItemSpinner}>
+						{userRequestDetail}
+					</Grid>
 				</div>}
-		</ModalLayout>
+		</Grid>
 	);
 	return {
 		...component
@@ -331,6 +345,8 @@ function mapStateToProps(state) {
 		initialValues: state.users.usersRequest,
 		userInfo: state.login.userInfo,
 		userRequestUpdated: state.users.userRequestUpdated,
-		isAuthenticated: state.login.isAuthenticated
+		isAuthenticated: state.login.isAuthenticated,
+		fetchedPublisher: state.publisher.publisher,
+		publisherLoading: state.publisher.loading
 	});
 }

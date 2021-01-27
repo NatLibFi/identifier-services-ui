@@ -42,12 +42,14 @@ import NewUserPasswordResetForm from './components/form/NewUserPasswordResetForm
 import Publisher from './components/publishers/Publisher';
 import PublishersList from './components/publishers/PublishersList';
 import PublisherProfile from './components/publishers/PublisherProfile';
+import User from './components/users/User';
 import UsersList from './components/users/UsersList';
 import IsbnIsmnList from './components/publication/isbnIsmn/IsbnIsmnList';
 import IsbnIsmn from './components/publication/isbnIsmn/IsbnIsmn';
 import IssnList from './components/publication/issn/IssnList';
 import Issn from './components/publication/issn/Issn';
 import UsersRequestsList from './components/usersRequests/UsersRequestsList';
+import UsersRequest from './components/usersRequests/UsersRequest';
 import MessagesList from './components/messageTemplates/MessagesList';
 import PublishersRequestsList from './components/publishersRequests/PublishersRequestsList';
 import PublishersRequest from './components/publishersRequests/publisherRequest';
@@ -91,13 +93,13 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 
 	const privateRoutesList = [
 		{path: '/users', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
-		{path: '/users/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: UsersList},
+		{path: '/users/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: User},
 		{path: '/publications/isbn-ismn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmnList},
 		{path: '/publications/isbn-ismn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IsbnIsmn},
 		{path: '/publications/issn', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: IssnList},
 		{path: '/publications/issn/:id', role: ['admin', 'publisher-admin', 'publisher', 'system'], component: Issn},
 		{path: '/requests/users', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
-		{path: '/requests/users/:id', role: ['admin', 'publisher-admin'], component: UsersRequestsList},
+		{path: '/requests/users/:id', role: ['admin', 'publisher-admin'], component: UsersRequest},
 		{path: '/templates', role: ['admin'], component: MessagesList},
 		{path: '/templates/:id', role: ['admin'], component: MessagesList},
 		{path: '/requests/publishers', role: ['publisher', 'admin'], component: PublishersRequestsList},
