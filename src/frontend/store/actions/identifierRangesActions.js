@@ -453,3 +453,22 @@ export const createIssnRange = (values, token) => async dispatch => {
 	dispatch(setMessage({color: 'error', msg: 'There is a problem creating ISSN range'}));
 	return response.status;
 };
+
+export const assignIssnRange = (values, token) => async dispatch => {
+	const response = await fetch(`${API_URL}/ranges/issn/assignRange`, {
+		method: 'POST',
+		headers: {
+			Authorization: `Bearer ${token}`,
+			'Content-Type': 'application/json'
+		},
+		credentials: 'same-origin',
+		body: JSON.stringify(values)
+	});
+	if (response.status === HttpStatus.OK) {
+		dispatch(setMessage({color: 'success', msg: 'ISSN range created successfully'}));
+		return response.status;
+	}
+
+	dispatch(setMessage({color: 'error', msg: 'There is a problem creating ISSN range'}));
+	return response.status;
+};

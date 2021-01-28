@@ -472,14 +472,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Identifier
-						</Typography>
-						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={issnRequest.identifier && issnRequest.identifier.id ? issnRequest.identifier.id : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={issnRequest.identifier && issnRequest.identifier.type ? issnRequest.identifier.type : ''}/>
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="h6">
 							Metadata References
 						</Typography>
 						<hr/>

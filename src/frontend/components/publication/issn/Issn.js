@@ -32,7 +32,6 @@ import {
 	Grid,
 	Fab
 } from '@material-ui/core';
-import RichTextEditor from '../isbnIsmn/RichTextEditor';
 import Select from 'react-select';
 import EditIcon from '@material-ui/icons/Edit';
 import {reduxForm} from 'redux-form';
@@ -40,10 +39,14 @@ import {useCookies} from 'react-cookie';
 import {connect} from 'react-redux';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {FormattedMessage, useIntl} from 'react-intl';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
+import RichTextEditor from '../isbnIsmn/RichTextEditor';
 import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import PublicationRenderComponent from '../PublicationRenderComponent';
+import SelectPublicationIdentifierRange from './SelectIssnIdentifierRange';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'issnUpdateForm',
@@ -64,6 +67,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		messageTemplates,
 		match,
 		history,
+		assignIssnRange,
 		messageInfo
 	} = props;
 	const {id} = match.params;
@@ -71,10 +75,14 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const classes = commonStyles();
 	const {role} = userInfo;
 	const [isEdit, setIsEdit] = useState(false);
+	const [disableAssign, setDisableAssign] = useState(true);
+	const [assignRange, setAssignRange] = useState(false);
 	const [publisherEmail, setPublisherEmail] = useState(null);
 	const [sendingMessage, setSendingMessage] = useState(false);
 	const [selectedTemplate, setSelectedTemplate] = useState(null);
 	const [messageToBeSend, setMessageToBeSend] = useState(null);
+	const [rangeBlockId, setRangeBlockId] = useState(null);
+	const [next, setNext] = useState(false);
 
 	/* global COOKIE_NAME */
 	const [cookie] = useCookies(COOKIE_NAME);
@@ -94,6 +102,22 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			fetchMessage(selectedTemplate.value, cookie[COOKIE_NAME]);
 		}
 	}, [cookie, fetchMessage, selectedTemplate]);
+
+	useEffect(() => {
+		if (Object.keys(issn).length > 0) {
+			if (issn.identifier && issn.identifier.length > 0) {
+				setDisableAssign(true);
+			} else {
+				setDisableAssign(false);
+			}
+		}
+	}, [issn]);
+
+	useEffect(() => {
+		if (rangeBlockId !== null) {
+			assignIssnRange({rangeBlockId, issn}, cookie[COOKIE_NAME]);
+		}
+	}, [assignIssnRange, cookie, issn, rangeBlockId]);
 
 	const handleEditClick = () => {
 		setIsEdit(true);
@@ -121,6 +145,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		sendMessage({...messageToBeSend, sendTo: publisherEmail});
 	}
 
+	function handleRange() {
+		setAssignRange(!assignRange);
+	}
+
 	function isEditable(key) {
 		const nonEditableFields = userInfo.role === 'admin' ?
 			['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type'] :
@@ -133,7 +161,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	const component = (
 		<Grid item xs={12}>
-			{/* <ModalLayout isTableRow color="primary" title={intl.formatMessage({id: 'app.modal.title.publicationIssn'})} {...props}> */}
 			{ sendingMessage ?
 				messageElement() :
 				(
@@ -160,39 +187,72 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								</Grid>
 							</form>
 						</div> :
-						<div className={classes.listItem}>
-							{role !== undefined && role === 'admin' &&
-								<div className={classes.btnContainer}>
-									<Grid item xs={12}>
-										{
-											issn.associatedRange && Object.keys(issn.associatedRange).length > 0 &&
-												<Button variant="outlined" color="primary" onClick={handleOnClickSendMessage}>
-													<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
-												</Button>
-										}
+						(
+							assignRange ?
+								<div className={classes.listItem}>
+									{
+										next ?
+											<Button
+												variant="outlined"
+												endIcon={<ArrowForwardIosIcon/>}
+												onClick={() => setNext(false)}
+											>
+												<FormattedMessage id="form.button.label.next"/>
+											</Button> :
+											<Button
+												variant="outlined"
+												startIcon={<ArrowBackIosIcon/>}
+												onClick={handleRange}
+											>
+												<FormattedMessage id="form.button.label.back"/>
+											</Button>
+
+									}
+									<SelectPublicationIdentifierRange
+										issn={issn}
+										handleRange={handleRange}
+										setRangeBlockId={setRangeBlockId}
+										{...props}
+									/>
+								</div> :
+								<div className={classes.listItem}>
+									{role !== undefined && role === 'admin' &&
+										<div className={classes.btnContainer}>
+											<Grid item xs={12}>
+												{
+													<Button disabled={disableAssign} variant="outlined" color="primary" onClick={handleRange}>
+														<FormattedMessage id="publicationRequestRender.button.label.assignRanges"/>
+													</Button>
+												}
+												{
+													issn.associatedRange && Object.keys(issn.associatedRange).length > 0 &&
+														<Button variant="outlined" color="primary" onClick={handleOnClickSendMessage}>
+															<FormattedMessage id="publicationRequestRender.button.label.sendMessage"/>
+														</Button>
+												}
+											</Grid>
+											<Fab
+												color="primary"
+												size="small"
+												title={intl.formatMessage({id: 'publication.issn.edit.label'})}
+												onClick={handleEditClick}
+											>
+												<EditIcon/>
+											</Fab>
+										</div>}
+									<Grid container spacing={3} className={classes.listItemSpinner}>
+										<PublicationRenderComponent
+											issn
+											publication={issn}
+											setPublisherEmail={setPublisherEmail}
+											isEdit={isEdit}
+											clearFields={clearFields}
+											isEditable={isEditable}
+										/>
 									</Grid>
-									<Fab
-										color="primary"
-										size="small"
-										title={intl.formatMessage({id: 'publication.issn.edit.label'})}
-										onClick={handleEditClick}
-									>
-										<EditIcon/>
-									</Fab>
-								</div>}
-							<Grid container spacing={3} className={classes.listItemSpinner}>
-								<PublicationRenderComponent
-									issn
-									publication={issn}
-									setPublisherEmail={setPublisherEmail}
-									isEdit={isEdit}
-									clearFields={clearFields}
-									isEditable={isEditable}
-								/>
-							</Grid>
-						</div>
+								</div>
+						)
 				)}
-			{/* </ModalLayout> */}
 		</Grid>
 	);
 	return {

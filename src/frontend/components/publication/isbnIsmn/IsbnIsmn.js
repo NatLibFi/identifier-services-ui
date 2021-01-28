@@ -46,7 +46,7 @@ import {commonStyles} from '../../../styles/app';
 import * as actions from '../../../store/actions';
 import PublicationRenderComponent from '../PublicationRenderComponent';
 import RichTextEditor from './RichTextEditor';
-import SelectPublicationIdentifierRange from './SelectPublicationIdentifierRange';
+import SelectPublicationIdentifierRange from './SelectIsbnIsmnIdentifierRange';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnUpdateForm',

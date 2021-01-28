@@ -430,8 +430,18 @@ export default connect(mapStateToProps, actions)(props => {
 							Identifier
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={publication.identifier && publication.identifier.id ? publication.identifier.id : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={publication.identifier && publication.identifier.type ? publication.identifier.type : ''}/>
+						{
+							publication.identifier ?
+								publication.identifier.map(item => (
+									<div key={publication.identifier.id}>
+										<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={item.id}/>
+										<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={item.type}/>
+									</div>
+								)) :
+								<Typography variant="body1">
+									Identifier not assigned
+								</Typography>
+						}
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -460,7 +470,7 @@ export default connect(mapStateToProps, actions)(props => {
 							Other References
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={publication.associatedRange ? formatValueforAssociatedRange(publication.associatedRange) : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={publication.associatedRange ? publication.associatedRange : ''}/>
 						<ListComponent label={intl.formatMessage({id: 'listComponent.request'})} value={publication.request ? publication.request : ''}/>
 						<ListComponent
 							label={intl.formatMessage({id: 'listComponent.lastUpdated'})}
@@ -671,7 +681,7 @@ export default connect(mapStateToProps, actions)(props => {
 								) : ''}
 						/>
 						<ListComponent
-							label={intl.formatMessage({id: 'listComponent.state'})}
+							label={intl.formatMessage({id: 'listComponent.scale'})}
 							value={publication.mapDetails ?
 								(publication.mapDetails.scale ?
 									publication.mapDetails.scale :
@@ -684,8 +694,18 @@ export default connect(mapStateToProps, actions)(props => {
 							Identifier
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={publication.identifier && publication.identifier.id ? publication.identifier.id : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={publication.identifier && publication.identifier.type ? publication.identifier.type : ''}/>
+						{
+							publication.identifier ?
+								publication.identifier.map(item => (
+									<div key={publication.identifier.id}>
+										<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={item.id}/>
+										<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={item.type}/>
+									</div>
+								)) :
+								<Typography variant="body1">
+									Identifier not assigned
+								</Typography>
+						}
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">

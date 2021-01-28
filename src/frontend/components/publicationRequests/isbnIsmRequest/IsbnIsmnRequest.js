@@ -455,14 +455,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Identifier
-						</Typography>
-						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.id'})} value={publicationIsbnIsmnRequest.identifier && publicationIsbnIsmnRequest.identifier.id ? publicationIsbnIsmnRequest.identifier.id : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.type'})} value={publicationIsbnIsmnRequest.identifier && publicationIsbnIsmnRequest.identifier.type ? publicationIsbnIsmnRequest.identifier.type : ''}/>
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="h6">
 							Other References
 						</Typography>
 						<hr/>
