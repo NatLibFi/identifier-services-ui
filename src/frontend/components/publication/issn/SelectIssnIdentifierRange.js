@@ -29,13 +29,12 @@
 import React, {useEffect, useState} from 'react';
 import {useCookies} from 'react-cookie';
 import {connect} from 'react-redux';
-import moment from 'moment';
 import {FormattedMessage, useIntl} from 'react-intl';
 import {
 	Grid,
 	FormControlLabel,
 	Checkbox,
-	Typography,
+	Typography
 } from '@material-ui/core';
 
 import * as actions from '../../../store/actions';
@@ -108,7 +107,7 @@ export default connect(mapStateToProps, actions)(props => {
 				'created',
 				'createdBy'
 			];
-			array.unshift('rangeStart', 'rangeEnd', 'free', 'taken', 'canceled', 'deleted', 'next', 'active', 'isClosed');
+			array.unshift('rangeStart', 'rangeEnd', 'free', 'taken', 'canceled', 'next', 'active', 'isClosed');
 
 			return array;
 		}
@@ -148,23 +147,12 @@ export default connect(mapStateToProps, actions)(props => {
 	}
 
 	function listRender(item) {
-		console.log(item)
-		return item;
-		// return Object.entries(item)
-		// 	.filter(([key]) => key === 'isbnIsmnRangeId' === false)
-		// 	.filter(([key]) => key === 'publisherId' === false)
-		// 	.reduce((acc, [
-		// 		key,
-		// 		value
-		// 	]) => ({...acc, [key]: formatDate(key, value)}), {});
-
-		function formatDate(key, value) {
-			if (key === 'created') {
-				return moment(value, moment.defaultFormat).format('L');
-			}
-
-			return value;
-			}
+		const sortBy = ['rangeStart', 'rangeEnd', 'free', 'taken', 'canceled', 'next', 'active', 'isClosed', 'id'];
+		const sortedItem = sortBy.reduce((acc, k) => {
+			acc = {...acc, [k]: item[k]};
+			return acc;
+		}, {});
+		return sortedItem;
 	}
 
 	const component = (
