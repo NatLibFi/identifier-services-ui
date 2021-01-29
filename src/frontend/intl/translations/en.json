@@ -261,10 +261,13 @@
     "publicationRegistration.form.seriesDetails.identifier": "Identifier",
 
 
+    "publicationRegistration.form.formatDetails": "Format Details",
     "publicationRegistration.form.formatDetails.select.label": "Select the way you want Publication to be issued",
     "publicationRegistration.form.formatDetails.electronic": "Electronic",
     "publicationRegistration.form.formatDetails.printed": "Printed",
     "publicationRegistration.form.formatDetails.cd": "CD",
+    "publicationRegistration.form.formatDetails.cdRom": "CD-ROM",
+    "publicationRegistration.form.formatDetails.online": "Online",
     "publicationRegistration.form.formatDetails.both": "Both(Printed and Electronic)",
  
     "publicationRegistration.form.formatDetails.fileformat": "File Format*",

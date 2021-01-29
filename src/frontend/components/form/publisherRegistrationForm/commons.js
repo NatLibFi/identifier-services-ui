@@ -5,7 +5,6 @@ import {Field, FieldArray} from 'redux-form';
 import {FormattedMessage} from 'react-intl';
 import renderTextField from '../render/renderTextField';
 import renderAliases from '../render/renderAliases';
-import renderSelect from '../render/renderSelect';
 import renderDateTime from '../render/renderDateTime';
 import renderRadioButton from '../render/renderRadioButton';
 import renderCheckbox from '../render/renderCheckbox';
@@ -45,28 +44,6 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 						/>
 					</Grid>
 				);
-			case 'select':
-				return (
-					<>
-						<Grid key={list.name} item xs={6}>
-							<Field
-								className={`${classes.selectField} ${list.width}`}
-								component={renderSelect}
-								label={list.label}
-								name={list.name}
-								type={list.type}
-								options={list.options}
-								props={{publicationValues: publicationIssnValues || publicationIsbnValues, clearFields}}
-							/>
-						</Grid>
-						{
-							publicationIssnValues && publicationIssnValues.formatDetails &&
-							(publicationIssnValues.formatDetails.format === 'electronic' || publicationIssnValues.formatDetails.format === 'printed-and-electronic') ?
-								element({array: getUrl(), classes, clearFields}) :
-								null
-						}
-					</>
-				);
 			case 'multiSelect':
 				return (
 					<Grid key={list.name} container item xs={list.width === 'half' ? 6 : 12}>
@@ -82,6 +59,12 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								creatable={list.isCreatable}
 								props={{isMulti: list.isMulti ? list.isMulti : false}}
 							/>
+							{
+								publicationIssnValues && publicationIssnValues.issnFormatDetails &&
+								(publicationIssnValues.issnFormatDetails.some(item => item.value === 'online')) ?
+									element({array: getUrl(), classes, clearFields}) :
+									null
+							}
 						</Grid>
 					</Grid>
 				);
@@ -149,7 +132,6 @@ export function element({array, classes, clearFields, publicationIssnValues, fie
 								/>
 							</Grid>
 							{publicationIsbnValues && publicationIsbnValues.selectFormat && subElementFormatDetails({value: publicationIsbnValues.selectFormat, classes, intl})}
-							{publicationIssnValues && publicationIssnValues.selectFormat && subElementFormatDetails({value: publicationIssnValues.selectFormat, classes, intl})}
 						</>
 					);
 				}

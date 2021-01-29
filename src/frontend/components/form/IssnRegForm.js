@@ -99,7 +99,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 3:
 						return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
 					case 4:
-						return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
+						return publisherElement({array: fieldArray[5].formatDetails, publicationIssnValues: publicationValues, classes, clearFields, intl});
 					case 5:
 						return renderPreview(publicationValues);
 					default:
@@ -120,7 +120,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					case 4:
 						return withFormTitle({arr: fieldArray[4].SeriesDetails, publicationValues, clearFields});
 					case 5:
-						return publisherElement({array: fieldArray[5].formatDetails, fieldName: 'formatDetails', publicationIssnValues: publicationValues, classes, clearFields, intl});
+						return publisherElement({array: fieldArray[5].formatDetails, publicationIssnValues: publicationValues, classes, clearFields, intl});
 					case 6:
 						return renderPreview(publicationValues);
 					default:
@@ -166,7 +166,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				language: values.publisherLanguage,
 				aliases: values.aliases && values.aliases
 			};
-			const {name, postalAddress, publisherEmail, phone, publisherLanguage, ...formattedPublicationValues} = {
+			const {name, postalAddress, publisherEmail, phone, publisherLanguage, issnFormatDetails, formatDetails, ...formattedPublicationValues} = {
 				...values,
 				publisher,
 				firstNumber: values.firstNumber,
@@ -177,48 +177,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					lastYear: values.previousPublication.lastYear && Number(values.previousPublication.lastYear),
 					lastNumber: values.previousPublication.lastNumber && values.previousPublication.lastNumber
 				},
-				formatDetails: formatDetail(),
 				type: values.type.value
 			};
-			return formattedPublicationValues;
-
-			function formatDetail() {
-				if (values.selectFormat === 'electronic') {
-					const formatDetails = {
-						...values.formatDetails,
-						format: 'electronic',
-						fileFormat: reFormat(values.formatDetails.fileFormat)
-					};
-					return formatDetails;
-				}
-
-				if (values.selectFormat === 'printed') {
-					const formatDetails = {
-						...values.formatDetails,
-						printFormat: reFormat(values.formatDetails.printFormat),
-						format: 'printed',
-						run: values.formatDetails.run && Number(values.formatDetails.run),
-						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
-					};
-					return formatDetails;
-				}
-
-				if (values.selectFormat === 'both') {
-					const formatDetails = {
-						...values.formatDetails,
-						format: 'printed-and-electronic',
-						fileFormat: reFormat(values.formatDetails.fileFormat),
-						printFormat: reFormat(values.formatDetails.printFormat),
-						run: values.formatDetails.run && Number(values.formatDetails.run),
-						edition: values.formatDetails.edition && Number(values.formatDetails.edition)
-					};
-					return formatDetails;
-				}
-			}
+			return {...formattedPublicationValues, formatDetails: reFormat(values)};
 
 			function reFormat(value) {
-				return value.reduce((acc, item) => {
-					acc.push(item.value);
+				const {issnFormatDetails, formatDetails} = value;
+				return issnFormatDetails.reduce((acc, item) => {
+					const data = item.value === 'online' ? {format: item.value, url: formatDetails.url} : {format: item.value};
+					acc.push(data);
 					return acc;
 				}, []);
 			}
@@ -654,13 +621,16 @@ function getFieldArray(intl) {
 		{
 			formatDetails: [
 				{
-					name: 'selectFormat',
-					type: 'radio',
+					name: 'issnFormatDetails',
+					type: 'multiSelect',
 					width: 'full',
+					isMulti: true,
+					isCreatable: true,
+					label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails'}),
 					options: [
 						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.printed'}), value: 'printed'},
-						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.electronic'}), value: 'electronic'},
-						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.both'}), value: 'both'}
+						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.online'}), value: 'online'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.formatDetails.cdRom'}), value: 'CD-ROM'}
 					]
 				}
 			]
