@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 
 /**
  *
@@ -32,9 +33,9 @@ import {
 	ButtonGroup,
 	Button,
 	Grid,
-	List,
 	TextareaAutosize,
-	Fab
+	Fab,
+	Typography
 } from '@material-ui/core';
 import {validate} from '@natlibfi/identifier-services-commons';
 import {reduxForm} from 'redux-form';
@@ -80,8 +81,10 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}, [cookie, fetchPublisher, usersRequest.publisher]);
 
 	useEffect(() => {
-		if (Object.keys(fetchedPublisher).length > 0) {
-			setPublisherName(fetchedPublisher.name);
+		if (Object.keys(fetchedPublisher) === undefined) {
+			if (Object.keys(fetchedPublisher).length > 0) {
+				setPublisherName(fetchedPublisher.name);
+			}
 		}
 	}, [fetchedPublisher]);
 
@@ -185,71 +188,106 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	let userRequestDetail;
-	if (usersRequest.length < 1 || loading) {
+	if (usersRequest === undefined || loading) {
 		userRequestDetail = <Spinner/>;
 	} else {
 		userRequestDetail = (
 			<>
-				{isEdit ?
-					(
-						<>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(usersRequest).map(key => {
-											return typeof usersRequest[key] === 'string' ?
-												(
-													<ListComponent edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `user.label.${key}`})} value={usersRequest[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(usersRequest).map(key => {
-											return typeof usersRequest[key] === 'object' ?
-												(
-													<ListComponent edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `user.label.${key}`})} value={usersRequest[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-						</>
-					) : (
-						<>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(usersRequest).map(key => {
-											return typeof usersRequest[key] === 'string' ?
-												(
-													<ListComponent label={intl.formatMessage({id: `user.label.${key}`})} value={usersRequest[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(usersRequest).map(key => {
-											return typeof usersRequest[key] === 'object' ?
-												(
-													<ListComponent label={intl.formatMessage({id: `user.label.${key}`})} value={usersRequest[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-						</>
-					)}
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								Basic Informations
+							</Typography>
+							<hr/>
+							<ListComponent
+								label={intl.formatMessage({id: 'listComponent.email'})}
+								value={usersRequest.email ? usersRequest.email : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="givenName"
+								label={intl.formatMessage({id: 'listComponent.givenName'})}
+								value={usersRequest.givenName ? usersRequest.givenName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="familyName"
+								label={intl.formatMessage({id: 'listComponent.familyName'})}
+								value={usersRequest.familyName ? usersRequest.familyName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="state"
+								label={intl.formatMessage({id: 'listComponent.state'})}
+								value={usersRequest.state ? usersRequest.state : ''}
+							/>
+							<ListComponent
+								fieldName="role"
+								label={intl.formatMessage({id: 'listComponent.role'})}
+								value={usersRequest.role ? usersRequest.role : ''}
+							/>
+							<ListComponent
+								fieldName="userId"
+								label={intl.formatMessage({id: 'listComponent.userId'})}
+								value={usersRequest.userId ? usersRequest.userId : ''}
+							/>
+							<ListComponent
+								fieldName="creator"
+								label={intl.formatMessage({id: 'listComponent.creator'})}
+								value={usersRequest.creator ? usersRequest.creator : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisher"
+								label={intl.formatMessage({id: 'listComponent.publisher'})}
+								value={usersRequest.publisher ? usersRequest.publisher : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="backgroundProcessingState"
+								label={intl.formatMessage({id: 'listComponent.backgroundProcessingState'})}
+								value={usersRequest.backgroundProcessingState ? usersRequest.backgroundProcessingState : ''}
+							/>
+						</Grid>
+					</Grid>
+				</Grid>
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Preferences
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="preferences[defaultLanguage]"
+							label={intl.formatMessage({id: 'listComponent.defaultLanguage'})}
+							value={usersRequest.preferences && usersRequest.preferences.defaultLanguage ? usersRequest.preferences.defaultLanguage : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Last Updated
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.timestamp'})}
+							value={usersRequest.lastUpdated ?
+								(usersRequest.lastUpdated.timestamp ?
+									usersRequest.lastUpdated.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.user'})}
+							value={usersRequest.lastUpdated ?
+								(usersRequest.lastUpdated.user ?
+									usersRequest.lastUpdated.user :
+									''
+								) : ''}
+						/>
+					</Grid>
+				</Grid>
 			</>
 		);
 	}

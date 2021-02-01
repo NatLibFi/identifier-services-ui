@@ -722,6 +722,7 @@
     
     "listComponent.familyName": "Family Name",
     "listComponent.email": "Email",
+    "listComponent.userId": "UserId",
     "listComponent.active": "Active",
     "listComponent.yearInactivated": "Year Inactivated",
     "listComponent.zip": "Zip",
