@@ -205,7 +205,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							</Typography>
 							<hr/>
 							<ListComponent edit={isEdit && isEditable} fieldName="title" label={intl.formatMessage({id: 'listComponent.title'})} value={publicationIsbnIsmnRequest.title ? publicationIsbnIsmnRequest.title : ''}/>
-							<ListComponent edit={isEdit && isEditable} fieldName="subtitle" label={intl.formatMessage({id: 'listComponent.subtitle'})} value={publicationIsbnIsmnRequest.subTitle ? publicationIsbnIsmnRequest.subTitle : ''}/>
+							<ListComponent edit={isEdit && isEditable} fieldName="subTitle" label={intl.formatMessage({id: 'listComponent.subtitle'})} value={publicationIsbnIsmnRequest.subTitle ? publicationIsbnIsmnRequest.subTitle : ''}/>
 							<ListComponent edit={isEdit && isEditable} fieldName="language" label={intl.formatMessage({id: 'listComponent.language'})} value={publicationIsbnIsmnRequest.language ? publicationIsbnIsmnRequest.language : ''}/>
 							<ListComponent edit={isEdit && isEditable} fieldName="publicationTime" label={intl.formatMessage({id: 'listComponent.publicationTime'})} value={publicationIsbnIsmnRequest.publicationTime ? publicationIsbnIsmnRequest.publicationTime : ''}/>
 						</Grid>
@@ -479,68 +479,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						/>
 					</Grid>
 				</Grid>
-				{/* {typeof formattedPublicationIsbnIsmnRequest.publisher === 'string' ?
-					<>
-						<Grid item xs={12} md={6}>
-							<List>
-								{
-									Object.keys(formattedPublicationIsbnIsmnRequest).map(key => {
-										return typeof formattedPublicationIsbnIsmnRequest[key] === 'string' ?
-											(
-												<ListComponent label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={formattedPublicationIsbnIsmnRequest[key]}/>
-											) :
-											null;
-									})
-								}
-							</List>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<List>
-								{
-									Object.keys(formattedPublicationIsbnIsmnRequest).map(key => {
-										return typeof formattedPublicationIsbnIsmnRequest[key] === 'object' ?
-											(
-												<ListComponent label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={formattedPublicationIsbnIsmnRequest[key]}/>
-											) :
-											null;
-									})
-								}
-							</List>
-						</Grid>
-					</> :
-					<>
-						<Grid item xs={12} md={6}>
-							<List>
-
-								{
-									Object.keys(withoutPublisher).map(key => {
-										return <ListComponent key={key} label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={withoutPublisher[key]}/>;
-									})
-								}
-							</List>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<ExpansionPanel>
-								<ExpansionPanelSummary
-									expandIcon={<ExpandMoreIcon/>}
-									aria-controls="panel1a-content"
-									id="panel1a-header"
-								>
-									<FormattedMessage id="publicationRequest.label.publisherDetails"/>
-								</ExpansionPanelSummary>
-								<ExpansionPanelDetails>
-									<List>
-										{
-											Object.keys(formatOnlyPublisher).map(key => {
-												return <ListComponent key={key} label={intl.formatMessage({id: `publisherRender.label.${key}`})} value={formatOnlyPublisher[key]}/>;
-											})
-										}
-									</List>
-								</ExpansionPanelDetails>
-							</ExpansionPanel>
-
-						</Grid>
-					</>} */}
 			</>
 		);
 	}

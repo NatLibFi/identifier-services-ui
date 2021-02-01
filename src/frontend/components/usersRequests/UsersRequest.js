@@ -81,7 +81,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}, [cookie, fetchPublisher, usersRequest.publisher]);
 
 	useEffect(() => {
-		if (Object.keys(fetchedPublisher) === undefined) {
+		if (Object.keys(fetchedPublisher) !== undefined) {
 			if (Object.keys(fetchedPublisher).length > 0) {
 				setPublisherName(fetchedPublisher.name);
 			}
@@ -129,7 +129,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handleOnSubmit(values) {
-		console.log(publisherName);
 		updateUserRequest(id, values, cookie[COOKIE_NAME], lang);
 		setIsEdit(false);
 	}
@@ -241,7 +240,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								edit={isEdit && isEditable}
 								fieldName="publisher"
 								label={intl.formatMessage({id: 'listComponent.publisher'})}
-								value={usersRequest.publisher ? usersRequest.publisher : ''}
+								value={usersRequest.publisher && publisherName !== null ? publisherName : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}

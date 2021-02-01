@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -33,7 +34,7 @@ import {
 	ButtonGroup,
 	Button,
 	TextareaAutosize,
-	List
+	Typography
 } from '@material-ui/core';
 import {reduxForm} from 'redux-form';
 import EditIcon from '@material-ui/icons/Edit';
@@ -98,14 +99,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		setButtonState(publisherRequest.state);
 	}
 
-	function handlePublisherUpdate() {
+	function handlePublisherUpdate(values) {
 		const newPublisherRequest = {
-			...publisherRequest,
+			...values,
 			state: 'new',
 			backgroundProcessingState: 'inProgress'
 		};
 		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
+		setIsEdit(false);
 	}
 
 	function handleAccept() {
@@ -125,6 +127,16 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handleCancel = () => {
 		setIsEdit(false);
 	};
+
+	function isEditable(key) {
+		const nonEditableFields = userInfo.role === 'admin' ?
+			['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type', 'format', 'createdResource'] :
+			(userInfo.role === 'publisher-admin' ?
+				['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type', 'format', 'createdResource', 'state', 'backgroundProcessingState'] :
+				[]);
+
+		return isEdit && !nonEditableFields.includes(key);
+	}
 
 	function renderButton(state) {
 		switch (state) {
@@ -178,31 +190,366 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	} else {
 		publisherRequestDetail = (
 			<>
-				<Grid item xs={12} md={6}>
-					<List>
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								<FormattedMessage id="listComponent.basicInformations"/>
+							</Typography>
+							<hr/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="name"
+								label={intl.formatMessage({id: 'listComponent.name'})}
+								value={publisherRequest.name ? publisherRequest.name : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="phone"
+								label={intl.formatMessage({id: 'listComponent.phone'})}
+								value={publisherRequest.phone ? publisherRequest.phone : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisherCategory"
+								label={intl.formatMessage({id: 'listComponent.publisherCategory'})}
+								value={publisherRequest.publisherCategory ? publisherRequest.publisherCategory : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="language"
+								label={intl.formatMessage({id: 'listComponent.language'})}
+								value={publisherRequest.language ? publisherRequest.language : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="email"
+								label={intl.formatMessage({id: 'listComponent.email'})}
+								value={publisherRequest.email ? publisherRequest.email : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="givenName"
+								label={intl.formatMessage({id: 'listComponent.givenName'})}
+								value={publisherRequest.givenName ? publisherRequest.givenName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="familyName"
+								label={intl.formatMessage({id: 'listComponent.familyName'})}
+								value={publisherRequest.familyName ? publisherRequest.familyName : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="publisherType"
+								label={intl.formatMessage({id: 'listComponent.publisherType'})}
+								value={publisherRequest.publisherType ? publisherRequest.publisherType : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="creator"
+								label={intl.formatMessage({id: 'listComponent.creator'})}
+								value={publisherRequest.creator ? publisherRequest.creator : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="website"
+								label={intl.formatMessage({id: 'listComponent.website'})}
+								value={publisherRequest.website ? publisherRequest.website : ''}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography variant="h6">
+								<FormattedMessage id="listComponent.postalAddress"/>
+							</Typography>
+							<hr/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="postalAddress[address]"
+								label={intl.formatMessage({id: 'listComponent.address'})}
+								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.address ?
+									publisherRequest.postalAddress.address : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="postalAddress[city]"
+								label={intl.formatMessage({id: 'listComponent.city'})}
+								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.city ?
+									publisherRequest.postalAddress.city : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="postalAddress[zip]"
+								label={intl.formatMessage({id: 'listComponent.zip'})}
+								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.zip ?
+									publisherRequest.postalAddress.zip : ''}
+							/>
+							<ListComponent
+								edit={isEdit && isEditable}
+								fieldName="postalAddress[public]"
+								label={intl.formatMessage({id: 'listComponent.public'})}
+								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.public ?
+									publisherRequest.postalAddress.public : ''}
+							/>
+						</Grid>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.affiliateOf"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[affiliateOf][address]"
+							label={intl.formatMessage({id: 'listComponent.address'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.address ?
+								publisherRequest.organizationDetails.affiliateOf.address : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[affiliateOf][city]"
+							label={intl.formatMessage({id: 'listComponent.city'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.city ?
+								publisherRequest.organizationDetails.affiliateOf.city : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[affiliateOf][zip]"
+							label={intl.formatMessage({id: 'listComponent.zip'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.zip ?
+								publisherRequest.organizationDetails.affiliateOf.zip : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[affiliateOf][name]"
+							label={intl.formatMessage({id: 'listComponent.name'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.name ?
+								publisherRequest.organizationDetails.affiliateOf.name : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.affiliates"/>
+						</Typography>
+						<hr/>
 						{
-							Object.keys(formattedPublisherRequest).map(key => {
-								return typeof formattedPublisherRequest[key] === 'string' ?
-									(
-										<ListComponent label={intl.formatMessage({id: `publisherRender.label.${key}`})} value={formattedPublisherRequest[key]}/>
-									) :
-									null;
-							})
+							publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliates && publisherRequest.organizationDetails.affiliates.map(item => (
+								<Grid key={`${item.name}${item.address}`} container>
+									<ListComponent
+										edit={isEdit && isEditable}
+										fieldName="organizationDetails[affiliates][address]"
+										label={intl.formatMessage({id: 'listComponent.address'})}
+										value={item.address ? item.address : ''}
+									/>
+									<ListComponent
+										edit={isEdit && isEditable}
+										fieldName="organizationDetails[affiliates][city]"
+										label={intl.formatMessage({id: 'listComponent.city'})}
+										value={item.city ? item.city : ''}
+									/>
+									<ListComponent
+										edit={isEdit && isEditable}
+										fieldName="organizationDetails[affiliates][zip]"
+										label={intl.formatMessage({id: 'listComponent.zip'})}
+										value={item.zip ? item.zip : ''}
+									/>
+									<ListComponent
+										edit={isEdit && isEditable}
+										fieldName="organizationDetails[affiliates][name]"
+										label={intl.formatMessage({id: 'listComponent.name'})}
+										value={item.name ? item.name : ''}
+									/>
+								</Grid>
+
+							))
 						}
-					</List>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.distributorOf"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributorOf][address]"
+							label={intl.formatMessage({id: 'listComponent.address'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.address ?
+								publisherRequest.organizationDetails.distributorOf.address : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributorOf][city]"
+							label={intl.formatMessage({id: 'listComponent.city'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.city ?
+								publisherRequest.organizationDetails.distributorOf.city : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributorOf][zip]"
+							label={intl.formatMessage({id: 'listComponent.zip'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.zip ?
+								publisherRequest.organizationDetails.distributorOf.zip : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributorOf][name]"
+							label={intl.formatMessage({id: 'listComponent.name'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.name ?
+								publisherRequest.organizationDetails.distributorOf.name : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.distributor"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributor][address]"
+							label={intl.formatMessage({id: 'listComponent.address'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.address ?
+								publisherRequest.organizationDetails.distributor.address : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributor][city]"
+							label={intl.formatMessage({id: 'listComponent.city'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.city ?
+								publisherRequest.organizationDetails.distributor.city : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributor][zip]"
+							label={intl.formatMessage({id: 'listComponent.zip'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.zip ?
+								publisherRequest.organizationDetails.distributor.zip : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="organizationDetails[distributor][name]"
+							label={intl.formatMessage({id: 'listComponent.name'})}
+							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.name ?
+								publisherRequest.organizationDetails.distributor.name : ''}
+						/>
+					</Grid>
 				</Grid>
-				<Grid item xs={12} md={6}>
-					<List>
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.aliases"/>
+						</Typography>
+						<hr/>
 						{
-							Object.keys(formattedPublisherRequest).map(key => {
-								return typeof formattedPublisherRequest[key] === 'object' ?
-									(
-										<ListComponent label={intl.formatMessage({id: `publisherRender.label.${key}`})} value={formattedPublisherRequest[key]}/>
-									) :
-									null;
-							})
+							publisherRequest.aliases && publisherRequest.aliases.map(item => (
+								<ListComponent
+									key={item}
+									edit={isEdit && isEditable}
+									fieldName="aliases"
+									label={intl.formatMessage({id: 'listComponent.aliases'})}
+									value={item}
+								/>
+							))
 						}
-					</List>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Frequency
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publicationDetails[frequency][currentYear]"
+							label={intl.formatMessage({id: 'listComponent.currentYear'})}
+							value={publisherRequest && publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency && publisherRequest.publicationDetails.frequency.currentYear ?
+								publisherRequest.publicationDetails.frequency.currentYear : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="publicationDetails[frequency][currentYear]"
+							label={intl.formatMessage({id: 'listComponent.nextYear'})}
+							value={publisherRequest && publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency && publisherRequest.publicationDetails.frequency.nextYear ?
+								publisherRequest.publicationDetails.frequency.nextYear : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.classification"/>
+						</Typography>
+						<hr/>
+						{
+							publisherRequest.classification && publisherRequest.classification.map(item => (
+								<ListComponent
+									key={item}
+									label={intl.formatMessage({id: 'listComponent.classification'})}
+									value={item}
+								/>
+							))
+						}
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.status"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="state"
+							label={intl.formatMessage({id: 'listComponent.state'})}
+							value={publisherRequest.state ? publisherRequest.state : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="backgroundProcessingState"
+							label={intl.formatMessage({id: 'listComponent.backgroundProcessingState'})}
+							value={publisherRequest.backgroundProcessingState ? publisherRequest.backgroundProcessingState : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="rejectionReason"
+							label={intl.formatMessage({id: 'listComponent.rejectionReason'})}
+							value={publisherRequest.rejectionReason ? publisherRequest.rejectionReason : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="rejectionReason"
+							label={intl.formatMessage({id: 'listComponent.createdResource'})}
+							value={publisherRequest.createdResource ? publisherRequest.createdResource : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.lastUpdated"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.timestamp'})}
+							value={publisherRequest.lastUpdated ?
+								(publisherRequest.lastUpdated.timestamp ?
+									publisherRequest.lastUpdated.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.user'})}
+							value={publisherRequest.lastUpdated ?
+								(publisherRequest.lastUpdated.user ?
+									publisherRequest.lastUpdated.user :
+									''
+								) : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.notes"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="notes"
+							label={intl.formatMessage({id: 'listComponent.notes'})}
+							value={publisherRequest.notes ? publisherRequest.notes : ''}
+						/>
+					</Grid>
 				</Grid>
 			</>
 		);
@@ -281,6 +628,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
+		initialValues: state.publisher.publisherRequest,
 		publisherRequest: state.publisher.publisherRequest,
 		loading: state.publisher.loading,
 		isAuthenticated: state.login.isAuthenticated,
