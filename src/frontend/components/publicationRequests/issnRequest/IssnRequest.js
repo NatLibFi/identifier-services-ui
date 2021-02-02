@@ -112,9 +112,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handlePublicationRequestUpdate(values) {
 		const newIssnRequest = {
 			...values,
+			firstYear: Number(values.firstYear),
+			lastYear: values.previousPublication && values.previousPublication.lastYear && Number(values.lastYear),
 			state: 'new',
 			backgroundProcessingState: 'inProgress'
 		};
+		delete newIssnRequest._id;
 		updateIssnRequest(issnRequest._id, newIssnRequest, cookie[COOKIE_NAME]);
 		setIsEdit(false);
 		setButtonState(issnRequest.state);
@@ -176,9 +179,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 	function isEditable(key) {
 		const nonEditableFields = userInfo.role === 'admin' ?
-			['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type'] :
+			['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange'] :
 			(userInfo.role === 'publisher-admin' ?
-				['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange', 'type'] :
+				['lastUpdated', '_id', 'associatedRange', 'identifier', 'metadataReference', 'request', 'associatedRange'] :
 				[]);
 
 		return isEdit && !nonEditableFields.includes(key);
@@ -207,7 +210,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<ListComponent edit={isEdit && isEditable} fieldName="language" label={intl.formatMessage({id: 'listComponent.language'})} value={issnRequest.language ? issnRequest.language : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="manufacturer" label={intl.formatMessage({id: 'listComponent.manufacturer'})} value={issnRequest.manufacturer ? issnRequest.manufacturer : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="city" label={intl.formatMessage({id: 'listComponent.city'})} value={issnRequest.city ? issnRequest.city : ''}/>
-						<ListComponent edit={isEdit && isEditable} fieldName="additionalDetails" label={intl.formatMessage({id: 'listComponent.additionalDetails'})} value={issnRequest.additionalDetails ? issnRequest.additionalDetails : ''}/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -343,6 +345,70 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
+							Additional Details
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="additionalDetails"
+							value={issnRequest.additionalDetails ? issnRequest.additionalDetails : ''}
+						/>
+					</Grid>
+				</Grid>
+				<Grid container item xs={6} md={6} spacing={2}>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Time Details
+						</Typography>
+						<hr/>
+						<ListComponent edit={isEdit && isEditable} fieldName="firstYear" label={intl.formatMessage({id: 'listComponent.firstYear'})} value={issnRequest.firstYear ? issnRequest.firstYear : ''}/>
+						<ListComponent edit={isEdit && isEditable} fieldName="firstNumber" label={intl.formatMessage({id: 'listComponent.firstNumber'})} value={issnRequest.firstNumber ? issnRequest.firstNumber : ''}/>
+						<ListComponent edit={isEdit && isEditable} fieldName="frequency" label={intl.formatMessage({id: 'listComponent.frequency'})} value={issnRequest.frequency ? issnRequest.frequency : ''}/>
+						<ListComponent edit={isEdit && isEditable} fieldName="type" label={intl.formatMessage({id: 'listComponent.type'})} value={issnRequest.type ? issnRequest.type : ''}/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Previous Publication
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="previousPublication[lastYear]"
+							label={intl.formatMessage({id: 'listComponent.lastYear'})}
+							value={issnRequest.previousPublication ?
+								(issnRequest.previousPublication.lastYear ?
+									issnRequest.previousPublication.lastYear :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="previousPublication[lastNumber]"
+							label={intl.formatMessage({id: 'listComponent.lastNumber'})}
+							value={issnRequest.previousPublication ?
+								(issnRequest.previousPublication.lastNumber ?
+									issnRequest.previousPublication.lastNumber :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="previousPublication[title]"
+							label={intl.formatMessage({id: 'listComponent.title'})}
+							value={issnRequest.previousPublication ?
+								(issnRequest.previousPublication.title ?
+									issnRequest.previousPublication.title :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="previousPublication[identifier]"
+							label={intl.formatMessage({id: 'listComponent.identifier'})}
+							value={issnRequest.previousPublication ?
+								(issnRequest.previousPublication.identifier ?
+									issnRequest.previousPublication.identifier :
+									''
+								) : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
 							Format Details
 						</Typography>
 						<hr/>
@@ -416,60 +482,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								) : ''}
 						/>
 					</Grid>
-				</Grid>
-				<Grid container item xs={6} md={6} spacing={2}>
-					<Grid item xs={12}>
-						<Typography variant="h6">
-							Time Details
-						</Typography>
-						<hr/>
-						<ListComponent edit={isEdit && isEditable} fieldName="firstYear" label={intl.formatMessage({id: 'listComponent.firstYear'})} value={issnRequest.firstYear ? issnRequest.firstYear : ''}/>
-						<ListComponent edit={isEdit && isEditable} fieldName="firstNumber" label={intl.formatMessage({id: 'listComponent.firstNumber'})} value={issnRequest.firstNumber ? issnRequest.firstNumber : ''}/>
-						<ListComponent edit={isEdit && isEditable} fieldName="frequency" label={intl.formatMessage({id: 'listComponent.frequency'})} value={issnRequest.frequency ? issnRequest.frequency : ''}/>
-						<ListComponent edit={isEdit && isEditable} fieldName="type" label={intl.formatMessage({id: 'listComponent.type'})} value={issnRequest.type ? issnRequest.type : ''}/>
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="h6">
-							Previous Publication
-						</Typography>
-						<hr/>
-						<ListComponent
-							edit={isEdit && isEditable} fieldName="previousPublication[lastYear]"
-							label={intl.formatMessage({id: 'listComponent.lastYear'})}
-							value={issnRequest.previousPublication ?
-								(issnRequest.previousPublication.lastYear ?
-									issnRequest.previousPublication.lastYear :
-									''
-								) : ''}
-						/>
-						<ListComponent
-							edit={isEdit && isEditable} fieldName="previousPublication[lastNumber]"
-							label={intl.formatMessage({id: 'listComponent.lastNumber'})}
-							value={issnRequest.previousPublication ?
-								(issnRequest.previousPublication.lastNumber ?
-									issnRequest.previousPublication.lastNumber :
-									''
-								) : ''}
-						/>
-						<ListComponent
-							edit={isEdit && isEditable} fieldName="previousPublication[title]"
-							label={intl.formatMessage({id: 'listComponent.title'})}
-							value={issnRequest.previousPublication ?
-								(issnRequest.previousPublication.title ?
-									issnRequest.previousPublication.title :
-									''
-								) : ''}
-						/>
-						<ListComponent
-							edit={isEdit && isEditable} fieldName="previousPublication[identifier]"
-							label={intl.formatMessage({id: 'listComponent.identifier'})}
-							value={issnRequest.previousPublication ?
-								(issnRequest.previousPublication.identifier ?
-									issnRequest.previousPublication.identifier :
-									''
-								) : ''}
-						/>
-					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
 							Metadata References
@@ -497,8 +509,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							Other References
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={issnRequest.state ? issnRequest.state : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={issnRequest.creator ? issnRequest.creator : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.state'})} value={issnRequest.state ? issnRequest.state : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.creator'})} value={issnRequest.creator ? issnRequest.creator : ''}/>
 						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={issnRequest.associatedRange ? formatValueforAssociatedRange(issnRequest.associatedRange) : ''}/>
 						<ListComponent
 							label={intl.formatMessage({id: 'listComponent.lastUpdated'})}

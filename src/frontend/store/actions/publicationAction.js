@@ -119,8 +119,13 @@ export const updatePublicationIsbnIsmn = (id, values, token) => async dispatch =
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(UPDATE_ISBN_ISMN, result));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(success(UPDATE_ISBN_ISMN, result));
+			dispatch(setMessage({color: 'success', msg: 'IsbnIsmn Request updated'}));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
@@ -139,8 +144,13 @@ export const updatePublicationIssn = (id, values, token) => async dispatch => {
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(UPDATE_ISSN, result));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(success(UPDATE_ISSN, result));
+			dispatch(setMessage({color: 'success', msg: 'IsbnIsmn Request updated'}));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
@@ -248,8 +258,13 @@ export const updatePublicationIsbnIsmnRequest = (id, values, token) => async dis
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(PUBLICATION_ISBN_ISMN_REQUEST, result));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(setMessage({color: 'success', msg: 'IsbnIsmn Request updated'}));
+			dispatch(success(PUBLICATION_ISBN_ISMN_REQUEST, result));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
@@ -308,8 +323,13 @@ export const updateIssnRequest = (id, values, token) => async dispatch => {
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(ISSN_REQUEST, result));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(setMessage({color: 'success', msg: 'Issn Request updated'}));
+			dispatch(success(ISSN_REQUEST, result));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

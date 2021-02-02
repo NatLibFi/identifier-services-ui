@@ -1,17 +1,19 @@
+/* eslint-disable complexity */
 import React from 'react';
 import {Grid, ListItem, ListItemText, Chip, Typography} from '@material-ui/core';
 import {Field} from 'redux-form';
 import {FormattedMessage, useIntl} from 'react-intl';
 import renderTextField from './form/render/renderTextField';
 import renderSelect from './form/render/renderSelect';
+import renderMultiSelect from './form/render/renderMultiSelect';
+import renderTextArea from './form/render/renderTextArea';
 import useFormStyles from '../styles/form';
 import useStyles from '../styles/listComponent';
-import {element} from './form/publisherRegistrationForm/commons';
-import {fieldArray} from './form/publisherRegistrationForm/formFieldVariable';
+import {classificationCodes, isbnClassificationCodes} from './form/publisherRegistrationForm/formFieldVariable';
 
 export default function (props) {
 	const classes = useStyles();
-	const {label, value, edit, fieldName, clearFields} = props;
+	const {label, value, edit, fieldName} = props;
 	const intl = useIntl();
 	const formClasses = useFormStyles();
 
@@ -22,28 +24,40 @@ export default function (props) {
 			case 'string':
 			case 'number':
 				return (
-					<>
-						<Grid item xs={4}>
-							<span className={classes.label}>{label}:</span>
-						</Grid>
-						<Grid item xs={8}>
-							{edit ? (
-								fieldName === 'frequency' ? (
-									renderEditFrequency(fieldName)
-								) : fieldName === 'preferences[defaultLanguage]' ? (
-									renderEditDefaultLanguage(fieldName)
-								) : fieldName === 'state' ? (
-									renderEditState(fieldName)
-								) : fieldName === 'backgroundProcessingState' ? (
-									renderEditBackgroundProcessingState(fieldName)
+					fieldName === 'additionalDetails' || fieldName === 'notes' ?
+						(edit ? renderEditAdditionalDetails(fieldName) : value) :
+						<>
+							<Grid item xs={4}>
+								<span className={classes.label}>{label}:</span>
+							</Grid>
+							<Grid item xs={8}>
+								{edit ? (
+									fieldName === 'frequency' ? (
+										renderEditFrequency(fieldName)
+									) : (fieldName === 'preferences[defaultLanguage]' || fieldName === 'language') || fieldName === 'publisher[language]' || fieldName === 'uniform[language]' ? (
+										renderEditDefaultLanguage(fieldName)
+									) : fieldName === 'type' ? (
+										renderEditType(fieldName)
+									) : fieldName === 'state' ? (
+										renderEditState(fieldName)
+									) : fieldName === 'publisherType' ? (
+										renderEditPublisherType(fieldName)
+									) : fieldName === 'publisherCategory' ? (
+										renderEditPublisherCategory(fieldName)
+									) : fieldName === 'publishingActivities' ? (
+										renderEditPublishingActivities(fieldName)
+									) : fieldName === 'backgroundProcessingState' ? (
+										renderEditBackgroundProcessingState(fieldName)
+									) : (fieldName === 'isPublic' || fieldName === 'public') ? (
+										renderEditIsPublic(fieldName)
+									) : (
+										<Field name={fieldName} className={formClasses.editForm} component={renderTextField}/>
+									)
 								) : (
-									<Field name={fieldName} className={formClasses.editForm} component={renderTextField}/>
-								)
-							) : (
-								value
-							)}
-						</Grid>
-					</>
+									value
+								)}
+							</Grid>
+						</>
 				);
 			case 'boolean':
 				return (
@@ -82,18 +96,24 @@ export default function (props) {
 			}
 
 			if (Array.isArray(obj)) {
-				if (edit && fieldName === 'classification') {
-					return (
-						<>
-							<Grid item xs={8}>
-								{element({
-									array: fieldArray[1].publishingActivities.filter(item => item.name === 'classification'),
-									classes: formClasses,
-									clearFields
-								})}
-							</Grid>
-						</>
-					);
+				if (fieldName === 'classification' || fieldName === 'isbnClassification') {
+					if (edit) {
+						return fieldName === 'classification' ? (
+							renderEditClassification(fieldName, classificationCodes)
+						) : (renderEditClassification(fieldName, isbnClassificationCodes)
+						);
+					}
+
+					return obj.map(item => (
+						<Grid key={item} item>
+							{
+								fieldName === 'classification' ? (
+									<Chip label={getClassificationValue(Number(item), classificationCodes)}/>
+								) : (<Chip label={getClassificationValue(Number(item), isbnClassificationCodes)}/>
+								)
+							}
+						</Grid>
+					));
 				}
 
 				if (edit && fieldName === 'authors') {
@@ -320,6 +340,96 @@ export default function (props) {
 		);
 	}
 
+	function renderEditIsPublic(fieldName) {
+		return (
+			<Grid item xs={8}>
+				<Field
+					name={fieldName}
+					type="select"
+					component={renderSelect}
+					options={[
+						{label: 'True', value: 'true'},
+						{label: 'False', value: 'false'}
+					]}
+				/>
+			</Grid>
+		);
+	}
+
+	function renderEditPublisherType(fieldName) {
+		return (
+			<Grid item xs={8}>
+				<Field
+					name={fieldName}
+					type="select"
+					component={renderSelect}
+					options={[
+						{label: 'P', value: 'P'},
+						{label: 'A', value: 'A'},
+						{label: 'T', value: 'T'}
+					]}
+				/>
+			</Grid>
+		);
+	}
+
+	function renderEditType(fieldName) {
+		return (
+			<Grid item xs={8}>
+				<Field
+					name={fieldName}
+					type="select"
+					component={renderSelect}
+					options={[
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.cartoon'}), value: 'cartoon'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.freepaper'}), value: 'free-paper'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.journal'}), value: 'journal'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.membershipmagazine'}), value: 'membership-magazine'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.monography'}), value: 'monography'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.newsletter'}), value: 'newsletter'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.newspaper'}), value: 'newspaper'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.Time.type.staffmagazine'}), value: 'staff-magazine'}
+					]}
+				/>
+			</Grid>
+		);
+	}
+
+	function renderEditPublisherCategory(fieldName) {
+		return (
+			<Grid item xs={8}>
+				<Field
+					name={fieldName}
+					type="select"
+					component={renderSelect}
+					options={[
+						{label: intl.formatMessage({id: 'publisherRegistration.form.basicInformation.publisherCategory.associationCorporationOrganisation'}), value: 'association/corporation/organisation'},
+						{label: intl.formatMessage({id: 'publisherRegistration.form.basicInformation.publisherCategory.cityMunicipality'}), value: 'city/municipality'},
+						{label: intl.formatMessage({id: 'publisherRegistration.form.basicInformation.publisherCategory.clericalOrganisation'}), value: 'clerical organisation'},
+						{label: intl.formatMessage({id: 'publisherRegistration.form.basicInformation.publisherCategory.privatePerson'}), value: 'private person'},
+						{label: intl.formatMessage({id: 'publisherRegistration.form.basicInformation.publisherCategory.school'}), value: 'school'}
+					]}
+				/>
+			</Grid>
+		);
+	}
+
+	function renderEditPublishingActivities(fieldName) {
+		return (
+			<Grid item xs={8}>
+				<Field
+					name={fieldName}
+					type="select"
+					component={renderSelect}
+					options={[
+						{label: intl.formatMessage({id: 'publicationRegistration.form.publishingActivities.continuous'}), value: 'continuous'},
+						{label: intl.formatMessage({id: 'publicationRegistration.form.publishingActivities.occasional'}), value: 'occasional'}
+					]}
+				/>
+			</Grid>
+		);
+	}
+
 	function renderEditFrequency(fieldName) {
 		return (
 			<Grid item xs={8}>
@@ -341,6 +451,44 @@ export default function (props) {
 					]}
 				/>
 			</Grid>
+		);
+	}
+
+	function getClassificationValue(value, array) {
+		const reducedValue = array.reduce((acc, item) => {
+			if (item.value === value) {
+				acc = intl.formatMessage({id: `${item.label.props.id}`});
+				return acc;
+			}
+
+			return acc;
+		}, '');
+		return reducedValue;
+	}
+
+	function renderEditClassification(fieldName, options) {
+		return (
+			<Grid item xs={12}>
+				<Field
+					className={`${classes.selectField} ${classes.full}`}
+					component={renderMultiSelect}
+					name={fieldName}
+					type="multiSelect"
+					options={options}
+					props={{isMulti: true}}
+				/>
+			</Grid>
+		);
+	}
+
+	function renderEditAdditionalDetails(fieldName) {
+		return (
+			<Field
+				className={`${classes.textArea} ${classes.full}`}
+				component={renderTextArea}
+				name={fieldName}
+				type="multiline"
+			/>
 		);
 	}
 }

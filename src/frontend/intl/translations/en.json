@@ -783,7 +783,7 @@
     "listComponent.phone" : "Phone",
     "listComponent.publisherEmail" : "Publisher Email",
     "listComponent.website" : "Website",
-    "listComponent.language" : "SelectLanguage",
+    "listComponent.language" : "Language",
 
     "listComponent.currentYear" : "Publication Estimate this Year",
     "listComponent.nextYear" : "Publication Estimate next Year",

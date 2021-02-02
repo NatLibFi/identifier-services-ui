@@ -63,9 +63,13 @@ export const updatePublisher = (id, values, token) => async dispatch => {
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(UPDATE_PUBLISHER, result.value));
-		dispatch(setMessage({color: 'success', msg: 'Publisher updated'}));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(setMessage({color: 'success', msg: 'Publisher updated'}));
+			dispatch(success(UPDATE_PUBLISHER, result.value));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}
@@ -209,8 +213,13 @@ export const updatePublisherRequest = (id, values, token) => async dispatch => {
 			credentials: 'same-origin',
 			body: JSON.stringify(values)
 		});
-		const result = await response.json();
-		dispatch(success(PUBLISHER_REQUEST, result.value));
+		if (response.status === HttpStatus.OK) {
+			const result = await response.json();
+			dispatch(setMessage({color: 'success', msg: 'Publisher Request updated'}));
+			dispatch(success(PUBLISHER_REQUEST, result.value));
+		} else {
+			dispatch(setMessage({color: 'error', msg: 'Request update unsuccessful'}));
+		}
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

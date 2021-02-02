@@ -56,6 +56,16 @@ const useStyles = makeStyles({
 				width: 'auto'
 			}
 		}
+	},
+	full: {
+		flexDirection: 'column'
+	},
+	selectField: {
+		width: '100%'
+	},
+	textArea: {
+		width: '100%',
+		background: '#f5f3f3'
 	}
 });
 

@@ -117,6 +117,13 @@ export const classificationCodes = [
 	{label: <FormattedMessage id="publisher.classification.numismatics"/>, value: 950}
 ];
 
+export const isbnClassificationCodes = [
+	{label: <FormattedMessage id="publicationRegistration.form.basicInformation.classification.nonFiction"/>, value: 1},
+	{label: <FormattedMessage id="publicationRegistration.form.basicInformation.classification.fiction"/>, value: 2},
+	{label: <FormattedMessage id="publicationRegistration.form.basicInformation.classification.cartoon"/>, value: 3},
+	{label: <FormattedMessage id="publicationRegistration.form.basicInformation.classification.childrenBook"/>, value: 4}
+];
+
 const publisherCategory = [
 	{label: <FormattedMessage id="publisherRegistration.form.basicInformation.publisherCategory.privatePerson"/>, value: 'private person'},
 	{label: <FormattedMessage id="publisherRegistration.form.basicInformation.publisherCategory.associationCorporationOrganisation"/>, value: 'association/corporation/organisation'},

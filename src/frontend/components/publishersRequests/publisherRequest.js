@@ -48,6 +48,7 @@ import * as actions from '../../store/actions';
 import Spinner from '../Spinner';
 import ListComponent from '../ListComponent';
 import CustomColor from '../../styles/app';
+import {classificationCodes} from '../form/publisherRegistrationForm/formFieldVariable';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'userCreation',
@@ -102,6 +103,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handlePublisherUpdate(values) {
 		const newPublisherRequest = {
 			...values,
+			classification: values.classification.map(item => item.value.toString()),
 			state: 'new',
 			backgroundProcessingState: 'inProgress'
 		};
@@ -476,15 +478,13 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<FormattedMessage id="listComponent.classification"/>
 						</Typography>
 						<hr/>
-						{
-							publisherRequest.classification && publisherRequest.classification.map(item => (
-								<ListComponent
-									key={item}
-									label={intl.formatMessage({id: 'listComponent.classification'})}
-									value={item}
-								/>
-							))
-						}
+						<Grid container style={{display: 'flex', flexDirection: 'column'}}>
+							<ListComponent
+								edit={isEdit && isEditable} fieldName="classification"
+								label={intl.formatMessage({id: 'listComponent.classification'})}
+								value={publisherRequest.classification && publisherRequest.classification}
+							/>
+						</Grid>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -628,7 +628,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 function mapStateToProps(state) {
 	return ({
-		initialValues: state.publisher.publisherRequest,
+		initialValues: formatInitialValues(state.publisher.publisherRequest),
 		publisherRequest: state.publisher.publisherRequest,
 		loading: state.publisher.loading,
 		isAuthenticated: state.login.isAuthenticated,
@@ -638,3 +638,28 @@ function mapStateToProps(state) {
 		ismnRangeList: state.identifierRanges.ismnList
 	});
 }
+
+function formatInitialValues(values) {
+	if (Object.keys(values).length > 0) {
+		const formattedValues = {
+			...values,
+			classification: values.classification.map(item => {
+				return formatClassificationForEditing(Number(item));
+			})
+		};
+
+		return formattedValues;
+	}
+
+	function formatClassificationForEditing(v) {
+		return classificationCodes.reduce((acc, k) => {
+			if (k.value === v) {
+				acc = k;
+				return acc;
+			}
+
+			return acc;
+		}, {});
+	}
+}
+
