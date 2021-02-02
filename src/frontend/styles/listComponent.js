@@ -66,6 +66,9 @@ const useStyles = makeStyles({
 	textArea: {
 		width: '100%',
 		background: '#f5f3f3'
+	},
+	arrayString: {
+		width: '95%'
 	}
 });
 

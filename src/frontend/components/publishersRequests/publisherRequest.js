@@ -79,7 +79,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		if (id !== null) {
 			fetchPublisherRequest(id, cookie[COOKIE_NAME]);
 		}
-	}, [cookie, fetchPublisherRequest, id, buttonState]);
+	}, [cookie, fetchPublisherRequest, id, buttonState, isEdit]);
 	function handleRejectClick() {
 		setReject(!reject);
 	}
@@ -441,17 +441,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<FormattedMessage id="listComponent.aliases"/>
 						</Typography>
 						<hr/>
-						{
-							publisherRequest.aliases && publisherRequest.aliases.map(item => (
-								<ListComponent
-									key={item}
-									edit={isEdit && isEditable}
-									fieldName="aliases"
-									label={intl.formatMessage({id: 'listComponent.aliases'})}
-									value={item}
-								/>
-							))
-						}
+						<ListComponent
+							edit={isEdit && isEditable}
+							fieldName="aliases"
+							label={intl.formatMessage({id: 'listComponent.aliases'})}
+							value={publisherRequest.aliases ? publisherRequest.aliases : []}
+						/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">

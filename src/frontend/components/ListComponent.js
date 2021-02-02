@@ -1,12 +1,13 @@
 /* eslint-disable complexity */
 import React from 'react';
 import {Grid, ListItem, ListItemText, Chip, Typography} from '@material-ui/core';
-import {Field} from 'redux-form';
+import {Field, FieldArray} from 'redux-form';
 import {FormattedMessage, useIntl} from 'react-intl';
 import renderTextField from './form/render/renderTextField';
 import renderSelect from './form/render/renderSelect';
 import renderMultiSelect from './form/render/renderMultiSelect';
 import renderTextArea from './form/render/renderTextArea';
+import renderAliases from './form/render/renderAliases';
 import useFormStyles from '../styles/form';
 import useStyles from '../styles/listComponent';
 import {classificationCodes, isbnClassificationCodes} from './form/publisherRegistrationForm/formFieldVariable';
@@ -114,6 +115,22 @@ export default function (props) {
 							}
 						</Grid>
 					));
+				}
+
+				if (fieldName === 'aliases') {
+					if (edit) {
+						return (
+							<Grid item xs={12}>
+								<FieldArray
+									className={`${classes.arrayString} ${classes.full}`}
+									component={renderAliases}
+									name={fieldName}
+									type="arrayString"
+									props={{name: fieldName, subName: 'alias', classes}}
+								/>
+							</Grid>
+						);
+					}
 				}
 
 				if (edit && fieldName === 'authors') {
