@@ -8,13 +8,16 @@ import renderSelect from './form/render/renderSelect';
 import renderMultiSelect from './form/render/renderMultiSelect';
 import renderTextArea from './form/render/renderTextArea';
 import renderAliases from './form/render/renderAliases';
+import renderContactDetail from './form/render/renderContactDetail';
 import useFormStyles from '../styles/form';
 import useStyles from '../styles/listComponent';
+import {fieldArray} from '../components/form/publisherRegistrationForm/formFieldVariable';
+import {getFieldArray} from './form/IsbnIsmnRegForm';
 import {classificationCodes, isbnClassificationCodes} from './form/publisherRegistrationForm/formFieldVariable';
 
 export default function (props) {
 	const classes = useStyles();
-	const {label, value, edit, fieldName} = props;
+	const {label, value, edit, fieldName, clearFields} = props;
 	const intl = useIntl();
 	const formClasses = useFormStyles();
 
@@ -49,8 +52,6 @@ export default function (props) {
 										renderEditPublishingActivities(fieldName)
 									) : fieldName === 'backgroundProcessingState' ? (
 										renderEditBackgroundProcessingState(fieldName)
-									) : (fieldName === 'isPublic' || fieldName === 'public') ? (
-										renderEditIsPublic(fieldName)
 									) : (
 										<Field name={fieldName} className={formClasses.editForm} component={renderTextField}/>
 									)
@@ -73,7 +74,7 @@ export default function (props) {
 									type="select"
 									className={formClasses.editForm}
 									component={renderSelect}
-									option={[
+									options={[
 										{label: 'True', value: 'true'},
 										{label: 'False', value: 'false'}
 									]}
@@ -92,29 +93,37 @@ export default function (props) {
 		}
 
 		function renderObject(obj) {
-			if (obj.length === 0) {
-				return null;
-			}
-
 			if (Array.isArray(obj)) {
 				if (fieldName === 'classification' || fieldName === 'isbnClassification') {
 					if (edit) {
-						return fieldName === 'classification' ? (
-							renderEditClassification(fieldName, classificationCodes)
-						) : (renderEditClassification(fieldName, isbnClassificationCodes)
+						const codes = fieldName === 'classification' ? classificationCodes : isbnClassificationCodes;
+						return (
+							<>
+								<Grid item xs={4}>
+									<span className={classes.label}>{label}:</span>
+								</Grid>
+								{renderEditClassification(fieldName, codes)}
+							</>
 						);
 					}
 
-					return obj.map(item => (
-						<Grid key={item} item>
-							{
-								fieldName === 'classification' ? (
-									<Chip label={getClassificationValue(Number(item), classificationCodes)}/>
-								) : (<Chip label={getClassificationValue(Number(item), isbnClassificationCodes)}/>
-								)
-							}
-						</Grid>
-					));
+					return (
+						<>
+							<Grid item xs={4}>
+								<span className={classes.label}>{label}:</span>
+							</Grid>
+							{obj.map(item => (
+								<Grid key={item} item>
+									{
+										fieldName === 'classification' ? (
+											<Chip label={getClassificationValue(Number(item), classificationCodes)}/>
+										) : (<Chip label={getClassificationValue(Number(item), isbnClassificationCodes)}/>
+										)
+									}
+								</Grid>
+							))}
+						</>
+					);
 				}
 
 				if (fieldName === 'aliases') {
@@ -126,23 +135,73 @@ export default function (props) {
 									component={renderAliases}
 									name={fieldName}
 									type="arrayString"
-									props={{name: fieldName, subName: 'alias', classes}}
+									props={{name: fieldName, clearFields, subName: 'alias', classes}}
 								/>
 							</Grid>
 						);
 					}
 				}
 
-				if (edit && fieldName === 'authors') {
-					const fieldsAuthor = ['givenName', 'familyName', 'role'];
+				if (fieldName === 'organizationDetails[affiliates]') {
+					if (edit) {
+						return (
+							<Grid item xs={12}>
+								<FieldArray
+									component={renderContactDetail}
+									name={fieldName}
+									props={{data: fieldArray[2].affiliate[1].fields, fieldName}}
+								/>
+							</Grid>
+						);
+					}
+
+					return (
+						<Grid item xs={4}>
+							<span> No affiliate Added</span>
+						</Grid>
+					);
+				}
+
+				if (fieldName === 'authors') {
+					if (edit) {
+						const fields = getFieldArray(intl);
+						return (
+							<Grid item xs={12}>
+								<FieldArray
+									component={renderContactDetail}
+									name={fieldName}
+									props={{data: fields[4].Authors[0].fields, clearFields, fieldName}}
+								/>
+							</Grid>
+						);
+					}
+
 					return (
 						<>
-							<Grid item xs={4}>
-								<span className={classes.label}>{label}:</span>
-							</Grid>
-							<Grid item xs={8}>
-								{obj.map((o, i) => fieldsAuthor.map(field => <Field key={`author[${field}]`} name={`authors[${i}].${field}`} className={formClasses.editForm} component={renderTextField}/>))}
-							</Grid>
+							{obj.length > 0 ?
+								obj.map(item => {
+									const keys = Object.keys(item);
+									return (
+										<Grid key={item} container>
+											{keys.length > 0 && keys.map(k =>
+												(
+													<Grid key={k} container>
+														<Grid item xs={4}>
+															<span className={classes.label}>{intl.formatMessage({id: `listComponent.${k}`})}:</span>
+														</Grid>
+														<Grid item xs={8}>
+															{item[k]}
+														</Grid>
+														<hr/>
+													</Grid>
+												)
+											)}
+										</Grid>
+									);
+								}) :
+								<Grid item xs={4}>
+									<span> No Authors Added</span>
+								</Grid>}
 						</>
 					);
 				}
@@ -351,22 +410,6 @@ export default function (props) {
 						{label: 'Pending', value: 'pending'},
 						{label: 'In Progress', value: 'inProgress'},
 						{label: 'Processed', value: 'processed'}
-					]}
-				/>
-			</Grid>
-		);
-	}
-
-	function renderEditIsPublic(fieldName) {
-		return (
-			<Grid item xs={8}>
-				<Field
-					name={fieldName}
-					type="select"
-					component={renderSelect}
-					options={[
-						{label: 'True', value: 'true'},
-						{label: 'False', value: 'false'}
 					]}
 				/>
 			</Grid>

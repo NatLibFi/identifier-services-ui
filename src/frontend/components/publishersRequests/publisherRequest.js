@@ -51,7 +51,7 @@ import CustomColor from '../../styles/app';
 import {classificationCodes} from '../form/publisherRegistrationForm/formFieldVariable';
 
 export default connect(mapStateToProps, actions)(reduxForm({
-	form: 'userCreation',
+	form: 'publisherRequestUpdateForm',
 	validate,
 	enableReinitialize: true
 })(props => {
@@ -101,13 +101,12 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	}
 
 	function handlePublisherUpdate(values) {
-		const newPublisherRequest = {
+		const {alias, _id, ...newPublisherRequest} = {
 			...values,
 			classification: values.classification.map(item => item.value.toString()),
 			state: 'new',
 			backgroundProcessingState: 'inProgress'
 		};
-		delete newPublisherRequest._id;
 		updatePublisherRequest(publisherRequest._id, newPublisherRequest, cookie[COOKIE_NAME]);
 		setIsEdit(false);
 	}
@@ -203,61 +202,61 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								edit={isEdit && isEditable}
 								fieldName="name"
 								label={intl.formatMessage({id: 'listComponent.name'})}
-								value={publisherRequest.name ? publisherRequest.name : ''}
+								value={formattedPublisherRequest.name ? formattedPublisherRequest.name : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="phone"
 								label={intl.formatMessage({id: 'listComponent.phone'})}
-								value={publisherRequest.phone ? publisherRequest.phone : ''}
+								value={formattedPublisherRequest.phone ? formattedPublisherRequest.phone : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="publisherCategory"
 								label={intl.formatMessage({id: 'listComponent.publisherCategory'})}
-								value={publisherRequest.publisherCategory ? publisherRequest.publisherCategory : ''}
+								value={formattedPublisherRequest.publisherCategory ? formattedPublisherRequest.publisherCategory : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="language"
 								label={intl.formatMessage({id: 'listComponent.language'})}
-								value={publisherRequest.language ? publisherRequest.language : ''}
+								value={formattedPublisherRequest.language ? formattedPublisherRequest.language : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="email"
 								label={intl.formatMessage({id: 'listComponent.email'})}
-								value={publisherRequest.email ? publisherRequest.email : ''}
+								value={formattedPublisherRequest.email ? formattedPublisherRequest.email : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="givenName"
 								label={intl.formatMessage({id: 'listComponent.givenName'})}
-								value={publisherRequest.givenName ? publisherRequest.givenName : ''}
+								value={formattedPublisherRequest.givenName ? formattedPublisherRequest.givenName : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="familyName"
 								label={intl.formatMessage({id: 'listComponent.familyName'})}
-								value={publisherRequest.familyName ? publisherRequest.familyName : ''}
+								value={formattedPublisherRequest.familyName ? formattedPublisherRequest.familyName : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="publisherType"
 								label={intl.formatMessage({id: 'listComponent.publisherType'})}
-								value={publisherRequest.publisherType ? publisherRequest.publisherType : ''}
+								value={formattedPublisherRequest.publisherType ? formattedPublisherRequest.publisherType : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="creator"
 								label={intl.formatMessage({id: 'listComponent.creator'})}
-								value={publisherRequest.creator ? publisherRequest.creator : ''}
+								value={formattedPublisherRequest.creator ? formattedPublisherRequest.creator : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="website"
 								label={intl.formatMessage({id: 'listComponent.website'})}
-								value={publisherRequest.website ? publisherRequest.website : ''}
+								value={formattedPublisherRequest.website ? formattedPublisherRequest.website : ''}
 							/>
 						</Grid>
 						<Grid item xs={12}>
@@ -269,29 +268,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 								edit={isEdit && isEditable}
 								fieldName="postalAddress[address]"
 								label={intl.formatMessage({id: 'listComponent.address'})}
-								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.address ?
-									publisherRequest.postalAddress.address : ''}
+								value={formattedPublisherRequest && formattedPublisherRequest.postalAddress && formattedPublisherRequest.postalAddress.address ?
+									formattedPublisherRequest.postalAddress.address : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="postalAddress[city]"
 								label={intl.formatMessage({id: 'listComponent.city'})}
-								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.city ?
-									publisherRequest.postalAddress.city : ''}
+								value={formattedPublisherRequest && formattedPublisherRequest.postalAddress && formattedPublisherRequest.postalAddress.city ?
+									formattedPublisherRequest.postalAddress.city : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="postalAddress[zip]"
 								label={intl.formatMessage({id: 'listComponent.zip'})}
-								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.zip ?
-									publisherRequest.postalAddress.zip : ''}
+								value={formattedPublisherRequest && formattedPublisherRequest.postalAddress && formattedPublisherRequest.postalAddress.zip ?
+									formattedPublisherRequest.postalAddress.zip : ''}
 							/>
 							<ListComponent
 								edit={isEdit && isEditable}
 								fieldName="postalAddress[public]"
 								label={intl.formatMessage({id: 'listComponent.public'})}
-								value={publisherRequest && publisherRequest.postalAddress && publisherRequest.postalAddress.public ?
-									publisherRequest.postalAddress.public : ''}
+								value={formattedPublisherRequest && formattedPublisherRequest.postalAddress && formattedPublisherRequest.postalAddress.public ?
+									formattedPublisherRequest.postalAddress.public : ''}
 							/>
 						</Grid>
 					</Grid>
@@ -304,29 +303,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[affiliateOf][address]"
 							label={intl.formatMessage({id: 'listComponent.address'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.address ?
-								publisherRequest.organizationDetails.affiliateOf.address : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.affiliateOf && formattedPublisherRequest.affiliateOf.address ?
+								formattedPublisherRequest.affiliateOf.address : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[affiliateOf][city]"
 							label={intl.formatMessage({id: 'listComponent.city'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.city ?
-								publisherRequest.organizationDetails.affiliateOf.city : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.affiliateOf && formattedPublisherRequest.affiliateOf.city ?
+								formattedPublisherRequest.affiliateOf.city : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[affiliateOf][zip]"
 							label={intl.formatMessage({id: 'listComponent.zip'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.zip ?
-								publisherRequest.organizationDetails.affiliateOf.zip : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.affiliateOf && formattedPublisherRequest.affiliateOf.zip ?
+								formattedPublisherRequest.affiliateOf.zip : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[affiliateOf][name]"
 							label={intl.formatMessage({id: 'listComponent.name'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliateOf && publisherRequest.organizationDetails.affiliateOf.name ?
-								publisherRequest.organizationDetails.affiliateOf.name : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.affiliateOf && formattedPublisherRequest.affiliateOf.name ?
+								formattedPublisherRequest.affiliateOf.name : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -335,7 +334,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Typography>
 						<hr/>
 						{
-							publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.affiliates && publisherRequest.organizationDetails.affiliates.map(item => (
+							formattedPublisherRequest && formattedPublisherRequest.affiliates && formattedPublisherRequest.affiliates.map(item => (
 								<Grid key={`${item.name}${item.address}`} container>
 									<ListComponent
 										edit={isEdit && isEditable}
@@ -367,6 +366,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						}
 					</Grid>
 					<Grid item xs={12}>
+						{console.log(formattedPublisherRequest)}
 						<Typography variant="h6">
 							<FormattedMessage id="listComponent.distributorOf"/>
 						</Typography>
@@ -375,29 +375,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributorOf][address]"
 							label={intl.formatMessage({id: 'listComponent.address'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.address ?
-								publisherRequest.organizationDetails.distributorOf.address : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributorOf && formattedPublisherRequest.distributorOf.address ?
+								formattedPublisherRequest.distributorOf.address : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributorOf][city]"
 							label={intl.formatMessage({id: 'listComponent.city'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.city ?
-								publisherRequest.organizationDetails.distributorOf.city : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributorOf && formattedPublisherRequest.distributorOf.city ?
+								formattedPublisherRequest.distributorOf.city : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributorOf][zip]"
 							label={intl.formatMessage({id: 'listComponent.zip'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.zip ?
-								publisherRequest.organizationDetails.distributorOf.zip : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributorOf && formattedPublisherRequest.distributorOf.zip ?
+								formattedPublisherRequest.distributorOf.zip : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributorOf][name]"
 							label={intl.formatMessage({id: 'listComponent.name'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributorOf && publisherRequest.organizationDetails.distributorOf.name ?
-								publisherRequest.organizationDetails.distributorOf.name : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributorOf && formattedPublisherRequest.distributorOf.name ?
+								formattedPublisherRequest.distributorOf.name : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -409,29 +409,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributor][address]"
 							label={intl.formatMessage({id: 'listComponent.address'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.address ?
-								publisherRequest.organizationDetails.distributor.address : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributor && formattedPublisherRequest.distributor.address ?
+								formattedPublisherRequest.distributor.address : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributor][city]"
 							label={intl.formatMessage({id: 'listComponent.city'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.city ?
-								publisherRequest.organizationDetails.distributor.city : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributor && formattedPublisherRequest.distributor.city ?
+								formattedPublisherRequest.distributor.city : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributor][zip]"
 							label={intl.formatMessage({id: 'listComponent.zip'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.zip ?
-								publisherRequest.organizationDetails.distributor.zip : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributor && formattedPublisherRequest.distributor.zip ?
+								formattedPublisherRequest.distributor.zip : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="organizationDetails[distributor][name]"
 							label={intl.formatMessage({id: 'listComponent.name'})}
-							value={publisherRequest && publisherRequest.organizationDetails && publisherRequest.organizationDetails.distributor && publisherRequest.organizationDetails.distributor.name ?
-								publisherRequest.organizationDetails.distributor.name : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.distributor && formattedPublisherRequest.distributor.name ?
+								formattedPublisherRequest.distributor.name : ''}
 						/>
 					</Grid>
 				</Grid>
@@ -445,7 +445,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="aliases"
 							label={intl.formatMessage({id: 'listComponent.aliases'})}
-							value={publisherRequest.aliases ? publisherRequest.aliases : []}
+							value={formattedPublisherRequest.aliases ? formattedPublisherRequest.aliases : []}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -457,15 +457,15 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="publicationDetails[frequency][currentYear]"
 							label={intl.formatMessage({id: 'listComponent.currentYear'})}
-							value={publisherRequest && publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency && publisherRequest.publicationDetails.frequency.currentYear ?
-								publisherRequest.publicationDetails.frequency.currentYear : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.publicationDetails && formattedPublisherRequest.publicationDetails.frequency && formattedPublisherRequest.publicationDetails.frequency.currentYear ?
+								formattedPublisherRequest.publicationDetails.frequency.currentYear : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="publicationDetails[frequency][currentYear]"
 							label={intl.formatMessage({id: 'listComponent.nextYear'})}
-							value={publisherRequest && publisherRequest.publicationDetails && publisherRequest.publicationDetails.frequency && publisherRequest.publicationDetails.frequency.nextYear ?
-								publisherRequest.publicationDetails.frequency.nextYear : ''}
+							value={formattedPublisherRequest && formattedPublisherRequest.publicationDetails && formattedPublisherRequest.publicationDetails.frequency && formattedPublisherRequest.publicationDetails.frequency.nextYear ?
+								formattedPublisherRequest.publicationDetails.frequency.nextYear : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -477,7 +477,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							<ListComponent
 								edit={isEdit && isEditable} fieldName="classification"
 								label={intl.formatMessage({id: 'listComponent.classification'})}
-								value={publisherRequest.classification && publisherRequest.classification}
+								value={formattedPublisherRequest.classification && formattedPublisherRequest.classification}
 							/>
 						</Grid>
 					</Grid>
@@ -490,25 +490,25 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="state"
 							label={intl.formatMessage({id: 'listComponent.state'})}
-							value={publisherRequest.state ? publisherRequest.state : ''}
+							value={formattedPublisherRequest.state ? formattedPublisherRequest.state : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="backgroundProcessingState"
 							label={intl.formatMessage({id: 'listComponent.backgroundProcessingState'})}
-							value={publisherRequest.backgroundProcessingState ? publisherRequest.backgroundProcessingState : ''}
+							value={formattedPublisherRequest.backgroundProcessingState ? formattedPublisherRequest.backgroundProcessingState : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="rejectionReason"
 							label={intl.formatMessage({id: 'listComponent.rejectionReason'})}
-							value={publisherRequest.rejectionReason ? publisherRequest.rejectionReason : ''}
+							value={formattedPublisherRequest.rejectionReason ? formattedPublisherRequest.rejectionReason : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable}
 							fieldName="rejectionReason"
 							label={intl.formatMessage({id: 'listComponent.createdResource'})}
-							value={publisherRequest.createdResource ? publisherRequest.createdResource : ''}
+							value={formattedPublisherRequest.createdResource ? formattedPublisherRequest.createdResource : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -518,17 +518,17 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<hr/>
 						<ListComponent
 							label={intl.formatMessage({id: 'listComponent.timestamp'})}
-							value={publisherRequest.lastUpdated ?
-								(publisherRequest.lastUpdated.timestamp ?
-									publisherRequest.lastUpdated.timestamp :
+							value={formattedPublisherRequest.lastUpdated ?
+								(formattedPublisherRequest.lastUpdated.timestamp ?
+									formattedPublisherRequest.lastUpdated.timestamp :
 									''
 								) : ''}
 						/>
 						<ListComponent
 							label={intl.formatMessage({id: 'listComponent.user'})}
-							value={publisherRequest.lastUpdated ?
-								(publisherRequest.lastUpdated.user ?
-									publisherRequest.lastUpdated.user :
+							value={formattedPublisherRequest.lastUpdated ?
+								(formattedPublisherRequest.lastUpdated.user ?
+									formattedPublisherRequest.lastUpdated.user :
 									''
 								) : ''}
 						/>
@@ -542,7 +542,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							edit={isEdit && isEditable}
 							fieldName="notes"
 							label={intl.formatMessage({id: 'listComponent.notes'})}
-							value={publisherRequest.notes ? publisherRequest.notes : ''}
+							value={formattedPublisherRequest.notes ? formattedPublisherRequest.notes : ''}
 						/>
 					</Grid>
 				</Grid>

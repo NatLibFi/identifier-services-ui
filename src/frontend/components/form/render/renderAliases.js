@@ -40,7 +40,9 @@ export default connect(state => ({
 	values: getFormValues('userCreation')(state) ||
 		getFormValues('publisherRegistrationForm')(state) ||
 		getFormValues('issnRegForm')(state) ||
-		getFormValues('isbnIsmnRegForm')(state)
+		getFormValues('isbnIsmnRegForm')(state) ||
+		getFormValues('publisherUpdateForm')(state) ||
+		getFormValues('publisherRequestUpdateForm')(state)
 }))(props => {
 	const [errors, setErrors] = useState();
 	const {fields, values, className, clearFields, name, subName, label} = props;

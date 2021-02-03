@@ -37,7 +37,11 @@ import renderTextField from './renderTextField';
 import useStyles from '../../../styles/form';
 
 export default connect(state => ({
-	values: getFormValues('userCreation')(state) || getFormValues('publisherRegistrationForm')(state) || getFormValues('templateCreationForm')(state)
+	values: getFormValues('userCreation')(state) ||
+		getFormValues('publisherRequestUpdateForm')(state) ||
+		getFormValues('publisherRegistrationForm')(state) ||
+		getFormValues('publisherUpdateForm')(state) ||
+		getFormValues('templateCreationForm')(state)
 
 }))(props => {
 	const [errors, setErrors] = useState();

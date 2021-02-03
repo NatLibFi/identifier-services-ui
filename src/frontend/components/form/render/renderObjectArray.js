@@ -38,8 +38,9 @@ import renderTextField from './renderTextField';
 import renderSelect from './renderSelect';
 
 export default connect(state => ({
-	values: getFormValues('userCreation')(state)
-
+	values: getFormValues('userCreation')(state) ||
+		getFormValues('publisherRequestUpdateForm')(state) ||
+		getFormValues('publisherUpdateForm')(state)
 }))(props => {
 	const classes = useStyles();
 	const [errors, setErrors] = useState();

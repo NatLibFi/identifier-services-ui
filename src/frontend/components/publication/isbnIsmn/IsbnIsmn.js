@@ -47,6 +47,7 @@ import * as actions from '../../../store/actions';
 import PublicationRenderComponent from '../PublicationRenderComponent';
 import RichTextEditor from './RichTextEditor';
 import SelectPublicationIdentifierRange from './SelectIsbnIsmnIdentifierRange';
+import {isbnClassificationCodes} from '../../form/publisherRegistrationForm/formFieldVariable';
 
 export default connect(mapStateToProps, actions)(reduxForm({
 	form: 'isbnIsmnUpdateForm',
@@ -69,8 +70,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		messageTemplates,
 		messageInfo,
 		match,
-		createIsbnIsmnBatch,
-		history
+		createIsbnIsmnBatch
 	} = props;
 	const {id} = match.params;
 	const intl = useIntl();
@@ -94,7 +94,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			fetchIsbnIsmn({id: id, token: cookie[COOKIE_NAME]});
 			fetchPublisherOption({token: cookie[COOKIE_NAME]});
 		}
-	}, [cookie, fetchIsbnIsmn, fetchPublisherOption, id, updatedIsbnIsmn]);
+	}, [cookie, fetchIsbnIsmn, fetchPublisherOption, id, updatedIsbnIsmn, isEdit]);
 
 	useEffect(() => {
 		fetchAllMessagesList(cookie[COOKIE_NAME]);
@@ -133,12 +133,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	};
 
 	const handlePublicationUpdate = values => {
-		const {_id, ...updateValues} = values;
+		const {_id, authorFamilyName, authorGivenName, roles, ...rest} = values;
+		const updateValues = {
+			...rest,
+			authors: formatAuthorsValue(isbnIsmn.authors, values.authors),
+			isbnClassification: values.isbnClassification ? values.isbnClassification.map(item => item.value.toString()) : []
+		};
 		const token = cookie[COOKIE_NAME];
 		updatePublicationIsbnIsmn(id, updateValues, token);
 		setIsEdit(false);
-		history.push('/publications/isbn-ismn');
 	};
+
+	function formatAuthorsValue(oldValue, newValue) {
+		if (newValue !== undefined) {
+			const value = newValue.map(item => ({
+				givenName: item.authorGivenName ? item.authorGivenName : '',
+				familyName: item.authorFamilyName ? item.authorFamilyName : '',
+				role: item.role && item.role
+			}));
+			return value;
+		}
+
+		return oldValue;
+	}
 
 	function handleOnClickSendMessage() {
 		setSendingMessage(true);
@@ -312,7 +329,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 function mapStateToProps(state) {
 	return ({
 		isbnIsmn: state.publication.isbnIsmn,
-		initialValues: state.publication.isbnIsmn,
+		initialValues: formatInitialValues(state.publication.isbnIsmn),
 		publisherOption: state.publisher.publisherOptions,
 		updatedIsbnIsmn: state.publication.updatedIsbnIsmn,
 		userInfo: state.login.userInfo,
@@ -320,4 +337,36 @@ function mapStateToProps(state) {
 		messageTemplates: state.contact.messagesList,
 		messageInfo: state.contact.messageInfo
 	});
+
+	function formatInitialValues(values) {
+		if (Object.keys(values).length > 0) {
+			const formattedValues = {
+				...values,
+				isbnClassification: values.isbnClassification && values.isbnClassification.map(item => {
+					return formatClassificationForEditing(Number(item));
+				}),
+				authors: values.authors && values.authors.map(item => formatAuthorsForEditing(item))
+			};
+			return formattedValues;
+		}
+
+		function formatClassificationForEditing(v) {
+			return isbnClassificationCodes.reduce((acc, k) => {
+				if (k.value === v) {
+					acc = k;
+					return acc;
+				}
+
+				return acc;
+			}, {});
+		}
+
+		function formatAuthorsForEditing(v) {
+			return {
+				authorGivenName: v.givenName,
+				authorFamilyName: v.familyName,
+				role: v.role
+			};
+		}
+	}
 }

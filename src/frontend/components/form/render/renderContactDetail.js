@@ -43,7 +43,9 @@ export default connect(state => ({
 	values: getFormValues('publisherRegistrationForm')(state) ||
 		getFormValues('issnRegForm')(state) ||
 		getFormValues('isbnIsmnRegForm')(state) ||
-		getFormValues('publisherUpdateForm')(state)
+		getFormValues('isbnIsmnUpdateForm')(state) ||
+		getFormValues('publisherUpdateForm')(state) ||
+		getFormValues('publisherRequestUpdateForm')(state)
 
 }))(props => {
 	const [errors, setErrors] = React.useState();
@@ -128,7 +130,7 @@ export default connect(state => ({
 
 	const component = (
 		<>
-			{data.map(list => {
+			{data && data.map(list => {
 				switch (list.type) {
 					case 'select':
 						return (
@@ -188,7 +190,7 @@ export default connect(state => ({
 
 					</div>
 				) || (
-					fieldName === 'affiliates' &&
+					(fieldName === 'affiliates' || fieldName === 'organizationDetails[affiliates]') &&
 						<div className={classes.affiliatesAddBtn}>
 							<Button
 								aria-label="Add"

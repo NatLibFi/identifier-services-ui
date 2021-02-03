@@ -46,6 +46,7 @@ export default connect(mapStateToProps, actions)(props => {
 		publication,
 		isEdit,
 		isEditable,
+		clearFields,
 		fetchPublisher,
 		fetchedPublisher,
 		publisherLoading,
@@ -81,128 +82,6 @@ export default connect(mapStateToProps, actions)(props => {
 	} else {
 		publicationDetail = (
 			<>
-				{/* {typeof formattedPublication.publisher === 'string' ?
-					(isEdit ?
-						<>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(formattedPublication).map(key => {
-											return typeof formattedPublication[key] === 'string' ?
-												(
-													<ListComponent clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formattedPublication[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(formattedPublication).map(key => {
-											return typeof formattedPublication[key] === 'object' ?
-												(
-													<ListComponent clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formattedPublication[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-						</> :
-						<>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(formattedPublication).map(key => {
-											if (key === 'publisher') {
-												return <ListComponent clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={publisherName !== null && publisherName}/>;
-											}
-
-											return typeof formattedPublication[key] === 'string' ?
-												(
-													<ListComponent label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formattedPublication[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-							<Grid item xs={12} md={6}>
-								<List>
-									{
-										Object.keys(formattedPublication).map(key => {
-											return typeof formattedPublication[key] === 'object' ?
-												(
-													key === 'associatedRange' ?
-														<ListComponent clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formatValueforAssociatedRange(formattedPublication[key])}/> :
-														<ListComponent label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formattedPublication[key]}/>
-												) :
-												null;
-										})
-									}
-								</List>
-							</Grid>
-						</>
-					) : (
-						isEdit ?
-							(
-								<>
-									<Grid item xs={12} md={6}>
-										<List>
-											{
-												Object.keys(withoutPublisher).map(key => {
-													return <ListComponent key={key} clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={withoutPublisher[key]}/>;
-												})
-											}
-										</List>
-									</Grid>
-									<Grid item xs={12} md={6}>
-
-										<Typography variant="h6">
-											<FormattedMessage id="publicationRender.heading.publisherDetails"/>
-										</Typography>
-
-										<List>
-											{
-												Object.keys(formatOnlyPublisher).map(key => {
-													return <ListComponent key={key} clearFields={clearFields} edit={isEditable(key)} fieldName={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formatOnlyPublisher[key]}/>;
-												})
-											}
-										</List>
-
-									</Grid>
-								</>
-							) : (
-								<>
-									<Grid item xs={12} md={6}>
-										<List>
-											{
-												Object.keys(withoutPublisher).map(key => {
-													return <ListComponent key={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={withoutPublisher[key]}/>;
-												})
-											}
-										</List>
-									</Grid>
-									<Grid item xs={12} md={6}>
-
-										<Typography variant="h6">
-											<FormattedMessage id="publicationRender.heading.publisherDetails"/>
-										</Typography>
-
-										<List>
-											{
-												Object.keys(formatOnlyPublisher).map(key => {
-													return <ListComponent key={key} label={intl.formatMessage({id: `publicationRender.label.${key}`})} value={formatOnlyPublisher[key]}/>;
-												})
-											}
-										</List>
-
-									</Grid>
-								</>
-							)
-					)} */}
 				<Grid container item xs={12} spacing={2}>
 					{issn && issnElements(publication)}
 					{isbnIsmn && isbnIsmnElements(publication)}
@@ -234,7 +113,7 @@ export default connect(mapStateToProps, actions)(props => {
 							Publisher Informations
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.publisher'})} value={(publication.publisher && publisherName !== null) ? publisherName : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.publisherName'})} value={(publication.publisher && publisherName !== null) ? publisherName : ''}/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -507,13 +386,7 @@ export default connect(mapStateToProps, actions)(props => {
 						<ListComponent edit={isEdit && isEditable} fieldName="subtitle" label={intl.formatMessage({id: 'listComponent.subtitle'})} value={publication.subTitle ? publication.subTitle : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="language" label={intl.formatMessage({id: 'listComponent.language'})} value={publication.language ? publication.language : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="publicationTime" label={intl.formatMessage({id: 'listComponent.publicationTime'})} value={publication.publicationTime ? publication.publicationTime : ''}/>
-					</Grid>
-					<Grid item xs={12}>
-						<Typography variant="h6">
-							Publisher Informations
-						</Typography>
-						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.publisher'})} value={(publication.publisher && publisherName !== null) ? publisherName : ''}/>
+						<ListComponent label={intl.formatMessage({id: 'listComponent.publisherName'})} value={(publication.publisher && publisherName !== null) ? publisherName : ''}/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -546,6 +419,22 @@ export default connect(mapStateToProps, actions)(props => {
 									publication.seriesDetails.identifier :
 									''
 								) :	''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Uniform Details
+						</Typography>
+						<hr/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="uniform[name]"
+							label={intl.formatMessage({id: 'listComponent.name'})}
+							value={publication.uniform && publication.uniform.name ? publication.uniform.name : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="uniform[language]"
+							label={intl.formatMessage({id: 'listComponent.language'})}
+							value={publication.uniform && publication.uniform.language ? publication.uniform.language : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>
@@ -629,34 +518,31 @@ export default connect(mapStateToProps, actions)(props => {
 							Author Details
 						</Typography>
 						<hr/>
-						{publication.authors && publication.authors.map((item, index) => (
-							<div key={`${item.givenName}${Math.random()}`}>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][givenName]`}
-									label={intl.formatMessage({id: 'listComponent.givenName'})}
-									value={item.givenName ? item.givenName : ''}
-								/>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][familyName]`}
-									label={intl.formatMessage({id: 'listComponent.familyName'})}
-									value={item.familyName ? item.familyName : ''}
-								/>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][role]`}
-									label={intl.formatMessage({id: 'listComponent.role'})}
-									value={item.role ? item.role : ''}
-								/>
-							</div>
-						))}
+						<ListComponent
+							clearFields={clearFields}
+							edit={isEdit && isEditable} fieldName="authors"
+							value={publication.authors ? publication.authors : []}
+						/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
 							Publication Details
 						</Typography>
 						<hr/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.isbnClassification'})} value={publication.isbnClassification ? publication.isbnClassification : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.publicationType'})} value={publication.publicationType ? publication.publicationType : ''}/>
-						<ListComponent label={intl.formatMessage({id: 'listComponent.isPublic'})} value={publication.isPublic ? publication.isPublic : ''}/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="isbnClassification"
+							label={intl.formatMessage({id: 'listComponent.isbnClassification'})}
+							value={publication.isbnClassification ? publication.isbnClassification : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.publicationType'})}
+							value={publication.publicationType ? publication.publicationType : ''}
+						/>
+						<ListComponent
+							edit={isEdit && isEditable} fieldName="isPublic"
+							label={intl.formatMessage({id: 'listComponent.isPublic'})}
+							value={publication.isPublic ? publication.isPublic : ''}
+						/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">

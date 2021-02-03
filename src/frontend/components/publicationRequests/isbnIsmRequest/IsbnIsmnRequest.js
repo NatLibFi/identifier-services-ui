@@ -59,6 +59,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		match,
 		loading,
 		userInfo,
+		clearFields,
 		fetchPublicationIsbnIsmnRequest,
 		publicationIsbnIsmnRequest,
 		updatePublicationIsbnIsmnRequest,
@@ -346,25 +347,11 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							Author Details
 						</Typography>
 						<hr/>
-						{publicationIsbnIsmnRequest.authors && publicationIsbnIsmnRequest.authors.map((item, index) => (
-							<div key={`${item.givenName}${Math.random()}`}>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][givenName]`}
-									label={intl.formatMessage({id: 'listComponent.givenName'})}
-									value={item.givenName ? item.givenName : ''}
-								/>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][familyName]`}
-									label={intl.formatMessage({id: 'listComponent.familyName'})}
-									value={item.familyName ? item.familyName : ''}
-								/>
-								<ListComponent
-									edit={isEdit && isEditable} fieldName={`authors[${index}][role]`}
-									label={intl.formatMessage({id: 'listComponent.role'})}
-									value={item.role ? item.role : ''}
-								/>
-							</div>
-						))}
+						<ListComponent
+							clearFields={clearFields}
+							edit={isEdit && isEditable} fieldName="authors"
+							value={publicationIsbnIsmnRequest.authors ? publicationIsbnIsmnRequest.authors : []}
+						/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -395,6 +382,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							value={publicationIsbnIsmnRequest.publicationType ? publicationIsbnIsmnRequest.publicationType : ''}
 						/>
 						<ListComponent
+							edit={isEdit && isEditable} fieldName="isPublic"
 							label={intl.formatMessage({id: 'listComponent.isPublic'})}
 							value={publicationIsbnIsmnRequest.isPublic ? publicationIsbnIsmnRequest.isPublic : ''}
 						/>
@@ -416,7 +404,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						<ListComponent
 							edit={isEdit && isEditable} fieldName="uniform[name]"
 							label={intl.formatMessage({id: 'listComponent.name'})}
-							value={publicationIsbnIsmnRequest.uniform ? publicationIsbnIsmnRequest.uniform : ''}
+							value={publicationIsbnIsmnRequest.uniform && publicationIsbnIsmnRequest.uniform.name ? publicationIsbnIsmnRequest.uniform.name : ''}
 						/>
 						<ListComponent
 							edit={isEdit && isEditable} fieldName="uniform[language]"
