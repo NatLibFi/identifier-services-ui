@@ -44,6 +44,7 @@ export default connect(state => ({
 		getFormValues('issnRegForm')(state) ||
 		getFormValues('isbnIsmnRegForm')(state) ||
 		getFormValues('isbnIsmnUpdateForm')(state) ||
+		getFormValues('publicationRequestIsbnIsmn')(state) ||
 		getFormValues('publisherUpdateForm')(state) ||
 		getFormValues('publisherRequestUpdateForm')(state)
 

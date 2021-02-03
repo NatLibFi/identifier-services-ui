@@ -113,6 +113,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handlePublicationRequestUpdate(values) {
 		const newPublicationIsbnIsmnRequest = {
 			...values,
+			authors: formatAuthorsValue(publicationIsbnIsmnRequest.authors, values.authors),
 			isbnClassification: values.isbnClassification ? values.isbnClassification.map(item => item.value.toString()) : [],
 			publisher: formatPublisher(values.publisher),
 			state: 'new',
@@ -121,6 +122,19 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		delete newPublicationIsbnIsmnRequest._id;
 		updatePublicationIsbnIsmnRequest(publicationIsbnIsmnRequest._id, newPublicationIsbnIsmnRequest, cookie[COOKIE_NAME]);
 		setIsEdit(false);
+	}
+
+	function formatAuthorsValue(oldValue, newValue) {
+		if (newValue !== undefined) {
+			const value = newValue.map(item => ({
+				givenName: item.authorGivenName ? item.authorGivenName : '',
+				familyName: item.authorFamilyName ? item.authorFamilyName : '',
+				role: item.role && item.role
+			}));
+			return value;
+		}
+
+		return oldValue;
 	}
 
 	function handleAccept() {
@@ -638,6 +652,7 @@ function formatInitialValues(values) {
 	if (Object.keys(values).length > 0) {
 		const formattedValues = {
 			...values,
+			authors: values.authors && values.authors.map(item => formatAuthorsForEditing(item)),
 			isbnClassification: values.isbnClassification && values.isbnClassification.map(item => {
 				return formatClassificationForEditing(Number(item));
 			})
@@ -654,5 +669,13 @@ function formatInitialValues(values) {
 
 			return acc;
 		}, {});
+	}
+
+	function formatAuthorsForEditing(v) {
+		return {
+			authorGivenName: v.givenName,
+			authorFamilyName: v.familyName,
+			role: v.role
+		};
 	}
 }
