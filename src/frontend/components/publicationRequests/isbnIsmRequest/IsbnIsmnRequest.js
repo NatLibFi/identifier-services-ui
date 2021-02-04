@@ -102,6 +102,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const newPublicationIsbnIsmnRequest = {
 			...publicationIsbnIsmnRequest,
 			state: 'rejected',
+			created: {
+				user: userInfo.name.givenName
+			},
 			rejectionReason: rejectReason
 		};
 		delete newPublicationIsbnIsmnRequest._id;
@@ -140,6 +143,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newPublicationIsbnIsmnRequest = {
 			...publicationIsbnIsmnRequest,
+			created: {
+				user: userInfo.name.givenName
+			},
 			state: 'accepted'
 		};
 		delete newPublicationIsbnIsmnRequest._id;
@@ -241,7 +247,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid item xs={12}>
 						<Grid item xs={12}>
 							<Typography variant="h6">
-								Basic Informations
+								<FormattedMessage id="listComponent.basicInformations"/>
 							</Typography>
 							<hr/>
 							<ListComponent edit={isEdit && isEditable} fieldName="title" label={intl.formatMessage({id: 'listComponent.title'})} value={publicationIsbnIsmnRequest.title ? publicationIsbnIsmnRequest.title : ''}/>
@@ -251,7 +257,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						</Grid>
 						<Grid item xs={12}>
 							<Typography variant="h6">
-								Publisher Basic Informations
+								<FormattedMessage id="listComponent.publisher"/>&nbsp;
+								<FormattedMessage id="listComponent.informations"/>
 							</Typography>
 							<hr/>
 							<ListComponent
@@ -324,7 +331,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Publisher Publishing Activities
+							<FormattedMessage id="listComponent.publisher"/>&nbsp;
+							<FormattedMessage id="listComponent.publishingActivities"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -358,7 +366,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Author Details
+							<FormattedMessage id="listComponent.authors"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -369,7 +377,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Additional Details
+							<FormattedMessage id="listComponent.additionalDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -381,7 +389,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<Grid container item xs={6} md={6} spacing={2}>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Publication Details
+							<FormattedMessage id="listComponent.publicationDetails"/>
 						</Typography>
 						<hr/>
 						<Grid container style={{display: 'flex', flexDirection: 'column'}}>
@@ -412,7 +420,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Uniform Details
+							<FormattedMessage id="listComponent.uniformDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -428,7 +436,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Series Details
+							<FormattedMessage id="listComponent.seriesDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -461,7 +469,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Format Details
+							<FormattedMessage id="listComponent.formatDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -527,7 +535,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Other References
+							<FormattedMessage id="listComponent.otherReference"/>
 						</Typography>
 						<hr/>
 						<ListComponent

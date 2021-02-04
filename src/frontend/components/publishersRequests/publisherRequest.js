@@ -92,6 +92,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const newPublisherRequest = {
 			...publisherRequest,
 			state: 'rejected',
+			created: {
+				user: userInfo.name.givenName
+			},
 			rejectionReason: rejectReason
 		};
 		delete newPublisherRequest._id;
@@ -114,6 +117,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newPublisherRequest = {
 			...publisherRequest,
+			created: {
+				user: userInfo.name.givenName
+			},
 			state: 'accepted'
 		};
 		delete newPublisherRequest._id;
@@ -509,6 +515,28 @@ export default connect(mapStateToProps, actions)(reduxForm({
 							fieldName="rejectionReason"
 							label={intl.formatMessage({id: 'listComponent.createdResource'})}
 							value={formattedPublisherRequest.createdResource ? formattedPublisherRequest.createdResource : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.creationDetails"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.timestamp'})}
+							value={formattedPublisherRequest.created ?
+								(formattedPublisherRequest.created.timestamp ?
+									formattedPublisherRequest.created.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.user'})}
+							value={formattedPublisherRequest.created ?
+								(formattedPublisherRequest.created.user ?
+									formattedPublisherRequest.created.user :
+									''
+								) : ''}
 						/>
 					</Grid>
 					<Grid item xs={12}>

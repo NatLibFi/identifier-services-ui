@@ -101,6 +101,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const newIssnRequest = {
 			...issnRequest,
 			state: 'rejected',
+			created: {
+				user: userInfo.name.givenName
+			},
 			rejectionReason: rejectReason
 		};
 		delete newIssnRequest._id;
@@ -126,6 +129,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	function handleAccept() {
 		const newIssnRequest = {
 			...issnRequest,
+			created: {
+				user: userInfo.name.givenName
+			},
 			state: 'accepted'
 		};
 		delete newIssnRequest._id;
@@ -202,7 +208,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<Grid container item xs={6} md={6} spacing={2}>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Basic Informations
+							<FormattedMessage id="listComponent.basicInformations"/>
 						</Typography>
 						<hr/>
 						<ListComponent edit={isEdit && isEditable} fieldName="title" label={intl.formatMessage({id: 'listComponent.title'})} value={issnRequest.title ? issnRequest.title : ''}/>
@@ -213,7 +219,8 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Publisher Basic Informations
+							<FormattedMessage id="listComponent.publisher"/>&nbsp;
+							<FormattedMessage id="listComponent.informations"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -285,7 +292,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Main Series
+							<FormattedMessage id="listComponent.mainSeries"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -315,7 +322,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Sub Series
+							<FormattedMessage id="listComponent.subSeries"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -345,7 +352,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Additional Details
+							<FormattedMessage id="listComponent.additionalDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -367,7 +374,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Previous Publication
+							<FormattedMessage id="listComponent.previouslyPublished"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -409,7 +416,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Format Details
+							<FormattedMessage id="listComponent.formatDetails"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -484,7 +491,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Metadata References
+							<FormattedMessage id="listComponent.metadataReference"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -506,12 +513,40 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Other References
+							<FormattedMessage id="listComponent.otherReference"/>
 						</Typography>
 						<hr/>
 						<ListComponent label={intl.formatMessage({id: 'listComponent.state'})} value={issnRequest.state ? issnRequest.state : ''}/>
 						<ListComponent label={intl.formatMessage({id: 'listComponent.creator'})} value={issnRequest.creator ? issnRequest.creator : ''}/>
 						<ListComponent label={intl.formatMessage({id: 'listComponent.associatedRange'})} value={issnRequest.associatedRange ? formatValueforAssociatedRange(issnRequest.associatedRange) : ''}/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.creationDetails"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.timestamp'})}
+							value={issnRequest.created ?
+								(issnRequest.created.timestamp ?
+									issnRequest.created.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.user'})}
+							value={issnRequest.created ?
+								(issnRequest.created.user ?
+									issnRequest.created.user :
+									''
+								) : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.lastUpdated"/>
+						</Typography>
+						<hr/>
 						<ListComponent
 							label={intl.formatMessage({id: 'listComponent.lastUpdated'})}
 							value={issnRequest.lastUpdated ?
@@ -530,70 +565,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 						/>
 					</Grid>
 				</Grid>
-				{/* {typeof formattedIssnRequest.publisher === 'string' ?
-					<>
-						<Grid item xs={12} md={6}>
-							<List>
-								{
-									Object.keys(formattedIssnRequest).map(key => {
-										return typeof formattedIssnRequest[key] === 'string' ?
-											(
-												<ListComponent label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={formattedIssnRequest[key]}/>
-											) :
-											null;
-									})
-								}
-							</List>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<List>
-								{
-									Object.keys(formattedIssnRequest).map(key => {
-										return typeof formattedIssnRequest[key] === 'object' ?
-											(
-												<ListComponent label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={formattedIssnRequest[key]}/>
-											) :
-											null;
-									})
-								}
-							</List>
-						</Grid>
-					</> :
-					<>
-						<Grid item xs={12} md={6}>
-							<List>
-
-								{
-									Object.keys(withoutPublisher).map(key => {
-										return <ListComponent key={key} label={intl.formatMessage({id: `publicationRequest.label.${key}`})} value={withoutPublisher[key]}/>;
-									})
-								}
-							</List>
-						</Grid>
-						<Grid item xs={12} md={6}>
-							<ExpansionPanel>
-								<ExpansionPanelSummary
-									expandIcon={<ExpandMoreIcon/>}
-									aria-controls="panel1a-content"
-									id="panel1a-header"
-								>
-									<Typography variant="h6">
-										<FormattedMessage id="publicationRequest.label.publisherDetails"/>
-									</Typography>
-								</ExpansionPanelSummary>
-								<ExpansionPanelDetails>
-									<List>
-										{
-											Object.keys(formatOnlyPublisher).map(key => {
-												return <ListComponent key={key} label={intl.formatMessage({id: `publisherRender.label.${key}`})} value={formatOnlyPublisher[key]}/>;
-											})
-										}
-									</List>
-								</ExpansionPanelDetails>
-							</ExpansionPanel>
-
-						</Grid>
-					</>} */}
 			</>
 		);
 	}

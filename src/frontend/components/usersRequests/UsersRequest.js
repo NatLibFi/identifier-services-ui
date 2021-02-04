@@ -94,6 +94,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 			givenName: usersRequest.givenName.toLowerCase(),
 			familyName: usersRequest.familyName.toLowerCase(),
 			role: usersRequest.role,
+			created: {
+				user: userInfo.name.givenName
+			},
 			state: 'accepted'
 		};
 
@@ -121,6 +124,9 @@ export default connect(mapStateToProps, actions)(reduxForm({
 		const requestToUpdate = {
 			...usersRequest,
 			state: 'rejected',
+			created: {
+				user: userInfo.name.givenName
+			},
 			rejectionReason: rejectReason
 		};
 		updateUserRequest(id, requestToUpdate, cookie[COOKIE_NAME], lang);
@@ -196,7 +202,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					<Grid item xs={12}>
 						<Grid item xs={12}>
 							<Typography variant="h6">
-								Basic Informations
+								<FormattedMessage id="listComponent.basicInformations"/>
 							</Typography>
 							<hr/>
 							<ListComponent
@@ -254,7 +260,7 @@ export default connect(mapStateToProps, actions)(reduxForm({
 				<Grid container item xs={6} md={6} spacing={2}>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Preferences
+							<FormattedMessage id="listComponent.preferences"/>
 						</Typography>
 						<hr/>
 						<ListComponent
@@ -266,7 +272,29 @@ export default connect(mapStateToProps, actions)(reduxForm({
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
-							Last Updated
+							<FormattedMessage id="listComponent.creationDetails"/>
+						</Typography>
+						<hr/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.timestamp'})}
+							value={usersRequest.created ?
+								(usersRequest.created.timestamp ?
+									usersRequest.created.timestamp :
+									''
+								) : ''}
+						/>
+						<ListComponent
+							label={intl.formatMessage({id: 'listComponent.user'})}
+							value={usersRequest.created ?
+								(usersRequest.created.user ?
+									usersRequest.created.user :
+									''
+								) : ''}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							<FormattedMessage id="listComponent.lastUpdated"/>
 						</Typography>
 						<hr/>
 						<ListComponent
