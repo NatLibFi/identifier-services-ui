@@ -27,9 +27,10 @@
  */
 /* global API_URL */
 import fetch from 'node-fetch';
-import {ERROR, IDENTIFIER, IDR, IDR_LIST, IDR_ISBN_LIST, IDR_ISBN, IDR_ISMN_LIST, IDR_ISMN, IDR_ISSN_LIST, IDR_ISSN} from './types';
+import {ERROR, IDENTIFIER, IDR, IDR_LIST, IDR_ISBN_LIST, IDR_ISBN, IDR_ISMN_LIST, IDR_ISMN, IDR_ISSN_LIST, IDR_ISSN, RANGE_STATISTICS} from './types';
 import {setLoader, setRangeListLoader, success, fail, setMessage} from './commonAction';
 import HttpStatus from 'http-status';
+import moment from 'moment';
 
 export const fetchIDRList = ({searchText, token, offset, activeCheck, rangeType}) => async dispatch => {
 	dispatch(setRangeListLoader());
@@ -471,4 +472,26 @@ export const assignIssnRange = (values, token) => async dispatch => {
 
 	dispatch(setMessage({color: 'error', msg: 'There is a problem creating ISSN range'}));
 	return response.status;
+};
+
+export const fetchRangeStatistics = ({startDate, endDate, token}) => async dispatch => {
+	dispatch(setRangeListLoader());
+	const query = {$and: [{'created.timestamp': {$gte: moment(startDate).toISOString()}}, {'created.timestamp': {$lte: moment(endDate).toISOString()}}]};
+
+	try {
+		const response = await fetch(`${API_URL}/ranges/issn/queryStatistics`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				query: query
+			})
+		});
+		const result = await response.json();
+		dispatch(success(RANGE_STATISTICS, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };

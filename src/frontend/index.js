@@ -46,16 +46,12 @@ async function run() {
 	/* global REDUX_EXTENSION */
 	/* eslint no-undef: "error" */
 	const store = createStore(allReducers, REDUX_EXTENSION === 'development' ? composeWithDevTools(applyMiddleware(thunk)) : applyMiddleware(thunk));
-	/* global localStorage */
-	/* eslint no-undef: "error" */
 	if (localStorage.allLang) {
 		store.dispatch(setLocale(localStorage.allLang));
 	}
 
 	function readCookie(name) {
 		const nameEQ = `${name}=`;
-		/* global document */
-		/* eslint no-undef: "error" */
 		const ca = document.cookie.split(';');
 		for (let i = 0; i < ca.length; i++) {
 			let c = ca[i];
@@ -77,8 +73,6 @@ async function run() {
 		});
 		const result = await temp.json();
 		Object.keys(result).forEach(key => {
-			/* global window */
-			/* eslint no-undef: "error" */
 			window[key] = result[key];
 		});
 	}

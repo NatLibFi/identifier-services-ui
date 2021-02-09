@@ -26,6 +26,7 @@
  *
  */
 import fetch from 'node-fetch';
+import XLSX from 'xlsx';
 import {LOADER, LIST_LOADER, GET_CAPTCHA, ERROR, SET_FORM_NAME, SNACKBAR_MESSAGE, GET_NOTIFICATION, RANGE_LIST_LOADER, SEARCH_LIST_LOADER} from './types';
 
 export function success(type, payload) {
@@ -124,6 +125,15 @@ export const getNotification = () => async dispatch => {
 			type: GET_NOTIFICATION,
 			payload: result
 		});
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
+};
+
+export const exportXLS = (wbout, dataToDownload) => dispatch => {
+	try {
+		XLSX.utils.book_append_sheet(wbout, dataToDownload, 'statistics');
+		XLSX.writeFile(wbout, 'statistics.xml', {bookType: 'xlsx', type: 'file'});
 	} catch (err) {
 		dispatch(fail(ERROR, err));
 	}

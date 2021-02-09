@@ -90,6 +90,9 @@ export const ISSN_LIST = 'ISSN_LIST';
 export const FETCH_ISBN_ISMN = 'FETCH_ISBN_ISMN';
 export const FETCH_ISSN = 'FETCH_ISSN';
 
+export const RANGE_STATISTICS = 'RANGE_STATISTICS';
+export const ISSN_STATISTICS = 'ISSN_STATISTICS';
+
 export const SET_FORM_NAME = 'SET_FORM_NAME';
 
 export const GET_NOTIFICATION = 'GET_NOTIFICATION';

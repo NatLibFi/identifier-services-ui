@@ -61,6 +61,7 @@ import IDRISNBISMNList from './components/identifierRanges/RangesList';
 import IDRIsbnList from './components/identifierRanges/isbn/IsbnList';
 import IDRIsmnList from './components/identifierRanges/ismn/IsmnList';
 import IDRIssnList from './components/identifierRanges/issn/IssnList';
+import Statistics from './components/statistics';
 import Footer from './components/footer';
 import PrivateRoute from './components/PrivateRoutes';
 import theme from './styles/app';
@@ -114,7 +115,8 @@ export default connect(mapStateToProps, actions)(withRouter(props => {
 		{path: '/ranges/ismn', role: ['admin'], component: IDRIsmnList},
 		{path: '/ranges/ismn/:id', role: ['admin'], component: IDRIsbnList},
 		{path: '/ranges/issn', role: ['admin'], component: IDRIssnList},
-		{path: '/ranges/issn/:id', role: ['admin'], component: IDRIssnList}
+		{path: '/ranges/issn/:id', role: ['admin'], component: IDRIssnList},
+		{path: '/statistics', role: ['admin'], component: Statistics}
 
 	];
 

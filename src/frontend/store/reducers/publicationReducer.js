@@ -39,7 +39,8 @@ import {
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
 	PUBLICATION_ISBN_ISMN_REQUEST,
 	ISSN_REQUESTS_LIST,
-	ISSN_REQUEST
+	ISSN_REQUEST,
+	ISSN_STATISTICS
 } from '../actions/types';
 
 const initialState = {
@@ -62,6 +63,7 @@ const initialState = {
 	queryDocCount: null,
 	listLoading: false,
 	loading: false,
+	issnStatistics: null,
 	error: {}
 };
 
@@ -148,6 +150,12 @@ export default function (state = initialState, action) {
 				...state,
 				issnRequest: action.payload,
 				loading: false
+			};
+		case ISSN_STATISTICS:
+			return {
+				...state,
+				issnStatistics: action.payload,
+				listLoading: false
 			};
 		case ERROR:
 			return {

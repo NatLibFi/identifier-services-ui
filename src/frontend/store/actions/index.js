@@ -65,7 +65,8 @@ export {
 	postCaptchaInput,
 	setFormName,
 	setMessage,
-	getNotification
+	getNotification,
+	exportXLS
 } from './commonAction';
 
 export {
@@ -102,6 +103,7 @@ export {
 	updatePublicationIsbnIsmnRequest,
 	fetchIssnRequestsList,
 	fetchIssnRequest,
+	fetchIssnStatistics,
 	updateIssnRequest
 } from './publicationAction';
 
@@ -120,6 +122,7 @@ export {
 	fetchIDRIsmn,
 	fetchIDRIssnList,
 	fetchIDRIssn,
+	fetchRangeStatistics,
 	createIssnRange,
 	createIsbnRange,
 	createIsmnRange,

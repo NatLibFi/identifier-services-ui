@@ -130,7 +130,6 @@ export default connect(mapStateToProps, actions)(reduxForm({
 	const handlePublicationUpdate = values => {
 		const {_id, ...updateValues} = values;
 		const token = cookie[COOKIE_NAME];
-		console.log(updateValues, token);
 		updatePublicationIssn(id, updateValues, token);
 		setIsEdit(false);
 		history.push('/publications/issn');

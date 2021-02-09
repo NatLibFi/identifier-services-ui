@@ -1,3 +1,4 @@
+
 /**
  *
  * @licstart  The following is the entire license notice for the JavaScript code in this file.
@@ -25,12 +26,21 @@
  * for the JavaScript code in this file.
  *
  */
-import {LOCALE_SET} from './types';
+import {makeStyles} from '@material-ui/core/styles';
 
-export const setLocale = lang => dispatch => {
-	localStorage.allLang = lang;
-	dispatch({
-		type: LOCALE_SET,
-		payload: lang
-	});
-};
+const useStyles = makeStyles(theme => ({
+	dateContainer: {
+		display: 'flex',
+		flexWrap: 'wrap'
+	},
+	textField: {
+		marginLeft: theme.spacing(1),
+		marginRight: theme.spacing(1),
+		width: 200
+	},
+	full: {
+		flexDirection: 'column'
+	}
+}));
+
+export default useStyles;

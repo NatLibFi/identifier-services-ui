@@ -38,7 +38,8 @@ import {
 	IDR_ISMN_LIST,
 	IDR_ISMN,
 	IDR_ISSN_LIST,
-	IDR_ISSN
+	IDR_ISSN,
+	RANGE_STATISTICS
 } from '../actions/types';
 
 const initialState = {
@@ -60,6 +61,7 @@ const initialState = {
 	queryDocCount: null,
 	rangeListLoading: false,
 	loading: false,
+	statistics: null,
 	error: {}
 };
 
@@ -139,6 +141,12 @@ export default function (state = initialState, action) {
 			return {
 				...state,
 				issn: action.payload,
+				loading: false
+			};
+		case RANGE_STATISTICS:
+			return {
+				...state,
+				statistics: action.payload,
 				loading: false
 			};
 		case ERROR:

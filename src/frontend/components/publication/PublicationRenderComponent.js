@@ -106,7 +106,6 @@ export default connect(mapStateToProps, actions)(props => {
 						<ListComponent edit={isEdit && isEditable} fieldName="language" label={intl.formatMessage({id: 'listComponent.language'})} value={publication.language ? publication.language : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="manufacturer" label={intl.formatMessage({id: 'listComponent.manufacturer'})} value={publication.manufacturer ? publication.manufacturer : ''}/>
 						<ListComponent edit={isEdit && isEditable} fieldName="city" label={intl.formatMessage({id: 'listComponent.city'})} value={publication.city ? publication.city : ''}/>
-						<ListComponent edit={isEdit && isEditable} fieldName="additionalDetails" label={intl.formatMessage({id: 'listComponent.additionalDetails'})} value={publication.additionalDetails ? publication.additionalDetails : ''}/>
 					</Grid>
 					<Grid item xs={12}>
 						<Typography variant="h6">
@@ -249,6 +248,13 @@ export default connect(mapStateToProps, actions)(props => {
 									''
 								) : ''}
 						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Typography variant="h6">
+							Additional Details
+						</Typography>
+						<hr/>
+						<ListComponent edit={isEdit && isEditable} fieldName="additionalDetails" label={intl.formatMessage({id: 'listComponent.additionalDetails'})} value={publication.additionalDetails ? publication.additionalDetails : ''}/>
 					</Grid>
 				</Grid>
 				<Grid container item xs={6} md={6} spacing={2}>

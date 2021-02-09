@@ -70,6 +70,11 @@ export default function ({userInfo, isAuthenticated}) {
 			path: 'users'
 		},
 		{
+			label: <FormattedMessage id="app.menu.statistics"/>,
+			roleView: ['admin', 'publisher-admin', 'publisher'],
+			path: 'statistics'
+		},
+		{
 			label: <FormattedMessage id="app.menu.identifierRanges"/>,
 			roleView: ['admin'],
 			// Path: 'ranges'

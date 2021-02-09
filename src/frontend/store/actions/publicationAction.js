@@ -39,8 +39,10 @@ import {
 	PUBLICATIONISBNISMN_REQUESTS_LIST,
 	PUBLICATION_ISBN_ISMN_REQUEST,
 	ISSN_REQUESTS_LIST,
-	ISSN_REQUEST
+	ISSN_REQUEST,
+	ISSN_STATISTICS
 } from './types';
+import moment from 'moment';
 import HttpStatus from 'http-status';
 import {setLoader, setListLoader, success, fail, setMessage} from './commonAction';
 
@@ -186,6 +188,27 @@ export const publicationCreation = ({values, token, subType}) => async dispatch 
 	}
 
 	return response.status;
+};
+
+export const fetchIssnStatistics = ({token, startDate, endDate}) => async dispatch => {
+	dispatch(setListLoader());
+	try {
+		const query = {$and: [{'created.timestamp': {$gte: moment(startDate).toISOString()}}, {'created.timestamp': {$lte: moment(endDate).toISOString()}}]};
+		const response = await fetch(`${API_URL}/publications/issn/queryStatistics`, {
+			method: 'POST',
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				query: query
+			})
+		});
+		const result = await response.json();
+		dispatch(success(ISSN_STATISTICS, result));
+	} catch (err) {
+		dispatch(fail(ERROR, err));
+	}
 };
 
 // ****************REQUESTS**********************************
